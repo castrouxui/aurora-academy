@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+:root {
+  /* Aurora Theme - Specific to Design Mockup */
+  --background: #0B0F19;
+  /* Deep Charcoal */
+  --foreground: #ffffff;
+
+  --primary: #5D5CDE;
+  /* Vibrant Purple */
+  --primary-foreground: #ffffff;
+
+  --secondary: #E0E7FF;
+  /* Light Indigo for text/accents */
+  --secondary-foreground: #0B0F19;
+
+  --accent: #10b981;
+  /* Emerald for success/indicators */
+  --accent-foreground: #ffffff;
+
+  --muted: #1F2937;
+  --muted-foreground: #9CA3AF;
+
+  --card: #1F2937;
+  --card-foreground: #ffffff;
+
+  --radius: 0.75rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0B0F19;
+    --foreground: #ffffff;
+
+    --primary: #5D5CDE;
+    --primary-foreground: #ffffff;
+
+    --secondary: #E0E7FF;
+    --secondary-foreground: #0B0F19;
+
+    --accent: #10b981;
+    --accent-foreground: #ffffff;
+
+    --muted: #1F2937;
+    --muted-foreground: #9CA3AF;
+
+    --card: #1F2937;
+    --card-foreground: #ffffff;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+
+  /* Fonts */
+  --font-sans: var(--font-sans);
+
+  --animate-blob: blob 7s infinite;
+
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
