@@ -8,18 +8,23 @@ export function HeroBanner() {
                 <div className="flex flex-col items-center space-y-6 text-center">
                     <div className="space-y-4 max-w-[800px]">
                         <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none text-white drop-shadow-lg">
-                            Aprende a Invertir con Expertos Reales
+                            Aprendé a invertir desde cero
                         </h1>
-                        <p className="mx-auto max-w-[700px] text-gray-200 md:text-xl drop-shadow-md font-medium">
-                            Domina los mercados financieros con nuestra plataforma educativa líder. Cursos de Trading, Inversiones y Finanzas Personales.
+                        <p className="mx-auto max-w-[700px] text-gray-200 md:text-xl drop-shadow-md font-medium leading-relaxed">
+                            Cursos y formaciones diseñadas por <strong className="text-white">traders con experiencia real en mercados</strong>.
+                            Formación clara, práctica y enfocada en <strong className="text-white">decisiones reales</strong>.
                         </p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
-                        <Link href="/courses">
-                            <Button className="h-12 px-8 text-lg w-full sm:w-auto" size="lg">Explorar Cursos</Button>
-                        </Link>
                         <Link href="/pricing">
-                            <Button variant="outline" className="h-12 px-8 text-lg w-full sm:w-auto text-black bg-white hover:bg-gray-200 border-transparent" size="lg">Ver Planes</Button>
+                            <Button className="h-12 px-8 text-lg w-full sm:w-auto bg-white text-black hover:bg-gray-200 border-transparent font-semibold" size="lg">
+                                Acceder
+                            </Button>
+                        </Link>
+                        <Link href="#categories" scroll={true}>
+                            <Button variant="ghost" className="h-12 px-8 text-lg w-full sm:w-auto text-white hover:bg-white/10 hover:text-white" size="lg">
+                                Explorar
+                            </Button>
                         </Link>
                     </div>
                 </div>
