@@ -80,6 +80,18 @@ export function Navbar() {
         {isOpen && (
           <div className="border-t border-gray-800 bg-background md:hidden">
             <div className="container mx-auto flex flex-col space-y-4 px-4 py-6">
+              {/* Mobile Search */}
+              <div className="relative w-full mb-2">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <Search size={18} />
+                </div>
+                <input
+                  type="text"
+                  placeholder="¿Qué quieres aprender?"
+                  className="w-full bg-[#1e2330] border border-gray-700 text-gray-200 text-sm rounded-md py-2 pl-10 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                />
+              </div>
+
               <Link
                 href="/courses"
                 className="text-base font-medium text-gray-300 transition-colors hover:text-primary"
