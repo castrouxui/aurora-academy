@@ -17,6 +17,8 @@ interface PaymentModalProps {
 }
 
 export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice }: PaymentModalProps) {
+    const [preferenceId, setPreferenceId] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [initError, setInitError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -110,7 +112,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice }: Paym
                     ) : preferenceId ? (
                         <div className="wallet-container min-h-[150px]">
                             <Wallet
-                                initialization={{ preferenceId: preferenceId, redirectMode: 'modal' }}
+                                initialization={{ preferenceId: preferenceId }}
                                 onError={(error) => {
                                     console.error("Wallet Error:", error);
                                     setInitError("Error cargando botón de pago (Wallet Brick).");
