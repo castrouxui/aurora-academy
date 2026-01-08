@@ -103,3 +103,19 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Enforce hand cursor on all interactive elements */
+button,
+a,
+[role="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+label {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled {
+  cursor: not-allowed;
+}
