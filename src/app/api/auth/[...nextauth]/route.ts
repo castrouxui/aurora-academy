@@ -32,6 +32,7 @@ export const authOptions: AuthOptions = {
     },
     debug: true, // Force debug logs to help diagnose production issues
     secret: process.env.NEXTAUTH_SECRET, // Explicitly load secret
+    // @ts-ignore - trustHost is valid for NextAuth header handling behind proxies but missing in some type definitions
     trustHost: true, // Crucial for Render/Vercel deployments behind proxies
 };
 
