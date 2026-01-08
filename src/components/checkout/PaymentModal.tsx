@@ -110,7 +110,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice }: Paym
                             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
                         </div>
                     ) : preferenceId ? (
-                        <div className="wallet-container min-h-[150px]">
+                        <div className="wallet-container">
                             <Wallet
                                 initialization={{ preferenceId: preferenceId }}
                                 onError={(error) => {
