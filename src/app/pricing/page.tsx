@@ -20,7 +20,7 @@ export default function PricingPage() {
     const tradingPlans = [
         {
             title: "Inicial",
-            price: "$40.000",
+            price: "$10",
             periodicity: "único",
             students: "Nivel Básico",
             features: [
