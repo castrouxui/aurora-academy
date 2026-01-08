@@ -11,6 +11,7 @@ interface PricingCardProps {
     features: string[];
     isRecommended?: boolean;
     buttonText?: string;
+    onAction?: () => void;
     className?: string; // Allow custom classes
 }
 
@@ -22,6 +23,7 @@ export function PricingCard({
     features,
     isRecommended = false,
     buttonText = "Suscribirse",
+    onAction,
     className,
 }: PricingCardProps) {
     return (
@@ -63,6 +65,7 @@ export function PricingCard({
             </ul>
 
             <Button
+                onClick={onAction}
                 className={cn(
                     "w-full",
                     isRecommended ? "bg-primary hover:bg-primary/90" : "bg-card hover:bg-card/80 border-gray-700"

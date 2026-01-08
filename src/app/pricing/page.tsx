@@ -1,10 +1,22 @@
+"use client";
 
+import { useState } from "react";
 import { PricingCard } from "@/components/pricing/PricingCard";
 import { PricingCheckmark } from "@/components/pricing/PricingCheckmark";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
+import { Container } from "@/components/layout/Container";
+import { PaymentModal } from "@/components/checkout/PaymentModal";
 
 export default function PricingPage() {
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState({ title: "", price: "" });
+
+    const handlePurchase = (title: string, price: string) => {
+        setSelectedCourse({ title, price });
+        setIsPaymentModalOpen(true);
+    };
+
     const tradingPlans = [
         {
             title: "Inicial",
@@ -18,6 +30,7 @@ export default function PricingPage() {
                 "Acceso a Comunidad Discord",
             ],
             isRecommended: false,
+            buttonText: "Comprar ahora",
         },
         {
             title: "Intermedio",
@@ -31,6 +44,7 @@ export default function PricingPage() {
                 "Sesiones en Vivo (Grabadas)",
             ],
             isRecommended: false,
+            buttonText: "Comprar ahora",
         },
         {
             title: "Avanzado",
@@ -44,6 +58,7 @@ export default function PricingPage() {
                 "Acceso Vitalicio",
             ],
             isRecommended: false,
+            buttonText: "Comprar ahora",
         },
     ];
 
@@ -75,64 +90,92 @@ export default function PricingPage() {
             {/* Hero Section */}
             <section className="relative overflow-hidden py-16 sm:py-24">
                 <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/20 via-background to-background opacity-50 blur-3xl"></div>
-                <div className="relative z-10 mx-auto max-w-7xl px-6 text-center lg:px-8">
-                    <h1 className="text-4xl font-bold tracking-tight sm:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                <Container className="relative z-10 text-center">
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
                         Formación Profesional
                     </h1>
-                    <p className="mt-6 text-lg leading-8 text-gray-300 max-w-2xl mx-auto">
+                    <p className="text-lg leading-8 text-gray-300 max-w-2xl mx-auto">
                         Desde tus primeros pasos hasta operar como un profesional.
                         Elige tu nivel o lleva el paquete completo.
                     </p>
-                </div>
+                </Container>
             </section>
 
             {/* Trading Path Section */}
-            <section className="relative z-10 mx-auto max-w-7xl px-6 pb-16 lg:px-8">
-                <h2 className="mb-12 text-center text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-                    Carrera de Trading
-                </h2>
+            <section className="relative z-10 pb-16">
+                <Container>
+                    <h2 className="mb-12 text-center text-3xl md:text-4xl font-bold text-white">
+                        Carrera de Trading
+                    </h2>
 
-                {/* Individual Levels */}
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12">
-                    {tradingPlans.map((plan, index) => (
-                        <PricingCard key={index} {...plan} />
-                    ))}
-                </div>
+                    {/* Individual Levels */}
+                    <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12">
+                        {tradingPlans.map((plan, index) => (
+                            <PricingCard
+                                key={index}
+                                {...plan}
+                                onAction={() => handlePurchase(plan.title, plan.price)}
+                            />
+                        ))}
+                    </div>
 
-                {/* Bundle Card (Full Width Highlight) */}
-                <div className="mx-auto max-w-4xl">
-                    <div className="relative rounded-3xl border border-primary bg-card/60 p-8 shadow-2xl backdrop-blur-sm md:p-12">
-                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-sm font-bold text-primary-foreground shadow-lg">
-                            RECOMENDADO
-                        </div>
-                        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center">
-                            <div>
-                                <h3 className="text-3xl font-bold text-foreground">{bundlePlan.title}</h3>
-                                <p className="mt-2 text-muted-foreground">La formación definitiva para dominar los mercados.</p>
-                                <ul className="mt-6 space-y-3">
-                                    {bundlePlan.features.map((feature, idx) => (
-                                        <li key={idx} className="flex items-start gap-3">
-                                            <PricingCheckmark />
-                                            <span className="text-gray-300">{feature}</span>
-                                        </li>
-                                    ))}
-                                </ul>
+                    {/* Bundle Card (Full Width Highlight) */}
+                    <div className="w-full">
+                        <div className="relative rounded-3xl border border-primary bg-[#1F2937] p-8 shadow-2xl md:p-12 overflow-hidden">
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 rounded-b-xl bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg uppercase tracking-wider">
+                                RECOMENDADO
                             </div>
-                            <div className="text-center rounded-2xl bg-background/50 p-6 border border-gray-800">
-                                <p className="text-sm font-medium text-gray-400">Precio Paquete</p>
-                                <div className="mt-2 flex items-baseline justify-center gap-1">
-                                    <span className="text-5xl font-extrabold tracking-tight text-foreground">
-                                        {bundlePlan.price}
-                                    </span>
+                            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center mt-4">
+                                <div>
+                                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">{bundlePlan.title}</h3>
+                                    <p className="text-gray-400 text-lg">La formación definitiva para dominar los mercados.</p>
+                                    <ul className="mt-8 space-y-4">
+                                        {bundlePlan.features.map((feature, idx) => (
+                                            <li key={idx} className="flex items-center gap-3">
+                                                <div className="rounded-full bg-primary/20 p-1">
+                                                    <PricingCheckmark />
+                                                </div>
+                                                <span className="text-gray-200 text-lg">{feature}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
-                                <p className="mt-1 text-xs text-accent">ahorras comprando el bundle</p>
-                                <Button className="mt-6 w-full text-lg h-12" size="lg">
-                                    {bundlePlan.buttonText}
-                                </Button>
+                                <div className="rounded-2xl bg-[#0B0F19] p-8 border border-gray-800 flex flex-col items-center justify-center text-center">
+                                    <p className="text-gray-400 mb-2">Precio Paquete</p>
+                                    <div className="text-5xl md:text-6xl font-bold text-white mb-2">
+                                        {bundlePlan.price}
+                                    </div>
+                                    <p className="text-emerald-400 font-medium mb-8">
+                                        Estás ahorrando $40.000 al invertir en este paquete
+                                    </p>
+                                    <Button
+                                        className="w-full text-lg h-14 font-bold shadow-lg shadow-primary/25 hover:scale-105 transition-transform"
+                                        size="lg"
+                                        onClick={() => handlePurchase(bundlePlan.title, bundlePlan.price)}
+                                    >
+                                        {bundlePlan.buttonText}
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+
+                    {/* Pricing Footer Info */}
+                    <div className="mx-auto max-w-4xl mt-6 flex items-center justify-center gap-8 px-4 text-sm text-gray-400">
+                        <div className="flex items-center gap-2">
+                            <span className="text-lg">🇦🇷</span>
+                            <span>Precios en pesos argentinos.</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs">Pagá con</span>
+                            <img
+                                src="/mercadopago.png"
+                                alt="Mercado Pago"
+                                className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                            />
+                        </div>
+                    </div>
+                </Container>
             </section>
 
             {/* Other Courses Section */}
@@ -165,6 +208,15 @@ export default function PricingPage() {
                     </div>
                 </div>
             </section>
+            {/* Payment Modal */}
+            {isPaymentModalOpen && (
+                <PaymentModal
+                    isOpen={isPaymentModalOpen}
+                    onClose={() => setIsPaymentModalOpen(false)}
+                    courseTitle={selectedCourse.title}
+                    coursePrice={selectedCourse.price}
+                />
+            )}
         </div>
     );
 }

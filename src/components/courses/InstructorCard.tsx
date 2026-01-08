@@ -33,7 +33,7 @@ export function InstructorCard() {
                 </div>
 
                 <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                    I'm Angela, I'm a developer with a passion for teaching. I'm the lead instructor at the London App Brewery, London's leading Programming Bootcamp. I've helped hundreds of thousands of students learn to code and change their lives by becoming a developer.
+                    I&apos;m Angela, I&apos;m a developer with a passion for teaching. I&apos;m the lead instructor at the London App Brewery, London&apos;s leading Programming Bootcamp. I&apos;ve helped hundreds of thousands of students learn to code and change their lives by becoming a developer.
                 </p>
             </div>
         </div>

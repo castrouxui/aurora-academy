@@ -3,7 +3,9 @@
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
 import { Logo } from "@/components/layout/Logo";
+import { signIn } from "next-auth/react";
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -38,6 +40,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 {/* Social Buttons */}
                 <div className="flex flex-col space-y-3">
                     <Button
+                        onClick={() => signIn("google")}
                         variant="outline"
                         className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
                     >
@@ -71,10 +74,11 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
                 {/* Email Button */}
                 <Button
+                    onClick={() => signIn("credentials", { callbackUrl: "/my-courses" })}
                     variant="outline"
                     className="h-12 w-full border-gray-700 bg-transparent text-white hover:bg-gray-800 hover:text-white"
                 >
-                    Con correo y contraseña
+                    Ingreso Rápido (Modo Prueba)
                 </Button>
 
                 {/* Footer */}
@@ -82,7 +86,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                     Al crear una cuenta en Aurora Academy, aceptas los <span className="text-white cursor-pointer hover:underline">Términos de Servicio</span> y <span className="text-white cursor-pointer hover:underline">Políticas de privacidad</span>.
                 </p>
             </div>
-        </div>
+        </div >
     );
 }
 

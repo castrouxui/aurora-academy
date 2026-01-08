@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Container } from '@/components/layout/Container';
 import { CourseCard } from './CourseCard';
 
 const courses = [
@@ -51,7 +52,7 @@ const courses = [
 export function CourseList() {
     return (
         <section className="py-20 bg-[#5D5CDE] text-white">
-            <div className="container mx-auto px-4">
+            <Container>
                 <h2 className="text-3xl font-bold text-center mb-12">Cursos más elegidos</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -65,7 +66,7 @@ export function CourseList() {
                         Ver todos los cursos
                     </Button>
                 </div>
-            </div>
+            </Container>
         </section>
     );
 }

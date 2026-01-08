@@ -12,7 +12,9 @@ export default function Home() {
       <div className="pt-24">
         <HeroBanner />
         <Categories />
-        <CourseList />
+        <div id="courses" className="scroll-mt-24">
+          <CourseList />
+        </div>
 
         <CTASection />
 
