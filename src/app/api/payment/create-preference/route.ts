@@ -8,12 +8,21 @@ const client = new MercadoPagoConfig({
 
 export async function POST(req: NextRequest) {
     try {
+        if (!process.env.MP_ACCESS_TOKEN) {
+            console.error("Missing MP_ACCESS_TOKEN");
+            return NextResponse.json({ error: "Server misconfiguration: Missing Payment Token" }, { status: 500 });
+        }
+
         const body = await req.json();
         const { title, price, quantity } = body;
 
-        // Clean price string (remove symbols and dots) to number
-        // Assuming price format like "$40.000" or similar
+        // Clean price string
         const numericPrice = Number(price.replace(/[^0-9]/g, ''));
+
+        // Determine Base URL for callbacks
+        // Priority: Env Var -> Request Origin -> Production Fallback -> Localhost
+        const origin = req.headers.get('origin');
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || origin || 'https://aurora-academy.onrender.com';
 
         const preference = new Preference(client);
 
@@ -21,24 +30,18 @@ export async function POST(req: NextRequest) {
             body: {
                 items: [
                     {
-                        id: 'course-id', // dynamic in real app
+                        id: 'course-id',
                         title: title,
                         unit_price: numericPrice,
                         quantity: 1,
                     }
                 ],
-                // In production, use numericPrice. For testing, low value is better.
-                // We will use the passed 'price' converted properly.
-                // Note: MP Sandbox might fail with huge numbers if not configured correctly.
-                // Let's assume we pass the real values.
-
-                // Redirection URLs
                 back_urls: {
-                    success: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/courses`,
-                    failure: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/courses`,
-                    pending: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/courses`,
+                    success: `${baseUrl}/courses`,
+                    failure: `${baseUrl}/courses`,
+                    pending: `${baseUrl}/courses`,
                 },
-                // auto_return: 'approved', // Commented out to prevent validation errors with localhost
+                auto_return: 'approved',
             }
         });
 
