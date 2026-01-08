@@ -4,10 +4,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: AuthOptions = {
     providers: [
-        GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID || "",
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-        }),
         CredentialsProvider({
             name: "Login de Prueba",
             credentials: {
@@ -16,6 +12,7 @@ export const authOptions: AuthOptions = {
             },
             async authorize(credentials, req) {
                 // MOCK LOGIN FOR DEVELOPMENT
+                // Accept any credentials for the demo
                 return {
                     id: "mock-user-1",
                     name: "Estudiante Demo",
@@ -33,8 +30,20 @@ export const authOptions: AuthOptions = {
     theme: {
         colorScheme: "dark",
     },
-    debug: process.env.NODE_ENV === "development",
+    debug: true, // Force debug logs to help diagnose production issues
+    secret: process.env.NEXTAUTH_SECRET, // Explicitly load secret
+    trustHost: true, // Crucial for Render/Vercel deployments behind proxies
 };
+
+// Conditionally append Google Provider if keys are present
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    authOptions.providers.push(
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        })
+    );
+}
 
 const handler = NextAuth(authOptions);
 
