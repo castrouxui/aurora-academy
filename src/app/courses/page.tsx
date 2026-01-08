@@ -78,7 +78,8 @@ const allCourses = [
     }
 ];
 
-export default function CoursesPage() {
+
+function CoursesContent() {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [activeFilters, setActiveFilters] = useState<FilterState>({
         categories: [],
@@ -209,5 +210,13 @@ export default function CoursesPage() {
                 onApply={setActiveFilters}
             />
         </main>
+    );
+}
+
+export default function CoursesPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[#0B0F19] pt-32 text-center text-white">Cargando catálogo...</div>}>
+            <CoursesContent />
+        </Suspense>
     );
 }
