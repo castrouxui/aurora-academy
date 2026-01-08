@@ -90,6 +90,10 @@ export function Navbar() {
                       <p className="text-sm text-white font-medium truncate">{session.user.name}</p>
                       <p className="text-xs text-gray-400 truncate">{session.user.email}</p>
                     </div>
+                    <Link href="/admin" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors">
+                      <LayoutDashboard size={16} />
+                      Administración
+                    </Link>
                     <Link href="/my-courses" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors">
                       <BookOpen size={16} />
                       Mis Cursos
