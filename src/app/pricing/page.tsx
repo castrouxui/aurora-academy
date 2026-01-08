@@ -7,12 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
 import { Container } from "@/components/layout/Container";
 import { PaymentModal } from "@/components/checkout/PaymentModal";
+import { useSession } from "next-auth/react";
+import { LoginModal } from "@/components/auth/LoginModal";
 
 export default function PricingPage() {
+    const { data: session } = useSession();
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState({ title: "", price: "" });
 
     const handlePurchase = (title: string, price: string) => {
+        if (!session) {
+            setIsLoginModalOpen(true);
+            return;
+        }
         setSelectedCourse({ title, price });
         setIsPaymentModalOpen(true);
     };
@@ -217,6 +225,12 @@ export default function PricingPage() {
                     coursePrice={selectedCourse.price}
                 />
             )}
+
+            {/* Login Modal for unauthenticated purchases */}
+            <LoginModal
+                isOpen={isLoginModalOpen}
+                onClose={() => setIsLoginModalOpen(false)}
+            />
         </div>
     );
 }
