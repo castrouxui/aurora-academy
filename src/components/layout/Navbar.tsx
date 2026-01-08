@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
 import { Logo } from "./Logo";
-import { Menu, X, Search, LogOut, BookOpen, User } from "lucide-react";
+import { Menu, X, Search, LogOut, BookOpen, User, LayoutDashboard } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 // import { cn } from "@/lib/utils"; // Not used but could be kept
 import { LoginModal } from "@/components/auth/LoginModal";
