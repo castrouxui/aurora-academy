@@ -17,14 +17,22 @@ interface PaymentModalProps {
 }
 
 export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice }: PaymentModalProps) {
-    const [preferenceId, setPreferenceId] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [initError, setInitError] = useState<string | null>(null);
 
     useEffect(() => {
         // Initialize once
         const publicKey = process.env.NEXT_PUBLIC_MP_PUBLIC_KEY;
         if (publicKey) {
-            initMercadoPago(publicKey, { locale: 'es-AR' });
+            try {
+                initMercadoPago(publicKey, { locale: 'es-AR' });
+                console.log("MP Initialized with key:", publicKey.substring(0, 10) + "...");
+            } catch (err) {
+                console.error("MP Init Error:", err);
+                setInitError("Error inicializando pagos.");
+            }
+        } else {
+            console.error("Missing NEXT_PUBLIC_MP_PUBLIC_KEY");
+            setInitError("Falta configuración de clave pública (Render Env Var).");
         }
     }, []);
 
@@ -33,6 +41,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice }: Paym
             // Create preference when modal opens
             const createPreference = async () => {
                 setIsLoading(true);
+                setInitError(null); // Reset error
                 try {
                     const response = await fetch('/api/payment/create-preference', {
                         method: 'POST',
@@ -52,9 +61,11 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice }: Paym
                         setPreferenceId(data.id);
                     } else {
                         console.error('Error fetching preference:', data);
+                        setInitError("Error creando orden de pago.");
                     }
                 } catch (error) {
                     console.error('Error:', error);
+                    setInitError("Error de conexión con el servidor.");
                 } finally {
                     setIsLoading(false);
                 }
@@ -86,21 +97,31 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice }: Paym
                         <p className="text-primary font-bold mt-1">{coursePrice}</p>
                     </div>
 
+                    {initError && (
+                        <div className="mb-4 p-3 bg-red-900/30 border border-red-800 rounded text-red-200 text-sm">
+                            ⚠️ {initError}
+                        </div>
+                    )}
+
                     {isLoading ? (
                         <div className="flex justify-center py-8">
                             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
                         </div>
                     ) : preferenceId ? (
-                        <div className="wallet-container">
+                        <div className="wallet-container min-h-[150px]">
                             <Wallet
-                                initialization={{ preferenceId: preferenceId }}
+                                initialization={{ preferenceId: preferenceId, redirectMode: 'modal' }}
+                                onError={(error) => {
+                                    console.error("Wallet Error:", error);
+                                    setInitError("Error cargando botón de pago (Wallet Brick).");
+                                }}
                                 // @ts-ignore
                                 customization={{ visual: { theme: 'dark', valuePropColor: 'white' } }}
                             />
                         </div>
-                    ) : (
-                        <div className="text-center text-red-400 py-4">
-                            Error al cargar el pago. Por favor intenta de nuevo.
+                    ) : !initError && (
+                        <div className="text-center text-gray-500 py-4">
+                            Preparando pago...
                         </div>
                     )}
                 </div>
