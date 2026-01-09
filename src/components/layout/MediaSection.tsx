@@ -1,8 +1,9 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { MediaModal } from "./MediaModal";
 
 interface MediaItem {
     id: number;
@@ -66,6 +67,18 @@ const MEDIA_ITEMS: MediaItem[] = [
 ];
 
 export function MediaSection() {
+    const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleItemClick = (e: React.MouseEvent, item: MediaItem) => {
+        // Check if we are on desktop (md breakpoint is usually 768px)
+        if (window.innerWidth >= 768) {
+            e.preventDefault();
+            setSelectedItem(item);
+            setIsModalOpen(true);
+        }
+    };
+
     return (
         <section className="py-24 bg-[#0B0F19]">
             <Container>
@@ -85,7 +98,8 @@ export function MediaSection() {
                             href={item.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group relative flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300 hover:-translate-y-1"
+                            onClick={(e) => handleItemClick(e, item)}
+                            className="group relative flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
                         >
                             <div className="h-16 w-full relative flex items-center justify-center mb-4">
                                 {item.imageUrl ? (
@@ -93,8 +107,8 @@ export function MediaSection() {
                                         src={item.imageUrl}
                                         alt={item.name}
                                         className={`object-contain transition-opacity ${item.keepOriginal
-                                                ? "opacity-100"
-                                                : "filter brightness-0 invert opacity-70 group-hover:opacity-100"
+                                            ? "opacity-100"
+                                            : "filter brightness-0 invert opacity-70 group-hover:opacity-100"
                                             }`}
                                         fill
                                         sizes="(max-width: 768px) 50vw, 25vw"
@@ -113,6 +127,12 @@ export function MediaSection() {
                     ))}
                 </div>
             </Container>
+
+            <MediaModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                item={selectedItem}
+            />
         </section>
     );
 }

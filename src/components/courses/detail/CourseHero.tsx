@@ -2,6 +2,9 @@
 
 import { Star, Globe, AlertCircle, Play } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { VideoPlayer } from "@/components/player/VideoPlayer";
 
 interface CourseHeroProps {
     title: string;
@@ -13,6 +16,7 @@ interface CourseHeroProps {
         image: string;
     };
     videoThumbnail: string;
+    videoUrl?: string;
 }
 
 export function CourseHero({
@@ -21,8 +25,11 @@ export function CourseHero({
     rating,
     totalRatings,
     instructor,
-    videoThumbnail
+    videoThumbnail,
+    videoUrl
 }: CourseHeroProps) {
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
     return (
         <div className="text-white">
             <div className="space-y-4 max-w-3xl">
@@ -59,8 +66,11 @@ export function CourseHero({
                 </div>
             </div>
 
-            {/* Video Player */}
-            <div className="mt-8 relative aspect-video rounded-xl overflow-hidden bg-black group cursor-pointer border border-gray-800 shadow-2xl">
+            {/* Video Player Preview Trigger */}
+            <div
+                className="mt-8 relative aspect-video rounded-xl overflow-hidden bg-black group cursor-pointer border border-gray-800 shadow-2xl"
+                onClick={() => setIsPreviewOpen(true)}
+            >
                 <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${videoThumbnail})` }}></div>
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                     <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
@@ -71,6 +81,27 @@ export function CourseHero({
                     Vista previa de este curso
                 </div>
             </div>
+
+            {/* Preview Modal */}
+            <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+                <DialogContent className="sm:max-w-4xl p-0 bg-black border-gray-800 overflow-hidden">
+                    <div className="aspect-video w-full">
+                        {/* We import VideoPlayer dynamically or use it directly if it's client-side compatible */}
+                        {videoUrl ? (
+                            <VideoPlayer
+                                url={videoUrl}
+                                title={`Vista Previa: ${title}`}
+                                isLocked={false}
+                                previewMode={true} // Enforce 30s limit
+                            />
+                        ) : (
+                            <div className="flex items-center justify-center h-full text-white">
+                                Video no disponible
+                            </div>
+                        )}
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

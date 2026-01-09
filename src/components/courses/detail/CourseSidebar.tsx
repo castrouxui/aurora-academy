@@ -119,23 +119,9 @@ export function CourseSidebar({
                         <Button onClick={handlePurchase} className="w-full h-12 text-lg font-bold bg-primary hover:bg-primary/90 text-white">
                             Comprar ahora
                         </Button>
-                        <Button className="w-full h-12 text-lg font-bold bg-primary/10 hover:bg-primary/20 text-primary border-0">
-                            Agregar al carrito
-                        </Button>
                     </div>
 
-                    <div className="flex gap-3">
-                        <Button variant="outline" className="flex-1 border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 hover:bg-gray-800">
-                            <Heart size={18} className="mr-2" />
-                            Wishlist
-                        </Button>
-                        <Button variant="outline" className="flex-1 border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 hover:bg-gray-800">
-                            <Gift size={18} className="mr-2" />
-                            Regalar
-                        </Button>
-                    </div>
-
-                    <p className="text-center text-xs text-gray-400">Garantía de reembolso de 30 días</p>
+                    <p className="text-center text-xs text-gray-400">Garantía de reembolso de 48 hs</p>
 
                     <div className="space-y-4 pt-4 border-t border-gray-700">
                         <h4 className="font-bold text-white text-sm">Este curso incluye:</h4>
