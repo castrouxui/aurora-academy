@@ -90,6 +90,7 @@ export function CourseHero({
                         {videoUrl ? (
                             <VideoPlayer
                                 url={videoUrl}
+                                thumbnail={videoThumbnail}
                                 title={`Vista Previa: ${title}`}
                                 isLocked={false}
                                 previewMode={true} // Enforce 30s limit

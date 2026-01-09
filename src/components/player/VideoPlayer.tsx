@@ -123,6 +123,8 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                 ref={videoRef}
                 src={url}
                 className="w-full h-full object-contain"
+                poster={thumbnail}
+                preload="metadata"
                 onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleLoadedMetadata}
                 onWaiting={() => setIsLoading(true)}
