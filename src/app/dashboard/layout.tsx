@@ -9,6 +9,7 @@ import { useSession, signOut } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { MobileSidebar } from "@/components/layout/MobileSidebar";
 
 export default function DashboardLayout({
     children,
@@ -57,8 +58,8 @@ export default function DashboardLayout({
 
     return (
         <div className="min-h-screen bg-[#0B0F19] flex">
-            {/* Sidebar */}
-            <aside className="w-64 bg-[#111827] border-r border-[#1F2937] flex flex-col fixed h-full z-10 hidden md:flex">
+            {/* Desktop Sidebar */}
+            <aside className="w-64 bg-[#111827] border-r border-[#1F2937] flex-col fixed h-full z-10 hidden md:flex">
                 <div className="h-16 flex items-center px-6 border-b border-[#1F2937]">
                     <Logo />
                 </div>
@@ -123,8 +124,20 @@ export default function DashboardLayout({
                 </div>
             </aside>
 
+            {/* Mobile Header & Sidebar */}
+            <div className="fixed top-0 left-0 right-0 h-16 bg-[#111827] border-b border-[#1F2937] z-20 flex items-center px-4 md:hidden">
+                <MobileSidebar
+                    items={navigation.map(n => ({ ...n, icon: n.icon }))}
+                    role={isAdmin ? "ADMIN" : "STUDENT"}
+                    user={session.user}
+                />
+                <div className="ml-4">
+                    <Logo />
+                </div>
+            </div>
+
             {/* Main Content */}
-            <main className="flex-1 md:ml-64 p-8">
+            <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full">
                 <div className="max-w-6xl mx-auto">
                     {children}
                 </div>
