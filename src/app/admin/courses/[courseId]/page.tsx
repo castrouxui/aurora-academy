@@ -189,6 +189,34 @@ export default function CourseEditorPage() {
         }
     };
 
+    const handleResourceUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                setResourceUrl(data.url);
+                if (!resourceTitle) {
+                    setResourceTitle(file.name);
+                }
+            }
+        } catch (error) {
+            console.error("Resource upload failed", error);
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
     const togglePublish = async () => {
         if (!course) return;
         try {
@@ -445,7 +473,6 @@ export default function CourseEditorPage() {
                                         }
                                     </div>
 
-                                    {/* Add new resource */}
                                     <div className="space-y-2">
                                         <div className="grid grid-cols-2 gap-2">
                                             <Input
@@ -454,12 +481,23 @@ export default function CourseEditorPage() {
                                                 placeholder="Título del recurso"
                                                 className="bg-[#121620] border-gray-600 text-xs h-8"
                                             />
-                                            <Input
-                                                value={resourceUrl}
-                                                onChange={(e) => setResourceUrl(e.target.value)}
-                                                placeholder="URL (PDF/Drive)"
-                                                className="bg-[#121620] border-gray-600 text-xs h-8"
-                                            />
+                                            <div className="flex gap-1">
+                                                <Input
+                                                    value={resourceUrl}
+                                                    onChange={(e) => setResourceUrl(e.target.value)}
+                                                    placeholder="URL o Archivo"
+                                                    className="bg-[#121620] border-gray-600 text-xs h-8 flex-1"
+                                                />
+                                                <label className={`cursor-pointer bg-[#1F2937] hover:bg-gray-700 border border-gray-600 text-white rounded h-8 w-8 flex items-center justify-center flex-shrink-0 ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                                                    {isUploading ? <Loader2 size={12} className="animate-spin" /> : <UploadCloud size={14} />}
+                                                    <input
+                                                        type="file"
+                                                        className="hidden"
+                                                        onChange={handleResourceUpload}
+                                                        disabled={isUploading}
+                                                    />
+                                                </label>
+                                            </div>
                                         </div>
                                         <Button
                                             type="button"
