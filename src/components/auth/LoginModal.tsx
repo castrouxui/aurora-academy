@@ -73,13 +73,22 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 </div>
 
                 {/* Email Button */}
-                <Button
-                    onClick={() => signIn("credentials", { callbackUrl: "/my-courses" })}
-                    variant="outline"
-                    className="h-12 w-full border-gray-700 bg-transparent text-white hover:bg-gray-800 hover:text-white"
-                >
-                    Ingreso Rápido (Modo Prueba)
-                </Button>
+                <div className="flex gap-3">
+                    <Button
+                        onClick={() => signIn("credentials", { email: "demo@aurora.com", callbackUrl: "/my-courses" })}
+                        variant="outline"
+                        className="h-12 flex-1 border-gray-700 bg-transparent text-white hover:bg-gray-800 hover:text-white text-xs sm:text-sm"
+                    >
+                        Estudiante (Demo)
+                    </Button>
+                    <Button
+                        onClick={() => signIn("credentials", { email: "admin@aurora.com", callbackUrl: "/admin" })}
+                        variant="outline"
+                        className="h-12 flex-1 border-[#5D5CDE]/50 text-[#5D5CDE] hover:bg-[#5D5CDE]/10 hover:text-[#5D5CDE] text-xs sm:text-sm"
+                    >
+                        Admin (Demo)
+                    </Button>
+                </div>
 
                 {/* Footer */}
                 <p className="mt-8 text-center text-xs text-gray-500 max-w-xs mx-auto leading-relaxed">

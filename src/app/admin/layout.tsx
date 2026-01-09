@@ -6,12 +6,39 @@ import { LayoutDashboard, ShoppingCart, BookOpen, Users, LogOut, Settings } from
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/layout/Logo";
 
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
+
 export default function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
+    const { data: session, status } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (status === "loading") return;
+
+        if (!session || session.user.role !== "ADMIN") {
+            router.push("/");
+        }
+    }, [session, status, router]);
+
+    if (status === "loading") {
+        return (
+            <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-[#5D5CDE]" />
+            </div>
+        );
+    }
+
+    if (!session || session.user.role !== "ADMIN") {
+        return null;
+    }
 
     const navigation = [
         { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -40,8 +67,8 @@ export default function AdminLayout({
                                     key={item.name}
                                     href={item.href}
                                     className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive
-                                            ? "bg-[#5D5CDE]/10 text-[#5D5CDE]"
-                                            : "text-gray-400 hover:bg-[#1F2937] hover:text-white"
+                                        ? "bg-[#5D5CDE]/10 text-[#5D5CDE]"
+                                        : "text-gray-400 hover:bg-[#1F2937] hover:text-white"
                                         }`}
                                 >
                                     <item.icon size={20} />

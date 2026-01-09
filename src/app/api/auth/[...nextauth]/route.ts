@@ -13,17 +13,31 @@ export const authOptions: AuthOptions = {
             async authorize(credentials, req) {
                 // MOCK LOGIN FOR DEVELOPMENT
                 // Accept any credentials for the demo
+                const role = credentials?.email === "admin@aurora.com" ? "ADMIN" : "STUDENT";
+
                 return {
                     id: "mock-user-1",
-                    name: "Estudiante Demo",
-                    email: "demo@aurora.com",
-                    image: "https://ui-avatars.com/api/?name=Estudiante+Demo&background=random"
+                    name: role === "ADMIN" ? "Admin User" : "Estudiante Demo",
+                    email: credentials?.email || "demo@aurora.com",
+                    image: `https://ui-avatars.com/api/?name=${role === "ADMIN" ? "Admin+User" : "Estudiante+Demo"}&background=random`,
+                    role: role,
                 };
             }
         })
     ],
     callbacks: {
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+                token.role = user.role;
+            }
+            return token;
+        },
         async session({ session, token }) {
+            if (session.user) {
+                session.user.id = token.id;
+                session.user.role = token.role;
+            }
             return session;
         },
     },

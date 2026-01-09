@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 // NextAuth Models
@@ -41,7 +42,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  role          UserRole  @default(STUDENT)
+  role          String    @default("STUDENT")
   accounts      Account[]
   sessions      Session[]
   purchases     Purchase[]
@@ -53,12 +54,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-enum UserRole {
-  ADMIN
-  INSTRUCTOR
-  STUDENT
 }
 
 // App Models
@@ -74,8 +69,24 @@ model Course {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  lessons     Lesson[]
+  modules     Module[]
   purchases   Purchase[]
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  title       String
+  position    Int
+  
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  lessons     Lesson[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([courseId])
 }
 
 model Lesson {
@@ -84,14 +95,16 @@ model Lesson {
   description String?
   videoUrl    String?  // URL to video content (e.g. YouTube, Vimeo, S3)
   content     String?  // Markdown content
-  position    Int      // Order in the course
+  position    Int      // Order in the module
   published   Boolean  @default(false)
 
-  courseId    String
-  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  moduleId    String
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
+  @@index([moduleId])
 }
 
 model Purchase {
