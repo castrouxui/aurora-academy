@@ -144,25 +144,6 @@ export function CourseSidebar({
                             </li>
                         </ul>
                     </div>
-
-                    <div className="space-y-4 pt-4 border-t border-gray-700">
-                        <h4 className="font-bold text-white text-sm">Compartir curso:</h4>
-                        <div className="flex gap-2">
-                            <Button variant="outline" className="flex-1 border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 hover:bg-gray-800 h-10">
-                                <Copy size={16} className="mr-2" />
-                                Copiar Link
-                            </Button>
-                            <Button variant="outline" className="w-10 px-0 border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 hover:bg-gray-800 h-10">
-                                <Facebook size={18} />
-                            </Button>
-                            <Button variant="outline" className="w-10 px-0 border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 hover:bg-gray-800 h-10">
-                                <Twitter size={18} />
-                            </Button>
-                            <Button variant="outline" className="w-10 px-0 border-gray-700 text-gray-300 hover:text-white hover:border-gray-500 hover:bg-gray-800 h-10">
-                                <Mail size={18} />
-                            </Button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </>
