@@ -72,22 +72,54 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                     <div className="h-[1px] flex-1 bg-gray-800"></div>
                 </div>
 
-                {/* Email Button */}
-                <div className="flex gap-3">
+                {/* Email/Password Form */}
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
+                        const password = (e.currentTarget.elements.namedItem('password') as HTMLInputElement).value;
+                        signIn("credentials", {
+                            email,
+                            password,
+                            callbackUrl: email.includes("admin") ? "/admin" : "/my-courses"
+                        });
+                    }}
+                    className="flex flex-col gap-4"
+                >
+                    <div className="space-y-2">
+                        <label className="text-xs font-medium text-gray-400">Correo Electrónico</label>
+                        <input
+                            name="email"
+                            type="email"
+                            placeholder="nombre@ejemplo.com"
+                            required
+                            className="w-full bg-[#1e2330] border border-gray-700 text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-medium text-gray-400">Contraseña</label>
+                        <input
+                            name="password"
+                            type="password"
+                            placeholder="••••••••"
+                            required
+                            className="w-full bg-[#1e2330] border border-gray-700 text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                        />
+                    </div>
                     <Button
-                        onClick={() => signIn("credentials", { email: "demo@aurora.com", callbackUrl: "/my-courses" })}
-                        variant="outline"
-                        className="h-12 flex-1 border-gray-700 bg-transparent text-white hover:bg-gray-800 hover:text-white text-xs sm:text-sm"
+                        type="submit"
+                        className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-medium mt-2"
                     >
-                        Estudiante (Demo)
+                        Iniciar Sesión
                     </Button>
-                    <Button
-                        onClick={() => signIn("credentials", { email: "admin@aurora.com", callbackUrl: "/admin" })}
-                        variant="outline"
-                        className="h-12 flex-1 border-[#5D5CDE]/50 text-[#5D5CDE] hover:bg-[#5D5CDE]/10 hover:text-[#5D5CDE] text-xs sm:text-sm"
-                    >
-                        Admin (Demo)
-                    </Button>
+                </form>
+
+                <div className="mt-4 text-center">
+                    <p className="text-xs text-gray-500">
+                        Credenciales de prueba:<br />
+                        <span className="text-gray-400">admin@aurora.com</span> (Admin)<br />
+                        <span className="text-gray-400">student@aurora.com</span> (Alumno)
+                    </p>
                 </div>
 
                 {/* Footer */}
