@@ -139,7 +139,7 @@ export function Navbar() {
         {/* Mobile Menu Dropdown */}
         {isOpen && (
           <div className="border-t border-gray-800 bg-background md:hidden">
-            <div className="container mx-auto flex flex-col space-y-4 px-4 py-6">
+            <div className="container mx-auto flex flex-col space-y-6 px-6 py-8">
               {/* Mobile Search */}
               <div className="relative w-full mb-2">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
