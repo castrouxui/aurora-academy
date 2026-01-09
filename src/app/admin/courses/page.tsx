@@ -7,9 +7,20 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Pencil, Loader2 } from "lucide-react";
+import { Plus, Pencil, Loader2, Trash } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Course {
     id: string;
@@ -78,6 +89,22 @@ export default function AdminCoursesPage() {
             console.error("Error creating course:", error);
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleDelete = async (courseId: string) => {
+        try {
+            const res = await fetch(`/api/courses/${courseId}`, {
+                method: "DELETE",
+            });
+
+            if (res.ok) {
+                setCourses((prev) => prev.filter((c) => c.id !== courseId));
+            } else {
+                alert("Error al eliminar el curso");
+            }
+        } catch (error) {
+            console.error("Error deleting course:", error);
         }
     };
 
@@ -174,14 +201,63 @@ export default function AdminCoursesPage() {
                                 <p className="text-gray-400 text-sm mb-4 line-clamp-2">{course.description || "Sin descripción"}</p>
                                 <p className="text-[#5D5CDE] font-bold">${course.price}</p>
                             </CardContent>
-                            <CardFooter className="pt-0">
-                                <Link href={`/admin/courses/${course.id}`} className="w-full">
+// ... imports
+                            import {Trash} from "lucide-react";
+                            import {
+                                AlertDialog,
+                                AlertDialogAction,
+                                AlertDialogCancel,
+                                AlertDialogContent,
+                                AlertDialogDescription,
+                                AlertDialogFooter,
+                                AlertDialogHeader,
+                                AlertDialogTitle,
+                                AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
+// ... inside component
+    const handleDelete = async (courseId: string) => {
+        try {
+            const res = await fetch(`/api/courses/${courseId}`, {
+                                method: "DELETE",
+            });
+
+                            if (res.ok) {
+                                setCourses((prev) => prev.filter((c) => c.id !== courseId));
+            } else {
+                                alert("Error al eliminar el curso");
+            }
+        } catch (error) {
+                                console.error("Error deleting course:", error);
+                            <div className="flex gap-2 w-full mt-auto pt-4">
+                                <Link href={`/admin/courses/${course.id}`} className="flex-1">
                                     <Button variant="outline" className="w-full border-gray-600 text-gray-300 hover:text-white hover:bg-gray-700 gap-2">
                                         <Pencil size={14} />
-                                        Editar / Agregar Clases
+                                        Editar
                                     </Button>
                                 </Link>
-                            </CardFooter>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button variant="destructive" size="icon" className="shrink-0 bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20">
+                                            <Trash size={14} />
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent className="bg-[#1F2937] border-gray-700 text-white">
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>¿Estás seguro absolútamente?</AlertDialogTitle>
+                                            <AlertDialogDescription className="text-gray-400">
+                                                Esta acción no se puede deshacer. Esto eliminará permanentemente el curso "{course.title}" y todos sus datos asociados.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel className="bg-transparent border-gray-600 text-white hover:bg-gray-700">Cancelar</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleDelete(course.id)} className="bg-red-600 hover:bg-red-700 text-white border-0">
+                                                Eliminar Curso
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </div>
                         </Card>
                     ))}
                 </div>
