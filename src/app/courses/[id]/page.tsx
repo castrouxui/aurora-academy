@@ -35,6 +35,11 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         minimumFractionDigits: 0
     }).format(Number(course.price));
 
+    // Get first lesson video for preview
+    const firstModule = course.modules.sort((a, b) => a.position - b.position)[0];
+    const firstLesson = firstModule?.lessons.sort((a, b) => a.position - b.position)[0];
+    const previewVideoUrl = firstLesson?.videoUrl || undefined;
+
     // Prepare data for components
     const courseData = {
         id: course.id,
@@ -59,7 +64,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
             name: "Aurora Academy",
             image: "/logo.svg" // Fallback to logo
         },
-        videoThumbnail: course.imageUrl || "/course-placeholder.jpg"
+        videoThumbnail: course.imageUrl || "/course-placeholder.jpg",
+        videoUrl: previewVideoUrl
     };
 
     return (
@@ -81,6 +87,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                                 totalRatings={courseData.totalRatings}
                                 instructor={courseData.instructor}
                                 videoThumbnail={courseData.videoThumbnail}
+                                videoUrl={courseData.videoUrl}
                             />
                             <CourseTabs
                                 modules={courseData.modules}
