@@ -81,7 +81,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                         signIn("credentials", {
                             email,
                             password,
-                            callbackUrl: email.includes("admin") ? "/admin" : "/my-courses"
+                            callbackUrl: email.includes("admin") ? "/admin" : "/dashboard/courses"
                         });
                     }}
                     className="flex flex-col gap-4"

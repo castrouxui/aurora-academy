@@ -97,7 +97,7 @@ export function Navbar() {
                       </Link>
                     )}
                     {session && session.user.role !== 'ADMIN' && (
-                      <Link href="/my-courses" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors">
+                      <Link href="/dashboard/courses" className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors">
                         <BookOpen size={16} />
                         Mis Cursos
                       </Link>
@@ -175,7 +175,7 @@ export function Navbar() {
                         <p className="text-xs text-gray-400">{session.user?.email}</p>
                       </div>
                     </div>
-                    <Link href="/my-courses" className="flex items-center gap-2 px-2 py-2 text-gray-300 hover:text-white" onClick={toggleMenu}>
+                    <Link href="/dashboard/courses" className="flex items-center gap-2 px-2 py-2 text-gray-300 hover:text-white" onClick={toggleMenu}>
                       <BookOpen size={18} />
                       Mis Cursos
                     </Link>
