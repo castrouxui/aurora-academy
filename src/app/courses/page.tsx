@@ -21,6 +21,7 @@ function CoursesContent() {
         levels: [],
         price: null
     });
+    const [sortBy, setSortBy] = useState("popular");
     const searchParams = useSearchParams();
     const searchQuery = searchParams.get('search');
     const [searchTerm, setSearchTerm] = useState(searchQuery || "");
@@ -46,7 +47,8 @@ function CoursesContent() {
                         price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
                         image: course.imageUrl || "/course-placeholder.jpg",
                         tag: course.category || "General", // Use real category
-                        rawPrice: course.price
+                        rawPrice: course.price,
+                        createdAt: course.createdAt // Needed for "newest" sort
                     }));
                     setCourses(formattedCourses);
 
@@ -64,15 +66,29 @@ function CoursesContent() {
     }, []);
 
     const filteredCourses = courses.filter(course => {
-        const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            course.tag.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = activeFilters.categories.length === 0 || activeFilters.categories.some(cat => course.tag.includes(cat));
 
-        // Price logic needs improvement based on real data structure, currently basic mock map
+        // Price logic
         let matchesPrice = true;
         if (activeFilters.price === "Gratis") matchesPrice = course.rawPrice === 0;
         if (activeFilters.price === "De Pago") matchesPrice = course.rawPrice > 0;
 
         return matchesSearch && matchesCategory && matchesPrice;
+    }).sort((a, b) => {
+        switch (sortBy) {
+            case "price-asc":
+                return a.rawPrice - b.rawPrice;
+            case "price-desc":
+                return b.rawPrice - a.rawPrice;
+            case "newest":
+                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+            case "popular":
+            default:
+                // For now, no real popularity metric, so we return 0 (stable sort) or maybe by ID
+                return 0;
+        }
     });
 
     return (
@@ -114,13 +130,20 @@ function CoursesContent() {
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                         </div>
 
-                        {/* Sort Dropdown (Visual mock for now to match UI) */}
-                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#1F2937] border border-gray-700 text-white cursor-pointer hover:bg-gray-700 transition-colors min-w-[200px] justify-between h-[50px]">
-                            <span className="text-sm text-gray-400">Ordenar por:</span>
-                            <div className="flex items-center gap-2">
-                                <span className="font-medium">Populares</span>
-                                <ChevronDown size={16} className="text-gray-400" />
-                            </div>
+                        {/* Sort Dropdown */}
+                        <div className="relative group min-w-[200px] h-[50px]">
+                            <select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="appearance-none w-full h-full px-4 py-3 rounded-lg bg-[#1F2937] border border-gray-700 text-white cursor-pointer hover:bg-gray-700 transition-colors pl-4 pr-10 focus:outline-none"
+                            >
+                                <option value="popular">Más Populares</option>
+                                <option value="newest">Más Recientes</option>
+                                <option value="price-asc">Menor Precio</option>
+                                <option value="price-desc">Mayor Precio</option>
+                            </select>
+                            <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none hidden">Ordenar por:</div>
                         </div>
                     </div>
 
@@ -129,9 +152,13 @@ function CoursesContent() {
                         <div className="flex flex-wrap items-center gap-2">
                             <span className="text-gray-400">Sugerencias:</span>
                             {['análisis técnico', 'trading', 'finanzas', 'crypto', 'python'].map((tag) => (
-                                <span key={tag} className="text-primary hover:text-primary/80 cursor-pointer font-medium transition-colors">
+                                <button
+                                    key={tag}
+                                    onClick={() => setSearchTerm(tag)}
+                                    className="text-primary hover:text-primary/80 cursor-pointer font-medium transition-colors bg-transparent border-0 p-0"
+                                >
                                     {tag}
-                                </span>
+                                </button>
                             ))}
                         </div>
                         <div className="text-gray-400">
