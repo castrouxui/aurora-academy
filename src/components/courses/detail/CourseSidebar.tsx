@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PaymentModal } from "@/components/checkout/PaymentModal";
-import { PlayCircle, Download, Infinity, Trophy, Smartphone, Clock, BarChart, Users, Globe, Captions, Heart, Gift, Copy, Facebook, Twitter, Mail } from "lucide-react";
+import { PlayCircle, Download, Infinity, Trophy, Smartphone, Clock, BarChart, Users, Globe, Captions, Heart, Gift } from "lucide-react";
 
 interface CourseSidebarProps {
     title: string;
