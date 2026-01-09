@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
-import { X } from 'lucide-react';
+import { X, Wallet as WalletIcon } from 'lucide-react';
 import { useSession } from "next-auth/react";
 import { QRCodeSVG as QRCode } from 'qrcode.react';
 import { useRouter } from 'next/navigation';
