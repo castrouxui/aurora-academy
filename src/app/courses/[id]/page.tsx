@@ -6,8 +6,12 @@ import { CourseTabs } from "@/components/courses/detail/CourseTabs";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
 export default async function CourseDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
+    const session = await getServerSession(authOptions);
 
     const course = await prisma.course.findUnique({
         where: { id },
@@ -19,6 +23,18 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
             }
         }
     });
+
+    let hasAccess = false;
+    if (session?.user?.id && course) {
+        const purchase = await prisma.purchase.findFirst({
+            where: {
+                userId: session.user.id,
+                courseId: course.id,
+                status: 'approved'
+            }
+        });
+        hasAccess = !!purchase;
+    }
 
     if (!course) {
         notFound();
@@ -111,6 +127,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                                     language={courseData.language}
                                     subtitles={courseData.subtitles}
                                     courseId={courseData.id}
+                                    hasAccess={hasAccess}
                                 />
                             </div>
                         </div>

@@ -51,7 +51,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
         if (preferenceId && isOpen) {
             intervalId = setInterval(async () => {
                 try {
-                    const res = await fetch(`/api/payment/status?preferenceId=${preferenceId}`);
+                    const res = await fetch(`/api/payment/status?preferenceId=${preferenceId}&userId=${effectiveUserId}&courseId=${courseId}`);
                     if (res.ok) {
                         const data = await res.json();
                         if (data.status === 'approved') {

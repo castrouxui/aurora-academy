@@ -22,6 +22,23 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ status: 'approved', purchaseId: purchase.id });
         }
 
+        // Search by userId and courseId if provided (more reliable than preferenceId for webhook sync)
+        const userId = searchParams.get('userId');
+        const courseId = searchParams.get('courseId');
+
+        if (userId && courseId) {
+            const purchaseByContext = await prisma.purchase.findFirst({
+                where: {
+                    userId: userId,
+                    courseId: courseId,
+                    status: 'approved'
+                }
+            });
+            if (purchaseByContext) {
+                return NextResponse.json({ status: 'approved', purchaseId: purchaseByContext.id });
+            }
+        }
+
         return NextResponse.json({ status: 'pending' });
     } catch (error) {
         console.error('Error checking payment status:', error);

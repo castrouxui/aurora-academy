@@ -17,10 +17,12 @@ interface CourseSidebarProps {
     subtitles: string;
     className?: string;
     courseId: string;
+    hasAccess?: boolean;
 }
 
 import { useSession } from "next-auth/react";
 import { LoginModal } from "@/components/auth/LoginModal";
+import Link from "next/link";
 
 export function CourseSidebar({
     title,
@@ -33,7 +35,8 @@ export function CourseSidebar({
     language,
     subtitles,
     className,
-    courseId
+    courseId,
+    hasAccess = false
 }: CourseSidebarProps) {
     const { data: session } = useSession();
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -116,9 +119,19 @@ export function CourseSidebar({
                     </div>
 
                     <div className="space-y-3">
-                        <Button onClick={handlePurchase} className="w-full h-12 text-lg font-bold bg-primary hover:bg-primary/90 text-white">
-                            Comprar ahora
-                        </Button>
+                        <div className="space-y-3">
+                            {hasAccess ? (
+                                <Link href={`/learn/${courseId}`} className="block w-full">
+                                    <Button className="w-full h-12 text-lg font-bold bg-green-600 hover:bg-green-700 text-white">
+                                        Ir al curso
+                                    </Button>
+                                </Link>
+                            ) : (
+                                <Button onClick={handlePurchase} className="w-full h-12 text-lg font-bold bg-primary hover:bg-primary/90 text-white">
+                                    Comprar ahora
+                                </Button>
+                            )}
+                        </div>
                     </div>
 
                     <p className="text-center text-xs text-gray-400">Garantía de reembolso de 48 hs</p>
