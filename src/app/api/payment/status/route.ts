@@ -42,8 +42,12 @@ export async function GET(req: NextRequest) {
         // Fail-safe: Check MP API directly if Preference ID is known but DB record is missing
         if (preferenceId && userId && courseId) {
             try {
+                if (!process.env.MP_ACCESS_TOKEN) {
+                    console.warn("[FAILSAFE] Skipped: MP_ACCESS_TOKEN missing");
+                    return NextResponse.json({ status: 'pending' });
+                }
                 const { MercadoPagoConfig, Payment } = await import('mercadopago');
-                const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN! });
+                const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
                 const paymentClient = new Payment(client);
 
                 // Search for payments with this preference_id and status=approved

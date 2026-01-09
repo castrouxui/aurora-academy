@@ -18,11 +18,13 @@ interface Sale {
 export default function AdminSalesPage() {
     const [sales, setSales] = useState<Sale[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [period, setPeriod] = useState("all");
 
     useEffect(() => {
         async function fetchSales() {
+            setIsLoading(true);
             try {
-                const res = await fetch("/api/admin/sales");
+                const res = await fetch(`/api/admin/sales?period=${period}`);
                 if (res.ok) {
                     const data = await res.json();
                     setSales(data);
@@ -34,7 +36,7 @@ export default function AdminSalesPage() {
             }
         }
         fetchSales();
-    }, []);
+    }, [period]);
 
     const formatCurrency = (amount: string) => {
         return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(Number(amount));
@@ -63,8 +65,35 @@ export default function AdminSalesPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h1 className="text-3xl font-bold text-white">Ventas</h1>
+
+                <div className="flex items-center gap-2 bg-[#1F2937] p-1 rounded-lg border border-gray-700">
+                    <button
+                        onClick={() => setPeriod('today')}
+                        className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${period === 'today' ? 'bg-[#5D5CDE] text-white' : 'text-gray-400 hover:text-white'}`}
+                    >
+                        Hoy
+                    </button>
+                    <button
+                        onClick={() => setPeriod('week')}
+                        className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${period === 'week' ? 'bg-[#5D5CDE] text-white' : 'text-gray-400 hover:text-white'}`}
+                    >
+                        Semana
+                    </button>
+                    <button
+                        onClick={() => setPeriod('month')}
+                        className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${period === 'month' ? 'bg-[#5D5CDE] text-white' : 'text-gray-400 hover:text-white'}`}
+                    >
+                        Mes
+                    </button>
+                    <button
+                        onClick={() => setPeriod('all')}
+                        className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${period === 'all' ? 'bg-[#5D5CDE] text-white' : 'text-gray-400 hover:text-white'}`}
+                    >
+                        Histórico
+                    </button>
+                </div>
             </div>
 
             <Card className="bg-[#1F2937] border-gray-700">

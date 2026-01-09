@@ -2,9 +2,13 @@ import { NextResponse } from "next/server";
 import MercadoPagoConfig, { Payment } from "mercadopago";
 import { prisma } from "@/lib/prisma";
 
-const client = new MercadoPagoConfig({
-    accessToken: process.env.MP_ACCESS_TOKEN!,
-});
+// Initialize client lazily to avoid build-time errors if env is missing
+const getClient = () => {
+    if (!process.env.MP_ACCESS_TOKEN) {
+        throw new Error("MP_ACCESS_TOKEN is missing");
+    }
+    return new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+};
 
 export async function POST(request: Request) {
     try {
@@ -15,6 +19,7 @@ export async function POST(request: Request) {
         console.log(`[WEBHOOK] Received: topic=${topic}, id=${id}`);
 
         if (topic === "payment" && id) {
+            const client = getClient();
             const payment = new Payment(client);
             const paymentData = await payment.get({ id });
 
