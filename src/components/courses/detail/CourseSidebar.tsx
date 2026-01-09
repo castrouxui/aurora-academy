@@ -19,6 +19,9 @@ interface CourseSidebarProps {
     courseId: string;
 }
 
+import { useSession } from "next-auth/react";
+import { LoginModal } from "@/components/auth/LoginModal";
+
 export function CourseSidebar({
     title,
     price,
@@ -32,10 +35,26 @@ export function CourseSidebar({
     className,
     courseId
 }: CourseSidebarProps) {
+    const { data: session } = useSession();
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+    const handlePurchase = () => {
+        if (!session) {
+            setIsLoginModalOpen(true);
+            return;
+        }
+        setIsPaymentModalOpen(true);
+    };
 
     return (
         <>
+            <LoginModal
+                isOpen={isLoginModalOpen}
+                onClose={() => setIsLoginModalOpen(false)}
+                redirectUrl={`/courses/${courseId}`}
+                view="purchase"
+            />
             <PaymentModal
                 isOpen={isPaymentModalOpen}
                 onClose={() => setIsPaymentModalOpen(false)}
@@ -97,7 +116,7 @@ export function CourseSidebar({
                     </div>
 
                     <div className="space-y-3">
-                        <Button onClick={() => setIsPaymentModalOpen(true)} className="w-full h-12 text-lg font-bold bg-primary hover:bg-primary/90 text-white">
+                        <Button onClick={handlePurchase} className="w-full h-12 text-lg font-bold bg-primary hover:bg-primary/90 text-white">
                             Comprar ahora
                         </Button>
                         <Button className="w-full h-12 text-lg font-bold bg-primary/10 hover:bg-primary/20 text-primary border-0">
