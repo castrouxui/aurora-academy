@@ -20,8 +20,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
     const isPurchase = view === 'purchase';
     const titleText = isPurchase ? "Para comprar, primero debes registrarte" : "Ingresar o crear cuenta con:";
     const googleText = isPurchase ? "Registrarse con Google" : "Continuar con Google";
-    const appleText = isPurchase ? "Registrarse con Apple" : "Continuar con Apple";
-    const facebookText = isPurchase ? "Registrarse con Facebook" : "Continuar con Facebook";
+
     const submitText = isPurchase ? "Registrarse" : "Iniciar Sesión";
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -75,21 +74,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                         {googleText}
                     </Button>
 
-                    <Button
-                        variant="outline"
-                        className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
-                    >
-                        <AppleIcon />
-                        {appleText}
-                    </Button>
 
-                    <Button
-                        variant="outline"
-                        className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
-                    >
-                        <FacebookIcon />
-                        {facebookText}
-                    </Button>
                 </div>
 
                 {/* Divider */}
