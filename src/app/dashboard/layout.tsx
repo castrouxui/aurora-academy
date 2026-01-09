@@ -114,12 +114,12 @@ export default function DashboardLayout({
                             <p className="text-xs text-gray-500 truncate">{session.user.email}</p>
                         </div>
                     </div>
-                    <Link href="/">
+                    <button onClick={() => signOut({ callbackUrl: "/" })} className="w-full">
                         <Button variant="outline" className="w-full gap-2 border-[#1F2937] text-gray-400 hover:text-white hover:bg-[#1F2937]">
                             <LogOut size={16} />
-                            Volver al Inicio
+                            Cerrar sesión
                         </Button>
-                    </Link>
+                    </button>
                 </div>
             </aside>
 

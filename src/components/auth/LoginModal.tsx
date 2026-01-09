@@ -115,11 +115,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 </form>
 
                 <div className="mt-4 text-center">
-                    <p className="text-xs text-gray-500">
-                        Credenciales de prueba:<br />
-                        <span className="text-gray-400">admin@aurora.com</span> (Admin)<br />
-                        <span className="text-gray-400">student@aurora.com</span> (Alumno)
-                    </p>
+                    {/* Test credentials removed for production */}
                 </div>
 
                 {/* Footer */}
