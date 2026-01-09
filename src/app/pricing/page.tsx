@@ -129,7 +129,7 @@ export default function PricingPage() {
 
                     {/* Bundle Card (Full Width Highlight) */}
                     <div className="w-full">
-                        <div className="relative rounded-3xl border border-primary bg-[#1F2937] p-8 shadow-2xl md:p-12 overflow-hidden">
+                        <div className="relative rounded-3xl border border-primary bg-[#1F2937] p-6 md:p-12 shadow-2xl overflow-hidden">
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 rounded-b-xl bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg uppercase tracking-wider">
                                 RECOMENDADO
                             </div>
@@ -148,7 +148,7 @@ export default function PricingPage() {
                                         ))}
                                     </ul>
                                 </div>
-                                <div className="rounded-2xl bg-[#0B0F19] p-8 border border-gray-800 flex flex-col items-center justify-center text-center">
+                                <div className="rounded-2xl bg-[#0B0F19] p-6 md:p-8 border border-gray-800 flex flex-col items-center justify-center text-center">
                                     <p className="text-gray-400 mb-2">Precio Paquete</p>
                                     <div className="text-5xl md:text-6xl font-bold text-white mb-2">
                                         {bundlePlan.price}

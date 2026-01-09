@@ -12,7 +12,7 @@ export default function SettingsPage() {
     const { data: session } = useSession();
 
     return (
-        <div className="min-h-screen bg-[#0B0F19] p-6 lg:p-10">
+        <div className="min-h-screen bg-[#0B0F19] p-4 md:p-8">
             <div className="max-w-4xl mx-auto space-y-8">
                 <div>
                     <h1 className="text-3xl font-bold text-white mb-2">Configuración</h1>
