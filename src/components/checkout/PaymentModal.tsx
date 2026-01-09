@@ -192,6 +192,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                                 console.error("Wallet Error:", error);
                                                 setInitError("Error cargando botón de pago.");
                                             }}
+                                            // @ts-ignore
                                             customization={{ visual: { theme: 'dark' } }}
                                         />
                                     </div>

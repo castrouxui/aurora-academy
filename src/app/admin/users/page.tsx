@@ -78,7 +78,7 @@ export default function AdminUsersPage() {
                     ) : (
                         <div className="space-y-4">
                             {filteredUsers.map((user) => (
-                                <div key={user.id} className="flex items-center justify-between p-4 rounded-lg bg-[#111827] border border-gray-800 hover:border-gray-700 transition-colors">
+                                <div key={user.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg bg-[#111827] border border-gray-800 hover:border-gray-700 transition-colors gap-4">
                                     <div className="flex items-center gap-4">
                                         <div className="relative">
                                             <img
@@ -91,13 +91,13 @@ export default function AdminUsersPage() {
                                         <div>
                                             <h3 className="text-white font-medium">{user.name || "Sin nombre"}</h3>
                                             <div className="flex items-center gap-2 text-sm text-gray-400">
-                                                <Mail size={12} />
-                                                <span>{user.email}</span>
+                                                <Mail size={12} className="shrink-0" />
+                                                <span className="truncate max-w-[200px] sm:max-w-xs">{user.email}</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-4 sm:gap-8">
+                                    <div className="flex items-center gap-4 sm:gap-8 w-full sm:w-auto justify-between sm:justify-end">
                                         <div className="hidden sm:flex flex-col items-end">
                                             <span className="text-xs text-gray-500 uppercase font-semibold tracking-wider">Cursos</span>
                                             <span className="text-white font-mono">{user._count.purchases}</span>
