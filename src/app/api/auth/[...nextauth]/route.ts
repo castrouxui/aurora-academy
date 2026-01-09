@@ -1,8 +1,14 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { prisma } from "@/lib/prisma";
 
 export const authOptions: AuthOptions = {
+    adapter: PrismaAdapter(prisma),
+    session: {
+        strategy: "jwt",
+    },
     providers: [
         CredentialsProvider({
             name: "Login de Prueba",
@@ -39,8 +45,8 @@ export const authOptions: AuthOptions = {
         },
         async session({ session, token }) {
             if (session.user) {
-                session.user.id = token.id;
-                session.user.role = token.role;
+                session.user.id = token.id as string;
+                session.user.role = token.role as string;
             }
             return session;
         },
@@ -48,10 +54,10 @@ export const authOptions: AuthOptions = {
     theme: {
         colorScheme: "dark",
     },
-    debug: true, // Force debug logs to help diagnose production issues
-    secret: process.env.NEXTAUTH_SECRET, // Explicitly load secret
-    // @ts-ignore - trustHost is valid for NextAuth header handling behind proxies but missing in some type definitions
-    trustHost: true, // Crucial for Render/Vercel deployments behind proxies
+    debug: true,
+    secret: process.env.NEXTAUTH_SECRET,
+    // @ts-ignore
+    trustHost: true,
 };
 
 // Conditionally append Google Provider if keys are present
@@ -60,6 +66,17 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            // Explicitly map role if needed, though Adapter handles creation.
+            // We can use profile callback to default role if not set by adapter default
+            profile(profile) {
+                return {
+                    id: profile.sub,
+                    name: profile.name,
+                    email: profile.email,
+                    image: profile.picture,
+                    role: "STUDENT", // Default role for new users
+                }
+            },
         })
     );
 }
