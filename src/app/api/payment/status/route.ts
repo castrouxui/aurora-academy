@@ -42,27 +42,43 @@ export async function GET(req: NextRequest) {
         // Fail-safe: Check MP API directly if Preference ID is known but DB record is missing
         if (preferenceId && userId && courseId) {
             try {
-                // We don't have a direct "get payment by preference" in SDK easily without searching.
-                // But we can search for payments with this external_reference (if we set it) or just wait.
-                // Actually, simplest fail-safe for MVP without heavy search is searching payments by criteria.
-
-                // Better approach: Since we don't have the Payment ID here (only Preference ID),
-                // we'll rely on the search API.
-
                 const { MercadoPagoConfig, Payment } = await import('mercadopago');
                 const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN! });
-                const payment = new Payment(client);
+                const paymentClient = new Payment(client);
 
-                // This is a "best effort" search if we assume the user just paid.
-                // In reality, searching by preference_id in external_reference would be ideal if we set it.
-                // For now, let's stick to the read-only or webhook reliance unless we revamp the flow to capture Payment ID on frontend.
+                // Search for payments with this preference_id and status=approved
+                // Using a date filter to optimize and avoid huge queries, though filtering by preference_id is usually enough.
+                const searchResult = await paymentClient.search({
+                    options: {
+                        criteria: 'desc',
+                        sort: 'date_created',
+                        range: 'date_created',
+                        begin_date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // Last 24h
+                        filters: {
+                            preference_id: preferenceId,
+                            status: 'approved'
+                        }
+                    }
+                });
 
-                // WAIT. The frontend receives 'status=approved' & 'payment_id' in the URL query params upon redirect!
-                // But this is a background poll. The poll doesn't know the Payment ID.
+                if (searchResult.results && searchResult.results.length > 0) {
+                    const approvedPayment = searchResult.results[0];
+                    console.log(`[FAILSAFE] Found approved payment ${approvedPayment.id} for pref ${preferenceId}`);
 
-                // Pivot: Only the Webhook knows the Payment ID reliably for now.
-                // Implementing a search here might be too heavy/risky for a quick fix without external_reference.
-                // I will add a TODO to set external_reference = preferenceId in create-preference to make this searchable.
+                    // Create Purchase immediately
+                    const newPurchase = await prisma.purchase.create({
+                        data: {
+                            userId: userId,
+                            courseId: courseId,
+                            amount: approvedPayment.transaction_amount || 0,
+                            status: 'approved',
+                            paymentId: approvedPayment.id!.toString(),
+                            preferenceId: preferenceId
+                        }
+                    });
+
+                    return NextResponse.json({ status: 'approved', purchaseId: newPurchase.id });
+                }
 
             } catch (err) {
                 console.error("Fail-safe check error:", err);
