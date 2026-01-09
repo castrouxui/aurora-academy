@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { title, price, quantity } = body;
+        const { title, price, quantity, userId, courseId } = body;
 
         // Clean price string
         const numericPrice = Number(price.replace(/[^0-9]/g, ''));
@@ -42,6 +42,11 @@ export async function POST(req: NextRequest) {
                     pending: `${baseUrl}/my-courses`,
                 },
                 auto_return: 'approved',
+                metadata: {
+                    user_id: userId,
+                    course_id: courseId,
+                },
+                notification_url: `${baseUrl}/api/webhooks/mercadopago`,
             }
         });
 
