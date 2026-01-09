@@ -76,32 +76,27 @@ export function Footer() {
 
                         {/* Links Columns */}
                         <div className="space-y-4">
-                            <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Sección</h4>
+                            <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Plataforma</h4>
                             <ul className="space-y-3 text-sm">
-                                <li><Link href="#" className="hover:text-white transition-colors">Development</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Finance & Accounting</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Design</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Business</Link></li>
+                                <li><Link href="/courses" className="hover:text-white transition-colors">Cursos</Link></li>
+                                <li><Link href="/pricing" className="hover:text-white transition-colors">Precios</Link></li>
+                                <li><Link href="/about" className="hover:text-white transition-colors">Nosotros</Link></li>
                             </ul>
                         </div>
 
                         <div className="space-y-4">
-                            <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Sección</h4>
+                            <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Legales</h4>
                             <ul className="space-y-3 text-sm">
-                                <li><Link href="#" className="hover:text-white transition-colors">About</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors flex items-center gap-2">Become Instructor <span className="text-indigo-400">→</span></Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Contact</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Career</Link></li>
+                                <li><Link href="/terms" className="hover:text-white transition-colors">Términos y Condiciones</Link></li>
+                                <li><Link href="/privacy" className="hover:text-white transition-colors">Política de Privacidad</Link></li>
+                                <li><Link href="/refund-policy" className="hover:text-white transition-colors">Política de Reembolso</Link></li>
                             </ul>
                         </div>
 
                         <div className="space-y-4">
-                            <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Sección</h4>
+                            <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Ayuda</h4>
                             <ul className="space-y-3 text-sm">
-                                <li><Link href="#" className="hover:text-white transition-colors">Help Center</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">FAQs</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Terms & Condition</Link></li>
-                                <li><Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                                <li><Link href="mailto:soporte@auroraacademy.com" className="hover:text-white transition-colors">Contacto</Link></li>
                             </ul>
                         </div>
 
