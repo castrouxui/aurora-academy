@@ -64,6 +64,7 @@ model Course {
   description String?
   price       Decimal
   imageUrl    String?
+  category    String   @default("General")
   published   Boolean  @default(false)
   
   createdAt   DateTime @default(now())

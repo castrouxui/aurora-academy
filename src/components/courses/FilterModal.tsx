@@ -13,10 +13,16 @@ interface FilterModalProps {
     onClose: () => void;
     activeFilters: FilterState;
     onApply: (filters: FilterState) => void;
+    categories?: string[];
 }
 
-export function FilterModal({ isOpen, onClose, activeFilters, onApply }: FilterModalProps) {
+export function FilterModal({ isOpen, onClose, activeFilters, onApply, categories = [] }: FilterModalProps) {
     const [localFilters, setLocalFilters] = useState<FilterState>(activeFilters);
+
+    // Default categories if none provided or empty
+    const displayCategories = categories.length > 0
+        ? categories
+        : ['Trading', 'Finanzas Personales', 'Fondos Comunes', 'IA + Inversiones', 'Cripto', 'Bonos'];
 
     // Reset local filters when modal opens
     useEffect(() => {
@@ -71,7 +77,7 @@ export function FilterModal({ isOpen, onClose, activeFilters, onApply }: FilterM
                     <div>
                         <h4 className="text-white font-semibold mb-3">Categoría</h4>
                         <div className="space-y-2">
-                            {['Trading', 'Finanzas Personales', 'Fondos Comunes', 'IA + Inversiones', 'Cripto', 'Bonos'].map(c => (
+                            {displayCategories.map(c => (
                                 <label key={c} className="flex items-center gap-3 text-sm text-gray-300 hover:text-white cursor-pointer group">
                                     <div className="relative flex items-center">
                                         <input

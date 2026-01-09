@@ -46,7 +46,7 @@ export async function POST(req: Request) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const { title, description, price, imageUrl } = await req.json();
+        const { title, description, price, imageUrl, category } = await req.json();
 
         if (!title || !price) {
             return new NextResponse("Title and Price are required", { status: 400 });
@@ -63,6 +63,7 @@ export async function POST(req: Request) {
                 description,
                 price: parsedPrice,
                 imageUrl: imageUrl || null,
+                category: category || "General",
                 published: false
             },
         });

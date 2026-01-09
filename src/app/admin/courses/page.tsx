@@ -42,6 +42,7 @@ export default function AdminCoursesPage() {
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
     const [imageUrl, setImageUrl] = useState("");
+    const [category, setCategory] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const router = useRouter();
@@ -70,7 +71,7 @@ export default function AdminCoursesPage() {
             const res = await fetch("/api/courses", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ title, description, price, imageUrl }),
+                body: JSON.stringify({ title, description, price, imageUrl, category }),
             });
 
             if (res.ok) {
@@ -80,6 +81,7 @@ export default function AdminCoursesPage() {
                 setDescription("");
                 setPrice("");
                 setImageUrl("");
+                setCategory("");
                 router.push(`/admin/courses/${newCourse.id}`);
             } else {
                 const errorText = await res.text();
@@ -165,6 +167,16 @@ export default function AdminCoursesPage() {
                                     onChange={(e) => setImageUrl(e.target.value)}
                                     className="bg-[#121620] border-gray-600 focus-visible:ring-[#5D5CDE]"
                                     placeholder="https://..."
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="category">Categoría</Label>
+                                <Input
+                                    id="category"
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                    className="bg-[#121620] border-gray-600 focus-visible:ring-[#5D5CDE]"
+                                    placeholder="Ej: Trading, Forex, Crypto"
                                 />
                             </div>
 
