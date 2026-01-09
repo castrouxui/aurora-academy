@@ -1,7 +1,20 @@
 "use client";
 
+import { useEffect, useState } from 'react';
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import { X } from 'lucide-react';
+import { useSession } from "next-auth/react";
 import { QRCodeSVG as QRCode } from 'qrcode.react';
 import { useRouter } from 'next/navigation';
+
+interface PaymentModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    courseTitle: string;
+    coursePrice: string; // "$40.000"
+    courseId?: string;
+    userId?: string;
+}
 
 export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, courseId, userId }: PaymentModalProps) {
     const { data: session } = useSession();
