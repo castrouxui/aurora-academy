@@ -115,70 +115,118 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="relative w-full max-w-md bg-[#1F2937] border border-gray-700 rounded-xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="relative w-full max-w-2xl bg-[#121620] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b border-gray-700">
-                    <h3 className="text-lg font-bold text-white">Finalizar Compra</h3>
-                    <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
-                        <X size={24} />
+                <div className="flex items-center justify-between p-6 border-b border-gray-800 bg-[#1a1f2e]">
+                    <div className="flex items-center gap-3">
+                        <div className="bg-primary/20 p-2 rounded-lg">
+                            <Wallet className="w-6 h-6 text-primary" />
+                            {/* Note: Wallet icon from lucide-react might collide with Wallet brick from MP. 
+                                I will import CreditCard from lucide instead to avoid name clash or rename import. 
+                                Checking imports... Wallet is from MP. I'll use a text header for now or simple SVG.
+                             */}
+                            <svg className="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                            </svg>
+                        </div>
+                        <h3 className="text-xl font-semibold text-white">Finalizar Compra</h3>
+                    </div>
+                    <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/5 rounded-full">
+                        <X size={20} />
                     </button>
                 </div>
 
-                {/* Body */}
-                <div className="p-6">
-                    <div className="mb-6">
-                        <p className="text-sm text-gray-400 mb-1">Vas a comprar:</p>
-                        <p className="font-bold text-white text-lg">{courseTitle}</p>
-                        <p className="text-primary font-bold mt-1">{coursePrice}</p>
+                <div className="flex flex-col md:flex-row">
+                    {/* Left Col: Order Summary (on desktop) or Top (mobile) */}
+                    <div className="w-full md:w-5/12 bg-[#1a1f2e]/50 p-6 border-b md:border-b-0 md:border-r border-gray-800 flex flex-col justify-center">
+                        <p className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">Tu Pedido</p>
+
+                        <div className="bg-[#1F2937] p-4 rounded-xl border border-gray-700 shadow-sm mb-6">
+                            <h4 className="font-bold text-white text-lg leading-tight mb-2">{courseTitle}</h4>
+                            <div className="flex items-baseline gap-1 mt-3">
+                                <span className="text-2xl font-bold text-primary">{coursePrice}</span>
+                                <span className="text-xs text-gray-500">final</span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-3 text-sm text-gray-400">
+                            <div className="flex items-center gap-2">
+                                <span className="text-green-400">✓</span> Acceso inmediato
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-green-400">✓</span> Garantía de 48hs
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <span className="text-green-400">✓</span> Pago seguro SSL
+                            </div>
+                        </div>
                     </div>
 
-                    {initError && (
-                        <div className="mb-4 p-3 bg-red-900/30 border border-red-800 rounded text-red-200 text-sm">
-                            ⚠️ {initError}
-                        </div>
-                    )}
+                    {/* Right Col: Payment Actions */}
+                    <div className="w-full md:w-7/12 p-6 md:p-8 bg-[#121620]">
+                        {initError && (
+                            <div className="mb-6 p-4 bg-red-900/20 border border-red-800 rounded-lg flex items-center gap-3 text-red-200 text-sm">
+                                <X className="shrink-0 text-red-400" size={18} />
+                                {initError}
+                            </div>
+                        )}
 
-                    {isLoading ? (
-                        <div className="flex justify-center py-8">
-                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
-                        </div>
-                    ) : preferenceId ? (
-                        <div className="flex flex-col md:flex-row gap-8 items-start">
-                            {/* Desktop: QR Code option */}
-                            <div className="hidden md:flex flex-col items-center justify-center w-1/3 pt-2">
-                                <div className="bg-white p-2 rounded-lg shadow-md mb-3">
-                                    <QRCode value={initPoint || ""} size={120} />
+                        {isLoading ? (
+                            <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+                                <p className="text-gray-400 animate-pulse">Generando orden de pago...</p>
+                            </div>
+                        ) : preferenceId ? (
+                            <div className="space-y-8">
+                                {/* Option 1: Main Button */}
+                                <div>
+                                    <p className="text-sm text-white font-medium mb-3 flex items-center gap-2">
+                                        <span className="bg-gray-700 text-xs w-5 h-5 rounded-full flex items-center justify-center">1</span>
+                                        Pagar con Mercado Pago
+                                    </p>
+                                    <div className="wallet-container relative z-10">
+                                        <Wallet
+                                            initialization={{ preferenceId: preferenceId }}
+                                            onError={(error) => {
+                                                console.error("Wallet Error:", error);
+                                                setInitError("Error cargando botón de pago.");
+                                            }}
+                                            // @ts-ignore
+                                            customization={{ visual: { theme: 'dark', valuePropColor: 'white', buttonHeight: 48, borderRadius: 10 } }}
+                                        />
+                                    </div>
                                 </div>
-                                <p className="text-xs text-center text-gray-400 max-w-[140px]">
-                                    Escanea para pagar desde tu celular
-                                </p>
-                                <p className="text-[10px] text-gray-500 mt-1 animate-pulse">
-                                    Esperando confirmación...
-                                </p>
-                            </div>
 
-                            {/* Wallet Wrapper */}
-                            <div className="flex-1 w-full relative">
-                                {/* Vertical Separator for desktop */}
-                                <div className="hidden md:block absolute -left-4 top-0 bottom-0 w-[1px] bg-gray-700"></div>
+                                {/* Divider */}
+                                <div className="relative flex items-center py-2">
+                                    <div className="flex-grow border-t border-gray-800"></div>
+                                    <span className="flex-shrink-0 mx-4 text-gray-500 text-xs uppercase">O escanea el QR</span>
+                                    <div className="flex-grow border-t border-gray-800"></div>
+                                </div>
 
-                                <Wallet
-                                    initialization={{ preferenceId: preferenceId }}
-                                    onError={(error) => {
-                                        console.error("Wallet Error:", error);
-                                        setInitError("Error cargando botón de pago (Wallet Brick).");
-                                    }}
-                                    // @ts-ignore
-                                    customization={{ visual: { theme: 'dark', valuePropColor: 'white' } }}
-                                />
+                                {/* Option 2: QR */}
+                                <div className="flex flex-col items-center bg-[#1a1f2e] p-4 rounded-xl border border-gray-800/50">
+                                    <p className="text-xs text-gray-400 mb-3 text-center">Escanea con tu App de Mercado Pago</p>
+                                    <div className="bg-white p-3 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300">
+                                        <QRCode value={initPoint || ""} size={140} level="M" />
+                                    </div>
+                                    {/* Pulse Indicator */}
+                                    <div className="mt-4 flex items-center gap-2 bg-blue-500/10 px-3 py-1.5 rounded-full border border-blue-500/20">
+                                        <span className="relative flex h-2 w-2">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                                        </span>
+                                        <span className="text-[10px] font-medium text-blue-300 uppercase tracking-widest">Esperando pago</span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    ) : !initError && (
-                        <div className="text-center text-gray-500 py-4">
-                            Preparando pago...
-                        </div>
-                    )}
+                        ) : !initError && (
+                            <div className="text-center text-gray-500 py-12">
+                                Iniciando transacción segura...
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
