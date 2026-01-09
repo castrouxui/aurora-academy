@@ -3,6 +3,7 @@
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 import { Logo } from "@/components/layout/Logo";
 import { signIn } from "next-auth/react";
@@ -17,11 +18,15 @@ interface LoginModalProps {
 export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: LoginModalProps) {
     if (!isOpen) return null;
 
-    const isPurchase = view === 'purchase';
-    const titleText = isPurchase ? "Para comprar, primero debes registrarte" : "Ingresar o crear cuenta con:";
-    const googleText = isPurchase ? "Registrarse con Google" : "Continuar con Google";
 
-    const submitText = isPurchase ? "Registrarse" : "Iniciar Sesión";
+    const [mode, setMode] = useState<'login' | 'register'>(view === 'purchase' ? 'register' : 'login');
+
+    const isRegister = mode === 'register';
+    const titleText = isRegister ? "Crea tu cuenta para continuar" : "Bienvenido de nuevo";
+    const googleText = isRegister ? "Registrarse con Google" : "Continuar con Google";
+    const submitText = isRegister ? "Registrarse" : "Iniciar Sesión";
+
+    const toggleMode = () => setMode(prev => prev === 'login' ? 'register' : 'login');
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -61,6 +66,9 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                     <h2 className="text-xl font-semibold text-white px-4">
                         {titleText}
                     </h2>
+                    {view === 'purchase' && isRegister && (
+                        <p className="text-sm text-gray-400 mt-2">Para comprar, primero debes registrarte</p>
+                    )}
                 </div>
 
                 {/* Social Buttons */}
@@ -73,8 +81,6 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                         <GoogleIcon />
                         {googleText}
                     </Button>
-
-
                 </div>
 
                 {/* Divider */}
@@ -117,13 +123,22 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                     </Button>
                 </form>
 
-                <div className="mt-4 text-center">
-                    {/* Test credentials removed for production */}
+                {/* Toggle Mode */}
+                <div className="mt-6 text-center text-sm">
+                    <span className="text-gray-400">
+                        {isRegister ? "¿Ya tienes una cuenta?" : "¿No tienes una cuenta?"}
+                    </span>
+                    <button
+                        onClick={toggleMode}
+                        className="ml-2 text-primary hover:underline font-medium focus:outline-none"
+                    >
+                        {isRegister ? "Inicia Sesión" : "Regístrate"}
+                    </button>
                 </div>
 
                 {/* Footer */}
                 <p className="mt-8 text-center text-xs text-gray-500 max-w-xs mx-auto leading-relaxed">
-                    Al crear una cuenta en Aurora Academy, aceptas los <span className="text-white cursor-pointer hover:underline">Términos de Servicio</span> y <span className="text-white cursor-pointer hover:underline">Políticas de privacidad</span>.
+                    Al {isRegister ? "crear una cuenta" : "ingresar"} en Aurora Academy, aceptas los <span className="text-white cursor-pointer hover:underline">Términos de Servicio</span> y <span className="text-white cursor-pointer hover:underline">Políticas de privacidad</span>.
                 </p>
             </div>
         </div>
@@ -139,19 +154,5 @@ const GoogleIcon = () => (
             <path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.734 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z" />
             <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z" />
         </g>
-    </svg>
-)
-
-const AppleIcon = () => (
-    <svg className="h-5 w-5 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.128 22 16.991 22 12c0-5.523-4.477-10-10-10z" transform="scale(0.8) translate(3,3)" fill="none" />
-        {/* Using a simpler path for Apple logo approx or generic SVG */}
-        <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.03-.48-3.24.02-1.04.41-2.06.4-3.33-.85-4.5-4.63-3.75-11.23.95-13.13 1.25-.54 2.54-.1 3.28.16.89.33 1.63.26 2.45-.11.96-.44 2.52-.89 4.25-.09 1.83.83 2.84 2.07 2.89 2.14-.02.04-1.73 1.04-1.67 3.03.04 2.42 2.15 3.23 2.2 3.26-.04.09-.32 1.09-1.07 2.17-.67.97-1.57 2.16-2.58 2.18-.55 0-1.12-.18-1.78-.46l.24.4zm-3.38-16c.49-2.08 2.33-3.75 4.38-4.14.34 2.55-2.05 4.79-4.38 4.14z" />
-    </svg>
-)
-
-const FacebookIcon = () => (
-    <svg className="h-5 w-5 fill-white" viewBox="0 0 24 24">
-        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
     </svg>
 )
