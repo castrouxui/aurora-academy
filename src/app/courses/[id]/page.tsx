@@ -38,7 +38,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     // Get first lesson video for preview
     const firstModule = course.modules.sort((a, b) => a.position - b.position)[0];
     const firstLesson = firstModule?.lessons.sort((a, b) => a.position - b.position)[0];
-    const previewVideoUrl = firstLesson?.videoUrl || undefined;
+    const previewVideoUrl = firstLesson?.videoUrl || "/hero-video.mp4";
 
     // Prepare data for components
     const courseData = {
