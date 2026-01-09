@@ -24,7 +24,7 @@ export function CertificateModal({ isOpen, onClose, studentName, courseName, dat
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="relative w-full max-w-4xl bg-white text-black text-center p-2 rounded-xl shadow-2xl overflow-hidden">
+            <div className="relative w-full max-w-4xl bg-white text-black text-center p-2 rounded-xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
                 {/* Controls */}
                 <div className="absolute top-4 right-4 flex gap-2 z-10">
                     <Button variant="ghost" size="icon" onClick={onClose} className="hover:bg-gray-200 rounded-full">
@@ -33,42 +33,42 @@ export function CertificateModal({ isOpen, onClose, studentName, courseName, dat
                 </div>
 
                 {/* Certificate Content */}
-                <div ref={certificateRef} className="p-12 border-[20px] border-[#1F2937] h-full flex flex-col items-center justify-center bg-[#fdfbf7] relative">
+                <div ref={certificateRef} className="p-6 md:p-12 border-[8px] md:border-[20px] border-[#1F2937] h-full flex flex-col items-center justify-center bg-[#fdfbf7] relative">
                     {/* Background Pattern Mock */}
                     <div className="absolute inset-0 opacity-5 pointer-events-none"
                         style={{ backgroundImage: 'radial-gradient(circle at center, #000 1px, transparent 1px)', backgroundSize: '20px 20px' }}
                     />
 
                     <div className="mb-8">
-                        <h2 className="text-5xl font-serif font-bold text-[#1F2937] mb-2 uppercase tracking-wider">Certificado</h2>
-                        <p className="text-xl text-gray-500 uppercase tracking-[0.2em]">de Finalización</p>
+                        <h2 className="text-3xl md:text-5xl font-serif font-bold text-[#1F2937] mb-2 uppercase tracking-wider">Certificado</h2>
+                        <p className="text-base md:text-xl text-gray-500 uppercase tracking-[0.2em]">de Finalización</p>
                     </div>
 
                     <div className="my-8 w-full max-w-2xl">
-                        <p className="text-lg text-gray-600 italic mb-4">Este documento certifica que</p>
-                        <h3 className="text-4xl font-bold text-[#1F2937] border-b-2 border-gray-300 pb-4 mb-6 font-serif">
+                        <p className="text-base md:text-lg text-gray-600 italic mb-4">Este documento certifica que</p>
+                        <h3 className="text-2xl md:text-4xl font-bold text-[#1F2937] border-b-2 border-gray-300 pb-4 mb-6 font-serif break-words">
                             {studentName}
                         </h3>
-                        <p className="text-lg text-gray-600 italic mb-2">ha completado satisfactoriamente el curso</p>
-                        <h4 className="text-2xl font-bold text-primary mb-8">
+                        <p className="text-base md:text-lg text-gray-600 italic mb-2">ha completado satisfactoriamente el curso</p>
+                        <h4 className="text-xl md:text-2xl font-bold text-primary mb-8 px-2">
                             {courseName}
                         </h4>
                     </div>
 
-                    <div className="flex justify-between w-full max-w-3xl mt-12 px-12">
-                        <div className="text-center">
+                    <div className="flex flex-col md:flex-row justify-between w-full max-w-3xl mt-8 md:mt-12 px-4 md:px-12 gap-8 md:gap-0">
+                        <div className="text-center flex flex-col items-center">
                             <div className="w-40 border-b border-gray-400 mb-2"></div>
                             <p className="text-sm font-bold text-gray-700">Aurora Academy</p>
                             <p className="text-xs text-gray-500">Institución</p>
                         </div>
-                        <div className="text-center">
+                        <div className="text-center flex flex-col items-center">
                             <p className="text-lg font-bold text-[#1F2937]">{date}</p>
                             <div className="w-40 border-b border-gray-400 mt-2"></div>
                             <p className="text-xs text-gray-500 mt-2">Fecha de Emisión</p>
                         </div>
                     </div>
 
-                    <div className="absolute bottom-4 left-0 right-0 text-center">
+                    <div className="mt-8 text-center w-full">
                         <p className="text-[10px] text-gray-400">ID de Certificado: {Math.random().toString(36).substring(7).toUpperCase()}</p>
                     </div>
                 </div>

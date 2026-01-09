@@ -82,7 +82,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice }: Paym
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="relative w-full max-w-md bg-[#1F2937] border border-gray-700 rounded-xl shadow-2xl overflow-hidden">
+            <div className="relative w-full max-w-md bg-[#1F2937] border border-gray-700 rounded-xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-700">
                     <h3 className="text-lg font-bold text-white">Finalizar Compra</h3>
