@@ -66,3 +66,54 @@ export async function PATCH(
         return new NextResponse("Internal Error", { status: 500 });
     }
 }
+
+export async function DELETE(
+    req: Request,
+    { params }: { params: Promise<{ courseId: string }> }
+) {
+    try {
+        const session = await getServerSession(authOptions);
+        const userRole = session?.user?.role;
+        const { courseId } = await params;
+
+        if (!session || userRole !== "ADMIN") {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
+        // Manual Cascade Delete using Transaction to ensure data integrity
+        await prisma.$transaction(async (tx) => {
+            // 1. Delete Purchases related to this course
+            await tx.purchase.deleteMany({
+                where: { courseId },
+            });
+
+            // 2. Find all modules to delete their lessons
+            const modules = await tx.module.findMany({
+                where: { courseId },
+                select: { id: true }
+            });
+
+            // 3. Delete lessons for each module
+            for (const module of modules) {
+                await tx.lesson.deleteMany({
+                    where: { moduleId: module.id }
+                });
+            }
+
+            // 4. Delete modules
+            await tx.module.deleteMany({
+                where: { courseId }
+            });
+
+            // 5. Finally, delete the course
+            await tx.course.delete({
+                where: { id: courseId },
+            });
+        });
+
+        return new NextResponse(null, { status: 200 });
+    } catch (error) {
+        console.error("[COURSE_ID_DELETE]", error);
+        return new NextResponse("Internal Error", { status: 500 });
+    }
+}

@@ -39,7 +39,9 @@ export default function MyCoursesPage() {
     const router = useRouter();
     const [courses, setCourses] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<'in-progress' | 'completed'>('in-progress');
 
+    // ... (keep useEffects same) ...
     useEffect(() => {
         if (status === "unauthenticated") {
             router.push("/");
@@ -52,7 +54,7 @@ export default function MyCoursesPage() {
                 const res = await fetch("/api/my-courses");
                 if (res.ok) {
                     const data = await res.json();
-                    setCourses(data.length > 0 ? data : MOCK_COURSES); // Fallback to mock if empty response for demo
+                    setCourses(data.length > 0 ? data : MOCK_COURSES);
                 } else {
                     console.warn("API Error, using mock data");
                     setCourses(MOCK_COURSES);
@@ -68,7 +70,6 @@ export default function MyCoursesPage() {
         if (session?.user) {
             fetchCourses();
         } else {
-            // Show mock for dev preview if not logged in or during loading
             setCourses(MOCK_COURSES);
             setLoading(false);
         }
@@ -82,8 +83,13 @@ export default function MyCoursesPage() {
         );
     }
 
+    const filteredCourses = courses.filter(course => {
+        const isCompleted = course.progress === 100;
+        return activeTab === 'completed' ? isCompleted : !isCompleted;
+    });
+
     return (
-        <div className="min-h-screen pt-24 pb-12 bg-[#0B0F19]">
+        <div className="min-h-screen pt-4 pb-12 bg-[#0B0F19]">
             <Container>
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
@@ -92,27 +98,43 @@ export default function MyCoursesPage() {
                     </div>
 
                     <div className="flex gap-2 bg-[#1F2937] p-1 rounded-lg">
-                        <Button variant="ghost" size="sm" className="bg-[#374151] text-white hover:bg-[#374151]">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`${activeTab === 'in-progress' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
+                            onClick={() => setActiveTab('in-progress')}
+                        >
                             En Progreso
                         </Button>
-                        <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`${activeTab === 'completed' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
+                            onClick={() => setActiveTab('completed')}
+                        >
                             Completados
                         </Button>
                     </div>
                 </div>
 
-                {courses.length === 0 ? (
+                {filteredCourses.length === 0 ? (
                     <div className="text-center py-20 bg-[#111827] rounded-xl border border-gray-800">
                         <BookOpen className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-white mb-2">No tienes cursos activos</h3>
-                        <p className="text-gray-400 mb-6">Explora nuestro catálogo y comienza a aprender hoy mismo.</p>
-                        <Link href="/courses">
-                            <Button className="bg-primary hover:bg-primary/90">Explorar Cursos</Button>
-                        </Link>
+                        <h3 className="text-xl font-semibold text-white mb-2">
+                            {activeTab === 'completed' ? "No tienes cursos completados aún" : "No tienes cursos en progreso"}
+                        </h3>
+                        <p className="text-gray-400 mb-6">
+                            {activeTab === 'completed' ? "¡Sigue aprendiendo para conseguir tus certificados!" : "Explora nuestro catálogo y comienza a aprender hoy mismo."}
+                        </p>
+                        {activeTab === 'in-progress' && (
+                            <Link href="/courses">
+                                <Button className="bg-primary hover:bg-primary/90">Explorar Cursos</Button>
+                            </Link>
+                        )}
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {courses.map((course) => (
+                        {filteredCourses.map((course) => (
                             <Card key={course.id} className="bg-[#111827] border-gray-800 overflow-hidden flex flex-col hover:border-gray-700 transition-all group">
                                 <div className="relative h-48 w-full overflow-hidden">
                                     <img
@@ -154,7 +176,7 @@ export default function MyCoursesPage() {
                                     <Link href={`/learn/${course.id}`} className="w-full">
                                         <Button className="w-full gap-2 bg-[#1F2937] hover:bg-[#374151] text-white border border-gray-700">
                                             <PlayCircle size={16} />
-                                            Continuar Viendo
+                                            {activeTab === 'completed' ? "Repasar Curso" : "Continuar Viendo"}
                                         </Button>
                                     </Link>
                                 </CardFooter>

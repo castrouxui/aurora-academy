@@ -13,13 +13,17 @@ export const authOptions: AuthOptions = {
             async authorize(credentials, req) {
                 // MOCK LOGIN FOR DEVELOPMENT
                 // Accept any credentials for the demo
-                const role = credentials?.email === "admin@aurora.com" ? "ADMIN" : "STUDENT";
+                const role = credentials?.email.includes("admin") ? "ADMIN" : "STUDENT";
+                const isStudent = role === "STUDENT";
+
+                // If no email provided (empty credentials), default to student
+                const email = credentials?.email || "alumno@aurora.com";
 
                 return {
-                    id: "mock-user-1",
-                    name: role === "ADMIN" ? "Admin User" : "Estudiante Demo",
-                    email: credentials?.email || "demo@aurora.com",
-                    image: `https://ui-avatars.com/api/?name=${role === "ADMIN" ? "Admin+User" : "Estudiante+Demo"}&background=random`,
+                    id: isStudent ? "student-1" : "admin-1",
+                    name: isStudent ? "Alumno Demo" : "Admin User",
+                    email: email,
+                    image: `https://ui-avatars.com/api/?name=${isStudent ? "Alumno+Demo" : "Admin+User"}&background=random`,
                     role: role,
                 };
             }
