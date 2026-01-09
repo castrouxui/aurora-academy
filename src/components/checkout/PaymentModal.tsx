@@ -1,30 +1,15 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
-import { X } from 'lucide-react';
-
-// Initialize MP with Public Key
-// Note: This needs NEXT_PUBLIC_MP_PUBLIC_KEY in .env.local
-// We handle safe initialization inside the component or a global provider.
-// For now, simpler to do it here, but ensuring we have the key.
-
-interface PaymentModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    courseTitle: string;
-    coursePrice: string; // "$40.000"
-    courseId?: string;
-    userId?: string;
-}
-
-import { useSession } from "next-auth/react";
+import { QRCodeSVG as QRCode } from 'qrcode.react';
+import { useRouter } from 'next/navigation';
 
 export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, courseId, userId }: PaymentModalProps) {
     const { data: session } = useSession();
+    const router = useRouter();
     const effectiveUserId = userId || session?.user?.id;
 
     const [preferenceId, setPreferenceId] = useState<string | null>(null);
+    const [initPoint, setInitPoint] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [initError, setInitError] = useState<string | null>(null);
 
@@ -34,7 +19,6 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
         if (publicKey) {
             try {
                 initMercadoPago(publicKey, { locale: 'es-AR' });
-                console.log("MP Initialized with key:", publicKey.substring(0, 10) + "...");
             } catch (err) {
                 console.error("MP Init Error:", err);
                 setInitError("Error inicializando pagos.");
@@ -44,6 +28,33 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
             setInitError("Falta configuración de clave pública (Render Env Var).");
         }
     }, []);
+
+    // Polling for Payment Status
+    useEffect(() => {
+        let intervalId: NodeJS.Timeout;
+
+        if (preferenceId && isOpen) {
+            intervalId = setInterval(async () => {
+                try {
+                    const res = await fetch(`/api/payment/status?preferenceId=${preferenceId}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.status === 'approved') {
+                            clearInterval(intervalId);
+                            router.push('/dashboard/courses'); // Redirect to success
+                            onClose();
+                        }
+                    }
+                } catch (error) {
+                    console.error("Polling error:", error);
+                }
+            }, 3000); // Check every 3 seconds
+        }
+
+        return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
+    }, [preferenceId, isOpen, router, onClose]);
 
     useEffect(() => {
         if (isOpen && !preferenceId) {
@@ -70,6 +81,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
 
                     if (response.ok) {
                         setPreferenceId(data.id);
+                        setInitPoint(data.init_point);
                     } else {
                         console.error('Error fetching preference:', data);
                         setInitError("Error creando orden de pago.");
@@ -119,16 +131,35 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
                         </div>
                     ) : preferenceId ? (
-                        <div className="wallet-container">
-                            <Wallet
-                                initialization={{ preferenceId: preferenceId }}
-                                onError={(error) => {
-                                    console.error("Wallet Error:", error);
-                                    setInitError("Error cargando botón de pago (Wallet Brick).");
-                                }}
-                                // @ts-ignore
-                                customization={{ visual: { theme: 'dark', valuePropColor: 'white' } }}
-                            />
+                        <div className="flex flex-col md:flex-row gap-8 items-start">
+                            {/* Desktop: QR Code option */}
+                            <div className="hidden md:flex flex-col items-center justify-center w-1/3 pt-2">
+                                <div className="bg-white p-2 rounded-lg shadow-md mb-3">
+                                    <QRCode value={initPoint || ""} size={120} />
+                                </div>
+                                <p className="text-xs text-center text-gray-400 max-w-[140px]">
+                                    Escanea para pagar desde tu celular
+                                </p>
+                                <p className="text-[10px] text-gray-500 mt-1 animate-pulse">
+                                    Esperando confirmación...
+                                </p>
+                            </div>
+
+                            {/* Wallet Wrapper */}
+                            <div className="flex-1 w-full relative">
+                                {/* Vertical Separator for desktop */}
+                                <div className="hidden md:block absolute -left-4 top-0 bottom-0 w-[1px] bg-gray-700"></div>
+
+                                <Wallet
+                                    initialization={{ preferenceId: preferenceId }}
+                                    onError={(error) => {
+                                        console.error("Wallet Error:", error);
+                                        setInitError("Error cargando botón de pago (Wallet Brick).");
+                                    }}
+                                    // @ts-ignore
+                                    customization={{ visual: { theme: 'dark', valuePropColor: 'white' } }}
+                                />
+                            </div>
                         </div>
                     ) : !initError && (
                         <div className="text-center text-gray-500 py-4">

@@ -50,7 +50,10 @@ export async function POST(req: NextRequest) {
             }
         });
 
-        return NextResponse.json({ id: result.id });
+        return NextResponse.json({
+            id: result.id,
+            init_point: result.init_point
+        });
     } catch (error: any) {
         console.error('Error creating preference:', error);
         return NextResponse.json({ error: 'Error creating preference', details: error.message || error }, { status: 500 });
