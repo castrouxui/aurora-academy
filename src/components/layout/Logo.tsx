@@ -1,4 +1,3 @@
-```
 import Link from "next/link";
 import { Triangle } from "lucide-react";
 
@@ -17,4 +16,3 @@ export function Logo({ iconOnly = false }: { iconOnly?: boolean }) {
         </Link>
     );
 }
-```
