@@ -53,12 +53,12 @@ export async function GET(req: NextRequest) {
                         criteria: 'desc',
                         sort: 'date_created',
                         range: 'date_created',
-                        begin_date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // Last 24h
+                        begin_date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
                         filters: {
                             preference_id: preferenceId,
                             status: 'approved'
                         }
-                    }
+                    } as any // Bypass strict input types for search filters
                 });
 
                 if (searchResult.results && searchResult.results.length > 0) {
