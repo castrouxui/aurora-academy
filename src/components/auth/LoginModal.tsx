@@ -11,10 +11,18 @@ interface LoginModalProps {
     isOpen: boolean;
     onClose: () => void;
     redirectUrl?: string; // Optional URL to redirect after login
+    view?: 'default' | 'purchase'; // Customize text context
 }
 
-export function LoginModal({ isOpen, onClose, redirectUrl }: LoginModalProps) {
+export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: LoginModalProps) {
     if (!isOpen) return null;
+
+    const isPurchase = view === 'purchase';
+    const titleText = isPurchase ? "Para comprar, primero debes registrarte" : "Ingresar o crear cuenta con:";
+    const googleText = isPurchase ? "Registrarse con Google" : "Continuar con Google";
+    const appleText = isPurchase ? "Registrarse con Apple" : "Continuar con Apple";
+    const facebookText = isPurchase ? "Registrarse con Facebook" : "Continuar con Facebook";
+    const submitText = isPurchase ? "Registrarse" : "Iniciar Sesión";
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -51,8 +59,8 @@ export function LoginModal({ isOpen, onClose, redirectUrl }: LoginModalProps) {
                     <div className="mb-6 scale-110">
                         <Logo />
                     </div>
-                    <h2 className="text-xl font-semibold text-white">
-                        Ingresar o crear cuenta con:
+                    <h2 className="text-xl font-semibold text-white px-4">
+                        {titleText}
                     </h2>
                 </div>
 
@@ -64,7 +72,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl }: LoginModalProps) {
                         className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
                     >
                         <GoogleIcon />
-                        Continuar con Google
+                        {googleText}
                     </Button>
 
                     <Button
@@ -72,7 +80,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl }: LoginModalProps) {
                         className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
                     >
                         <AppleIcon />
-                        Continuar con Apple
+                        {appleText}
                     </Button>
 
                     <Button
@@ -80,7 +88,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl }: LoginModalProps) {
                         className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
                     >
                         <FacebookIcon />
-                        Continuar con Facebook
+                        {facebookText}
                     </Button>
                 </div>
 
@@ -120,7 +128,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl }: LoginModalProps) {
                         type="submit"
                         className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-medium mt-2"
                     >
-                        Iniciar Sesión
+                        {submitText}
                     </Button>
                 </form>
 

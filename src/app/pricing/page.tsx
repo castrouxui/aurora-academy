@@ -231,6 +231,7 @@ export default function PricingPage() {
                 isOpen={isLoginModalOpen}
                 onClose={() => setIsLoginModalOpen(false)}
                 redirectUrl="/pricing"
+                view="purchase"
             />
         </div>
     );
