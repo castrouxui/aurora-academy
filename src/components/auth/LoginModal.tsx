@@ -10,20 +10,18 @@ import { signIn } from "next-auth/react";
 interface LoginModalProps {
     isOpen: boolean;
     onClose: () => void;
-    redirectUrl?: string;
+    redirectUrl?: string; // Optional URL to redirect after login
 }
 
 export function LoginModal({ isOpen, onClose, redirectUrl }: LoginModalProps) {
     if (!isOpen) return null;
 
-    // ... (rest of render)
-
-    // In handleSubmit:
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
         const password = (e.currentTarget.elements.namedItem('password') as HTMLInputElement).value;
 
+        // Determine callback URL
         let callback = redirectUrl;
         if (!callback) {
             callback = email.includes("admin") ? "/admin" : "/dashboard/courses";
@@ -37,12 +35,67 @@ export function LoginModal({ isOpen, onClose, redirectUrl }: LoginModalProps) {
     };
 
     return (
-        // ...
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+            <div className="relative w-full max-w-md rounded-2xl border border-gray-800 bg-[#121620] p-8 shadow-2xl animate-in zoom-in-95 duration-200">
+
+                {/* Close Button */}
+                <button
+                    onClick={onClose}
+                    className="absolute right-4 top-4 text-gray-400 hover:text-white transition-colors"
+                >
+                    <X size={24} />
+                </button>
+
+                {/* Header */}
+                <div className="mb-8 flex flex-col items-center text-center">
+                    <div className="mb-6 scale-110">
+                        <Logo />
+                    </div>
+                    <h2 className="text-xl font-semibold text-white">
+                        Ingresar o crear cuenta con:
+                    </h2>
+                </div>
+
+                {/* Social Buttons */}
+                <div className="flex flex-col space-y-3">
+                    <Button
+                        onClick={() => signIn("google", { callbackUrl: redirectUrl || "/dashboard/courses" })}
+                        variant="outline"
+                        className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
+                    >
+                        <GoogleIcon />
+                        Continuar con Google
+                    </Button>
+
+                    <Button
+                        variant="outline"
+                        className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
+                    >
+                        <AppleIcon />
+                        Continuar con Apple
+                    </Button>
+
+                    <Button
+                        variant="outline"
+                        className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
+                    >
+                        <FacebookIcon />
+                        Continuar con Facebook
+                    </Button>
+                </div>
+
+                {/* Divider */}
+                <div className="my-6 flex items-center gap-4">
+                    <div className="h-[1px] flex-1 bg-gray-800"></div>
+                    <span className="text-sm text-gray-500">o</span>
+                    <div className="h-[1px] flex-1 bg-gray-800"></div>
+                </div>
+
+                {/* Email/Password Form */}
                 <form
                     onSubmit={handleSubmit}
                     className="flex flex-col gap-4"
                 >
-        // ...
                     <div className="space-y-2">
                         <label className="text-xs font-medium text-gray-400">Correo Electrónico</label>
                         <input
@@ -75,12 +128,12 @@ export function LoginModal({ isOpen, onClose, redirectUrl }: LoginModalProps) {
                     {/* Test credentials removed for production */}
                 </div>
 
-                {/* Footer */ }
-    <p className="mt-8 text-center text-xs text-gray-500 max-w-xs mx-auto leading-relaxed">
-        Al crear una cuenta en Aurora Academy, aceptas los <span className="text-white cursor-pointer hover:underline">Términos de Servicio</span> y <span className="text-white cursor-pointer hover:underline">Políticas de privacidad</span>.
-    </p>
-            </div >
-        </div >
+                {/* Footer */}
+                <p className="mt-8 text-center text-xs text-gray-500 max-w-xs mx-auto leading-relaxed">
+                    Al crear una cuenta en Aurora Academy, aceptas los <span className="text-white cursor-pointer hover:underline">Términos de Servicio</span> y <span className="text-white cursor-pointer hover:underline">Políticas de privacidad</span>.
+                </p>
+            </div>
+        </div>
     );
 }
 
