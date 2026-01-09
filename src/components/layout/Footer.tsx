@@ -57,12 +57,7 @@ export function Footer() {
                         {/* Brand Column */}
                         <div className="lg:col-span-2 space-y-6">
                             <div className="space-y-4">
-                                <div className="flex items-center gap-2 font-bold text-xl text-white">
-                                    <span className="bg-gradient-to-tr from-[#5D5CDE] to-cyan-400 p-1.5 rounded-md">
-                                        <span className="block w-4 h-4 bg-white transform rotate-45"></span>
-                                    </span>
-                                    AURORA ACADEMY
-                                </div>
+                                <Logo />
                                 <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
                                     Cursos y formaciones diseñadas por traders con experiencia real en mercados.
                                 </p>
