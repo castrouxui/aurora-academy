@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -188,7 +189,12 @@ export default function AdminCoursesPage() {
             ) : (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {courses.map((course) => (
-                        <Card key={course.id} className="bg-[#1F2937] border-gray-700 flex flex-col overflow-hidden hover:border-[#5D5CDE]/50 transition-colors">
+                        <Card key={course.id} className="group relative bg-[#1F2937] border-gray-700 flex flex-col overflow-hidden hover:border-[#5D5CDE]/50 transition-colors">
+                            <div className="absolute top-3 right-3 z-10">
+                                <Badge variant={course.published ? "success" : "warning"}>
+                                    {course.published ? "Publicado" : "Borrador"}
+                                </Badge>
+                            </div>
                             {course.imageUrl && (
                                 <div className="h-40 w-full overflow-hidden">
                                     <img src={course.imageUrl} alt={course.title} className="w-full h-full object-cover" />

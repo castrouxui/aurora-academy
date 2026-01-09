@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
 import { Logo } from "./Logo";
@@ -17,6 +17,7 @@ export function Navbar() {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { data: session } = useSession();
   const pathname = usePathname();
+  const router = useRouter(); // Added router
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const openLoginModal = () => setIsLoginModalOpen(true);
@@ -44,7 +45,14 @@ export function Navbar() {
           </Link>
 
           {/* Search Input - Desktop */}
-          <form onSubmit={(e) => { e.preventDefault(); const term = (e.currentTarget.elements.namedItem('search') as HTMLInputElement).value; if (term) window.location.href = `/courses?search=${encodeURIComponent(term)}`; }} className="hidden md:flex relative w-[300px] lg:w-[400px]">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const term = (e.currentTarget.elements.namedItem('search') as HTMLInputElement).value;
+              if (term) router.push(`/courses?search=${encodeURIComponent(term)}`);
+            }}
+            className="hidden md:flex relative w-[300px] lg:w-[400px]"
+          >
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
               <Search size={18} />
             </div>
