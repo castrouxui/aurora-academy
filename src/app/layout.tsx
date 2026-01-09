@@ -11,6 +11,9 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "Aurora Academy - Aprende a Invertir",
   description: "Plataforma educativa para inversores.",
+  icons: {
+    icon: "/icon.png",
+  },
 };
 
 export default function RootLayout({
