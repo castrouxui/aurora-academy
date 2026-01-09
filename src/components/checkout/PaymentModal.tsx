@@ -14,9 +14,16 @@ interface PaymentModalProps {
     onClose: () => void;
     courseTitle: string;
     coursePrice: string; // "$40.000"
+    courseId?: string;
+    userId?: string;
 }
 
-export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice }: PaymentModalProps) {
+import { useSession } from "next-auth/react";
+
+export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, courseId, userId }: PaymentModalProps) {
+    const { data: session } = useSession();
+    const effectiveUserId = userId || session?.user?.id;
+
     const [preferenceId, setPreferenceId] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [initError, setInitError] = useState<string | null>(null);
@@ -54,6 +61,8 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice }: Paym
                             title: courseTitle,
                             price: coursePrice,
                             quantity: 1,
+                            courseId: courseId,
+                            userId: effectiveUserId
                         }),
                     });
 

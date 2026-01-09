@@ -8,75 +8,8 @@ import { Container } from "@/components/layout/Container";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-// Mock data (extended)
-const allCourses = [
-    {
-        id: "1",
-        title: "The Complete 2024 Web Development Bootcamp",
-        instructor: "Dr. Angela Yu",
-        rating: 4.8,
-        reviews: "(123)",
-        price: "$19.99",
-        oldPrice: "$99.99",
-        image: "/course-1.jpg",
-        tag: "Web Dev"
-    },
-    {
-        id: "2",
-        title: "Machine Learning A-Z: AI, Python & R + ChatGPT",
-        instructor: "Kirill Eremenko",
-        rating: 4.7,
-        reviews: "(453)",
-        price: "$24.99",
-        oldPrice: "$89.99",
-        image: "/course-2.jpg",
-        tag: "Data Science"
-    },
-    {
-        id: "3",
-        title: "Financial Analysis and Investing Masterclass",
-        instructor: "365 Careers",
-        rating: 4.9,
-        reviews: "(899)",
-        price: "$14.99",
-        oldPrice: "$99.99",
-        image: "/course-3.jpg",
-        tag: "Finance"
-    },
-    {
-        id: "4",
-        title: "Complete Python Bootcamp From Zero to Hero in Python",
-        instructor: "Jose Portilla",
-        rating: 4.7,
-        reviews: "(2,300)",
-        price: "$19.99",
-        oldPrice: "$94.99",
-        image: "/course-4.jpg",
-        tag: "Python"
-    },
-    {
-        id: "5",
-        title: "Ethereum Blockchain Developer Bootcamp With Solidity",
-        instructor: "Ravinder Deol",
-        rating: 4.6,
-        reviews: "(500)",
-        price: "$29.99",
-        oldPrice: "$120.00",
-        image: "/course-5.jpg",
-        tag: "Crypto"
-    },
-    {
-        id: "6",
-        title: "The Complete Digital Marketing Course - 12 Courses in 1",
-        instructor: "Rob Percival",
-        rating: 4.5,
-        reviews: "(1,200)",
-        price: "$22.99",
-        oldPrice: "$149.99",
-        image: "/course-6.jpg",
-        tag: "Marketing"
-    }
-];
+// Mock data (removed)
+
 
 function CoursesContent() {
     const [courses, setCourses] = useState<any[]>([]);

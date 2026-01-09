@@ -16,6 +16,7 @@ interface CourseSidebarProps {
     language: string;
     subtitles: string;
     className?: string;
+    courseId: string;
 }
 
 export function CourseSidebar({
@@ -28,7 +29,8 @@ export function CourseSidebar({
     students,
     language,
     subtitles,
-    className
+    className,
+    courseId
 }: CourseSidebarProps) {
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
@@ -39,6 +41,7 @@ export function CourseSidebar({
                 onClose={() => setIsPaymentModalOpen(false)}
                 courseTitle={title}
                 coursePrice={price}
+                courseId={courseId}
             />
             <div className={`bg-[#1F2937] border border-gray-700 rounded-xl overflow-hidden shadow-2xl ${className || ''}`}>
 

@@ -164,6 +164,26 @@ export default function CourseEditorPage() {
         }
     };
 
+    const handleDeleteLesson = async () => {
+        if (!activeLessonId) return;
+        if (!confirm("¿Estás seguro de eliminar esta clase? Esta acción no se puede deshacer.")) return;
+
+        setIsSubmittingLesson(true);
+        try {
+            const res = await fetch(`/api/lessons/${activeLessonId}`, {
+                method: "DELETE"
+            });
+            if (res.ok) {
+                setIsAddLessonOpen(false);
+                fetchCourse();
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsSubmittingLesson(false);
+        }
+    };
+
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -436,9 +456,19 @@ export default function CourseEditorPage() {
                                     />
                                 </div>
                                 <DialogFooter>
-                                    <Button type="submit" disabled={isSubmittingLesson || isUploading} className="bg-[#5D5CDE] text-white w-full">
+                                    <Button type="submit" disabled={isSubmittingLesson || isUploading} className="bg-[#5D5CDE] text-white flex-1">
                                         {isSubmittingLesson ? <Loader2 className="animate-spin" /> : (activeLessonId ? "Actualizar Clase" : "Crear Clase")}
                                     </Button>
+                                    {activeLessonId && (
+                                        <Button
+                                            type="button"
+                                            variant="destructive"
+                                            disabled={isSubmittingLesson}
+                                            onClick={handleDeleteLesson}
+                                        >
+                                            Eliminar
+                                        </Button>
+                                    )}
                                 </DialogFooter>
                             </form>
 
@@ -574,6 +604,6 @@ export default function CourseEditorPage() {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

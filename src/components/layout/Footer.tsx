@@ -17,9 +17,11 @@ export function Footer() {
                             Aprendé junto a los +1000 alumnos de todo el mundo.
                         </h2>
                         <div className="flex flex-wrap justify-center gap-4">
-                            <Button className="bg-white text-indigo-600 hover:bg-indigo-50 font-semibold h-11 px-6">
-                                Unite A La Comunidad
-                            </Button>
+                            <Link href="/my-courses">
+                                <Button className="bg-white text-indigo-600 hover:bg-indigo-50 font-semibold h-11 px-6">
+                                    Unite A La Comunidad
+                                </Button>
+                            </Link>
                             <Link href="/courses">
                                 <Button variant="ghost" className="text-white hover:bg-white/10 hover:text-white h-11 px-6 bg-white/20 border border-transparent">
                                     Ver todos los cursos

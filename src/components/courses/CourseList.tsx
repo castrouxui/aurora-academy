@@ -1,55 +1,59 @@
+"use client";
+
 import { Button } from '@/components/ui/button';
+
 import { Container } from '@/components/layout/Container';
 import { CourseCard } from './CourseCard';
-
-const courses = [
-    {
-        id: "1",
-        title: "The Complete 2024 Web Development Bootcamp",
-        instructor: "Dr. Angela Yu",
-        rating: 4.8,
-        reviews: "(123)",
-        price: "$19.99",
-        oldPrice: "$99.99",
-        image: "/course-1.jpg",
-        tag: "Web Dev"
-    },
-    {
-        id: "2",
-        title: "Machine Learning A-Z: AI, Python & R + ChatGPT",
-        instructor: "Kirill Eremenko",
-        rating: 4.7,
-        reviews: "(453)",
-        price: "$24.99",
-        oldPrice: "$89.99",
-        image: "/course-2.jpg",
-        tag: "Data Science"
-    },
-    {
-        id: "3",
-        title: "Financial Analysis and Investing Masterclass",
-        instructor: "365 Careers",
-        rating: 4.9,
-        reviews: "(899)",
-        price: "$14.99",
-        oldPrice: "$99.99",
-        image: "/course-3.jpg",
-        tag: "Finance"
-    },
-    {
-        id: "4",
-        title: "Complete Python Bootcamp From Zero to Hero in Python",
-        instructor: "Jose Portilla",
-        rating: 4.7,
-        reviews: "(2,300)",
-        price: "$19.99",
-        oldPrice: "$94.99",
-        image: "/course-4.jpg",
-        tag: "Python"
-    }
-];
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export function CourseList() {
+    const [courses, setCourses] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchCourses() {
+            try {
+                const res = await fetch("/api/courses?published=true");
+                if (res.ok) {
+                    const data = await res.json();
+                    // Transform API data to UI format and take top 4
+                    const formattedCourses = data.slice(0, 4).map((course: any) => ({
+                        id: course.id,
+                        title: course.title,
+                        instructor: "Aurora Academy",
+                        rating: 5.0,
+                        reviews: "(0)",
+                        price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
+                        image: course.imageUrl || "/course-placeholder.jpg",
+                        tag: course.category || "General",
+                        rawPrice: course.price
+                    }));
+                    setCourses(formattedCourses);
+                }
+            } catch (error) {
+                console.error("Failed to fetch courses", error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        fetchCourses();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <section className="py-20 bg-[#5D5CDE] text-white">
+                <Container>
+                    <div className="flex justify-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+                    </div>
+                </Container>
+            </section>
+        );
+    }
+
+    if (courses.length === 0) return null; // Hide section if no courses
+
     return (
         <section className="py-20 bg-[#5D5CDE] text-white">
             <Container>
@@ -62,9 +66,11 @@ export function CourseList() {
                 </div>
 
                 <div className="mt-12 text-center">
-                    <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-bold px-8">
-                        Ver todos los cursos
-                    </Button>
+                    <Link href="/courses">
+                        <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-bold px-8">
+                            Ver todos los cursos
+                        </Button>
+                    </Link>
                 </div>
             </Container>
         </section>

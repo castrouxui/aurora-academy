@@ -6,7 +6,7 @@ import { LayoutDashboard, ShoppingCart, BookOpen, Users, LogOut, Settings } from
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/layout/Logo";
 
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
@@ -85,7 +85,7 @@ export default function AdminLayout({
                         </p>
                         <nav className="space-y-1">
                             <Link
-                                href="/settings"
+                                href="/admin/settings"
                                 className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-gray-400 hover:bg-[#1F2937] hover:text-white transition-colors"
                             >
                                 <Settings size={20} />
@@ -96,12 +96,14 @@ export default function AdminLayout({
                 </div>
 
                 <div className="p-4 border-t border-[#1F2937]">
-                    <Link href="/">
-                        <Button variant="outline" className="w-full gap-2 border-[#1F2937] text-gray-400 hover:text-white hover:bg-[#1F2937]">
-                            <LogOut size={16} />
-                            Volver al Sitio
-                        </Button>
-                    </Link>
+                    <Button
+                        onClick={() => signOut({ callbackUrl: "/" })}
+                        variant="outline"
+                        className="w-full gap-2 border-[#1F2937] text-gray-400 hover:text-white hover:bg-[#1F2937]"
+                    >
+                        <LogOut size={16} />
+                        Cerrar sesión
+                    </Button>
                 </div>
             </aside>
 
@@ -118,7 +120,7 @@ export default function AdminLayout({
             </div>
 
             {/* Main Content */}
-            <main className="flex-1 md:ml-64 p-4 md:p-8 pt-20 md:pt-8 w-full">
+            <main className="flex-1 md:ml-64 p-6 md:p-8 pt-24 md:pt-8 w-full">
                 <div className="max-w-6xl mx-auto">
                     {children}
                 </div>
