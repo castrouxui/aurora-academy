@@ -37,9 +37,9 @@ export async function POST(req: NextRequest) {
                     }
                 ],
                 back_urls: {
-                    success: `${baseUrl}/my-courses`,
-                    failure: `${baseUrl}/my-courses`,
-                    pending: `${baseUrl}/my-courses`,
+                    success: `${baseUrl}/dashboard/courses`,
+                    failure: `${baseUrl}/pricing`,
+                    pending: `${baseUrl}/pricing`,
                 },
                 auto_return: 'approved',
                 metadata: {
