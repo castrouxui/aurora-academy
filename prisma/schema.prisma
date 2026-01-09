@@ -101,10 +101,27 @@ model Lesson {
   moduleId    String
   module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 
+  resources   Resource[]
+  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   
   @@index([moduleId])
+}
+
+model Resource {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  type        String   @default("PDF") // PDF, LINK, etc.
+  
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([lessonId])
 }
 
 model Purchase {

@@ -3,16 +3,26 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
+        const { searchParams } = new URL(req.url);
+        const publishedOnly = searchParams.get("published") === "true";
+
+        const whereClause = publishedOnly ? { published: true } : {};
+
         const courses = await prisma.course.findMany({
+            where: whereClause,
             orderBy: {
                 createdAt: "desc",
             },
             include: {
                 modules: {
                     include: {
-                        lessons: true
+                        lessons: {
+                            include: {
+                                resources: true // Include resources for public view
+                            }
+                        }
                     }
                 }
             }

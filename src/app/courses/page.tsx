@@ -79,138 +79,157 @@ const allCourses = [
 ];
 
 
-function CoursesContent() {
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [activeFilters, setActiveFilters] = useState<FilterState>({
-        categories: [],
-        levels: [],
-        price: null
-    });
-    const [filteredCourses, setFilteredCourses] = useState(allCourses);
-    const searchParams = useSearchParams();
-    const searchQuery = searchParams.get('search');
-    const [searchTerm, setSearchTerm] = useState(searchQuery || "");
+const [courses, setCourses] = useState<any[]>([]);
+const [isLoading, setIsLoading] = useState(true);
+const [activeFilters, setActiveFilters] = useState<FilterState>({
+    categories: [],
+    levels: [],
+    price: null
+});
+const searchParams = useSearchParams();
+const searchQuery = searchParams.get('search');
+const [searchTerm, setSearchTerm] = useState(searchQuery || "");
 
-    useEffect(() => {
-        if (searchQuery) setSearchTerm(searchQuery);
-    }, [searchQuery]);
+useEffect(() => {
+    if (searchQuery) setSearchTerm(searchQuery);
+}, [searchQuery]);
 
-    useEffect(() => {
-        const term = searchTerm.toLowerCase();
-        let filtered = allCourses;
+useEffect(() => {
+    async function fetchCourses() {
+        try {
+            const res = await fetch("/api/courses?published=true");
+            if (res.ok) {
+                const data = await res.json();
 
-        // Filter by Search Term
-        if (term) {
-            filtered = filtered.filter(course =>
-                course.title.toLowerCase().includes(term) ||
-                (course as any).tag?.toLowerCase().includes(term) ||
-                course.instructor?.toLowerCase().includes(term)
-            );
-        }
-
-        // Filter by Categories
-        if (activeFilters.categories.length > 0) {
-            filtered = filtered.filter(course => activeFilters.categories.some(cat => (course as any).tag?.includes(cat)));
-        }
-
-        // Filter by Price
-        if (activeFilters.price) {
-            if (activeFilters.price === "Gratis") {
-                filtered = filtered.filter(c => c.price === "Gratis" || c.price === "$0");
-            } else if (activeFilters.price === "De Pago") {
-                filtered = filtered.filter(c => c.price !== "Gratis" && c.price !== "$0");
+                // Transform API data to UI format
+                const formattedCourses = data.map((course: any) => ({
+                    id: course.id,
+                    title: course.title,
+                    instructor: "Aurora Academy", // Default instructor for now
+                    rating: 5.0, // Default rating
+                    reviews: "(0)",
+                    price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
+                    image: course.imageUrl || "/course-placeholder.jpg",
+                    tag: "General", // Placeholder tag
+                    rawPrice: course.price
+                }));
+                setCourses(formattedCourses);
             }
+        } catch (error) {
+            console.error("Failed to fetch courses", error);
+        } finally {
+            setIsLoading(false);
         }
+    }
+    fetchCourses();
+}, []);
 
-        setFilteredCourses(filtered);
-    }, [searchTerm, activeFilters]);
+const filteredCourses = courses.filter(course => {
+    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = activeFilters.categories.length === 0 || activeFilters.categories.some(cat => course.tag.includes(cat));
 
-    return (
-        <main className="min-h-screen bg-[#0B0F19]">
-            <Navbar />
+    // Price logic needs improvement based on real data structure, currently basic mock map
+    let matchesPrice = true;
+    if (activeFilters.price === "Gratis") matchesPrice = course.rawPrice === 0;
+    if (activeFilters.price === "De Pago") matchesPrice = course.rawPrice > 0;
 
-            <div className="pt-32 pb-20">
-                <Container>
-                    {/* Page Title */}
-                    <div className="mb-12">
-                        <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-8">Catálogo de Cursos</h1>
+    return matchesSearch && matchesCategory && matchesPrice;
+});
+
+return (
+    <main className="min-h-screen bg-[#0B0F19]">
+        <Navbar />
+
+        <div className="pt-32 pb-20">
+            <Container>
+                {/* Page Title */}
+                <div className="mb-12">
+                    <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-8">Catálogo de Cursos</h1>
+                </div>
+
+                {/* Controls Bar */}
+                <div className="flex flex-col md:flex-row gap-4 mb-6">
+                    {/* Filter Button */}
+                    <button
+                        onClick={() => setIsFilterOpen(true)}
+                        className="flex items-center gap-2 px-5 py-3 rounded-lg bg-[#1F2937] border border-gray-700 text-white hover:bg-gray-700 transition-colors bg-gradient-to-r from-transparent to-transparent hover:from-white/5 hover:to-white/5"
+                    >
+                        <SlidersHorizontal size={20} />
+                        <span className="font-medium">Filtros</span>
+                        {(activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)) > 0 && (
+                            <span className="ml-1 bg-primary text-[10px] text-black w-5 h-5 flex items-center justify-center rounded-sm font-bold">
+                                {activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)}
+                            </span>
+                        )}
+                    </button>
+
+                    {/* Search Input */}
+                    <div className="flex-1 relative">
+                        <input
+                            type="text"
+                            placeholder="Buscar curso, instructor o categoría..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full h-[50px] rounded-lg bg-[#1F2937] border border-gray-700 pl-11 pr-4 text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-all"
+                        />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                     </div>
 
-                    {/* Controls Bar */}
-                    <div className="flex flex-col md:flex-row gap-4 mb-6">
-                        {/* Filter Button */}
-                        <button
-                            onClick={() => setIsFilterOpen(true)}
-                            className="flex items-center gap-2 px-5 py-3 rounded-lg bg-[#1F2937] border border-gray-700 text-white hover:bg-gray-700 transition-colors bg-gradient-to-r from-transparent to-transparent hover:from-white/5 hover:to-white/5"
-                        >
-                            <SlidersHorizontal size={20} />
-                            <span className="font-medium">Filtros</span>
-                            {(activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)) > 0 && (
-                                <span className="ml-1 bg-primary text-[10px] text-black w-5 h-5 flex items-center justify-center rounded-sm font-bold">
-                                    {activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)}
-                                </span>
-                            )}
-                        </button>
-
-                        {/* Search Input */}
-                        <div className="flex-1 relative">
-                            <input
-                                type="text"
-                                placeholder="Buscar curso, instructor o categoría..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full h-[50px] rounded-lg bg-[#1F2937] border border-gray-700 pl-11 pr-4 text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-all"
-                            />
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                        </div>
-
-                        {/* Sort Dropdown (Visual mock for now to match UI) */}
-                        <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#1F2937] border border-gray-700 text-white cursor-pointer hover:bg-gray-700 transition-colors min-w-[200px] justify-between h-[50px]">
-                            <span className="text-sm text-gray-400">Ordenar por:</span>
-                            <div className="flex items-center gap-2">
-                                <span className="font-medium">Populares</span>
-                                <ChevronDown size={16} className="text-gray-400" />
-                            </div>
+                    {/* Sort Dropdown (Visual mock for now to match UI) */}
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#1F2937] border border-gray-700 text-white cursor-pointer hover:bg-gray-700 transition-colors min-w-[200px] justify-between h-[50px]">
+                        <span className="text-sm text-gray-400">Ordenar por:</span>
+                        <div className="flex items-center gap-2">
+                            <span className="font-medium">Populares</span>
+                            <ChevronDown size={16} className="text-gray-400" />
                         </div>
                     </div>
+                </div>
 
-                    {/* Tags and Results Count */}
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 text-sm">
-                        <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-gray-400">Sugerencias:</span>
-                            {['análisis técnico', 'trading', 'finanzas', 'crypto', 'python'].map((tag) => (
-                                <span key={tag} className="text-primary hover:text-primary/80 cursor-pointer font-medium transition-colors">
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
-                        <div className="text-gray-400">
-                            <span className="font-bold text-white">84</span> resultados encontrados para "Trading"
-                        </div>
+                {/* Tags and Results Count */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 text-sm">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-gray-400">Sugerencias:</span>
+                        {['análisis técnico', 'trading', 'finanzas', 'crypto', 'python'].map((tag) => (
+                            <span key={tag} className="text-primary hover:text-primary/80 cursor-pointer font-medium transition-colors">
+                                {tag}
+                            </span>
+                        ))}
                     </div>
+                    <div className="text-gray-400">
+                        <span className="font-bold text-white">{filteredCourses.length}</span> resultados encontrados
+                    </div>
+                </div>
 
-                    {/* Course Grid - Full Width */}
+                {/* Course Grid - Full Width */}
+                {isLoading ? (
+                    <div className="flex justify-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                    </div>
+                ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {filteredCourses.map((course) => (
-                            <CourseCard key={course.id} course={course} />
-                        ))}
-                        {/* Duplicating courses to fill grid for demo purposes */}
-                        {allCourses.map((course) => (
-                            <CourseCard key={`${course.id}-dup`} course={{ ...course, id: `${course.id}-dup` }} />
-                        ))}
+                        {filteredCourses.length > 0 ? (
+                            filteredCourses.map((course) => (
+                                <CourseCard key={course.id} course={course} />
+                            ))
+                        ) : (
+                            <div className="col-span-full text-center py-12 text-gray-500">
+                                No se encontraron cursos publicados.
+                            </div>
+                        )}
                     </div>
+                )}
 
-                </Container>
-            </div>
+            </Container>
+        </div>
 
-            <FilterModal
-                isOpen={isFilterOpen}
-                onClose={() => setIsFilterOpen(false)}
-                activeFilters={activeFilters}
-                onApply={setActiveFilters}
-            />
-        </main>
-    );
+        <FilterModal
+            isOpen={isFilterOpen}
+            onClose={() => setIsFilterOpen(false)}
+            activeFilters={activeFilters}
+            onApply={setActiveFilters}
+        />
+    </main>
+);
 }
 
 export default function CoursesPage() {
