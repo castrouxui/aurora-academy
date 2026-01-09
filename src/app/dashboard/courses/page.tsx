@@ -99,30 +99,30 @@ export default function MyCoursesPage() {
                         <p className="text-gray-400">Gestiona el progreso de tus cursos.</p>
                     </div>
 
-                    <div className="flex gap-2 bg-[#1F2937] p-1 rounded-lg overflow-x-auto max-w-full">
+                    <div className="grid grid-cols-3 md:flex gap-1 md:gap-2 bg-[#1F2937] p-1 rounded-lg w-full md:w-auto">
                         <Button
                             variant="ghost"
                             size="sm"
-                            className={`${activeTab === 'not-started' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
+                            className={`w-full md:w-auto ${activeTab === 'not-started' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
                             onClick={() => setActiveTab('not-started')}
                         >
-                            Sin Empezar
+                            <span className="truncate">Sin Empezar</span>
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
-                            className={`${activeTab === 'in-progress' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
+                            className={`w-full md:w-auto ${activeTab === 'in-progress' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
                             onClick={() => setActiveTab('in-progress')}
                         >
-                            En Progreso
+                            <span className="truncate">En Progreso</span>
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
-                            className={`${activeTab === 'completed' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
+                            className={`w-full md:w-auto ${activeTab === 'completed' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
                             onClick={() => setActiveTab('completed')}
                         >
-                            Completados
+                            <span className="truncate">Completados</span>
                         </Button>
                     </div>
                 </div>
