@@ -5,7 +5,7 @@ import { Container } from "@/components/layout/Container";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, Clock, Trophy, PlayCircle } from "lucide-react";
+import { BookOpen, Clock, Trophy, PlayCircle, Lock } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -39,7 +39,7 @@ export default function MyCoursesPage() {
     const router = useRouter();
     const [courses, setCourses] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'in-progress' | 'completed'>('in-progress');
+    const [activeTab, setActiveTab] = useState<'not-started' | 'in-progress' | 'completed'>('in-progress');
 
     // ... (keep useEffects same) ...
     useEffect(() => {
@@ -84,8 +84,10 @@ export default function MyCoursesPage() {
     }
 
     const filteredCourses = courses.filter(course => {
-        const isCompleted = course.progress === 100;
-        return activeTab === 'completed' ? isCompleted : !isCompleted;
+        if (activeTab === 'not-started') return course.progress === 0;
+        if (activeTab === 'in-progress') return course.progress > 0 && course.progress < 100;
+        if (activeTab === 'completed') return course.progress === 100;
+        return false;
     });
 
     return (
@@ -94,10 +96,18 @@ export default function MyCoursesPage() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
                         <h1 className="text-3xl font-bold text-white mb-2">Mis Aprendizajes</h1>
-                        <p className="text-gray-400">Continúa donde dejaste tus cursos.</p>
+                        <p className="text-gray-400">Gestiona el progreso de tus cursos.</p>
                     </div>
 
-                    <div className="flex gap-2 bg-[#1F2937] p-1 rounded-lg">
+                    <div className="flex gap-2 bg-[#1F2937] p-1 rounded-lg overflow-x-auto max-w-full">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`${activeTab === 'not-started' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
+                            onClick={() => setActiveTab('not-started')}
+                        >
+                            Sin Empezar
+                        </Button>
                         <Button
                             variant="ghost"
                             size="sm"
@@ -121,16 +131,20 @@ export default function MyCoursesPage() {
                     <div className="text-center py-20 bg-[#111827] rounded-xl border border-gray-800">
                         <BookOpen className="w-16 h-16 text-gray-600 mx-auto mb-4" />
                         <h3 className="text-xl font-semibold text-white mb-2">
-                            {activeTab === 'completed' ? "No tienes cursos completados aún" : "No tienes cursos en progreso"}
+                            {activeTab === 'not-started'
+                                ? "No tienes cursos pendientes de inicio"
+                                : activeTab === 'in-progress'
+                                    ? "No tienes cursos en progreso actualmente"
+                                    : "No tienes cursos completados aún"}
                         </h3>
                         <p className="text-gray-400 mb-6">
-                            {activeTab === 'completed' ? "¡Sigue aprendiendo para conseguir tus certificados!" : "Explora nuestro catálogo y comienza a aprender hoy mismo."}
+                            {activeTab === 'completed'
+                                ? "¡Sigue aprendiendo para conseguir tus certificados!"
+                                : "Explora nuestro catálogo y comienza a aprender hoy mismo."}
                         </p>
-                        {activeTab === 'in-progress' && (
-                            <Link href="/dashboard/explore">
-                                <Button className="bg-primary hover:bg-primary/90">Explorar Cursos</Button>
-                            </Link>
-                        )}
+                        <Link href="/dashboard/explore">
+                            <Button className="bg-primary hover:bg-primary/90">Explorar Cursos</Button>
+                        </Link>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -148,6 +162,16 @@ export default function MyCoursesPage() {
                                                 <PlayCircle size={28} fill="currentColor" className="text-white" />
                                             </Button>
                                         </Link>
+                                    </div>
+                                    {/* Certificate Lock Badge */}
+                                    <div className="absolute top-2 right-2">
+                                        <div className={`backdrop-blur-md px-2 py-1 rounded-full text-[10px] font-medium border flex items-center gap-1 ${course.progress === 100
+                                            ? 'bg-green-500/20 border-green-500/50 text-green-300'
+                                            : 'bg-black/60 border-gray-600/50 text-gray-400'
+                                            }`}>
+                                            {course.progress === 100 ? <Trophy size={12} /> : <Lock size={12} />}
+                                            {course.progress === 100 ? 'Certificado' : 'Bloqueado'}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -176,7 +200,7 @@ export default function MyCoursesPage() {
                                     <Link href={`/learn/${course.id}`} className="w-full">
                                         <Button className="w-full gap-2 bg-[#1F2937] hover:bg-[#374151] text-white border border-gray-700">
                                             <PlayCircle size={16} />
-                                            {activeTab === 'completed' ? "Repasar Curso" : "Continuar Viendo"}
+                                            {activeTab === 'completed' ? "Repasar Curso" : activeTab === 'not-started' ? "Empezar Curso" : "Continuar Viendo"}
                                         </Button>
                                     </Link>
                                 </CardFooter>
