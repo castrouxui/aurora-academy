@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import { Logo } from "@/components/layout/Logo";
 import { signIn } from "next-auth/react";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -16,6 +17,7 @@ interface LoginModalProps {
 }
 
 export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: LoginModalProps) {
+    useBodyScrollLock(isOpen);
     if (!isOpen) return null;
 
 

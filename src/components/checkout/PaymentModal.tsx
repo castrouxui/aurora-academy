@@ -6,6 +6,7 @@ import { X, Wallet as WalletIcon } from 'lucide-react';
 import { useSession } from "next-auth/react";
 import { QRCodeSVG as QRCode } from 'qrcode.react';
 import { useRouter } from 'next/navigation';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 interface PaymentModalProps {
     isOpen: boolean;
@@ -17,6 +18,7 @@ interface PaymentModalProps {
 }
 
 export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, courseId, userId }: PaymentModalProps) {
+    useBodyScrollLock(isOpen);
     const { data: session } = useSession();
     const router = useRouter();
     const effectiveUserId = userId || session?.user?.id;
@@ -121,7 +123,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 <div className="flex items-center justify-between p-6 border-b border-gray-800 bg-[#1a1f2e]">
                     <div className="flex items-center gap-3">
                         <div className="bg-primary/20 p-2 rounded-lg">
-                            <Wallet className="w-6 h-6 text-primary" />
+                            <WalletIcon className="w-6 h-6 text-primary" />
                             {/* Note: Wallet icon from lucide-react might collide with Wallet brick from MP. 
                                 I will import CreditCard from lucide instead to avoid name clash or rename import. 
                                 Checking imports... Wallet is from MP. I'll use a text header for now or simple SVG.
