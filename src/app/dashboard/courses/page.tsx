@@ -127,7 +127,7 @@ export default function MyCoursesPage() {
                             {activeTab === 'completed' ? "¡Sigue aprendiendo para conseguir tus certificados!" : "Explora nuestro catálogo y comienza a aprender hoy mismo."}
                         </p>
                         {activeTab === 'in-progress' && (
-                            <Link href="/courses">
+                            <Link href="/dashboard/explore">
                                 <Button className="bg-primary hover:bg-primary/90">Explorar Cursos</Button>
                             </Link>
                         )}
