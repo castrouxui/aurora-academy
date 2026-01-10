@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,6 +42,64 @@ export default function AdminSettingsPage() {
                     </div>
                 </CardContent>
             </Card>
+
+            <AdminRecoveryCard />
         </div>
+    );
+}
+
+function AdminRecoveryCard() {
+    const [loading, setLoading] = useState(false);
+    const [result, setResult] = useState<null | { recovered: number, message: string }>(null);
+
+    const handleRecover = async () => {
+        setLoading(true);
+        setResult(null);
+        try {
+            const res = await fetch('/api/admin/recover', { method: 'POST' });
+            const data = await res.json();
+            if (res.ok) {
+                setResult({
+                    recovered: data.recovered,
+                    message: data.recovered > 0
+                        ? `¡Éxito! Se recuperaron ${data.recovered} ventas.`
+                        : "No se encontraron nuevas ventas para recuperar."
+                });
+            } else {
+                setResult({ recovered: 0, message: `Error: ${data.error || 'Desconocido'}` });
+            }
+        } catch (error) {
+            setResult({ recovered: 0, message: "Error de conexión." });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <Card className="bg-[#1F2937] border-gray-700 border-l-4 border-l-blue-500">
+            <CardHeader>
+                <CardTitle className="text-white">Recuperación de Datos</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                <p className="text-sm text-gray-400">
+                    Si ves inconsistencias en las ventas (ej: en MercadoPago están aprobadas pero no aquí),
+                    ejecuta esta herramienta para sincronizar la base de datos.
+                </p>
+                <div className="flex items-center gap-4">
+                    <Button
+                        onClick={handleRecover}
+                        disabled={loading}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                        {loading ? "Sincronizando..." : "Sincronizar Ventas con MercadoPago"}
+                    </Button>
+                    {result && (
+                        <span className={`text-sm font-medium ${result.message.includes("Error") ? "text-red-400" : "text-green-400"}`}>
+                            {result.message}
+                        </span>
+                    )}
+                </div>
+            </CardContent>
+        </Card>
     );
 }
