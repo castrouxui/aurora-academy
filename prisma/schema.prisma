@@ -7,8 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// NextAuth Models
-
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -22,8 +20,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -37,15 +34,15 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
-  role          String    @default("ESTUDIANTE")
+  role          String     @default("ESTUDIANTE")
   accounts      Account[]
-  sessions      Session[]
   purchases     Purchase[]
+  sessions      Session[]
 }
 
 model VerificationToken {
@@ -56,90 +53,76 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// App Models
-
 model Course {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
   description String?
   price       Decimal
   imageUrl    String?
-  category    String   @default("General")
-  published   Boolean  @default(false)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  category    String     @default("General")
+  published   Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   modules     Module[]
   purchases   Purchase[]
 }
 
 model Module {
-  id          String   @id @default(cuid())
-  title       String
-  position    Int
-  
-  courseId    String
-  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  
-  lessons     Lesson[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  id        String   @id @default(cuid())
+  title     String
+  position  Int
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lessons   Lesson[]
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
   @@index([courseId])
 }
 
 model Lesson {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
   description String?
-  videoUrl    String?  // URL to video content (e.g. YouTube, Vimeo, S3)
-  content     String?  // Markdown content
-  position    Int      // Order in the module
-  published   Boolean  @default(false)
-
+  videoUrl    String?
+  content     String?
+  position    Int
+  published   Boolean    @default(false)
   moduleId    String
-  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  module      Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   resources   Resource[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+
   @@index([moduleId])
 }
 
 model Resource {
-  id          String   @id @default(cuid())
-  title       String
-  url         String
-  type        String   @default("PDF") // PDF, LINK, etc.
-  
-  lessonId    String
-  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  id        String   @id @default(cuid())
+  title     String
+  url       String
+  type      String   @default("PDF")
+  lessonId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
   @@index([lessonId])
 }
 
 model Purchase {
-  id              String   @id @default(cuid())
-  userId          String
-  courseId        String
-  amount          Decimal
-  status          String   // 'approved', 'pending', 'rejected'
-  paymentId       String?  // Mercado Pago Payment ID
-  preferenceId    String?  // Mercado Pago Preference ID
-  
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  userId       String
+  courseId     String
+  amount       Decimal
+  status       String
+  paymentId    String?
+  preferenceId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  course       Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-    
   @@index([userId])
   @@index([courseId])
 }

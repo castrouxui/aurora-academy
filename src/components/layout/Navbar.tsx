@@ -25,13 +25,17 @@ export function Navbar() {
 
   const getLinkClass = (path: string) => {
     const isActive = pathname === path;
-    return `text-sm font-medium transition-colors ${isActive ? "text-white font-bold" : "text-gray-300 hover:text-white"
+    return `text-sm font-medium transition-all px-4 py-2 rounded-full ${isActive
+      ? "bg-primary/20 text-primary font-bold shadow-[0_0_10px_rgba(var(--primary),0.3)]"
+      : "text-gray-300 hover:text-white hover:bg-white/5"
       }`;
   };
 
   const getMobileLinkClass = (path: string) => {
     const isActive = pathname === path;
-    return `text-base font-medium transition-colors ${isActive ? "text-primary font-bold" : "text-gray-300 hover:text-primary"
+    return `flex items-center w-full px-4 py-3 text-base font-medium transition-colors rounded-lg ${isActive
+      ? "bg-primary/10 text-primary border-l-4 border-primary"
+      : "text-gray-300 hover:text-white hover:bg-white/5"
       }`;
   };
 

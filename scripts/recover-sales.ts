@@ -50,7 +50,16 @@ async function main() {
             let userId = metadata.user_id;
             let courseId = metadata.course_id;
 
-            // Check if purchase exists
+            // Validate if userId exists in DB (since DB was reset)
+            if (userId) {
+                const userExists = await prisma.user.findUnique({ where: { id: userId } });
+                if (!userExists) {
+                    console.log(`   > User ID ${userId} from metadata not found in DB. Falling back to email.`);
+                    userId = null;
+                }
+            }
+
+            // Check if purchase exists (using paymentId as unique key)
             const exists = await prisma.purchase.findFirst({
                 where: { paymentId: paymentId }
             });
@@ -63,15 +72,29 @@ async function main() {
             console.log(`[NEW] Payment ${paymentId} ($${amount}) by ${email} is MISSING.`);
 
             // RESOLVE USER
-            if (!userId && email) {
+            if (!userId) {
+                if (!email) {
+                    console.log(`   > No metadata user_id and no email. Skipping (likely POS payment).`);
+                    continue;
+                }
+
                 console.log(`   > Looking up user by email: ${email}`);
                 const user = await prisma.user.findUnique({ where: { email } });
                 if (user) {
                     userId = user.id;
                     console.log(`   > Found user: ${user.name} (${user.id})`);
                 } else {
-                    console.log(`   > User not found for email ${email}. Skipping.`);
-                    continue;
+                    console.log(`   > User not found for email ${email}. Creating new user...`);
+                    const payer: any = p.payer || {};
+                    const newUser = await prisma.user.create({
+                        data: {
+                            email: email,
+                            name: payer.first_name ? `${payer.first_name} ${payer.last_name || ''}`.trim() : "Usuario Recuperado",
+                            image: `https://ui-avatars.com/api/?name=${email}&background=random`
+                        }
+                    });
+                    userId = newUser.id;
+                    console.log(`   > Created user: ${newUser.name} (${newUser.id})`);
                 }
             }
 
@@ -80,6 +103,11 @@ async function main() {
                 // Try to guess from description or items
                 const description = p.description || "";
                 const title = p.additional_info?.items?.[0]?.title || description;
+
+                if (!title || title.trim() === "") {
+                    console.log(`   > No title found. Skipping.`);
+                    continue;
+                }
 
                 console.log(`   > Looking up course by title: "${title}"`);
                 const course = await prisma.course.findFirst({
