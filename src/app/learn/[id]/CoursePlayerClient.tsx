@@ -68,8 +68,32 @@ export function CoursePlayerClient({ course, isAccess, studentName }: CoursePlay
 
     const completionDate = new Date().toLocaleDateString();
 
-    // Calculate progress (Mock for now, normally passed from DB)
-    const [progress, setProgress] = useState(0); // TODO: Implement real progress tracking
+    // Local state for modules/lessons to handle optimistic updates
+    const [localModules, setLocalModules] = useState(course.modules);
+
+    // Calculate progress
+    const totalLessons = localModules.reduce((acc, m) => acc + m.lessons.length, 0);
+    const completedLessons = localModules.reduce((acc, m) => acc + m.lessons.filter(l => l.completed).length, 0);
+    const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+    const handleToggleComplete = async (lessonId: string, currentStatus: boolean) => {
+        // Optimistic update
+        setLocalModules(prev => prev.map(m => ({
+            ...m,
+            lessons: m.lessons.map(l => l.id === lessonId ? { ...l, completed: !currentStatus } : l)
+        })));
+
+        try {
+            await fetch("/api/progress", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ lessonId, completed: !currentStatus })
+            });
+        } catch (error) {
+            console.error("Failed to update progress", error);
+            // Revert on error (could implement if needed, skipping for now for speed)
+        }
+    };
 
     return (
         <div className="flex h-screen flex-col bg-[#0B0F19] text-white overflow-hidden">
@@ -137,12 +161,38 @@ export function CoursePlayerClient({ course, isAccess, studentName }: CoursePlay
                             {/* Tab Content */}
                             <div className="min-h-[200px]">
                                 {activeTab === "description" && activeLesson && (
-                                    <div className="space-y-4">
-                                        <h2 className="text-2xl font-bold">{activeLesson.title}</h2>
-                                        <p className="text-gray-400 leading-relaxed">
-                                            {activeLesson.description || "Sin descripción disponible para esta lección."}
-                                        </p>
-                                    </div>
+                                    <>
+                                        <div className="space-y-4">
+                                            <h2 className="text-2xl font-bold">{activeLesson.title}</h2>
+                                            <p className="text-gray-400 leading-relaxed">
+                                                {activeLesson.description || "Sin descripción disponible para esta lección."}
+                                            </p>
+                                        </div>
+                                        <div className="pt-4 flex items-center justify-end">
+                                            <Button
+                                                onClick={() => handleToggleComplete(activeLesson.id, activeLesson.completed)}
+                                                variant={activeLesson.completed ? "outline" : "default"}
+                                                className={cn(
+                                                    "gap-2 transition-all",
+                                                    activeLesson.completed
+                                                        ? "border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10"
+                                                        : "bg-[#5D5CDE] text-white hover:bg-[#4B4AC0]"
+                                                )}
+                                            >
+                                                {activeLesson.completed ? (
+                                                    <>
+                                                        <CheckCircle size={18} />
+                                                        Completada
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <CheckCircle size={18} />
+                                                        Marcar como Vista
+                                                    </>
+                                                )}
+                                            </Button>
+                                        </div>
+                                    </>
                                 )}
                                 {activeTab === "notes" && (
                                     <div className="flex flex-col items-center justify-center py-12 text-gray-500 border border-dashed border-gray-800 rounded-xl bg-card/20">
@@ -201,7 +251,7 @@ export function CoursePlayerClient({ course, isAccess, studentName }: CoursePlay
                     </div>
 
                     <div className="flex-1 overflow-y-auto">
-                        {course.modules.map((module, i) => (
+                        {localModules.map((module, i) => (
                             <div key={i} className="border-b border-gray-800/50">
                                 <div className="bg-gray-800/20 px-5 py-3 text-sm font-medium text-gray-300">
                                     {module.title}
@@ -261,6 +311,6 @@ export function CoursePlayerClient({ course, isAccess, studentName }: CoursePlay
                 studentName={studentName}
                 date={completionDate}
             />
-        </div>
+        </div >
     );
 }

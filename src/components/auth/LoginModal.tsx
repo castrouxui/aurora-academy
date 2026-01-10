@@ -40,17 +40,36 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
         const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
         const password = (e.currentTarget.elements.namedItem('password') as HTMLInputElement).value;
 
-        // Determine callback URL
-        let callback = redirectUrl;
-        if (!callback) {
-            callback = email.includes("admin") ? "/admin" : "/dashboard/courses";
-        }
+        try {
+            const result = await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+            });
 
-        await signIn("credentials", {
-            email,
-            password,
-            callbackUrl: callback
-        });
+            if (result?.error) {
+                // You could add error handling state here if needed
+                console.error("Login failed:", result.error);
+                return;
+            }
+
+            if (result?.ok) {
+                // Fetch the session to check the role
+                const session = await getProviders().then(() => fetch("/api/auth/session").then(res => res.json()));
+
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                } else if (session?.user?.role === "ADMIN") {
+                    window.location.href = "/admin";
+                } else {
+                    window.location.href = "/dashboard";
+                }
+
+                onClose();
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+        }
     };
 
     return (

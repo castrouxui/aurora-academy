@@ -28,7 +28,7 @@ export function CourseDetailContent({
             <div className="absolute top-0 left-0 right-0 h-[500px] bg-[#1F2937] z-0"></div>
 
             <div className="relative z-10">
-                <Container className="pt-32 pb-12">
+                <Container className="pt-24 pb-12">
                     {/* Breadcrumbs */}
                     {breadcrumbs && (
                         <nav className="flex items-center text-sm text-gray-400 mb-8 overflow-x-auto whitespace-nowrap pb-2">

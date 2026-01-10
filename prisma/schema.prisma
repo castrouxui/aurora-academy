@@ -43,6 +43,22 @@ model User {
   accounts      Account[]
   purchases     Purchase[]
   sessions      Session[]
+  progress      UserProgress[]
+}
+
+model UserProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  lessonId  String
+  completed Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@index([lessonId])
 }
 
 model VerificationToken {
@@ -94,6 +110,7 @@ model Lesson {
   updatedAt   DateTime   @updatedAt
   module      Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   resources   Resource[]
+  progress    UserProgress[]
 
   @@index([moduleId])
 }
