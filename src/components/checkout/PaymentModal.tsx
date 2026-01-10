@@ -220,7 +220,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                 </div>
 
                                 {/* Step 2 QR */}
-                                <div>
+                                <div className="hidden md:block">
                                     <div className="flex items-center gap-3 mb-3 mt-8">
                                         <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-800 text-gray-400 text-xs font-bold border border-gray-700">2</div>
                                         <h4 className="text-sm font-medium text-gray-300">O escanea el código QR</h4>

@@ -67,8 +67,36 @@ export default function MyCoursesPage() {
             }
         }
 
+        async function verifyPayment() {
+            // Check for payment params in URL
+            const params = new URLSearchParams(window.location.search);
+            const paymentId = params.get("payment_id");
+            const status = params.get("status");
+
+            if (status === "approved" && paymentId) {
+                console.log("Verifying payment...", paymentId);
+                // Optional: Show a toast or loading indicator here
+
+                try {
+                    const res = await fetch("/api/payment/verify", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ paymentId }),
+                    });
+
+                    if (res.ok) {
+                        console.log("Payment verified successfully");
+                        // Clear params to avoid re-verifying
+                        router.replace("/dashboard/courses");
+                    }
+                } catch (error) {
+                    console.error("Payment verification failed", error);
+                }
+            }
+        }
+
         if (session?.user) {
-            fetchCourses();
+            verifyPayment().then(() => fetchCourses());
         } else {
             setCourses(MOCK_COURSES);
             setLoading(false);
