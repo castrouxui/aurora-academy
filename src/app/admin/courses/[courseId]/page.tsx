@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, ArrowLeft, Plus, Video, Eye, EyeOff, FolderPlus, UploadCloud, FileVideo } from "lucide-react";
+import { Plus, Video, Trash2, Edit, Save, PlusCircle, LayoutList, ChevronUp, ChevronDown, Check, X, GripVertical, MoreVertical, FileVideo, UploadCloud, FolderPlus, EyeOff, Loader2, LinkIcon, File, ArrowLeft, Eye } from "lucide-react";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 
@@ -384,162 +384,245 @@ export default function CourseEditorPage() {
 
                     {/* Add Lesson Dialog (Shared) */}
                     <Dialog open={isAddLessonOpen} onOpenChange={setIsAddLessonOpen}>
-                        <DialogContent className="bg-[#1F2937] border-gray-700 text-white">
-                            <DialogHeader>
-                                <DialogTitle>{activeLessonId ? "Editar Clase & Recursos" : "Agregar Clase"}</DialogTitle>
+                        <DialogContent className="bg-[#0f111a] border border-gray-800 text-white sm:max-w-[600px] shadow-2xl p-0 overflow-hidden rounded-2xl">
+                            {/* Premium Header */}
+                            <DialogHeader className="px-6 py-5 border-b border-gray-800 bg-[#141824]/50 backdrop-blur-sm">
+                                <DialogTitle className="text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                                    {activeLessonId ? "Editar Contenido" : "Nueva Clase"}
+                                </DialogTitle>
+                                <p className="text-xs text-gray-500 mt-1">
+                                    {activeLessonId ? "Administra el contenido y los recursos de esta lección." : "Agrega una nueva lección al módulo."}
+                                </p>
                             </DialogHeader>
-                            <form onSubmit={handleAddLesson} className="space-y-4 py-4">
-                                <div className="space-y-2">
-                                    <Label>Título de la Clase</Label>
-                                    <Input
-                                        value={lessonTitle}
-                                        onChange={(e) => setLessonTitle(e.target.value)}
-                                        className="bg-[#121620] border-gray-600"
-                                        placeholder="Ej: Análisis Fundamental"
-                                        required
-                                    />
-                                </div>
 
-                                <div className="space-y-2">
-                                    <Label>Video</Label>
-                                    <div className="border-2 border-dashed border-gray-600 rounded-lg p-6 flex flex-col items-center justify-center bg-[#121620]/50 hover:bg-[#121620] transition-colors cursor-pointer relative">
-                                        {isUploading ? (
-                                            <div className="flex flex-col items-center gap-2">
-                                                <Loader2 className="h-8 w-8 animate-spin text-[#5D5CDE]" />
-                                                <span className="text-xs text-gray-400">Subiendo video...</span>
-                                            </div>
-                                        ) : lessonUrl ? (
-                                            <div className="flex flex-col items-center gap-2 w-full">
-                                                <div className="w-full bg-black/50 p-2 rounded flex items-center gap-2 overflow-hidden">
-                                                    <FileVideo size={16} className="text-[#5D5CDE] flex-shrink-0" />
-                                                    <span className="text-xs text-gray-300 truncate">{lessonUrl}</span>
+                            <form onSubmit={handleAddLesson} className="flex flex-col max-h-[85vh]">
+                                <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+
+                                    {/* Title Section */}
+                                    <div className="space-y-3">
+                                        <Label className="text-sm font-medium text-gray-300">Título de la Clase</Label>
+                                        <div className="relative group">
+                                            <Input
+                                                value={lessonTitle}
+                                                onChange={(e) => setLessonTitle(e.target.value)}
+                                                className="bg-[#1a1f2e] border-gray-700 focus:border-[#5D5CDE] text-white h-12 rounded-xl transition-all pl-4 text-base shadow-sm group-hover:border-gray-600"
+                                                placeholder="Ej: Introducción a Velas Japonesas"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Video Upload Section */}
+                                    <div className="space-y-3">
+                                        <div className="flex items-center justify-between">
+                                            <Label className="text-sm font-medium text-gray-300">Video de la Clase</Label>
+                                            {lessonUrl && (
+                                                <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                                                    Video cargado
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div className={`relative group border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center transition-all duration-300 ease-out 
+                                            ${lessonUrl ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-gray-700 bg-[#1a1f2e]/30 hover:bg-[#1a1f2e] hover:border-[#5D5CDE]/50'}`}>
+
+                                            {isUploading ? (
+                                                <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
+                                                    <div className="relative">
+                                                        <div className="h-12 w-12 rounded-full border-4 border-gray-700"></div>
+                                                        <div className="absolute top-0 left-0 h-12 w-12 rounded-full border-4 border-[#5D5CDE] border-t-transparent animate-spin"></div>
+                                                    </div>
+                                                    <div className="text-center">
+                                                        <p className="text-sm font-medium text-white">Subiendo tu video...</p>
+                                                        <p className="text-xs text-gray-500 mt-1">Esto puede tardar unos segundos</p>
+                                                    </div>
                                                 </div>
-                                                <label htmlFor="file-upload" className="text-xs text-[#5D5CDE] hover:underline cursor-pointer mt-2">
-                                                    Cambiar archivo
-                                                </label>
+                                            ) : lessonUrl ? (
+                                                <div className="w-full flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                                    <div className="h-16 w-16 rounded-2xl bg-[#0f1118] flex items-center justify-center border border-gray-700 shadow-lg">
+                                                        <FileVideo size={32} className="text-emerald-400" />
+                                                    </div>
+                                                    <div className="text-center w-full px-4">
+                                                        <p className="text-sm text-gray-300 font-medium truncate max-w-full block">{lessonUrl}</p>
+                                                        <p className="text-xs text-gray-500 mt-1 mb-4">Listo para reproducir</p>
+                                                        <label htmlFor="file-upload" className="inline-flex items-center gap-2 text-xs font-medium text-[#5D5CDE] bg-[#5D5CDE]/10 px-3 py-1.5 rounded-lg hover:bg-[#5D5CDE]/20 cursor-pointer transition-colors">
+                                                            <UploadCloud size={12} />
+                                                            Reemplazar video
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <div className="h-14 w-14 rounded-2xl bg-[#1a1f2e] group-hover:bg-[#5D5CDE] transition-colors flex items-center justify-center mb-4 shadow-xl border border-gray-700 group-hover:border-[#5D5CDE]">
+                                                        <UploadCloud className="h-7 w-7 text-gray-400 group-hover:text-white transition-colors" />
+                                                    </div>
+                                                    <p className="text-sm text-gray-300 font-medium mb-1">
+                                                        Arrastra tu video aquí
+                                                    </p>
+                                                    <p className="text-xs text-gray-500 mb-4">
+                                                        o haz clic para explorar tus archivos
+                                                    </p>
+                                                    <span className="text-[10px] text-gray-600 bg-gray-900 px-2 py-1 rounded border border-gray-800">
+                                                        MP4, WebM • Max 500MB
+                                                    </span>
+                                                </>
+                                            )}
+                                            <input
+                                                id="file-upload"
+                                                type="file"
+                                                accept="video/*"
+                                                className="absolute inset-0 opacity-0 cursor-pointer"
+                                                onChange={handleFileUpload}
+                                                disabled={isUploading}
+                                            />
+                                        </div>
+
+                                        {/* URL fallback */}
+                                        <div className="relative mt-2">
+                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <LinkIcon size={14} className="text-gray-500" />
                                             </div>
-                                        ) : (
-                                            <>
-                                                <UploadCloud className="h-10 w-10 text-gray-500 mb-2" />
-                                                <p className="text-sm text-gray-400 text-center">
-                                                    <span className="text-[#5D5CDE] font-bold">Haz clic para subir</span> o arrastra el video aquí
-                                                </p>
-                                                <p className="text-xs text-gray-600 mt-1">MP4, WebM (Max 100MB prueba)</p>
-                                            </>
-                                        )}
-                                        <input
-                                            id="file-upload"
-                                            type="file"
-                                            accept="video/*"
-                                            className="absolute inset-0 opacity-0 cursor-pointer"
-                                            onChange={handleFileUpload}
-                                            disabled={isUploading}
+                                            <Input
+                                                value={lessonUrl}
+                                                onChange={(e) => setLessonUrl(e.target.value)}
+                                                className="bg-[#1a1f2e] border-gray-800 text-xs pl-9 h-9 placeholder:text-gray-600 focus:border-[#5D5CDE] transition-colors rounded-lg"
+                                                placeholder="O pega una URL directa (YouTube/Vimeo)"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Description */}
+                                    <div className="space-y-3">
+                                        <Label className="text-sm font-medium text-gray-300">Descripción</Label>
+                                        <Textarea
+                                            value={lessonDesc}
+                                            onChange={(e) => setLessonDesc(e.target.value)}
+                                            className="bg-[#1a1f2e] border-gray-700 focus:border-[#5D5CDE] min-h-[100px] text-sm text-gray-300 rounded-xl resize-none p-4"
+                                            placeholder="¿De qué trata esta clase?"
                                         />
                                     </div>
-                                    <div className="mt-2 text-center">
-                                        <span className="text-xs text-gray-500">O ingresa una URL externa (YouTube/Vimeo)</span>
-                                    </div>
-                                    <Input
-                                        value={lessonUrl}
-                                        onChange={(e) => setLessonUrl(e.target.value)}
-                                        className="bg-[#121620] border-gray-600 text-xs"
-                                        placeholder="https://..."
-                                    />
+
+                                    {/* Resources Section - Collapsible or distinct */}
+                                    {activeLessonId && (
+                                        <div className="pt-6 border-t border-gray-800">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <Label className="text-sm font-medium text-white flex items-center gap-2">
+                                                    <FolderPlus size={16} className="text-[#5D5CDE]" />
+                                                    Recursos Adicionales
+                                                </Label>
+                                                <span className="text-[10px] text-gray-500 bg-[#1a1f2e] px-2 py-0.5 rounded border border-gray-800">
+                                                    Archivos descargables
+                                                </span>
+                                            </div>
+
+                                            <div className="bg-[#0b0e14] rounded-xl border border-gray-800 p-1 space-y-1 mb-4">
+                                                {course?.modules
+                                                    .find(m => m.id === activeModuleId)
+                                                    ?.lessons.find(l => l.id === activeLessonId)
+                                                    ?.resources.length === 0 && (
+                                                        <div className="text-center py-6">
+                                                            <p className="text-xs text-gray-500 italic">No hay recursos agregados aún.</p>
+                                                        </div>
+                                                    )}
+
+                                                {course?.modules
+                                                    .find(m => m.id === activeModuleId)
+                                                    ?.lessons.find(l => l.id === activeLessonId)
+                                                    ?.resources.map(resource => (
+                                                        <div key={resource.id} className="group flex items-center justify-between p-3 rounded-lg hover:bg-[#1a1f2e] transition-colors border border-transparent hover:border-gray-800">
+                                                            <div className="flex items-center gap-3 overflow-hidden">
+                                                                <div className="h-8 w-8 rounded bg-[#5D5CDE]/10 flex items-center justify-center text-[#5D5CDE]">
+                                                                    <File size={14} />
+                                                                </div>
+                                                                <div className="flex flex-col min-w-0">
+                                                                    <span className="text-xs text-gray-200 font-medium truncate">{resource.title}</span>
+                                                                    <a href={resource.url} target="_blank" className="text-[10px] text-gray-500 hover:text-[#5D5CDE] truncate transition-colors">Abrir recurso</a>
+                                                                </div>
+                                                            </div>
+                                                            <Button
+                                                                variant="ghost"
+                                                                size="icon"
+                                                                className="h-7 w-7 text-gray-600 hover:text-red-400 hover:bg-red-400/10 opacity-0 group-hover:opacity-100 transition-all rounded-md"
+                                                                onClick={() => handleDeleteResource(resource.id)}
+                                                            >
+                                                                <Trash2 size={12} />
+                                                            </Button>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+
+                                            <div className="flex gap-2 p-3 bg-[#1a1f2e]/50 rounded-xl border border-gray-800 items-start">
+                                                <div className="flex-1 space-y-2">
+                                                    <Input
+                                                        value={resourceTitle}
+                                                        onChange={(e) => setResourceTitle(e.target.value)}
+                                                        placeholder="Nombre del archivo (Ej: PDF Resumen)"
+                                                        className="h-9 bg-[#0b0e14] border-gray-700 text-xs focus:ring-1 focus:ring-[#5D5CDE]"
+                                                    />
+                                                    <div className="flex gap-2">
+                                                        <div className="relative flex-1">
+                                                            <Input
+                                                                value={resourceUrl}
+                                                                onChange={(e) => setResourceUrl(e.target.value)}
+                                                                placeholder="URL o subir archivo..."
+                                                                className="h-9 bg-[#0b0e14] border-gray-700 text-xs pl-8 focus:ring-1 focus:ring-[#5D5CDE]"
+                                                            />
+                                                            <LinkIcon size={12} className="absolute top-2.5 left-2.5 text-gray-600" />
+                                                        </div>
+                                                        <label className={`cursor-pointer h-9 w-9 flex items-center justify-center rounded-lg bg-[#1F2937] hover:bg-gray-700 border border-gray-600 transition-colors ${isUploading ? 'opacity-50' : ''}`}>
+                                                            {isUploading ? <Loader2 size={14} className="animate-spin text-gray-400" /> : <UploadCloud size={14} className="text-gray-300" />}
+                                                            <input type="file" className="hidden" onChange={handleResourceUpload} disabled={isUploading} />
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <Button
+                                                    type="button"
+                                                    onClick={handleAddResource}
+                                                    disabled={!resourceTitle || !resourceUrl || isAddingResource}
+                                                    className="h-[76px] w-12 bg-[#5D5CDE]/10 hover:bg-[#5D5CDE]/20 border border-[#5D5CDE]/20 text-[#5D5CDE] rounded-xl flex items-center justify-center"
+                                                >
+                                                    {isAddingResource ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus size={20} />}
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    )}
+
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label>Descripción (Opcional)</Label>
-                                    <Textarea
-                                        value={lessonDesc}
-                                        onChange={(e) => setLessonDesc(e.target.value)}
-                                        className="bg-[#121620] border-gray-600"
-                                    />
-                                </div>
-                                <DialogFooter>
-                                    <Button type="submit" disabled={isSubmittingLesson || isUploading} className="bg-[#5D5CDE] text-white flex-1">
-                                        {isSubmittingLesson ? <Loader2 className="animate-spin" /> : (activeLessonId ? "Actualizar Clase" : "Crear Clase")}
-                                    </Button>
+                                {/* Footer Actions */}
+                                <DialogFooter className="px-6 py-4 border-t border-gray-800 bg-[#141824]/50 backdrop-blur-sm gap-3">
                                     {activeLessonId && (
                                         <Button
                                             type="button"
-                                            variant="destructive"
+                                            variant="ghost"
                                             disabled={isSubmittingLesson}
                                             onClick={handleDeleteLesson}
+                                            className="text-red-400 hover:text-red-300 hover:bg-red-400/10 mr-auto px-4"
                                         >
-                                            Eliminar
+                                            <Trash2 size={16} className="mr-2" />
+                                            Eliminar Clase
                                         </Button>
                                     )}
+                                    <Button type="button" variant="outline" onClick={() => setIsAddLessonOpen(false)} className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white">
+                                        Cancelar
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        disabled={isSubmittingLesson || isUploading}
+                                        className="bg-gradient-to-r from-[#5D5CDE] to-[#4B4AC0] hover:from-[#4B4AC0] hover:to-[#3e3db3] text-white shadow-lg shadow-[#5D5CDE]/25 px-8 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                    >
+                                        {isSubmittingLesson ? (
+                                            <>
+                                                <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                                                Guardando...
+                                            </>
+                                        ) : (
+                                            activeLessonId ? "Guardar Cambios" : "Crear Clase"
+                                        )}
+                                    </Button>
                                 </DialogFooter>
                             </form>
-
-                            {activeLessonId && (
-                                <div className="border-t border-gray-700 pt-4 mt-4">
-                                    <h4 className="text-sm font-semibold text-white mb-3">Recursos Descargables</h4>
-
-                                    {/* List existing resources */}
-                                    <div className="space-y-2 mb-4">
-                                        {course?.modules
-                                            .find(m => m.id === activeModuleId)
-                                            ?.lessons.find(l => l.id === activeLessonId)
-                                            ?.resources.map(resource => (
-                                                <div key={resource.id} className="flex items-center justify-between bg-[#121620] p-2 rounded border border-gray-700">
-                                                    <div className="flex items-center gap-2 overflow-hidden">
-                                                        <FolderPlus size={14} className="text-[#5D5CDE] shrink-0" />
-                                                        <div className="flex flex-col">
-                                                            <span className="text-xs text-white truncate max-w-[200px]">{resource.title}</span>
-                                                            <a href={resource.url} target="_blank" className="text-[10px] text-gray-400 hover:text-[#5D5CDE] truncate max-w-[200px]">{resource.url}</a>
-                                                        </div>
-                                                    </div>
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-6 w-6 text-gray-400 hover:text-red-400"
-                                                        onClick={() => handleDeleteResource(resource.id)}
-                                                    >
-                                                        <EyeOff size={12} />
-                                                    </Button>
-                                                </div>
-                                            ))
-                                        }
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <Input
-                                                value={resourceTitle}
-                                                onChange={(e) => setResourceTitle(e.target.value)}
-                                                placeholder="Título del recurso"
-                                                className="bg-[#121620] border-gray-600 text-xs h-8"
-                                            />
-                                            <div className="flex gap-1">
-                                                <Input
-                                                    value={resourceUrl}
-                                                    onChange={(e) => setResourceUrl(e.target.value)}
-                                                    placeholder="URL o Archivo"
-                                                    className="bg-[#121620] border-gray-600 text-xs h-8 flex-1"
-                                                />
-                                                <label className={`cursor-pointer bg-[#1F2937] hover:bg-gray-700 border border-gray-600 text-white rounded h-8 w-8 flex items-center justify-center flex-shrink-0 ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}>
-                                                    {isUploading ? <Loader2 size={12} className="animate-spin" /> : <UploadCloud size={14} />}
-                                                    <input
-                                                        type="file"
-                                                        className="hidden"
-                                                        onChange={handleResourceUpload}
-                                                        disabled={isUploading}
-                                                    />
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <Button
-                                            type="button"
-                                            onClick={handleAddResource}
-                                            disabled={!resourceTitle || !resourceUrl || isAddingResource}
-                                            className="w-full h-8 text-xs bg-[#1F2937] hover:bg-gray-700 border border-gray-600"
-                                        >
-                                            {isAddingResource ? <Loader2 className="h-3 w-3 animate-spin" /> : "Agregar Recurso"}
-                                        </Button>
-                                    </div>
-                                </div>
-                            )}
                         </DialogContent>
                     </Dialog>
 

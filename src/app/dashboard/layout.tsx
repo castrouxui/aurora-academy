@@ -49,7 +49,7 @@ export default function DashboardLayout({
 
     const studentNav = [
         { name: "Mis Cursos", href: "/dashboard/courses", icon: BookOpen },
-        { name: "Explorar", href: "/courses", icon: Compass },
+        { name: "Explorar", href: "/dashboard/explore", icon: Compass },
         { name: "Certificados", href: "/dashboard/certificates", icon: GraduationCap },
     ];
 
