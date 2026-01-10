@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 import { Logo } from "@/components/layout/Logo";
-import { signIn } from "next-auth/react";
+import { signIn, getProviders, LiteralUnion, ClientSafeProvider } from "next-auth/react";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { useEffect } from "react";
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -18,10 +19,14 @@ interface LoginModalProps {
 
 export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: LoginModalProps) {
     useBodyScrollLock(isOpen);
-    if (!isOpen) return null;
-
-
     const [mode, setMode] = useState<'login' | 'register'>(view === 'purchase' ? 'register' : 'login');
+    const [providers, setProviders] = useState<Record<LiteralUnion<string>, ClientSafeProvider> | null>(null);
+
+    useEffect(() => {
+        getProviders().then(setProviders);
+    }, []);
+
+    if (!isOpen) return null;
 
     const isRegister = mode === 'register';
     const titleText = isRegister ? "Crea tu cuenta para continuar" : "Bienvenido de nuevo";
@@ -74,23 +79,32 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                 </div>
 
                 {/* Social Buttons */}
-                <div className="flex flex-col space-y-3">
-                    <Button
-                        onClick={() => signIn("google", { callbackUrl: redirectUrl || "/dashboard/courses" })}
-                        variant="outline"
-                        className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
-                    >
-                        <GoogleIcon />
-                        {googleText}
-                    </Button>
-                </div>
+                {providers?.google && (
+                    <div className="flex flex-col space-y-3">
+                        <Button
+                            onClick={() => signIn("google", { callbackUrl: redirectUrl || "/dashboard/courses" })}
+                            variant="outline"
+                            className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
+                        >
+                            <GoogleIcon />
+                            {googleText}
+                        </Button>
 
-                {/* Divider */}
-                <div className="my-6 flex items-center gap-4">
-                    <div className="h-[1px] flex-1 bg-gray-800"></div>
-                    <span className="text-sm text-gray-500">o</span>
-                    <div className="h-[1px] flex-1 bg-gray-800"></div>
-                </div>
+                        {/* Divider only if google is present */}
+                        <div className="my-6 flex items-center gap-4">
+                            <div className="h-[1px] flex-1 bg-gray-800"></div>
+                            <span className="text-sm text-gray-500">o</span>
+                            <div className="h-[1px] flex-1 bg-gray-800"></div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Fallback msg for dev if no providers */}
+                {!providers?.google && process.env.NODE_ENV === 'development' && (
+                    <p className="text-xs text-yellow-500 text-center mb-4">
+                        Google Login disabled (Missing Env Vars)
+                    </p>
+                )}
 
                 {/* Email/Password Form */}
                 <form

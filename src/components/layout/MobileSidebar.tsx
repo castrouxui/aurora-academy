@@ -16,7 +16,7 @@ interface NavItem {
 
 interface MobileSidebarProps {
     items: NavItem[];
-    role: "ADMIN" | "STUDENT";
+    role: "ADMIN" | "ESTUDIANTE";
     user?: {
         name?: string | null;
         email?: string | null;

@@ -19,8 +19,8 @@ export const authOptions: AuthOptions = {
             async authorize(credentials, req) {
                 // MOCK LOGIN FOR DEVELOPMENT
                 // Accept any credentials for the demo
-                const role = credentials?.email.includes("admin") ? "ADMIN" : "STUDENT";
-                const isStudent = role === "STUDENT";
+                const role = credentials?.email.includes("admin") ? "ADMIN" : "ESTUDIANTE";
+                const isStudent = role === "ESTUDIANTE";
 
                 // If no email provided (empty credentials), default to student
                 const email = credentials?.email || "alumno@aurora.com";
@@ -74,7 +74,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
                     name: profile.name,
                     email: profile.email,
                     image: profile.picture,
-                    role: "STUDENT", // Default role for new users
+                    role: "ESTUDIANTE", // Default role for new users
                 }
             },
         })

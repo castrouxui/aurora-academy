@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
-import { X, Wallet as WalletIcon } from 'lucide-react';
+import { X, ArrowRight, ShieldCheck, Lock, Zap } from 'lucide-react';
 import { useSession } from "next-auth/react";
 import { QRCodeSVG as QRCode } from 'qrcode.react';
 import { useRouter } from 'next/navigation';
@@ -28,21 +27,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
     const [isLoading, setIsLoading] = useState(false);
     const [initError, setInitError] = useState<string | null>(null);
 
-    useEffect(() => {
-        // Initialize once
-        const publicKey = process.env.NEXT_PUBLIC_MP_PUBLIC_KEY;
-        if (publicKey) {
-            try {
-                initMercadoPago(publicKey, { locale: 'es-AR' });
-            } catch (err) {
-                console.error("MP Init Error:", err);
-                setInitError("Error inicializando pagos.");
-            }
-        } else {
-            console.error("Missing NEXT_PUBLIC_MP_PUBLIC_KEY");
-            setInitError("Falta configuración de clave pública (Render Env Var).");
-        }
-    }, []);
+
 
     // Polling for Payment Status
     useEffect(() => {
@@ -111,121 +96,175 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
 
             createPreference();
         }
-    }, [isOpen, courseTitle, coursePrice, preferenceId]);
+    }, [isOpen, courseTitle, coursePrice, preferenceId, courseId, effectiveUserId]);
 
 
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="relative w-full max-w-2xl bg-[#121620] border border-gray-800 rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
-                {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-800 bg-[#1a1f2e]">
-                    <div className="flex items-center gap-3">
-                        <div className="bg-primary/20 p-2 rounded-lg">
-                            <WalletIcon className="w-6 h-6 text-primary" />
-                            {/* Note: Wallet icon from lucide-react might collide with Wallet brick from MP. 
-                                I will import CreditCard from lucide instead to avoid name clash or rename import. 
-                                Checking imports... Wallet is from MP. I'll use a text header for now or simple SVG.
-                             */}
+            <div className="bg-[#121620] w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden border border-gray-800 flex flex-col md:flex-row relative">
 
+                {/* Close Button (Absolute) */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 z-20 text-gray-400 hover:text-white bg-black/20 hover:bg-black/40 p-2 rounded-full transition-all"
+                >
+                    <X size={20} />
+                </button>
+
+                {/* LEFT COLUMN: Order Summary (Darker/Card style) */}
+                <div className="w-full md:w-5/12 bg-[#0d1017] p-8 flex flex-col border-r border-gray-800 relative overflow-hidden">
+
+                    {/* Background blob for visual interest */}
+                    <div className="absolute top-0 left-0 w-full h-32 bg-primary/5 blur-3xl pointer-events-none"></div>
+
+                    <div className="relative z-10 flex-1">
+                        <h3 className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
+                            Tu Resumen
+                        </h3>
+
+                        <div className="mb-8">
+                            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight">
+                                {courseTitle}
+                            </h2>
+                            <div className="flex items-end gap-2 mt-4">
+                                <span className="text-4xl font-bold text-white tracking-tight">{coursePrice}</span>
+                                <span className="text-gray-500 font-medium mb-1.5">ARS</span>
+                            </div>
                         </div>
-                        <h3 className="text-xl font-semibold text-white">Finalizar Compra</h3>
+
+                        {/* Features List */}
+                        <div className="space-y-4 mb-8">
+                            <div className="flex items-start gap-3 text-gray-300">
+                                <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
+                                    <Zap size={14} className="text-green-400" />
+                                </div>
+                                <span className="text-sm">Acceso inmediato y vitalicio al contenido.</span>
+                            </div>
+                            <div className="flex items-start gap-3 text-gray-300">
+                                <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
+                                    <ShieldCheck size={14} className="text-green-400" />
+                                </div>
+                                <span className="text-sm">Garantía de satisfacción de 7 días.</span>
+                            </div>
+                            <div className="flex items-start gap-3 text-gray-300">
+                                <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
+                                    <Lock size={14} className="text-green-400" />
+                                </div>
+                                <span className="text-sm">Pago encriptado y 100% seguro.</span>
+                            </div>
+                        </div>
                     </div>
-                    <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/5 rounded-full">
-                        <X size={20} />
-                    </button>
+
+                    {/* Trust Footer in Left Col */}
+                    <div className="relative z-10 mt-auto pt-6 border-t border-gray-800/50">
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <span>🛡️</span>
+                            <span>Compra protegida por Mercado Pago</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row">
-                    {/* Left Col: Order Summary (on desktop) or Top (mobile) */}
-                    <div className="w-full md:w-5/12 bg-[#1a1f2e]/50 p-6 border-b md:border-b-0 md:border-r border-gray-800 flex flex-col justify-center">
-                        <p className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">Tu Pedido</p>
+                {/* RIGHT COLUMN: Payment Actions */}
+                <div className="w-full md:w-7/12 bg-[#121620] relative flex flex-col">
 
-                        <div className="bg-[#1F2937] p-4 rounded-xl border border-gray-700 shadow-sm mb-6">
-                            <h4 className="font-bold text-white text-lg leading-tight mb-2">{courseTitle}</h4>
-                            <div className="flex items-baseline gap-1 mt-3">
-                                <span className="text-2xl font-bold text-primary">{coursePrice}</span>
-                                <span className="text-xs text-gray-500">final</span>
-                            </div>
-                        </div>
+                    <div className="p-8 flex-1 overflow-y-auto max-h-[80vh] md:max-h-full">
+                        <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                            Finalizar Compra
+                        </h3>
 
-                        <div className="space-y-3 text-sm text-gray-400">
-                            <div className="flex items-center gap-2">
-                                <span className="text-green-400">✓</span> Acceso inmediato
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-green-400">✓</span> Garantía de 48hs
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-green-400">✓</span> Pago seguro SSL
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Right Col: Payment Actions */}
-                    <div className="w-full md:w-7/12 p-6 md:p-8 bg-[#121620]">
                         {initError && (
-                            <div className="mb-6 p-4 bg-red-900/20 border border-red-800 rounded-lg flex items-center gap-3 text-red-200 text-sm">
+                            <div className="mb-6 p-4 bg-red-900/10 border border-red-900/30 rounded-lg flex items-center gap-3 text-red-300 text-sm">
                                 <X className="shrink-0 text-red-400" size={18} />
                                 {initError}
                             </div>
                         )}
 
                         {isLoading ? (
-                            <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
-                                <p className="text-gray-400 animate-pulse">Generando orden de pago...</p>
+                            <div className="flex flex-col items-center justify-center py-20">
+                                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary mb-4"></div>
+                                <p className="text-gray-400 animate-pulse text-sm">Conectando con Mercado Pago...</p>
                             </div>
                         ) : preferenceId ? (
-                            <div className="space-y-8">
-                                {/* Option 1: Main Button */}
+                            <div className="space-y-6">
+
+                                {/* Step 1 Button */}
                                 <div>
-                                    <p className="text-sm text-white font-medium mb-3 flex items-center gap-2">
-                                        <span className="bg-gray-700 text-xs w-5 h-5 rounded-full flex items-center justify-center">1</span>
-                                        Pagar con Mercado Pago
-                                    </p>
-                                    <div className="wallet-container relative z-10">
-                                        <Wallet
-                                            initialization={{ preferenceId: preferenceId }}
-                                            onError={(error) => {
-                                                console.error("Wallet Error:", error);
-                                                setInitError("Error cargando botón de pago.");
-                                            }}
-                                        // Customization removed for stability
-                                        />
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-bold border border-primary/30">1</div>
+                                        <h4 className="text-sm font-medium text-white">Ir a pagar</h4>
                                     </div>
+
+                                    <a
+                                        href={preferenceId ? initPoint! : "#"}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={`group relative w-full bg-[#009EE3] hover:bg-[#008ED6] text-white font-bold py-4 px-6 rounded-xl transition-all shadow-lg shadow-blue-900/20 hover:shadow-blue-900/40 flex items-center justify-between overflow-hidden ${!preferenceId ? 'pointer-events-none opacity-50' : ''}`}
+                                    >
+                                        <div className="flex items-center gap-3 z-10">
+                                            <div className="bg-black/10 p-2 rounded-lg">
+                                                <img
+                                                    src="/mercadopago.png"
+                                                    alt="Mercado Pago"
+                                                    className="h-5 w-auto brightness-0 invert object-contain"
+                                                />
+                                            </div>
+                                            <span className="text-lg">Pagar ahora</span>
+                                        </div>
+                                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform z-10" />
+
+                                        {/* Shine effect */}
+                                        <div className="absolute top-0 -left-full w-1/2 h-full bg-linear-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-[shimmer_2.5s_infinite]"></div>
+                                    </a>
                                 </div>
 
-                                {/* Divider */}
-                                <div className="relative flex items-center py-2">
-                                    <div className="flex-grow border-t border-gray-800"></div>
-                                    <span className="flex-shrink-0 mx-4 text-gray-500 text-xs uppercase">O escanea el QR</span>
-                                    <div className="flex-grow border-t border-gray-800"></div>
-                                </div>
-
-                                {/* Option 2: QR */}
-                                <div className="flex flex-col items-center bg-[#1a1f2e] p-4 rounded-xl border border-gray-800/50">
-                                    <p className="text-xs text-gray-400 mb-3 text-center">Escanea con tu App de Mercado Pago</p>
-                                    <div className="bg-white p-3 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300">
-                                        <QRCode value={initPoint || ""} size={140} level="M" />
+                                {/* Step 2 QR */}
+                                <div>
+                                    <div className="flex items-center gap-3 mb-3 mt-8">
+                                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-800 text-gray-400 text-xs font-bold border border-gray-700">2</div>
+                                        <h4 className="text-sm font-medium text-gray-300">O escanea el código QR</h4>
                                     </div>
-                                    {/* Pulse Indicator */}
-                                    <div className="mt-4 flex items-center gap-2 bg-blue-500/10 px-3 py-1.5 rounded-full border border-blue-500/20">
-                                        <span className="relative flex h-2 w-2">
-                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                                        </span>
-                                        <span className="text-[10px] font-medium text-blue-300 uppercase tracking-widest">Esperando pago</span>
+
+                                    <div className="bg-[#1a1f2e] rounded-xl p-4 border border-gray-800 flex items-start gap-6">
+                                        <div className="bg-white p-2 rounded-lg shrink-0">
+                                            <QRCode value={initPoint || ""} size={100} level="M" />
+                                        </div>
+                                        <div className="py-1">
+                                            <p className="text-sm text-gray-300 mb-2 font-medium">Desde tu celular</p>
+                                            <p className="text-xs text-gray-500 leading-relaxed max-w-[200px]">
+                                                Abre la App de Mercado Pago y escanea este código para pagar al instante.
+                                            </p>
+                                            <div className="mt-3 flex items-center gap-2">
+                                                <span className="relative flex h-2 w-2">
+                                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                                </span>
+                                                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Esperando pago</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        ) : !initError && (
-                            <div className="text-center text-gray-500 py-12">
-                                Iniciando transacción segura...
-                            </div>
-                        )}
+                        ) : null}
                     </div>
+
+                    {/* Right Column Footer (Requested Image info) */}
+                    <div className="bg-[#0b0e14] py-4 px-8 border-t border-gray-800 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <span className="text-lg">🇦🇷</span>
+                            <span className="text-xs text-gray-500 font-medium">Precios en pesos argentinos.</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs text-gray-600">Pagá con</span>
+                            <img
+                                src="/mercadopago.png"
+                                alt="Mercado Pago"
+                                className="h-4 w-auto"
+                            />
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -27,8 +27,8 @@ export default function PricingPage() {
 
     const tradingPlans = [
         {
-            title: "Inicial",
-            price: "$10",
+            title: "Trading Inicial",
+            price: "$1",
             periodicity: "único",
             students: "Nivel Básico",
             features: [
@@ -36,12 +36,15 @@ export default function PricingPage() {
                 "Análisis Técnico Básico",
                 "Gestión de Riesgo I",
                 "Acceso a Comunidad Discord",
+                "Acceso inmediato y vitalicio",
+                "Garantía de satisfacción (7 días)",
+                "Pago 100% seguro SSL",
             ],
             isRecommended: false,
             buttonText: "Comprar ahora",
         },
         {
-            title: "Intermedio",
+            title: "Trading Intermedio",
             price: "$100.000",
             periodicity: "único",
             students: "Nivel Intermedio",
@@ -50,20 +53,26 @@ export default function PricingPage() {
                 "Psicotrading",
                 "Análisis Fundamental",
                 "Sesiones en Vivo (Grabadas)",
+                "Acceso inmediato y vitalicio",
+                "Garantía de satisfacción (7 días)",
+                "Pago 100% seguro SSL",
             ],
             isRecommended: false,
             buttonText: "Comprar ahora",
         },
         {
-            title: "Avanzado",
+            title: "Trading Avanzado",
             price: "$150.000",
             periodicity: "único",
             students: "Nivel Profesional",
             features: [
-                "Smart Money Concepts",
                 "Trading Institucional",
-                "Mentoría 1 a 1",
-                "Acceso Vitalicio",
+                "Smart Money Concepts",
+                "Mentorías 1 a 1",
+                "Acceso a Sala de Señales VIP",
+                "Acceso inmediato y vitalicio",
+                "Garantía de satisfacción (7 días)",
+                "Pago 100% seguro SSL",
             ],
             isRecommended: false,
             buttonText: "Comprar ahora",
@@ -96,8 +105,8 @@ export default function PricingPage() {
             <Navbar />
 
             {/* Hero Section */}
-            <section className="relative overflow-hidden py-16 sm:py-24">
-                <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/20 via-background to-background opacity-50 blur-3xl"></div>
+            <section className="relative overflow-hidden pt-36 pb-12">
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
                 <Container className="relative z-10 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
                         Formación Profesional

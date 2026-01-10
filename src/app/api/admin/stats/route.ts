@@ -25,7 +25,7 @@ export async function GET() {
             }),
             // Users Count
             prisma.user.count({
-                where: { role: 'STUDENT' }
+                where: { role: 'ESTUDIANTE' }
             }),
             // Courses Count
             prisma.course.count({
@@ -42,7 +42,7 @@ export async function GET() {
             }),
             // Recent Students
             prisma.user.findMany({
-                where: { role: 'STUDENT' },
+                where: { role: 'ESTUDIANTE' },
                 take: 5,
                 orderBy: { id: 'desc' }, // or createdAt if available
                 select: { name: true, email: true, image: true }

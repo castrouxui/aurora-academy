@@ -26,28 +26,32 @@ export async function POST(req: NextRequest) {
 
         const preference = new Preference(client);
 
+        const preferenceBody = {
+            items: [
+                {
+                    id: 'course-id',
+                    title: title,
+                    unit_price: numericPrice,
+                    quantity: 1,
+                }
+            ],
+            back_urls: {
+                success: `${baseUrl}/dashboard/courses`,
+                failure: `${baseUrl}/pricing`,
+                pending: `${baseUrl}/pricing`,
+            },
+            // auto_return removed to fix creation error
+            metadata: {
+                user_id: userId,
+                course_id: courseId,
+            },
+            notification_url: `${baseUrl}/api/webhooks/mercadopago`,
+        };
+
+        console.log("Creating Preference with body:", JSON.stringify(preferenceBody, null, 2));
+
         const result = await preference.create({
-            body: {
-                items: [
-                    {
-                        id: 'course-id',
-                        title: title,
-                        unit_price: numericPrice,
-                        quantity: 1,
-                    }
-                ],
-                back_urls: {
-                    success: `${baseUrl}/dashboard/courses`,
-                    failure: `${baseUrl}/pricing`,
-                    pending: `${baseUrl}/pricing`,
-                },
-                auto_return: 'approved',
-                metadata: {
-                    user_id: userId,
-                    course_id: courseId,
-                },
-                notification_url: `${baseUrl}/api/webhooks/mercadopago`,
-            }
+            body: preferenceBody
         });
 
         return NextResponse.json({

@@ -40,9 +40,10 @@ export function Navbar() {
       <nav className="fixed top-0 z-50 w-full border-b border-muted bg-background/80 backdrop-blur-md">
         <Container className="flex h-16 items-center gap-6">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+          {/* Logo */}
+          <div className="flex-shrink-0">
             <Logo />
-          </Link>
+          </div>
 
           {/* Search Input - Desktop */}
           <form
