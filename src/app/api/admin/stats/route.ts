@@ -35,6 +35,7 @@ export async function GET() {
             prisma.purchase.findMany({
                 take: 5,
                 orderBy: { createdAt: 'desc' },
+                where: { status: 'approved' },
                 include: {
                     user: { select: { name: true, email: true, image: true } },
                     course: { select: { title: true } }
@@ -49,8 +50,14 @@ export async function GET() {
             })
         ]);
 
+        console.log("Admin Stats Debug:", {
+            revenue: totalRevenue._sum.amount,
+            salesCount: recentSales.length,
+            firstSale: recentSales[0]
+        });
+
         return NextResponse.json({
-            revenue: totalRevenue._sum.amount || 0,
+            revenue: Number(totalRevenue._sum.amount) || 0,
             activeStudents: usersCount,
             publishedCourses: coursesCount,
             recentSales,
