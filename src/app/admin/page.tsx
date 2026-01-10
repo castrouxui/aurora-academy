@@ -184,71 +184,59 @@ export default function AdminDashboard() {
                 </Card>
             </div>
         </div>
-// ... (previous code)
+    );
+}
 
 function RecoveryButton() {
-        const [loading, setLoading] = useState(false);
-        const [result, setResult] = useState<null | { recovered: number, message: string }>(null);
+    const [loading, setLoading] = useState(false);
+    const [result, setResult] = useState<null | { recovered: number, message: string }>(null);
 
-        const handleRecover = async () => {
-            setLoading(true);
-            setResult(null);
-            try {
-                const res = await fetch('/api/admin/recover', { method: 'POST' });
-                const data = await res.json();
-                if (res.ok) {
-                    setResult({
-                        recovered: data.recovered,
-                        message: data.recovered > 0
-                            ? `¡Éxito! ${data.recovered} ventas recuperadas.`
-                            : "Todo al día."
-                    });
-                } else {
-                    setResult({ recovered: 0, message: "Error" });
+    const handleRecover = async () => {
+        setLoading(true);
+        setResult(null);
+        try {
+            const res = await fetch('/api/admin/recover', { method: 'POST' });
+            const data = await res.json();
+            if (res.ok) {
+                setResult({
+                    recovered: data.recovered,
+                    message: data.recovered > 0
+                        ? `¡Éxito! ${data.recovered} ventas recuperadas.`
+                        : "Todo al día."
+                });
+                if (data.recovered > 0) {
+                    setTimeout(() => window.location.reload(), 1500);
                 }
-            } catch (error) {
+            } else {
                 setResult({ recovered: 0, message: "Error" });
-            } finally {
-                setLoading(false);
             }
-        };
+        } catch (error) {
+            setResult({ recovered: 0, message: "Error" });
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        return (
-            <div className="flex items-center gap-3">
-                {result && (
-                    <span className={`text-sm font-medium ${result.message.includes("Error") ? "text-red-400" : "text-green-400"} animate-in fade-in`}>
-                        {result.message}
-                    </span>
+    return (
+        <div className="flex items-center gap-3">
+            {result && (
+                <span className={`text-sm font-medium ${result.message.includes("Error") ? "text-red-400" : "text-green-400"} animate-in fade-in`}>
+                    {result.message}
+                </span>
+            )}
+            <Button
+                onClick={handleRecover}
+                disabled={loading}
+                variant="outline"
+                className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300"
+            >
+                {loading ? (
+                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                ) : (
+                    <TrendingUp className="w-4 h-4 mr-2" />
                 )}
-                <Button
-                    onClick={handleRecover}
-                    disabled={loading}
-                    variant="outline"
-                    className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300"
-                >
-                    {loading ? (
-                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-                    ) : (
-                        <TrendingUp className="w-4 h-4 mr-2" />
-                    )}
-                    Sincronizar Ventas
-                </Button>
-            </div>
-        );
-    }
-
-    export default function AdminDashboard() {
-        // ... (existing state)
-
-        return (
-            <div className="space-y-8">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-                        <p className="text-gray-400 mt-2">Bienvenido al panel de control de Aurora Academy.</p>
-                    </div>
-                    <RecoveryButton />
-                </div>
-
-                {/* KPI Grid ... */}
-
+                Sincronizar Ventas
+            </Button>
+        </div>
+    );
+}
