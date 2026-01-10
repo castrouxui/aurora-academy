@@ -77,6 +77,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
                     role: "ESTUDIANTE", // Default role for new users
                 }
             },
+            allowDangerousEmailAccountLinking: true,
         })
     );
 }
