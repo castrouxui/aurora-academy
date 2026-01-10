@@ -525,7 +525,7 @@ export default function CourseEditorPage() {
                                                         o haz clic para explorar tus archivos
                                                     </p>
                                                     <span className="text-[10px] text-gray-600 bg-gray-900 px-2 py-1 rounded border border-gray-800">
-                                                        MP4, WebM • Max 500MB
+                                                        MP4, WebM • Max 1GB
                                                     </span>
                                                 </>
                                             )}
