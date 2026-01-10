@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { Container } from "@/components/layout/Container";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -97,6 +98,58 @@ export default function SettingsPage() {
                     </Card>
                 </div>
             </div>
+        </CardContent>
+                    </Card >
+
+        { session?.user?.role === 'ADMIN' && (
+            <Card className="bg-[#1F2937] border-gray-700 border-l-4 border-l-blue-500">
+                <CardHeader>
+                    <CardTitle className="text-white">Panel de Administración</CardTitle>
+                </CardHeader>
+                <CardContent className="flex items-center justify-between">
+                    <div>
+                        <p className="text-sm font-medium text-white">Sincronización de Ventas</p>
+                        <p className="text-xs text-gray-400">Recuperar ventas perdidas de MercadoPago</p>
+                    </div>
+                    <AdminRecoveryButton />
+                </CardContent>
+            </Card>
+        )
+}
+                </div >
+            </div >
+        </div >
+    );
+}
+
+function AdminRecoveryButton() {
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
+
+    const handleRecover = async () => {
+        setLoading(true);
+        setMessage("");
+        try {
+            const res = await fetch('/api/admin/recover', { method: 'POST' });
+            const data = await res.json();
+            if (res.ok) {
+                setMessage(data.recovered > 0 ? `Se recuperaron ${data.recovered} ventas.` : "Todo está actualizado.");
+            } else {
+                setMessage("Error al sincronizar.");
+            }
+        } catch (e) {
+            setMessage("Error de conexión.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="flex items-center gap-3">
+            {message && <span className="text-xs text-blue-400">{message}</span>}
+            <Button onClick={handleRecover} disabled={loading} size="sm" className="bg-blue-600 hover:bg-blue-700">
+                {loading ? "..." : "Sincronizar"}
+            </Button>
         </div>
     );
 }
