@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Plus, Pencil, Loader2, Trash } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -191,8 +192,17 @@ export default function AdminCoursesPage() {
             </div>
 
             {isLoading ? (
-                <div className="flex justify-center py-20">
-                    <Loader2 className="h-8 w-8 animate-spin text-[#5D5CDE]" />
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="bg-[#1F2937] border border-gray-700 rounded-lg overflow-hidden h-[300px]">
+                            <Skeleton className="h-40 w-full bg-gray-800" />
+                            <div className="p-6 space-y-4">
+                                <Skeleton className="h-6 w-3/4 bg-gray-800" />
+                                <Skeleton className="h-4 w-full bg-gray-800" />
+                                <Skeleton className="h-4 w-1/2 bg-gray-800" />
+                            </div>
+                        </div>
+                    ))}
                 </div>
             ) : courses.length === 0 ? (
                 <div className="text-center py-20 bg-[#1F2937]/50 rounded-xl border border-dashed border-gray-700">

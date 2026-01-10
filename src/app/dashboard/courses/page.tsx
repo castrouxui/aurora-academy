@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { Container } from "@/components/layout/Container";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { BookOpen, Clock, Trophy, PlayCircle, Lock } from "lucide-react";
 import Link from "next/link";
@@ -105,8 +106,42 @@ export default function MyCoursesPage() {
 
     if (status === "loading" || loading) {
         return (
-            <div className="min-h-screen pt-24 pb-12 flex items-center justify-center bg-[#0B0F19]">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            <div className="min-h-screen pt-4 pb-12 bg-[#0B0F19]">
+                <Container>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                        <div className="space-y-2">
+                            <Skeleton className="h-8 w-48 bg-gray-800" />
+                            <Skeleton className="h-4 w-64 bg-gray-800/50" />
+                        </div>
+                        <div className="flex gap-2">
+                            <Skeleton className="h-9 w-24 bg-gray-800" />
+                            <Skeleton className="h-9 w-24 bg-gray-800" />
+                            <Skeleton className="h-9 w-24 bg-gray-800" />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="rounded-xl overflow-hidden border border-gray-800 bg-[#111827]">
+                                <Skeleton className="h-48 w-full bg-gray-800" />
+                                <div className="p-6 space-y-4">
+                                    <div className="space-y-2">
+                                        <Skeleton className="h-6 w-3/4 bg-gray-800" />
+                                        <Skeleton className="h-4 w-full bg-gray-800/50" />
+                                    </div>
+                                    <div className="pt-4 space-y-3">
+                                        <div className="flex justify-between">
+                                            <Skeleton className="h-3 w-12 bg-gray-800" />
+                                            <Skeleton className="h-3 w-12 bg-gray-800" />
+                                        </div>
+                                        <Skeleton className="h-2 w-full bg-gray-800" />
+                                    </div>
+                                    <Skeleton className="h-10 w-full mt-4 bg-gray-800" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </Container>
             </div>
         );
     }
