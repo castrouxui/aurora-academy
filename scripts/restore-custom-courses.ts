@@ -13,7 +13,7 @@ async function main() {
             description: '¿Te gustaría recibir pagos en tu cuenta periódicamente sin tener que vender tus activos? Aprende a invertir en Bonos y Obligaciones Negociables.',
             category: 'Inversiones',
             published: true,
-            imageUrl: '/images/courses/renta-fija.jpg',
+            imageUrl: '/images/courses/renta_fija_cover_1768005380686.png',
         },
         {
             title: 'Análisis Técnico',
@@ -21,7 +21,7 @@ async function main() {
             description: '¿Miras los gráficos y solo ves lineas caóticas? Los traders rentables ven oportunidades claras. La clave para entender el mercado.',
             category: 'Trading',
             published: true,
-            imageUrl: '/images/courses/analisis-tecnico.jpg',
+            imageUrl: '/images/courses/analisis_tecnico_cover_1768005395407.png',
         },
         {
             title: 'Mentoria en Price Action',
@@ -29,7 +29,7 @@ async function main() {
             description: 'Si quieres vivir del trading, necesitas entender el Price Action. Es así de simple. En este nuevo programa intensivo dominarás la acción del precio.',
             category: 'Mentoria',
             published: true,
-            imageUrl: '/images/courses/price-action.jpg',
+            imageUrl: '/images/courses/price_action_cover_1768005409635.png',
         },
     ]
 
@@ -66,7 +66,12 @@ async function main() {
             })
             console.log(`Restored: ${course.title}`)
         } else {
-            console.log(`Skipped (already exists): ${course.title}`)
+            // Update image just in case
+            await prisma.course.update({
+                where: { id: existing.id },
+                data: { imageUrl: course.imageUrl }
+            })
+            console.log(`Updated image for existing: ${course.title}`)
         }
     }
 
