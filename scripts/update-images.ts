@@ -22,7 +22,7 @@ async function main() {
                 data: { imageUrl: update.image }
             })
             console.log(`Updated image for: ${update.title}`)
-        } catch (e) {
+        } catch (e: any) {
             console.log(`Failed to update ${update.title}:`, e.message)
         }
     }
