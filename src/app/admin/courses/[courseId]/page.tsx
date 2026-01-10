@@ -257,6 +257,8 @@ export default function CourseEditorPage() {
         setLessonTitle("");
         setLessonUrl("");
         setLessonDesc("");
+        setResourceTitle(""); // Clear resource state
+        setResourceUrl("");   // Clear resource state
         setIsAddLessonOpen(true);
     };
 
@@ -266,6 +268,8 @@ export default function CourseEditorPage() {
         setLessonTitle(lesson.title);
         setLessonUrl(lesson.videoUrl || "");
         setLessonDesc(lesson.description || "");
+        setResourceTitle(""); // Clear resource state
+        setResourceUrl("");   // Clear resource state
         setIsAddLessonOpen(true);
     };
 
