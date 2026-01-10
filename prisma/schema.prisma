@@ -60,6 +60,7 @@ model Course {
   price       Decimal
   imageUrl    String?
   category    String     @default("General")
+  level       String     @default("Todos los niveles")
   published   Boolean    @default(false)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt

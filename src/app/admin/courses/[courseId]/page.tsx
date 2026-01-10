@@ -33,6 +33,9 @@ interface Course {
     title: string;
     description: string;
     price: string;
+    imageUrl: string;
+    category: string;
+    level: string;
     published: boolean;
     modules: Module[];
 }
@@ -328,10 +331,65 @@ export default function CourseEditorPage() {
                     </Button>
                 </Link>
                 <div className="flex-1">
-                    <h1 className="text-2xl font-bold text-white max-w-2xl truncate">{course.title}</h1>
-                    <p className="text-sm text-gray-400">
-                        {course.modules?.length || 0} Módulos • {course.published ? "Publicado" : "Borrador"}
-                    </p>
+                    <h1 className="text-2xl font-bold text-white max-w-2xl truncate mb-1">{course.title}</h1>
+                    <div className="flex items-center gap-3 text-sm text-gray-400">
+                        <span>{course.modules?.length || 0} Módulos</span>
+                        <span>•</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-gray-500">Categoría:</span>
+                            <select
+                                value={course.category || "General"}
+                                onChange={async (e) => {
+                                    const newCategory = e.target.value;
+                                    setCourse({ ...course, category: newCategory }); // Optimistic update
+                                    try {
+                                        await fetch(`/api/courses/${courseId}`, {
+                                            method: "PATCH",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({ category: newCategory }),
+                                        });
+                                    } catch (error) {
+                                        console.error("Failed to update category", error);
+                                    }
+                                }}
+                                className="bg-[#1a1f2e] text-white border border-gray-700 rounded px-2 py-0.5 text-xs focus:outline-none focus:border-[#5D5CDE]"
+                            >
+                                <option value="General">General</option>
+                                <option value="Trading">Trading</option>
+                                <option value="Crypto">Crypto</option>
+                                <option value="Finanzas">Finanzas</option>
+                                <option value="Psicología">Psicología</option>
+                            </select>
+                        </div>
+                        <span>•</span>
+                        <span>{course.published ? "Publicado" : "Borrador"}</span>
+                        <span>•</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-gray-500">Nivel:</span>
+                            <select
+                                value={course.level || "Todos los niveles"}
+                                onChange={async (e) => {
+                                    const newLevel = e.target.value;
+                                    setCourse({ ...course, level: newLevel }); // Optimistic update
+                                    try {
+                                        await fetch(`/api/courses/${courseId}`, {
+                                            method: "PATCH",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({ level: newLevel }),
+                                        });
+                                    } catch (error) {
+                                        console.error("Failed to update level", error);
+                                    }
+                                }}
+                                className="bg-[#1a1f2e] text-white border border-gray-700 rounded px-2 py-0.5 text-xs focus:outline-none focus:border-[#5D5CDE]"
+                            >
+                                <option value="Todos los niveles">Todos los niveles</option>
+                                <option value="Principiante">Principiante</option>
+                                <option value="Intermedio">Intermedio</option>
+                                <option value="Avanzado">Avanzado</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div className="flex gap-2">
                     <Button

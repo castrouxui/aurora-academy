@@ -50,6 +50,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                         price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
                         image: course.imageUrl || "/course-placeholder.jpg",
                         tag: course.category || "General",
+                        level: course.level || "Todos los niveles",
                         rawPrice: course.price,
                         createdAt: course.createdAt
                     }));
@@ -71,12 +72,13 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
         const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             course.tag.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = activeFilters.categories.length === 0 || activeFilters.categories.some(cat => course.tag.includes(cat));
+        const matchesLevel = activeFilters.levels.length === 0 || activeFilters.levels.includes(course.level);
 
         let matchesPrice = true;
         if (activeFilters.price === "Gratis") matchesPrice = course.rawPrice === 0;
         if (activeFilters.price === "De Pago") matchesPrice = course.rawPrice > 0;
 
-        return matchesSearch && matchesCategory && matchesPrice;
+        return matchesSearch && matchesCategory && matchesLevel && matchesPrice;
     }).sort((a, b) => {
         switch (sortBy) {
             case "price-asc":

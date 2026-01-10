@@ -195,36 +195,7 @@ export default function PricingPage() {
                 </Container>
             </section>
 
-            {/* Other Courses Section */}
-            <section className="py-16 bg-card/20 border-t border-gray-800">
-                <div className="mx-auto max-w-7xl px-6 lg:px-8">
-                    <h2 className="mb-8 text-center text-3xl font-bold">
-                        Otros Cursos Especializados
-                    </h2>
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {otherCourses.map((course, idx) => (
-                            <div
-                                key={idx}
-                                className="flex flex-col justify-between rounded-xl border border-gray-800 bg-card p-6 transition-colors hover:border-gray-700 hover:bg-card/80"
-                            >
-                                <div>
-                                    <h3 className="text-xl font-semibold text-foreground">
-                                        {course.title}
-                                    </h3>
-                                    <p className="mt-4 text-sm text-gray-400">
-                                        Impulsa tus conocimientos en áreas específicas.
-                                    </p>
-                                </div>
-                                <div className="mt-6">
-                                    <Button variant="outline" className="w-full">
-                                        Ver Detalles
-                                    </Button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+
             {/* Payment Modal */}
             {isPaymentModalOpen && (
                 <PaymentModal
