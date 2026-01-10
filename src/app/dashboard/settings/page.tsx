@@ -96,28 +96,24 @@ export default function SettingsPage() {
                             </div>
                         </CardContent>
                     </Card>
+
+                    {session?.user?.role === 'ADMIN' && (
+                        <Card className="bg-[#1F2937] border-gray-700 border-l-4 border-l-blue-500">
+                            <CardHeader>
+                                <CardTitle className="text-white">Panel de Administración</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-white">Sincronización de Ventas</p>
+                                    <p className="text-xs text-gray-400">Recuperar ventas perdidas de MercadoPago</p>
+                                </div>
+                                <AdminRecoveryButton />
+                            </CardContent>
+                        </Card>
+                    )}
                 </div>
             </div>
-        </CardContent>
-                    </Card >
-
-        { session?.user?.role === 'ADMIN' && (
-            <Card className="bg-[#1F2937] border-gray-700 border-l-4 border-l-blue-500">
-                <CardHeader>
-                    <CardTitle className="text-white">Panel de Administración</CardTitle>
-                </CardHeader>
-                <CardContent className="flex items-center justify-between">
-                    <div>
-                        <p className="text-sm font-medium text-white">Sincronización de Ventas</p>
-                        <p className="text-xs text-gray-400">Recuperar ventas perdidas de MercadoPago</p>
-                    </div>
-                    <AdminRecoveryButton />
-                </CardContent>
-            </Card>
-        )
-}
-                </div >
-            </div >
+        </div>
         </div >
     );
 }
