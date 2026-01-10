@@ -10,9 +10,10 @@ import { useSearchParams } from "next/navigation";
 interface CourseCatalogProps {
     showTitle?: boolean;
     paddingTop?: string;
+    basePath?: string; // New prop
 }
 
-export function CourseCatalog({ showTitle = true, paddingTop = "pt-32" }: CourseCatalogProps) {
+export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath }: CourseCatalogProps) {
     const [courses, setCourses] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [availableCategories, setAvailableCategories] = useState<string[]>([]);
@@ -168,7 +169,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32" }: Course
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {filteredCourses.length > 0 ? (
                             filteredCourses.map((course) => (
-                                <CourseCard key={course.id} course={course} />
+                                <CourseCard key={course.id} course={{ ...course, basePath }} />
                             ))
                         ) : (
                             <div className="col-span-full text-center py-12 text-gray-500">

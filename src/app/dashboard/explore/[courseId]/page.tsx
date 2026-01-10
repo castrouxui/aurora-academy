@@ -1,16 +1,15 @@
-import { Navbar } from "@/components/layout/Navbar";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { CourseDetailContent } from "@/components/courses/CourseDetailContent";
 
-export default async function CourseDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
+export default async function DashboardCourseDatailPage({ params }: { params: Promise<{ courseId: string }> }) {
+    const { courseId } = await params;
     const session = await getServerSession(authOptions);
 
     const course = await prisma.course.findUnique({
-        where: { id },
+        where: { id: courseId },
         include: {
             modules: {
                 include: {
@@ -79,15 +78,18 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         videoUrl: previewVideoUrl
     };
 
+    const breadcrumbs = [
+        { label: "Explorar", href: "/dashboard/explore" },
+        { label: course.title, href: `/dashboard/explore/${course.id}` }
+    ];
+
     return (
-        <main className="min-h-screen bg-[#0B0F19]">
-            <Navbar />
-            <CourseDetailContent
-                courseData={courseData}
-                hasAccess={hasAccess}
-                totalLessons={totalLessons}
-                totalModules={totalModules}
-            />
-        </main>
+        <CourseDetailContent
+            courseData={courseData}
+            hasAccess={hasAccess}
+            totalLessons={totalLessons}
+            totalModules={totalModules}
+            breadcrumbs={breadcrumbs}
+        />
     );
 }

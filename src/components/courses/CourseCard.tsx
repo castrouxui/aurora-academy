@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 
 interface CourseProps {
-    id: string; // Made required as every course must have an ID
+    id: string;
     title: string;
     instructor: string;
     rating: number;
@@ -13,11 +13,13 @@ interface CourseProps {
     oldPrice: string;
     image: string;
     tag: string;
+    basePath?: string; // Optional base path for link
 }
 
 export function CourseCard({ course }: { course: CourseProps }) {
+    const href = course.basePath ? `${course.basePath}/${course.id}` : `/courses/${course.id}`;
     return (
-        <Link href={`/courses/${course.id}`} className="block h-full group">
+        <Link href={href} className="block h-full group">
             <div className="bg-white rounded-2xl overflow-hidden p-3 shadow-lg hover:translate-y-[-5px] transition-transform duration-300 h-full flex flex-col border border-transparent hover:border-primary/20">
                 <div className="relative h-40 w-full mb-3 rounded-xl overflow-hidden bg-gray-200 shrink-0">
                     {/* Placeholder for image - using a generic div if no real image */}
