@@ -14,8 +14,8 @@ export function HeroBanner() {
 
     return (
 
-        <section className="relative w-full py-20 sm:py-24 md:py-32 lg:py-48 xl:py-56 overflow-hidden">
-            <Container className="relative z-10 h-full flex flex-col items-center justify-center">
+        <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+            <Container className="relative z-10 w-full flex flex-col items-center justify-center pt-20">
                 <div className="flex flex-col items-center space-y-6 md:space-y-8 text-center px-4 md:px-0">
                     <div className="space-y-4 md:space-y-6 max-w-[900px]">
                         <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl/none font-black tracking-tighter text-white drop-shadow-lg mb-4 md:mb-6">
@@ -54,8 +54,8 @@ export function HeroBanner() {
                     <source src="/hero-video.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
-                {/* Gradient Overlay for better text readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-[#0B0F19]/40 to-[#0B0F19]/30"></div>
+                {/* Gradient Overlay for better text readability and seamless transition */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-[#0B0F19]/50 to-[#0B0F19]/40"></div>
             </div>
 
             {/* Login Modal */}
