@@ -86,6 +86,9 @@ export default function CourseEditorPage() {
     // Upload State
     const [isUploading, setIsUploading] = useState(false);
 
+    // Price Local State
+    const [priceInput, setPriceInput] = useState("");
+
     const fetchCourse = async () => {
         try {
             const res = await fetch(`/api/courses/${courseId}`);
@@ -105,6 +108,13 @@ export default function CourseEditorPage() {
             fetchCourse();
         }
     }, [courseId]);
+
+    // Sync price to local input when course loads
+    useEffect(() => {
+        if (course) {
+            setPriceInput(course.price.toString());
+        }
+    }, [course?.price]);
 
     const handleAddModule = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -487,10 +497,15 @@ export default function CourseEditorPage() {
                                     <span className="text-gray-400 font-medium">$</span>
                                     <input
                                         type="number"
-                                        value={course.price || 0}
-                                        onChange={async (e) => {
-                                            const newPrice = parseFloat(e.target.value);
+                                        value={priceInput}
+                                        onChange={(e) => setPriceInput(e.target.value)}
+                                        onBlur={async () => {
+                                            if (!course) return;
+                                            const newPrice = priceInput === "" ? 0 : parseFloat(priceInput);
+
+                                            // Optimistic UI update
                                             setCourse({ ...course, price: newPrice });
+
                                             try {
                                                 await fetch(`/api/courses/${courseId}`, {
                                                     method: "PATCH",

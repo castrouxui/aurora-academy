@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { X, ArrowRight, ShieldCheck, Lock, Zap } from 'lucide-react';
+import { X, ArrowRight, ShieldCheck, Lock, Zap, CheckCircle2 } from 'lucide-react';
 import { useSession } from "next-auth/react";
 import { QRCodeSVG as QRCode } from 'qrcode.react';
 import { useRouter } from 'next/navigation';
@@ -26,23 +26,26 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
     const [initPoint, setInitPoint] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [initError, setInitError] = useState<string | null>(null);
-
-
+    const [paymentStatus, setPaymentStatus] = useState<'idle' | 'pending' | 'approved' | 'rejected'>('idle');
 
     // Polling for Payment Status
     useEffect(() => {
         let intervalId: NodeJS.Timeout;
 
-        if (preferenceId && isOpen) {
+        if (preferenceId && isOpen && paymentStatus !== 'approved') {
             intervalId = setInterval(async () => {
                 try {
                     const res = await fetch(`/api/payment/status?preferenceId=${preferenceId}&userId=${effectiveUserId}&courseId=${courseId}`);
                     if (res.ok) {
                         const data = await res.json();
                         if (data.status === 'approved') {
+                            setPaymentStatus('approved');
                             clearInterval(intervalId);
-                            router.push('/dashboard/courses'); // Redirect to success
-                            onClose();
+                            // Show success message for 3 seconds then redirect
+                            setTimeout(() => {
+                                router.push('/dashboard/courses'); // Redirect to success
+                                onClose();
+                            }, 3000);
                         }
                     }
                 } catch (error) {
@@ -181,7 +184,20 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             </div>
                         )}
 
-                        {isLoading ? (
+                        {paymentStatus === 'approved' ? (
+                            <div className="flex flex-col items-center justify-center py-20 animate-in zoom-in duration-300">
+                                <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mb-6 animate-bounce">
+                                    <CheckCircle2 size={48} className="text-green-500" />
+                                </div>
+                                <h3 className="text-2xl font-bold text-white mb-2">¡Pago Confirmado!</h3>
+                                <p className="text-gray-400 text-center max-w-xs mb-8">
+                                    Gracias por tu compra. Te estamos redirigiendo a tu curso...
+                                </p>
+                                <div className="w-full max-w-[200px] h-1 bg-gray-800 rounded-full overflow-hidden">
+                                    <div className="h-full bg-green-500 animate-[progress_3s_ease-in-out_forwards]"></div>
+                                </div>
+                            </div>
+                        ) : isLoading ? (
                             <div className="flex flex-col items-center justify-center py-20">
                                 <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary mb-4"></div>
                                 <p className="text-gray-400 animate-pulse text-sm">Conectando con Mercado Pago...</p>

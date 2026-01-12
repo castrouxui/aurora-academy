@@ -22,10 +22,16 @@ export function CourseCard({ course }: { course: CourseProps }) {
 
     // Determine Logic for Image
     let displayImage = course.image;
-    const isPlaceholder = !course.image || course.image === "/course-placeholder.jpg";
+    /* 
+       Priority:
+       1. YouTube Thumbnail (if video exists) - Because we don't have a custom image uploader yet,
+          and the seeded images are generic.
+       2. Custom Image (if no video)
+       3. Placeholder (if no image and no video)
+    */
     const youtubeId = course.videoUrl ? getYouTubeId(course.videoUrl) : null;
 
-    if (isPlaceholder && youtubeId) {
+    if (youtubeId) {
         displayImage = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
     }
 
