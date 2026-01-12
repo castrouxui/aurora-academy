@@ -122,8 +122,8 @@ export function CourseFloatingCard({
                             <span className="text-lg text-gray-500 line-through font-medium">{originalPrice}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="bg-red-500/20 text-red-400 border border-red-500/20 px-2 py-0.5 rounded text-sm font-bold">{discount} OFF</span>
-                            <span className="text-red-400 text-sm font-medium">¡Oferta por tiempo limitado!</span>
+                            <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-sm font-bold">{discount} OFF</span>
+                            <span className="text-emerald-400 text-sm font-medium">¡Oferta por tiempo limitado!</span>
                         </div>
                     </div>
 

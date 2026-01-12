@@ -101,7 +101,7 @@ export default function PricingPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen bg-[#0B0F19] text-white">
             <Navbar />
 
             {/* Hero Section */}
@@ -197,7 +197,6 @@ export default function PricingPage() {
                     </div>
                 </Container>
             </section>
-
 
             {/* Payment Modal */}
             {isPaymentModalOpen && (
