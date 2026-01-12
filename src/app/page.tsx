@@ -6,6 +6,8 @@ import { CTASection } from "@/components/layout/CTASection";
 import { Footer } from "@/components/layout/Footer";
 import { StatsStrip } from "@/components/layout/StatsStrip";
 
+import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#0B0F19]">
@@ -18,6 +20,7 @@ export default function Home() {
           <CourseList />
         </div>
 
+        <TestimonialsSection />
         <CTASection />
 
         <Footer />

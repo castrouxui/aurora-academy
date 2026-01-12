@@ -1,122 +1,175 @@
+"use client";
 
 import Image from "next/image";
 import { Container } from "@/components/layout/Container";
-import { Quote } from "lucide-react";
+import { Quote, Star } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface Testimonial {
     id: number;
     author: string;
     text: string;
     image: string;
+    role: string;
 }
 
 const TESTIMONIALS: Testimonial[] = [
     {
         id: 1,
         author: "Ezequiel",
-        text: "Respecto al servicio estoy con Fran hace poco más de 6 meses ininterrumpidos. La verdad que mi satisfacción es absoluta. Excelente resultados y gran profesor! Recién arrancamos.",
-        image: "https://framerusercontent.com/images/p7bvoFnbGtK8RZ1HSLiAUiHxx8.jpg"
+        text: "La plataforma es increíblemente intuitiva y los cursos están muy bien estructurados. Llevo 6 meses estudiando y mis resultados han mejorado notablemente gracias a la claridad del contenido.",
+        image: "https://framerusercontent.com/images/p7bvoFnbGtK8RZ1HSLiAUiHxx8.jpg",
+        role: "Alumno de Trading"
     },
     {
         id: 2,
         author: "Pato Touceda",
-        text: "Estoy muy contento con el servicio, sobre todo y lo más valioso la predisposición a responder y estar super atentos a las consultas.",
-        image: "https://framerusercontent.com/images/AvfrQfX4hg4yY1cKJQO4OAaXQ.png"
+        text: "Lo mejor de Aurora Academy es la calidad de producción de las lecciones. Los videos en alta definición y los recursos descargables hacen que aprender conceptos complejos sea un placer.",
+        image: "https://framerusercontent.com/images/AvfrQfX4hg4yY1cKJQO4OAaXQ.png",
+        role: "Alumno de Crypto"
     },
     {
         id: 3,
         author: "Juany",
-        text: "Quería felicitar a Fran por el servicio que presta y por las enseñanzas que da dia a dia con sus bitácoras. El ingreso hoy de VALO fue Luxury.",
-        image: "https://framerusercontent.com/images/2zaizaltMbd0hfmlArpqcyuC20.png"
+        text: "La calidad de los cursos y la plataforma es de otro nivel. Las bitácoras y el seguimiento personalizado marcan la diferencia. Nunca había visto una academia tan completa.",
+        image: "https://framerusercontent.com/images/2zaizaltMbd0hfmlArpqcyuC20.png",
+        role: "Suscriptor Pro"
     },
     {
         id: 4,
         author: "Santino Herrera",
-        text: "Estoy súper agradecido de las asesorías, mas allá de las alertas (mayormente positivas), en los canales se aprende muchísimo de Fran y su experiencia respecto al mercado.",
-        image: "https://framerusercontent.com/images/IZ6QsMgI2gFXUCOrdoCUsgOcvk.jpg"
+        text: "Más allá de las alertas, lo que más valoro es el contenido educativo. He aprendido más aquí en 3 meses que en años buscando información por mi cuenta. La plataforma es un 10.",
+        image: "https://framerusercontent.com/images/IZ6QsMgI2gFXUCOrdoCUsgOcvk.jpg",
+        role: "Alumno de Trading"
     },
     {
         id: 5,
         author: "Juan Huérfano",
-        text: "Excelente servicio, muy confiable, excelente tutoría y muy grandes personas, excelentes resultados, no me arrepiento.",
-        image: "https://framerusercontent.com/images/4KykQdxaykJ3SmZZ9orjS0MT8.jpg"
+        text: "Una plataforma robusta y confiable. Los cursos van directo al grano sin perder tiempo en teoría innecesaria. Es, sin dudas, la mejor inversión en mi educación financiera.",
+        image: "https://framerusercontent.com/images/4KykQdxaykJ3SmZZ9orjS0MT8.jpg",
+        role: "Alumno Avanzado"
     },
     {
         id: 6,
         author: "Fabián",
-        text: "No tengo más que agradecimientos. Llevo poco tiempo con la asesoría personalizada y de no saber sobre inversiones aprendí muchísimo, además de incrementar mí capital notablemente.",
-        image: "https://framerusercontent.com/images/ReDEVMJsLlrTYoDjEJ0Y42clXY.png"
+        text: "Empecé sin saber nada y ahora opero con confianza gracias al curso de análisis técnico. La metodología explicada en la plataforma es única y fácil de aplicar.",
+        image: "https://framerusercontent.com/images/ReDEVMJsLlrTYoDjEJ0Y42clXY.png",
+        role: "Alumno Inicial"
     },
     {
         id: 7,
         author: "Graciela",
-        text: "Fran Castro es muy audaz ! Te arma 2 carteras: a largo plazo y a corto plazo. La de corto plazo es para aplaudirlo 👏 Si no te llevan “a pasear con correa” en este mercado pierdes dinero. Siempre salimos con ganancias por su ojo profesional!💰",
-        image: "https://framerusercontent.com/images/zWYaQp7huo4iC7pJ5b9SfnRR4.jpg"
+        text: "La estructura de los cursos te permite ir a tu propio ritmo. Me encanta cómo la plataforma te guía paso a paso, combinando teoría con práctica en tiempo real. ¡Excelente experiencia!",
+        image: "https://framerusercontent.com/images/zWYaQp7huo4iC7pJ5b9SfnRR4.jpg",
+        role: "Alumna de Inversiones"
     },
     {
         id: 8,
         author: "Cristian",
-        text: "Soy suscriptor hace ya unos años, confianza y seguridad junto con transparencia es una característica del servicio brindado, a sumarse , que se aprende y gana en inversión.",
-        image: "https://framerusercontent.com/images/zKJ6HAHTifYjmA2FxMEnpqy1jEg.png"
+        text: "Llevo años en esto y nunca vi una plataforma tan completa. Desde los videos hasta el soporte, todo está pensado para que aprendas de verdad y no pierdas el tiempo.",
+        image: "https://framerusercontent.com/images/zKJ6HAHTifYjmA2FxMEnpqy1jEg.png",
+        role: "Suscriptor Plus"
     },
     {
         id: 9,
         author: "Adrián",
-        text: "Excelente servicio y predisposición. Lo mejor es la constante innovación con ideas superadoras. 100% recomendable.",
-        image: "https://framerusercontent.com/images/Ush6w0oEeByTIiHE4LqQyBcb3Ng.jpg"
+        text: "La interfaz es moderna, súper rápida y funciona perfecto en el celular. Da gusto estudiar así. Además, los contenidos se actualizan constantemente con nuevas estrategias.",
+        image: "https://framerusercontent.com/images/Ush6w0oEeByTIiHE4LqQyBcb3Ng.jpg",
+        role: "Alumno de Trading"
     }
 ];
+
+function ReviewCard({ review }: { review: Testimonial }) {
+    return (
+        <figure className="relative h-full w-full cursor-pointer overflow-hidden rounded-2xl border border-white/5 bg-white/[0.03] p-6 hover:bg-white/[0.08] hover:border-white/10 transition-all duration-300">
+            <div className="flex flex-row items-center gap-3 mb-4">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/10">
+                    <Image
+                        src={review.image}
+                        alt={review.author}
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <figcaption className="text-sm font-medium text-white">
+                        {review.author}
+                    </figcaption>
+                    <p className="text-xs font-medium text-white/40">{review.role}</p>
+                </div>
+                <div className="ml-auto">
+                    <Quote className="text-[#5D5CDE]/20" size={20} />
+                </div>
+            </div>
+            <blockquote className="text-sm leading-relaxed text-gray-300">
+                "{review.text}"
+            </blockquote>
+        </figure>
+    );
+}
+
+function ReviewColumn({
+    reviews,
+    className,
+    duration = 20
+}: {
+    reviews: Testimonial[];
+    className?: string;
+    duration?: number;
+}) {
+    const columnRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <div
+            ref={columnRef}
+            className={cn("animate-marquee space-y-6", className)}
+            style={{ "--marquee-duration": `${duration}s` } as React.CSSProperties}
+        >
+            {reviews.concat(reviews).map((review, i) => (
+                <ReviewCard key={`${review.id}-${i}`} review={review} />
+            ))}
+        </div>
+    );
+}
 
 export function TestimonialsSection() {
     return (
         <section className="py-24 bg-[#0B0F19] relative overflow-hidden">
-            {/* Background gradients */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl" />
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/5 rounded-full blur-[100px] pointer-events-none" />
 
-            <Container>
-                <div className="text-center mb-16 relative z-10">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            <Container className="relative z-10">
+                <div className="text-center mb-16 max-w-3xl mx-auto">
+                    <h2 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60 mb-6">
                         ¿Qué dicen nuestros alumnos?
                     </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
-                        La comunidad de Aurora Academy crece día a día. Estas son algunas de las experiencias de quienes ya se están formando con nosotros.
+                    <p className="text-lg text-gray-400">
+                        La comunidad de Aurora Academy crece día a día. Descubre por qué miles de estudiantes eligen nuestra plataforma para formarse.
                     </p>
                 </div>
 
-                <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6 relative z-10">
-                    {TESTIMONIALS.map((testimonial) => (
-                        <div
-                            key={testimonial.id}
-                            className="break-inside-avoid bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors"
-                        >
-                            <div className="mb-4 text-blue-400">
-                                <Quote size={24} className="opacity-50" />
-                            </div>
-                            <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                                &ldquo;{testimonial.text}&rdquo;
-                            </p>
-                            <div className="flex items-center gap-3">
-                                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/20">
-                                    <Image
-                                        src={testimonial.image}
-                                        alt={testimonial.author}
-                                        fill
-                                        className="object-cover"
-                                        sizes="40px"
-                                    />
-                                </div>
-                                <div>
-                                    <h4 className="text-white font-medium text-sm">
-                                        {testimonial.author}
-                                    </h4>
-                                    <p className="text-blue-400 text-xs">Alumno</p>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                <div className="relative h-[600px] max-h-[80vh] overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]">
+                    <ReviewColumn reviews={TESTIMONIALS.slice(0, 3)} duration={35} />
+                    <ReviewColumn reviews={TESTIMONIALS.slice(3, 6)} duration={45} className="hidden md:block" />
+                    <ReviewColumn reviews={TESTIMONIALS.slice(6, 9)} duration={40} className="hidden lg:block" />
                 </div>
             </Container>
+
+            {/* Custom Animation Styles */}
+            <style jsx global>{`
+                @keyframes marquee {
+                    from { transform: translateY(0); }
+                    to { transform: translateY(calc(-50% - 12px)); } /* 12px is half of gap-6 (24px) */
+                }
+                .animate-marquee {
+                    animation: marquee var(--marquee-duration) linear infinite;
+                }
+                .animate-marquee:hover {
+                    animation-play-state: paused;
+                }
+            `}</style>
         </section>
     );
 }

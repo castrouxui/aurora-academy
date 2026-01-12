@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Video, Trash2, Edit, Save, PlusCircle, LayoutList, ChevronUp, ChevronDown, Check, X, GripVertical, MoreVertical, FileVideo, UploadCloud, FolderPlus, EyeOff, Loader2, LinkIcon, File, ArrowLeft, Eye } from "lucide-react";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { useUploadThing } from "@/lib/uploadthing";
 
 interface Lesson {
     id: string;
@@ -187,27 +188,50 @@ export default function CourseEditorPage() {
         }
     };
 
+    // UploadThing Hooks
+    const { startUpload: startVideoUpload } = useUploadThing("chapterVideo", {
+        onClientUploadComplete: (res) => {
+            if (res && res[0]) {
+                setLessonUrl(res[0].url);
+                setIsUploading(false);
+            }
+        },
+        onUploadError: (error) => {
+            console.error(error);
+            setIsUploading(false);
+            alert(`Error uploading video: ${error.message}`);
+        },
+        onUploadProgress: (p) => {
+            // Optional: You could update a progress state here
+        }
+    });
+
+    const { startUpload: startResourceUpload } = useUploadThing("courseAttachment", {
+        onClientUploadComplete: (res) => {
+            if (res && res[0]) {
+                setResourceUrl(res[0].url);
+                if (!resourceTitle) {
+                    setResourceTitle(res[0].name);
+                }
+                setIsUploading(false);
+            }
+        },
+        onUploadError: (error) => {
+            console.error(error);
+            setIsUploading(false);
+            alert(`Error uploading resource: ${error.message}`);
+        }
+    });
+
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         setIsUploading(true);
-        const formData = new FormData();
-        formData.append('file', file);
-
         try {
-            const res = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (res.ok) {
-                const data = await res.json();
-                setLessonUrl(data.url);
-            }
+            await startVideoUpload([file]);
         } catch (error) {
             console.error("Upload failed", error);
-        } finally {
             setIsUploading(false);
         }
     };
@@ -217,25 +241,10 @@ export default function CourseEditorPage() {
         if (!file) return;
 
         setIsUploading(true);
-        const formData = new FormData();
-        formData.append('file', file);
-
         try {
-            const res = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (res.ok) {
-                const data = await res.json();
-                setResourceUrl(data.url);
-                if (!resourceTitle) {
-                    setResourceTitle(file.name);
-                }
-            }
+            await startResourceUpload([file]);
         } catch (error) {
             console.error("Resource upload failed", error);
-        } finally {
             setIsUploading(false);
         }
     };
@@ -525,7 +534,7 @@ export default function CourseEditorPage() {
                                                         o haz clic para explorar tus archivos
                                                     </p>
                                                     <span className="text-[10px] text-gray-600 bg-gray-900 px-2 py-1 rounded border border-gray-800">
-                                                        MP4, WebM • Max 1GB
+                                                        MP4, WebM • Max 512MB
                                                     </span>
                                                 </>
                                             )}
