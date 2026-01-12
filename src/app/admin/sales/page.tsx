@@ -63,6 +63,17 @@ export default function AdminSalesPage() {
         }
     };
 
+    const totalAmount = sales.reduce((acc, sale) => {
+        return acc + Number(sale.amount);
+    }, 0);
+
+    const periodLabel = {
+        'today': 'Hoy',
+        'week': 'Esta Semana',
+        'month': 'Este Mes',
+        'all': 'Histórico'
+    }[period] || 'Periodo';
+
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -95,6 +106,19 @@ export default function AdminSalesPage() {
                     </button>
                 </div>
             </div>
+
+            {/* Total Sales Card */}
+            <Card className="bg-gradient-to-r from-[#1F2937] to-[#111827] border-gray-700">
+                <CardContent className="p-6 flex flex-col sm:flex-row justify-between items-center">
+                    <div>
+                        <p className="text-gray-400 text-sm font-medium uppercase tracking-wider">Total Ventas ({periodLabel})</p>
+                        <h2 className="text-4xl font-bold text-white mt-1">{formatCurrency(totalAmount.toString())}</h2>
+                    </div>
+                    <div className="mt-4 sm:mt-0 bg-emerald-500/10 p-3 rounded-full">
+                        <DollarSign className="text-emerald-400 h-8 w-8" />
+                    </div>
+                </CardContent>
+            </Card>
 
             <Card className="bg-[#1F2937] border-gray-700">
                 <CardHeader>
