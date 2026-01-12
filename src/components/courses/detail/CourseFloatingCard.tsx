@@ -81,6 +81,10 @@ export function CourseFloatingCard({
                                 title={`Vista Previa: ${title}`}
                                 isLocked={false}
                                 previewMode={true}
+                                onPurchase={() => {
+                                    setIsPreviewOpen(false);
+                                    handlePurchase();
+                                }}
                             />
                         ) : (
                             <div className="flex items-center justify-center h-full text-white">

@@ -23,6 +23,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { getYouTubeId } from "@/lib/utils";
 
 interface Course {
     id: string;
@@ -52,7 +53,21 @@ export default function AdminCoursesPage() {
         try {
             const res = await fetch("/api/courses");
             const data = await res.json();
-            setCourses(data);
+
+            // Process courses to extract videoUrl
+            const processedCourses = data.map((course: any) => {
+                const sortedModules = course.modules?.sort((a: any, b: any) => a.position - b.position) || [];
+                const firstLessonWithVideo = sortedModules
+                    .flatMap((m: any) => m.lessons?.sort((a: any, b: any) => a.position - b.position) || [])
+                    .find((l: any) => l.videoUrl);
+
+                return {
+                    ...course,
+                    videoUrl: firstLessonWithVideo?.videoUrl || null
+                };
+            });
+
+            setCourses(processedCourses);
         } catch (error) {
             console.error("Error fetching courses:", error);
         } finally {
@@ -210,58 +225,65 @@ export default function AdminCoursesPage() {
                 </div>
             ) : (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {courses.map((course) => (
-                        <Card key={course.id} className="group relative bg-[#1F2937] border-gray-700 flex flex-col overflow-hidden hover:border-[#5D5CDE]/50 transition-colors">
-                            <div className="absolute top-3 right-3 z-10">
-                                <Badge variant={course.published ? "success" : "warning"}>
-                                    {course.published ? "Publicado" : "Borrador"}
-                                </Badge>
-                            </div>
-                            {course.imageUrl && (
-                                <div className="h-40 w-full overflow-hidden">
-                                    <img src={course.imageUrl} alt={course.title} className="w-full h-full object-cover" />
+                    {courses.map((course: any) => {
+                        const youtubeId = course.videoUrl ? getYouTubeId(course.videoUrl) : null;
+                        const displayImage = youtubeId
+                            ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
+                            : course.imageUrl;
+
+                        return (
+                            <Card key={course.id} className="group relative bg-[#1F2937] border-gray-700 flex flex-col overflow-hidden hover:border-[#5D5CDE]/50 transition-colors">
+                                <div className="absolute top-3 right-3 z-10">
+                                    <Badge variant={course.published ? "success" : "warning"}>
+                                        {course.published ? "Publicado" : "Borrador"}
+                                    </Badge>
                                 </div>
-                            )}
-                            <CardHeader>
-                                <CardTitle className="text-white text-lg line-clamp-2">{course.title}</CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex-1">
-                                <p className="text-gray-400 text-sm mb-4 line-clamp-2">{course.description || "Sin descripción"}</p>
-                                <p className="text-[#5D5CDE] font-bold">${course.price}</p>
-                            </CardContent>
-                            <CardFooter className="pt-0">
-                                <div className="flex gap-2 w-full mt-auto">
-                                    <Link href={`/admin/courses/${course.id}`} className="flex-1">
-                                        <Button variant="outline" className="w-full border-gray-600 text-gray-300 hover:text-white hover:bg-gray-700 gap-2">
-                                            <Pencil size={14} />
-                                            Editar
-                                        </Button>
-                                    </Link>
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button variant="destructive" size="icon" className="shrink-0 bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20">
-                                                <Trash size={14} />
+                                {displayImage && (
+                                    <div className="h-40 w-full overflow-hidden">
+                                        <img src={displayImage} alt={course.title} className="w-full h-full object-cover" />
+                                    </div>
+                                )}
+                                <CardHeader>
+                                    <CardTitle className="text-white text-lg line-clamp-2">{course.title}</CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex-1">
+                                    <p className="text-gray-400 text-sm mb-4 line-clamp-2">{course.description || "Sin descripción"}</p>
+                                    <p className="text-[#5D5CDE] font-bold">${course.price}</p>
+                                </CardContent>
+                                <CardFooter className="pt-0">
+                                    <div className="flex gap-2 w-full mt-auto">
+                                        <Link href={`/admin/courses/${course.id}`} className="flex-1">
+                                            <Button variant="outline" className="w-full border-gray-600 text-gray-300 hover:text-white hover:bg-gray-700 gap-2">
+                                                <Pencil size={14} />
+                                                Editar
                                             </Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent className="bg-[#1F2937] border-gray-700 text-white">
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>¿Eliminar curso?</AlertDialogTitle>
-                                                <AlertDialogDescription className="text-gray-400">
-                                                    Esta acción es irreversible. Se borrará el curso y todas sus lecciones.
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel className="bg-transparent border-gray-600 text-white hover:bg-gray-700">Cancelar</AlertDialogCancel>
-                                                <AlertDialogAction onClick={() => handleDelete(course.id)} className="bg-red-600 hover:bg-red-700 text-white border-0">
-                                                    Eliminar
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                </div>
-                            </CardFooter>
-                        </Card>
-                    ))}
+                                        </Link>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button variant="destructive" size="icon" className="shrink-0 bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20">
+                                                    <Trash size={14} />
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent className="bg-[#1F2937] border-gray-700 text-white">
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>¿Eliminar curso?</AlertDialogTitle>
+                                                    <AlertDialogDescription className="text-gray-400">
+                                                        Esta acción es irreversible. Se borrará el curso y todas sus lecciones.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel className="bg-transparent border-gray-600 text-white hover:bg-gray-700">Cancelar</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleDelete(course.id)} className="bg-red-600 hover:bg-red-700 text-white border-0">
+                                                        Eliminar
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </div>
+                                </CardFooter>
+                            </Card>
+                        );
+                    })}
                 </div>
             )}
         </div>

@@ -25,9 +25,10 @@ interface VideoPlayerProps {
     previewMode: boolean;
     courseId?: string;
     onComplete?: () => void;
+    onPurchase?: () => void;
 }
 
-export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, courseId, onComplete }: VideoPlayerProps) {
+export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, courseId, onComplete, onPurchase }: VideoPlayerProps) {
     const playerRef = useRef<any>(null); // ReactPlayer ref
     const [hasWindow, setHasWindow] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -152,7 +153,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                 {thumbnail && (
                     <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: `url(${thumbnail})` }}></div>
                 )}
-                <PaywallOverlay courseId={courseId} />
+                <PaywallOverlay courseId={courseId} onPurchase={onPurchase} />
             </div>
         );
     }
@@ -202,7 +203,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
             {/* Paywall Overlay */}
             {showPaywall && (
                 <div className="absolute inset-0 z-50">
-                    <PaywallOverlay courseId={courseId} />
+                    <PaywallOverlay courseId={courseId} onPurchase={onPurchase} />
                 </div>
             )}
 
