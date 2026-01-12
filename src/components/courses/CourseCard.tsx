@@ -20,40 +20,45 @@ export function CourseCard({ course }: { course: CourseProps }) {
     const href = course.basePath ? `${course.basePath}/${course.id}` : `/courses/${course.id}`;
     return (
         <Link href={href} className="block h-full group">
-            <div className="bg-white rounded-2xl overflow-hidden p-3 shadow-lg hover:translate-y-[-5px] transition-transform duration-300 h-full flex flex-col border border-transparent hover:border-primary/20">
-                <div className="relative h-40 w-full mb-3 rounded-xl overflow-hidden bg-gray-200 shrink-0">
+            <div className="group h-full flex flex-col bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                <div className="relative h-48 w-full overflow-hidden shrink-0">
                     {/* Placeholder for image - using a generic div if no real image */}
                     {course.image && course.image !== "/course-placeholder.jpg" ? (
-                        <img src={course.image} alt={course.title} className="w-full h-full object-cover" />
+                        <img src={course.image} alt={course.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" />
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-gray-400 bg-gray-100">
                             <Video size={40} />
                         </div>
                     )}
 
-                    <div className="absolute top-2 left-2 bg-white/90 text-black text-xs font-bold px-2 py-1 rounded-md z-10">
+                    <div className="absolute top-3 left-3 bg-white/95 text-black text-[10px] font-bold px-3 py-1.5 rounded-full z-10 uppercase tracking-wide shadow-sm">
                         {course.tag}
                     </div>
                 </div>
 
-                <div className="px-1 flex flex-col flex-1">
-                    <div className="flex items-center gap-1 mb-2 text-yellow-500 text-xs font-bold">
-                        <Star size={14} fill="currentColor" />
-                        <span>{course.rating}</span>
-                        <span className="text-gray-400 font-normal">{course.reviews}</span>
+                <div className="p-5 flex flex-col flex-1">
+                    <div className="flex items-center gap-1.5 mb-3">
+                        <div className="flex text-yellow-400">
+                            {[...Array(5)].map((_, i) => (
+                                <Star key={i} size={14} fill="currentColor" className="stroke-none" />
+                            ))}
+                        </div>
+                        <span className="text-gray-400 text-xs font-medium">{course.reviews}</span>
                     </div>
 
-                    <h3 className="text-gray-900 font-bold text-base leading-snug line-clamp-2 mb-1 flex-1 group-hover:text-primary transition-colors">
+                    <h3 className="text-gray-900 font-extrabold text-xl leading-tight line-clamp-2 mb-2 flex-1 group-hover:text-[#5D5CDE] transition-colors">
                         {course.title}
                     </h3>
-                    <p className="text-gray-500 text-xs mb-3 truncate">{course.instructor}</p>
 
-                    <div className="flex items-center justify-between border-t border-gray-100 pt-3 mt-auto">
-                        <div className="flex items-center gap-2">
-                            <span className="text-gray-900 font-bold">{course.price}</span>
+                    <div className="w-10 h-1 bg-gray-100 rounded-full mb-4 group-hover:bg-[#5D5CDE] transition-colors"></div>
+
+                    <div className="flex items-center justify-between mt-auto">
+                        <div className="flex flex-col">
+                            <span className="text-xs text-gray-400 font-medium uppercase">Inversión</span>
+                            <span className="text-gray-900 font-black text-lg">{course.price}</span>
                         </div>
-                        <div className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "h-8 px-2 text-primary hover:text-primary hover:bg-primary/10 pointer-events-none")}>
-                            Ver más
+                        <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-900 group-hover:bg-[#5D5CDE] group-hover:text-white transition-colors">
+                            <Video size={18} />
                         </div>
                     </div>
                 </div>

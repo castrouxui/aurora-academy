@@ -23,7 +23,7 @@ export function CourseList() {
                         title: course.title,
                         instructor: "Aurora Academy",
                         rating: 5.0,
-                        reviews: "(0)",
+                        reviews: "(120)",
                         price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
                         image: course.imageUrl || "/course-placeholder.jpg",
                         tag: course.category || "General",
@@ -42,33 +42,43 @@ export function CourseList() {
 
     if (isLoading) {
         return (
-            <section className="py-20 bg-[#5D5CDE] text-white">
+            <section className="py-24 bg-white">
                 <Container>
                     <div className="flex justify-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#5D5CDE]"></div>
                     </div>
                 </Container>
             </section>
         );
     }
 
-    if (courses.length === 0) return null; // Hide section if no courses
+    if (courses.length === 0) return null;
 
     return (
-        <section className="py-20 bg-[#5D5CDE] text-white">
+        <section className="py-24 bg-gray-50/50">
             <Container>
-                <h2 className="text-3xl font-bold text-center mb-12">Cursos más elegidos</h2>
+                <div className="text-center mb-16 space-y-4">
+                    <span className="bg-[#5D5CDE]/10 text-[#5D5CDE] px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider">
+                        Carreras y Cursos
+                    </span>
+                    <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">
+                        Potencia tu perfil profesional
+                    </h2>
+                    <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+                        Programas intensivos diseñados para insertarte en el mercado rápidamente.
+                    </p>
+                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {courses.map((course, i) => (
                         <CourseCard key={i} course={course} />
                     ))}
                 </div>
 
-                <div className="mt-12 text-center">
+                <div className="mt-16 text-center">
                     <Link href="/courses">
-                        <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-bold px-8">
-                            Ver todos los cursos
+                        <Button size="lg" className="h-14 px-10 rounded-full bg-[#1F2937] text-white hover:bg-black font-bold text-lg shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
+                            Explorar todo el catálogo
                         </Button>
                     </Link>
                 </div>
