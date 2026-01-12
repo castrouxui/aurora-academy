@@ -12,13 +12,16 @@ async function main() {
 
     await prisma.user.upsert({
         where: { email: adminEmail },
-        update: {},
+        update: {
+            name: 'Francisco Castro',
+            image: '/images/francisco-speaking.png',
+        },
         create: {
             id: adminKey,
             email: adminEmail,
-            name: 'Admin User',
+            name: 'Francisco Castro',
             role: 'ADMIN',
-            image: 'https://github.com/shadcn.png',
+            image: '/images/francisco-speaking.png',
         },
     })
     console.log('Ensure Admin User exists')
