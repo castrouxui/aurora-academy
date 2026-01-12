@@ -15,7 +15,7 @@ import {
 
 // Dynamic import to avoid SSR issues with ReactPlayer. 
 // Using main entry point to ensure compatibility.
-const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
+const ReactPlayer = dynamic(() => import("react-player"), { ssr: false }) as any;
 
 interface VideoPlayerProps {
     url: string;
@@ -170,15 +170,20 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     volume={isMuted ? 0 : volume}
                     playbackRate={playbackRate}
                     controls={false} // We provide custom controls
-                    // @ts-ignore
-                    onProgress={handleProgress}
+                    playsinline={true}
+                    config={{
+                        youtube: {
+                            playerVars: { showinfo: 0, controls: 0, modestbranding: 1, rel: 0, playsinline: 1 }
+                        }
+                    } as any}
+                    onProgress={handleProgress as any}
                     onDuration={handleDuration}
                     onEnded={handleEnded}
                     onError={handleError}
                     onBuffer={() => setIsLoading(true)}
                     onBufferEnd={() => setIsLoading(false)}
                     onReady={() => setIsLoading(false)}
-                    style={{ pointerEvents: 'none' }} // Prevent native YouTube clicks stealing focus
+                    onStart={() => setIsLoading(false)}
                 />
             )}
 
