@@ -1,47 +1,71 @@
 import { Container } from "@/components/layout/Container";
-import { Users, Award, TrendingUp, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MoveRight, Bitcoin, TrendingUp, DollarSign } from "lucide-react";
 
 export function StatsStrip() {
     return (
-        <section className="bg-black border-y border-white/10 py-10 relative z-20">
+        <section className="bg-black border-y border-white/10 py-20 relative z-20 overflow-hidden">
+            {/* Background Gradient Effect */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#5D5CDE]/20 blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+
             <Container>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                    <StatItem
-                        icon={<Users className="text-[#5D5CDE]" size={28} />}
-                        value="+1.000"
-                        label="Alumnos Activos"
-                    />
-                    <StatItem
-                        icon={<Award className="text-[#5D5CDE]" size={28} />}
-                        value="Certificaciones"
-                        label="Oficiales"
-                    />
-                    <StatItem
-                        icon={<ShieldCheck className="text-[#5D5CDE]" size={28} />}
-                        value="Mentoria"
-                        label="1 a 1 Garantizada"
-                    />
-                    <StatItem
-                        icon={<TrendingUp className="text-[#5D5CDE]" size={28} />}
-                        value="Y Combinator"
-                        label="Backed Company"
-                    />
+                <div className="flex flex-col lg:flex-row justify-between items-center gap-12 relative z-10">
+                    {/* LEft Side: Copy & CTA */}
+                    <div className="flex flex-col items-start space-y-8 max-w-2xl text-center lg:text-left">
+                        <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm">
+                            <span className="text-white text-sm font-medium">Comunidad Aurora</span>
+                        </div>
+
+                        <h2 className="text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
+                            Estudia con traders de toda la región y crea vínculos para toda la vida
+                        </h2>
+
+                        <Button className="h-14 px-8 rounded-full bg-[#FFE500] hover:bg-[#e6ce00] text-black font-black text-lg shadow-[0_0_20px_rgba(255,229,0,0.3)] transition-all hover:scale-105">
+                            Unirme a la comunidad
+                            <MoveRight className="ml-2 w-5 h-5" />
+                        </Button>
+                    </div>
+
+                    {/* Right Side: Social Proof & Avatars */}
+                    <div className="flex flex-col items-center lg:items-end gap-8">
+                        {/* Avatar Group */}
+                        <div className="flex items-center gap-4">
+                            <div className="flex -space-x-4">
+                                {[1, 2, 3, 4].map((i) => (
+                                    <div key={i} className="w-12 h-12 rounded-full border-2 border-black overflow-hidden relative bg-gray-800">
+                                        {/* Using generic placeholders for demo */}
+                                        <img
+                                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`}
+                                            alt="Student"
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-white font-bold text-lg leading-none">+1.000</span>
+                                <span className="text-gray-400 text-sm font-medium">Estudiantes Activos</span>
+                            </div>
+                        </div>
+
+                        {/* "Flags" replacement: Market Icons */}
+                        <div className="flex items-center gap-6 p-4 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
+                            <span className="text-gray-400 text-xs font-bold uppercase tracking-wider mr-2">Mercados:</span>
+                            <div className="flex items-center gap-4 text-white/80">
+                                <div className="flex items-center gap-2" title="Crypto">
+                                    <Bitcoin size={24} className="text-orange-500" />
+                                </div>
+                                <div className="flex items-center gap-2" title="Forex">
+                                    <DollarSign size={24} className="text-green-500" />
+                                </div>
+                                <div className="flex items-center gap-2" title="Stocks">
+                                    <TrendingUp size={24} className="text-blue-500" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </Container>
         </section>
-    );
-}
-
-function StatItem({ icon, value, label }: { icon: any, value: string, label: string }) {
-    return (
-        <div className="flex flex-col items-center justify-center text-center space-y-2 group hover:-translate-y-1 transition-transform duration-300">
-            <div className="p-3 bg-white/5 rounded-2xl mb-1 group-hover:bg-[#5D5CDE]/20 transition-colors">
-                {icon}
-            </div>
-            <div>
-                <p className="text-2xl md:text-3xl font-black text-white tracking-tight">{value}</p>
-                <p className="text-sm text-gray-400 font-medium uppercase tracking-wide">{label}</p>
-            </div>
-        </div>
     );
 }
