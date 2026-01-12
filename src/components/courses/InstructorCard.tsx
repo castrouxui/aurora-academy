@@ -16,8 +16,8 @@ export function InstructorCard() {
                         />
                     </div>
                     {/* Verified Badge Icon */}
-                    <div className="absolute bottom-1 right-1 bg-[#0B0F19] rounded-full text-[#5D5CDE]">
-                        <BadgeCheck size={28} fill="#0B0F19" className="text-[#5D5CDE]" />
+                    <div className="absolute bottom-1 right-1 bg-[#0B0F19] rounded-full">
+                        <BadgeCheck size={28} fill="#0095F6" className="text-white" />
                     </div>
                 </div>
 
