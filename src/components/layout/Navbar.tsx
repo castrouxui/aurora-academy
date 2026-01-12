@@ -245,7 +245,7 @@ export function Navbar() {
 
         {/* Mobile Menu Overlay */}
         {isOpen && (
-          <div className="fixed inset-0 z-40 bg-[#0B0F19]/95 backdrop-blur-xl md:hidden animate-in fade-in slide-in-from-top-5 duration-300">
+          <div className="fixed inset-0 z-[100] bg-[#0B0F19]/95 backdrop-blur-xl md:hidden animate-in fade-in slide-in-from-top-5 duration-300">
             <div className="flex flex-col h-full pt-20 px-6 pb-8 overflow-y-auto">
               {/* Mobile Search - Prominent */}
               <div className="relative w-full mb-8">
