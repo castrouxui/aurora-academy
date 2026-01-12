@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PaymentModal } from "@/components/checkout/PaymentModal";
-import { Play, PlayCircle, Clock, BarChart, Users, Globe, Captions, CheckCircle2 } from "lucide-react";
+import { Play, PlayCircle, Clock, BarChart, Users, Globe, Captions, CheckCircle2, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import Link from "next/link";
@@ -72,7 +72,13 @@ export function CourseFloatingCard({
 
             {/* Preview Modal */}
             <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-                <DialogContent className="sm:max-w-4xl p-0 bg-black border-gray-800 overflow-hidden">
+                <DialogContent className="sm:max-w-4xl p-0 bg-black border-gray-800 overflow-hidden relative">
+                    <button
+                        onClick={() => setIsPreviewOpen(false)}
+                        className="absolute top-4 right-4 z-[60] bg-black/50 p-2 rounded-full text-white hover:bg-black/80 transition-colors"
+                    >
+                        <X size={24} />
+                    </button>
                     <div className="aspect-video w-full">
                         {videoUrl ? (
                             <VideoPlayer

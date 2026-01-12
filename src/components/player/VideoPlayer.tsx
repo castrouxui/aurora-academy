@@ -173,7 +173,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     playsinline={true}
                     config={{
                         youtube: {
-                            playerVars: { showinfo: 0, controls: 0, modestbranding: 1, rel: 0, playsinline: 1 }
+                            playerVars: { showinfo: 0, controls: 1, rel: 0, playsinline: 1, modestbranding: 1 }
                         }
                     } as any}
                     onProgress={handleProgress as any}
