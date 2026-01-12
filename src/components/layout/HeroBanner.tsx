@@ -13,27 +13,28 @@ export function HeroBanner() {
     const closeLoginModal = () => setIsLoginModalOpen(false);
 
     return (
-        <section className="relative w-full py-24 md:py-32 lg:py-48 xl:py-56 overflow-hidden">
+
+        <section className="relative w-full py-20 sm:py-24 md:py-32 lg:py-48 xl:py-56 overflow-hidden">
             <Container className="relative z-10 h-full flex flex-col items-center justify-center">
-                <div className="flex flex-col items-center space-y-8 text-center">
-                    <div className="space-y-6 max-w-[900px]">
-                        <h1 className="text-4xl font-black tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none text-white drop-shadow-lg mb-6">
+                <div className="flex flex-col items-center space-y-6 md:space-y-8 text-center px-4 md:px-0">
+                    <div className="space-y-4 md:space-y-6 max-w-[900px]">
+                        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl/none font-black tracking-tighter text-white drop-shadow-lg mb-4 md:mb-6">
                             Aprendé a invertir desde cero
                         </h1>
-                        <p className="mx-auto max-w-[700px] text-gray-200 md:text-xl drop-shadow-md font-medium leading-relaxed mb-8">
+                        <p className="mx-auto max-w-[700px] text-gray-200 text-base sm:text-lg md:text-xl drop-shadow-md font-medium leading-relaxed mb-6 md:mb-8">
                             Cursos y formaciones diseñadas por <strong className="text-white">traders con experiencia real en mercados</strong>.
                             Formación clara, práctica y enfocada en <strong className="text-white">decisiones reales</strong>.
                         </p>
                     </div>
-                    <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+                    <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
                         <Button
                             onClick={openLoginModal}
-                            className="h-14 px-10 text-xl w-full sm:w-auto bg-[#5D5CDE] text-white hover:bg-[#4B4AC0] border-transparent font-bold rounded-full shadow-lg shiny-hover transition-transform hover:scale-105"
+                            className="h-12 sm:h-14 px-8 sm:px-10 text-lg sm:text-xl w-full sm:w-auto bg-[#5D5CDE] text-white hover:bg-[#4B4AC0] border-transparent font-bold rounded-full shadow-lg shiny-hover transition-transform hover:scale-105"
                         >
                             Aplicar Ahora
                         </Button>
-                        <Link href="#courses">
-                            <Button variant="outline" className="h-14 px-10 text-xl w-full sm:w-auto text-white border-white/20 bg-white/5 hover:bg-white hover:text-black font-bold rounded-full backdrop-blur-sm transition-transform hover:scale-105">
+                        <Link href="#courses" className="w-full sm:w-auto">
+                            <Button variant="outline" className="h-12 sm:h-14 px-8 sm:px-10 text-lg sm:text-xl w-full sm:w-auto text-white border-white/20 bg-white/5 hover:bg-white hover:text-black font-bold rounded-full backdrop-blur-sm transition-transform hover:scale-105">
                                 Explorar Carreras
                             </Button>
                         </Link>

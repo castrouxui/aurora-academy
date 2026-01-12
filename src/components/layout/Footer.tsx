@@ -1,26 +1,26 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./Logo";
-import { Facebook, Instagram, Linkedin, Twitter, Youtube, MoveRight, Bitcoin, TrendingUp, DollarSign } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Twitter, Youtube, MoveRight, Bitcoin, TrendingUp, DollarSign, Send } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 
 export function Footer() {
     return (
         <footer className="w-full">
             {/* Top Banner (Community Style) */}
-            <div className="bg-black text-white py-20 relative overflow-hidden border-b border-gray-800">
+            <div className="bg-black text-white py-12 md:py-20 relative overflow-hidden border-b border-gray-800">
                 {/* Background Gradient Effect */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#5D5CDE]/20 blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute top-0 right-0 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-[#5D5CDE]/20 blur-[80px] md:blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
 
                 <Container>
-                    <div className="flex flex-col lg:flex-row justify-between items-center gap-12 relative z-10">
+                    <div className="flex flex-col lg:flex-row justify-between items-center gap-10 lg:gap-12 relative z-10">
                         {/* Left Side: Copy & CTA */}
-                        <div className="flex flex-col items-start space-y-8 max-w-2xl text-center lg:text-left">
+                        <div className="flex flex-col items-center lg:items-start space-y-6 md:space-y-8 max-w-2xl text-center lg:text-left">
                             <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm">
-                                <span className="text-white text-sm font-medium">Comunidad Aurora</span>
+                                <span className="text-white text-xs md:text-sm font-medium">Comunidad Aurora</span>
                             </div>
 
-                            <h2 className="text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
+                            <h2 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">
                                 Estudia con traders de toda la región y crea vínculos para toda la vida
                             </h2>
 
@@ -91,6 +91,7 @@ export function Footer() {
                                 <SocialIcon icon={<Instagram size={20} />} href="#" />
                                 <SocialIcon icon={<Twitter size={20} />} href="#" />
                                 <SocialIcon icon={<Youtube size={20} />} href="#" />
+                                <SocialIcon icon={<Send size={20} />} href="#" />
                             </div>
                         </div>
 

@@ -40,7 +40,7 @@ export function CTASection() {
                                 <Users size={32} />
                             </div>
                             <h3 className="text-2xl font-bold text-white mb-2">Comunidad VIP</h3>
-                            <p className="text-gray-400">Acceso exclusivo a nuestro Discord. Señales, análisis diario y networking con otros traders.</p>
+                            <p className="text-gray-400">Acceso exclusivo a nuestro Telegram. Señales, análisis diario y networking con otros traders.</p>
                         </div>
                     </div>
 

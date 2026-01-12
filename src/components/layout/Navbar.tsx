@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
 import { Logo } from "./Logo";
-import { Menu, X, Search, LogOut, BookOpen, User, LayoutDashboard } from "lucide-react";
+import { Menu, X, Search, LogOut, BookOpen, User, LayoutDashboard, TrendingUp } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 // import { cn } from "@/lib/utils"; // Not used but could be kept
 import { LoginModal } from "@/components/auth/LoginModal";
@@ -141,77 +141,82 @@ export function Navbar() {
           </div>
         </Container>
 
-        {/* Mobile Menu Dropdown */}
+        {/* Mobile Menu Overlay */}
         {isOpen && (
-          <div className="border-t border-gray-800 bg-background md:hidden">
-            <div className="container mx-auto flex flex-col space-y-6 px-6 py-8">
-              {/* Mobile Search */}
-              <div className="relative w-full mb-2">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <Search size={18} />
+          <div className="fixed inset-0 z-40 bg-[#0B0F19]/95 backdrop-blur-xl md:hidden animate-in fade-in slide-in-from-top-5 duration-300">
+            <div className="flex flex-col h-full pt-20 px-6 pb-8 overflow-y-auto">
+              {/* Mobile Search - Prominent */}
+              <div className="relative w-full mb-8">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                  <Search size={20} />
                 </div>
                 <input
                   type="text"
-                  placeholder="¿Qué quieres aprender?"
-                  className="w-full bg-[#1e2330] border border-gray-700 text-gray-200 text-sm rounded-md py-2 pl-10 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                  placeholder="¿Qué quieres aprender hoy?"
+                  className="w-full bg-white/5 border border-white/10 text-white text-lg rounded-2xl py-4 pl-12 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                 />
               </div>
 
-              <Link
-                href="/courses"
-                className={getMobileLinkClass("/courses")}
-                onClick={toggleMenu}
-              >
-                Cursos
-              </Link>
-              <Link
-                href="/pricing"
-                className={getMobileLinkClass("/pricing")}
-                onClick={toggleMenu}
-              >
-                Precios
-              </Link>
-              <Link
-                href="/about"
-                className={getMobileLinkClass("/about")}
-                onClick={toggleMenu}
-              >
-                Nosotros
-              </Link>
-              {session ? (
-                <>
-                  <div className="border-t border-gray-800 pt-4 pb-2">
-                    <div className="flex items-center gap-3 px-2 mb-3">
-                      <img src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`} alt="" className="w-10 h-10 rounded-full" />
+              {/* Main Navigation Links */}
+              <div className="flex flex-col space-y-2 mb-8">
+                <Link
+                  href="/courses"
+                  className={getMobileLinkClass("/courses")}
+                  onClick={toggleMenu}
+                >
+                  <BookOpen className="mr-4 text-gray-500" size={24} />
+                  <span className="text-xl font-bold">Cursos</span>
+                </Link>
+                <Link
+                  href="/pricing"
+                  className={getMobileLinkClass("/pricing")}
+                  onClick={toggleMenu}
+                >
+                  <TrendingUp className="mr-4 text-gray-500" size={24} />
+                  <span className="text-xl font-bold">Precios</span>
+                </Link>
+                <Link
+                  href="/about"
+                  className={getMobileLinkClass("/about")}
+                  onClick={toggleMenu}
+                >
+                  <User className="mr-4 text-gray-500" size={24} />
+                  <span className="text-xl font-bold">Nosotros</span>
+                </Link>
+              </div>
+
+              {/* User Session / Auth */}
+              <div className="mt-auto">
+                {session ? (
+                  <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
+                    <div className="flex items-center gap-4 mb-4">
+                      <img src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`} alt="" className="w-12 h-12 rounded-full border border-gray-700" />
                       <div>
-                        <p className="text-white font-medium text-sm">{session.user?.name}</p>
-                        <p className="text-xs text-gray-400">{session.user?.email}</p>
+                        <p className="text-white font-bold text-lg">{session.user?.name}</p>
+                        <p className="text-sm text-gray-400">{session.user?.email}</p>
                       </div>
                     </div>
-                    <Link href="/dashboard/courses" className="flex items-center gap-2 px-2 py-2 text-gray-300 hover:text-white" onClick={toggleMenu}>
-                      <BookOpen size={18} />
-                      Mis Cursos
+                    <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"} className="w-full flex items-center justify-center gap-2 bg-[#5D5CDE] text-white py-3 rounded-xl font-bold mb-3 hover:bg-[#4B4AC0]" onClick={toggleMenu}>
+                      <LayoutDashboard size={20} />
+                      Ir al Dashboard
                     </Link>
-                    <button onClick={() => signOut()} className="w-full text-left flex items-center gap-2 px-2 py-2 text-red-400 hover:text-red-300">
-                      <LogOut size={18} />
+                    <button onClick={() => signOut()} className="w-full flex items-center justify-center gap-2 py-3 text-red-400 hover:bg-white/5 rounded-xl font-medium transition-colors">
+                      <LogOut size={20} />
                       Cerrar sesión
                     </button>
                   </div>
-                </>
-              ) : (
-                <div className="pt-4">
+                ) : (
                   <Button
-                    className="w-full"
-                    size="lg"
+                    className="w-full h-14 text-lg font-bold bg-[#5D5CDE] text-white rounded-2xl shadow-lg shiny-hover"
                     onClick={() => {
                       toggleMenu();
                       openLoginModal();
                     }}
                   >
-                    Acceder
+                    Acceder a la Academia
                   </Button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         )}
