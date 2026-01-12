@@ -7,10 +7,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Video, Trash2, Edit, Save, PlusCircle, LayoutList, ChevronUp, ChevronDown, Check, X, GripVertical, MoreVertical, FileVideo, UploadCloud, FolderPlus, EyeOff, Loader2, LinkIcon, File, ArrowLeft, Eye } from "lucide-react";
+import { Plus, Video, Trash2, Edit, Save, PlusCircle, LayoutList, ChevronUp, ChevronDown, Check, X, GripVertical, MoreVertical, FileVideo, UploadCloud, FolderPlus, EyeOff, Loader2, LinkIcon, File, ArrowLeft, Eye, Layers, DollarSign, BarChart, Tag, Globe } from "lucide-react";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { useUploadThing } from "@/lib/uploadthing";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    DropdownMenuLabel,
+    DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 
 interface Lesson {
     id: string;
@@ -333,110 +342,164 @@ export default function CourseEditorPage() {
 
     return (
         <div className="space-y-6 pb-20">
-            <div className="flex items-center gap-4">
-                <Link href="/admin/courses">
-                    <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
-                        <ArrowLeft size={20} />
-                    </Button>
-                </Link>
-                <div className="flex-1">
-                    <h1 className="text-2xl font-bold text-white max-w-2xl truncate mb-1">{course.title}</h1>
-                    <div className="flex items-center gap-3 text-sm text-gray-400">
-                        <span>{course.modules?.length || 0} Módulos</span>
-                        <span>•</span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-gray-500">Categoría:</span>
-                            <select
-                                value={course.category || "General"}
-                                onChange={async (e) => {
-                                    const newCategory = e.target.value;
-                                    setCourse({ ...course, category: newCategory }); // Optimistic update
-                                    try {
-                                        await fetch(`/api/courses/${courseId}`, {
-                                            method: "PATCH",
-                                            headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify({ category: newCategory }),
-                                        });
-                                    } catch (error) {
-                                        console.error("Failed to update category", error);
-                                    }
-                                }}
-                                className="bg-[#1a1f2e] text-white border border-gray-700 rounded px-2 py-0.5 text-xs focus:outline-none focus:border-[#5D5CDE]"
-                            >
-                                <option value="General">General</option>
-                                <option value="Trading">Trading</option>
-                                <option value="Crypto">Crypto</option>
-                                <option value="Finanzas">Finanzas</option>
-                                <option value="Psicología">Psicología</option>
-                            </select>
+            {/* Header Section */}
+            <div className="flex flex-col gap-6">
+                <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                        <Link href="/admin/courses">
+                            <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white hover:bg-white/5 rounded-xl">
+                                <ArrowLeft size={20} />
+                            </Button>
+                        </Link>
+                        <div>
+                            <div className="flex items-center gap-3 mb-1">
+                                <Badge variant="outline" className={`${course.published ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'}`}>
+                                    {course.published ? 'Publicado' : 'Borrador'}
+                                </Badge>
+                                <span className="text-xs text-gray-500 flex items-center gap-1">
+                                    <Layers size={12} /> {course.modules?.length || 0} Módulos
+                                </span>
+                            </div>
+                            <h1 className="text-3xl font-bold text-white tracking-tight">{course.title}</h1>
                         </div>
-                        <span>•</span>
-                        <span>{course.published ? "Publicado" : "Borrador"}</span>
-                        <span>•</span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-gray-500">Nivel:</span>
-                            <select
-                                value={course.level || "Todos los niveles"}
-                                onChange={async (e) => {
-                                    const newLevel = e.target.value;
-                                    setCourse({ ...course, level: newLevel }); // Optimistic update
-                                    try {
-                                        await fetch(`/api/courses/${courseId}`, {
-                                            method: "PATCH",
-                                            headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify({ level: newLevel }),
-                                        });
-                                    } catch (error) {
-                                        console.error("Failed to update level", error);
-                                    }
-                                }}
-                                className="bg-[#1a1f2e] text-white border border-gray-700 rounded px-2 py-0.5 text-xs focus:outline-none focus:border-[#5D5CDE]"
-                            >
-                                <option value="Todos los niveles">Todos los niveles</option>
-                                <option value="Principiante">Principiante</option>
-                                <option value="Intermedio">Intermedio</option>
-                                <option value="Avanzado">Avanzado</option>
-                            </select>
-                        </div>
-                        <span>•</span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-gray-500">Precio:</span>
-                            <div className="relative">
-                                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
-                                <input
-                                    type="number"
-                                    value={course.price || 0}
-                                    onChange={async (e) => {
-                                        const newPrice = parseFloat(e.target.value);
-                                        setCourse({ ...course, price: newPrice });
-                                        try {
-                                            await fetch(`/api/courses/${courseId}`, {
-                                                method: "PATCH",
-                                                headers: { "Content-Type": "application/json" },
-                                                body: JSON.stringify({ price: newPrice }),
-                                            });
-                                        } catch (error) {
-                                            console.error("Failed to update price", error);
-                                        }
-                                    }}
-                                    className="bg-[#1a1f2e] text-white border border-gray-700 rounded px-2 py-0.5 text-xs focus:outline-none focus:border-[#5D5CDE] w-24 pl-4"
-                                />
+                    </div>
+                    <div className="flex gap-2">
+                        <Link href={`/learn/${course.id}`} target="_blank">
+                            <Button variant="outline" className="border-gray-700 text-gray-300 hover:text-white hover:bg-white/5 gap-2">
+                                <Globe size={16} />
+                                Ver Curso
+                            </Button>
+                        </Link>
+                        <Button
+                            onClick={togglePublish}
+                            className={course.published
+                                ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 border border-emerald-500/20"
+                                : "bg-[#5D5CDE] text-white hover:bg-[#4B4AC0] shadow-lg shadow-[#5D5CDE]/20"}
+                        >
+                            {course.published ? (
+                                <><Eye size={16} className="mr-2" /> Publicado</>
+                            ) : (
+                                <><EyeOff size={16} className="mr-2" /> Publicar Curso</>
+                            )}
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Metadata Controls Bar */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Category Selector */}
+                    <div className="bg-[#1F2937]/50 border border-gray-800 p-3 rounded-xl flex items-center justify-between group hover:border-gray-700 transition-colors">
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-lg bg-[#5D5CDE]/10 flex items-center justify-center text-[#5D5CDE]">
+                                <Tag size={20} />
+                            </div>
+                            <div>
+                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Categoría</p>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <button className="text-sm font-medium text-white flex items-center gap-1 hover:text-[#5D5CDE] transition-colors focus:outline-none">
+                                            {course.category || "Seleccionar"} <ChevronDown size={14} className="opacity-50" />
+                                        </button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="start" className="bg-[#1F2937] border-gray-700 text-white">
+                                        <DropdownMenuLabel>Seleccionar Categoría</DropdownMenuLabel>
+                                        <DropdownMenuSeparator className="bg-gray-700" />
+                                        {["General", "Trading", "Crypto", "Finanzas", "Psicología"].map((cat) => (
+                                            <DropdownMenuItem
+                                                key={cat}
+                                                onClick={async () => {
+                                                    setCourse({ ...course, category: cat });
+                                                    try {
+                                                        await fetch(`/api/courses/${courseId}`, {
+                                                            method: "PATCH",
+                                                            headers: { "Content-Type": "application/json" },
+                                                            body: JSON.stringify({ category: cat }),
+                                                        });
+                                                    } catch (e) {
+                                                        console.error(e);
+                                                    }
+                                                }}
+                                                className="hover:bg-white/10 cursor-pointer"
+                                            >
+                                                {cat}
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="flex gap-2">
-                    <Button
-                        onClick={togglePublish}
-                        variant={course.published ? "secondary" : "default"}
-                        className={course.published ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20" : "bg-[#5D5CDE] text-white hover:bg-[#4B4AC0]"}
-                    >
-                        {course.published ? (
-                            <><Eye size={16} className="mr-2" /> Publicado</>
-                        ) : (
-                            <><EyeOff size={16} className="mr-2" /> Publicar</>
-                        )}
-                    </Button>
+
+                    {/* Level Selector */}
+                    <div className="bg-[#1F2937]/50 border border-gray-800 p-3 rounded-xl flex items-center justify-between group hover:border-gray-700 transition-colors">
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                                <BarChart size={20} />
+                            </div>
+                            <div>
+                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Nivel</p>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <button className="text-sm font-medium text-white flex items-center gap-1 hover:text-emerald-500 transition-colors focus:outline-none">
+                                            {course.level || "Seleccionar"} <ChevronDown size={14} className="opacity-50" />
+                                        </button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="start" className="bg-[#1F2937] border-gray-700 text-white">
+                                        {["Todos los niveles", "Principiante", "Intermedio", "Avanzado"].map((lvl) => (
+                                            <DropdownMenuItem
+                                                key={lvl}
+                                                onClick={async () => {
+                                                    setCourse({ ...course, level: lvl });
+                                                    try {
+                                                        await fetch(`/api/courses/${courseId}`, {
+                                                            method: "PATCH",
+                                                            headers: { "Content-Type": "application/json" },
+                                                            body: JSON.stringify({ level: lvl }),
+                                                        });
+                                                    } catch (e) { console.error(e); }
+                                                }}
+                                                className="hover:bg-white/10 cursor-pointer"
+                                            >
+                                                {lvl}
+                                            </DropdownMenuItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Price Input */}
+                    <div className="bg-[#1F2937]/50 border border-gray-800 p-3 rounded-xl flex items-center justify-between group hover:border-gray-700 transition-colors">
+                        <div className="flex items-center gap-3 w-full">
+                            <div className="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0">
+                                <DollarSign size={20} />
+                            </div>
+                            <div className="flex-1">
+                                <p className="text-xs text-gray-500 font-medium uppercase tracking-wider mb-0.5">Precio (ARS)</p>
+                                <div className="flex items-center gap-1">
+                                    <span className="text-gray-400 font-medium">$</span>
+                                    <input
+                                        type="number"
+                                        value={course.price || 0}
+                                        onChange={async (e) => {
+                                            const newPrice = parseFloat(e.target.value);
+                                            setCourse({ ...course, price: newPrice });
+                                            try {
+                                                await fetch(`/api/courses/${courseId}`, {
+                                                    method: "PATCH",
+                                                    headers: { "Content-Type": "application/json" },
+                                                    body: JSON.stringify({ price: newPrice }),
+                                                });
+                                            } catch (error) { console.error(error); }
+                                        }}
+                                        className="bg-transparent text-white font-medium border-none p-0 focus:ring-0 w-full h-auto text-sm placeholder:text-gray-600 appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                        placeholder="0.00"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
