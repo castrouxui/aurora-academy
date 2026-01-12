@@ -6,7 +6,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User, Mail, Lock, Shield } from "lucide-react";
+import { User, Mail, Lock, Shield, Trash2, AlertTriangle } from "lucide-react";
+import { signOut } from "next-auth/react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function SettingsPage() {
     const { data: session } = useSession();
@@ -95,6 +107,24 @@ export default function SettingsPage() {
                             </div>
                         </CardContent>
                     </Card>
+
+                    {session?.user?.role !== 'ADMIN' && (
+                        <Card className="bg-[#1F2937] border-red-900/30 border-l-4 border-l-red-600">
+                            <CardHeader>
+                                <CardTitle className="text-white flex items-center gap-2">
+                                    <Trash2 className="text-red-500" />
+                                    Zona de Peligro
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-medium text-white">Eliminar Cuenta</p>
+                                    <p className="text-xs text-gray-400">Esta acción es permanente y no se puede deshacer.</p>
+                                </div>
+                                <DeleteAccountButton />
+                            </CardContent>
+                        </Card>
+                    )}
 
                     {session?.user?.role === 'ADMIN' && (
                         <Card className="bg-[#1F2937] border-gray-700 border-l-4 border-l-blue-500">
