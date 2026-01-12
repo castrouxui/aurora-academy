@@ -18,20 +18,20 @@ export function Categories() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {categories.map((cat, i) => (
-                        <div key={i} className="bg-[#FFF5F1] hover:bg-white transition-colors p-6 rounded-xl flex items-center gap-4 cursor-pointer group hover:shadow-lg">
-                            <div className="p-3 bg-orange-100 rounded-lg group-hover:bg-primary/10 text-orange-500 group-hover:text-primary transition-colors">
+                        <div key={i} className="bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/10 transition-all duration-300 p-6 rounded-2xl flex items-center gap-4 cursor-pointer group hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/5">
+                            <div className="p-3 bg-white/5 rounded-xl text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                                 <cat.icon size={28} />
                             </div>
                             <div>
-                                <h3 className="font-bold text-gray-900 text-sm flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                <h3 className="font-bold text-white text-base flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 group-hover:text-primary transition-colors">
                                     {cat.name}
                                     {cat.status === "coming_soon" && (
-                                        <span className="text-[9px] sm:text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase font-bold tracking-wider w-fit">
+                                        <span className="text-[10px] bg-white/10 text-gray-300 border border-white/10 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider w-fit">
                                             Próximamente
                                         </span>
                                     )}
                                 </h3>
-                                <p className="text-xs text-gray-500">
+                                <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
                                     {cat.status === "coming_soon" ? "Disponible pronto" : cat.count}
                                 </p>
                             </div>
