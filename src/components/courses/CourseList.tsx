@@ -27,7 +27,8 @@ export function CourseList() {
                         price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
                         image: course.imageUrl || "/course-placeholder.jpg",
                         tag: course.category || "General",
-                        rawPrice: course.price
+                        rawPrice: course.price,
+                        videoUrl: course.modules?.[0]?.lessons?.[0]?.videoUrl || null // Get first video for thumbnail
                     }));
                     setCourses(formattedCourses);
                 }
@@ -42,7 +43,7 @@ export function CourseList() {
 
     if (isLoading) {
         return (
-            <section className="py-24 bg-white">
+            <section className="py-24 bg-[#0B0F19]">
                 <Container>
                     <div className="flex justify-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#5D5CDE]"></div>
@@ -55,16 +56,16 @@ export function CourseList() {
     if (courses.length === 0) return null;
 
     return (
-        <section className="py-24 bg-gray-50/50 dark:bg-[#0B0F19] transition-colors">
+        <section className="py-24 bg-[#0B0F19] transition-colors">
             <Container>
                 <div className="text-center mb-16 space-y-4">
                     <span className="bg-[#5D5CDE]/10 text-[#5D5CDE] px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider">
                         Carreras y Cursos
                     </span>
-                    <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white tracking-tight">
+                    <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">
                         Potencia tu perfil profesional
                     </h2>
-                    <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-xl text-gray-400 max-w-2xl mx-auto">
                         Programas intensivos diseñados para insertarte en el mercado rápidamente.
                     </p>
                 </div>
