@@ -261,17 +261,23 @@ export function Navbar() {
 
       {/* Mobile Menu Overlay - Portal/Fixed Layer */}
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] bg-[#0B0F19] md:hidden animate-in fade-in slide-in-from-top-5 duration-200 flex flex-col">
+        <div className="fixed inset-0 z-[9999] bg-[#0B0F19] md:hidden animate-in fade-in slide-in-from-top-[2%] duration-300 flex flex-col">
 
-          {/* Mobile Header (Logo + Close) */}
-          <div className="flex items-center justify-between p-6 border-b border-white/5">
-            <Logo />
-            <button
-              onClick={toggleMenu}
-              className="text-gray-300 hover:text-white focus:outline-none p-2 rounded-full hover:bg-white/5"
-            >
-              <X size={24} />
-            </button>
+          {/* Mobile Header (Replicating exact Desktop layout for smooth transition) */}
+          <div className="w-full border-b border-white/5 bg-[#0B0F19]">
+            <div className="flex h-16 items-center justify-between px-6 max-w-7xl mx-auto">
+              <div className="flex-shrink-0">
+                <Logo />
+              </div>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={toggleMenu}
+                  className="text-white focus:outline-none p-2 rounded-full hover:bg-white/5"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-col flex-1 px-6 py-8 overflow-y-auto">
