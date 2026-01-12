@@ -82,64 +82,78 @@ export function Navbar() {
               </button>
 
               {/* Dropdown Content */}
+              {/* Dropdown Content */}
               {isStudentsMenuOpen && (
-                <div className="absolute top-full left-0 w-[600px] -translate-x-[100px] pt-4">
-                  <div className="bg-[#0B0F19] border border-white/10 rounded-2xl shadow-2xl overflow-hidden grid grid-cols-2 p-2 animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute top-full left-0 w-[650px] -translate-x-[100px] pt-4">
+                  <div className="bg-[#0B0F19]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden grid grid-cols-[1.5fr_1fr] animate-in fade-in zoom-in-95 duration-200">
 
-                    {/* Column 1: Categorías */}
-                    <div className="p-4 space-y-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="text-white font-bold text-sm uppercase tracking-wider flex items-center gap-2">
-                          <GraduationCap size={16} className="text-[#5D5CDE]" />
+                    {/* Left Column: Categorías (Primary) */}
+                    <div className="p-6 space-y-6 relative">
+                      {/* Subtle Gradient Glow */}
+                      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#5D5CDE]/5 via-transparent to-transparent pointer-events-none" />
+
+                      <div className="flex items-center justify-between relative z-10">
+                        <h4 className="text-white font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 text-gray-400">
+                          <GraduationCap size={14} className="text-[#5D5CDE]" />
                           Categorías
                         </h4>
-                        <span className="text-[10px] bg-green-500/10 text-green-400 px-2 py-0.5 rounded-full border border-green-500/20 font-medium">Actualizado 2024</span>
+                        <span className="text-[10px] bg-[#5D5CDE]/10 text-[#5D5CDE] px-2 py-0.5 rounded-full border border-[#5D5CDE]/20 font-bold tracking-wide">2026 UPDATE</span>
                       </div>
-                      <div className="space-y-1">
-                        <Link href="/courses?category=Trading" className="group flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
-                          <div className="mt-1 p-1.5 rounded-lg bg-[#5D5CDE]/10 text-[#5D5CDE] group-hover:bg-[#5D5CDE] group-hover:text-white transition-colors">
-                            <TrendingUp size={16} />
+
+                      <div className="space-y-2 relative z-10">
+                        <Link href="/courses?category=Trading" className="group flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-300">
+                          <div className="p-2.5 rounded-xl bg-[#5D5CDE]/10 text-[#5D5CDE] group-hover:bg-[#5D5CDE] group-hover:text-white transition-all shadow-[0_0_15px_rgba(93,92,222,0.1)] group-hover:shadow-[0_0_25px_rgba(93,92,222,0.4)]">
+                            <TrendingUp size={20} />
                           </div>
                           <div>
-                            <p className="text-white font-semibold text-sm group-hover:text-[#5D5CDE] transition-colors">Trading Profesional</p>
-                            <p className="text-gray-400 text-xs mt-0.5">Domina el análisis técnico y fundamental.</p>
+                            <p className="text-white font-bold text-base group-hover:text-[#5D5CDE] transition-colors">Trading Profesional</p>
+                            <p className="text-gray-400 text-xs mt-1 leading-relaxed">Domina el análisis técnico, fundamental y la psicología del mercado.</p>
                           </div>
                         </Link>
-                        <Link href="/courses?category=Criptomonedas" className="group flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
-                          <div className="mt-1 p-1.5 rounded-lg bg-orange-500/10 text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                            <PlayCircle size={16} />
+
+                        <Link href="/courses?category=Criptomonedas" className="group flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-300">
+                          <div className="p-2.5 rounded-xl bg-orange-500/10 text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all shadow-[0_0_15px_rgba(249,115,22,0.1)] group-hover:shadow-[0_0_25px_rgba(249,115,22,0.4)]">
+                            <PlayCircle size={20} />
                           </div>
                           <div>
-                            <p className="text-white font-semibold text-sm group-hover:text-orange-500 transition-colors">Criptomonedas</p>
-                            <p className="text-gray-400 text-xs mt-0.5">Bitcoin, Ethereum y finanzas descentralizadas.</p>
+                            <p className="text-white font-bold text-base group-hover:text-orange-500 transition-colors">Criptomonedas</p>
+                            <p className="text-gray-400 text-xs mt-1 leading-relaxed">Bitcoin, DeFi, Smart Contracts y el futuro de las finanzas.</p>
                           </div>
                         </Link>
                       </div>
                     </div>
 
-                    {/* Column 2: Recursos */}
-                    <div className="p-4 bg-[#1F2937] rounded-xl space-y-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="text-white font-bold text-sm uppercase tracking-wider flex items-center gap-2">
-                          <FileText size={16} className="text-blue-400" />
+                    {/* Right Column: Recursos (Secondary) */}
+                    <div className="bg-white/[0.02] border-l border-white/5 p-6 flex flex-col relative">
+                      <div className="mb-6 flex items-center justify-between">
+                        <h4 className="text-white font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 text-gray-400">
+                          <FileText size={14} className="text-blue-400" />
                           Recursos
                         </h4>
-                        <span className="text-[10px] bg-[#0B0F19] text-gray-300 px-2 py-0.5 rounded-full font-medium border border-white/5">Gratuitos</span>
                       </div>
-                      <div className="space-y-3">
-                        <div className="flex flex-col gap-2">
-                          <Link href="/pricing" className="text-gray-200 hover:text-white text-sm flex items-center justify-between transition-colors px-2 py-2 hover:bg-white/5 rounded-lg font-medium">
-                            <span>Precios y Membresías</span>
-                            <ChevronDown size={14} className="-rotate-90 text-gray-500" />
-                          </Link>
-                          <Link href="/about" className="text-gray-200 hover:text-white text-sm flex items-center justify-between transition-colors px-2 py-2 hover:bg-white/5 rounded-lg font-medium">
-                            <span>Sobre Nosotros</span>
-                            <ChevronDown size={14} className="-rotate-90 text-gray-500" />
-                          </Link>
-                          <div className="text-gray-500 text-sm flex items-center justify-between px-2 py-2 cursor-not-allowed opacity-60">
-                            <span>Blog de Noticias</span>
-                            <span className="text-[10px] border border-gray-600 rounded px-1.5">Soon</span>
+
+                      <div className="space-y-1 flex-1">
+                        <Link href="/pricing" className="group flex items-center justify-between p-3 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white transition-all">
+                          <div className="flex items-center gap-3">
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#5D5CDE]" />
+                            <span className="font-medium text-sm">Membresías</span>
                           </div>
+                          <ChevronDown size={14} className="-rotate-90 opacity-0 group-hover:opacity-100 transition-all text-[#5D5CDE]" />
+                        </Link>
+                        <Link href="/about" className="group flex items-center justify-between p-3 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white transition-all">
+                          <div className="flex items-center gap-3">
+                            <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                            <span className="font-medium text-sm">Sobre Nosotros</span>
+                          </div>
+                          <ChevronDown size={14} className="-rotate-90 opacity-0 group-hover:opacity-100 transition-all text-blue-400" />
+                        </Link>
+                      </div>
+
+                      <div className="mt-auto pt-6 border-t border-white/5">
+                        <div className="bg-gradient-to-r from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 rounded-xl p-4">
+                          <p className="text-emerald-400 text-xs font-bold mb-1">¡Nuevo Blog!</p>
+                          <p className="text-gray-400 text-[10px] mb-2">Noticias y análisis semanales.</p>
+                          <span className="text-[10px] uppercase font-bold bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded">Próximamente</span>
                         </div>
                       </div>
                     </div>
