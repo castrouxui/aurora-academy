@@ -9,6 +9,7 @@ import { LoginModal } from "@/components/auth/LoginModal";
 import Link from "next/link";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { VideoPlayer } from "@/components/player/VideoPlayer";
+import { getYouTubeId } from "@/lib/utils";
 
 interface CourseFloatingCardProps {
     title: string;
@@ -54,6 +55,10 @@ export function CourseFloatingCard({
         setIsPaymentModalOpen(true);
     };
 
+    // Normalize Video URL to ensure ReactPlayer detects YouTube correctly
+    const youtubeId = videoUrl ? getYouTubeId(videoUrl) : null;
+    const playerUrl = youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : videoUrl;
+
     return (
         <>
             <LoginModal
@@ -82,7 +87,7 @@ export function CourseFloatingCard({
                     <div className="aspect-video w-full">
                         {videoUrl ? (
                             <VideoPlayer
-                                url={videoUrl}
+                                url={playerUrl || ""}
                                 thumbnail={videoThumbnail}
                                 title={`Vista Previa: ${title}`}
                                 isLocked={false}
