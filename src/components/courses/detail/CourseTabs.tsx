@@ -17,8 +17,8 @@ export function CourseTabs({ modules = [], totalLessons, totalModules, duration 
     return (
         <div className="space-y-12">
             {/* What you'll learn */}
-            <div className="border border-gray-100 p-8 rounded-3xl bg-gray-50/50">
-                <h2 className="text-2xl font-black text-gray-900 mb-6 font-headings">Lo que aprenderás</h2>
+            <div className="border border-white/10 p-8 rounded-3xl bg-white/5">
+                <h2 className="text-2xl font-black text-white mb-6 font-headings">Lo que aprenderás</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     {[
                         "Dominarás el análisis técnico desde cero a avanzado",
@@ -29,10 +29,10 @@ export function CourseTabs({ modules = [], totalLessons, totalModules, duration 
                         "Interpretarás gráficos y patrones de velas japonesas"
                     ].map((item, i) => (
                         <div key={i} className="flex items-start gap-3">
-                            <div className="mt-1 p-1 bg-green-100 rounded-full text-green-600">
-                                <Check size={14} className="text-green-600" />
+                            <div className="mt-1 p-1 bg-[#5D5CDE]/20 rounded-full text-[#5D5CDE]">
+                                <Check size={14} className="text-[#5D5CDE]" />
                             </div>
-                            <span className="text-gray-600 font-medium leading-relaxed">{item}</span>
+                            <span className="text-gray-300 font-medium leading-relaxed">{item}</span>
                         </div>
                     ))}
                 </div>
@@ -40,13 +40,13 @@ export function CourseTabs({ modules = [], totalLessons, totalModules, duration 
 
             {/* Course Content Accordion */}
             <div>
-                <h2 className="text-2xl font-black text-gray-900 mb-6 font-headings">Contenido del curso</h2>
-                <div className="text-sm text-gray-500 mb-6 flex gap-3 font-medium">
-                    <span className="bg-gray-100 px-3 py-1 rounded-full">{totalModules} secciones</span>
-                    <span className="bg-gray-100 px-3 py-1 rounded-full">{totalLessons} clases</span>
-                    <span className="bg-gray-100 px-3 py-1 rounded-full">{duration} total</span>
+                <h2 className="text-2xl font-black text-white mb-6 font-headings">Contenido del curso</h2>
+                <div className="text-sm text-gray-400 mb-6 flex gap-3 font-medium">
+                    <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-full">{totalModules} secciones</span>
+                    <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-full">{totalLessons} clases</span>
+                    <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-full">{duration} total</span>
                 </div>
-                <div className="border border-gray-200 rounded-2xl overflow-hidden divide-y divide-gray-100 shadow-sm">
+                <div className="border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/5 shadow-lg">
                     {modules.map((module) => (
                         <ModuleAccordion key={module.id} module={module} />
                     ))}
@@ -55,8 +55,8 @@ export function CourseTabs({ modules = [], totalLessons, totalModules, duration 
 
             {/* Requirements */}
             <div>
-                <h2 className="text-2xl font-black text-gray-900 mb-4 font-headings">Requisitos</h2>
-                <ul className="list-disc list-inside space-y-3 text-gray-600">
+                <h2 className="text-2xl font-black text-white mb-4 font-headings">Requisitos</h2>
+                <ul className="list-disc list-inside space-y-3 text-gray-300 ml-2">
                     <li>No se necesita experiencia previa en mercados financieros.</li>
                     <li>Ganas de aprender y disciplina para estudiar.</li>
                     <li>Un ordenador o dispositivo móvil con acceso a internet.</li>
@@ -65,8 +65,8 @@ export function CourseTabs({ modules = [], totalLessons, totalModules, duration 
 
             {/* Description */}
             <div>
-                <h2 className="text-2xl font-black text-gray-900 mb-4 font-headings">Descripción</h2>
-                <div className="space-y-4 text-gray-600 leading-relaxed text-lg">
+                <h2 className="text-2xl font-black text-white mb-4 font-headings">Descripción</h2>
+                <div className="space-y-4 text-gray-300 leading-relaxed text-lg">
                     <p>
                         Este curso completo de Trading Profesional está diseñado para llevarte desde un nivel principiante hasta un nivel avanzado, proporcionándote todas las herramientas necesarias para operar en los mercados financieros con confianza y consistencia.
                     </p>
@@ -86,31 +86,31 @@ function ModuleAccordion({ module }: { module: any }) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="bg-white">
+        <div className="bg-[#0B0F19]">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full text-left px-6 py-5 flex justify-between items-center hover:bg-gray-50 transition-colors group"
+                className="w-full text-left px-6 py-5 flex justify-between items-center hover:bg-white/5 transition-colors group"
             >
-                <span className="font-bold text-gray-900 text-lg group-hover:text-[#5D5CDE] transition-colors">{module.title}</span>
+                <span className="font-bold text-gray-200 text-lg group-hover:text-[#5D5CDE] transition-colors">{module.title}</span>
                 <div className="flex items-center gap-4">
                     <span className="text-sm text-gray-500 font-medium">{module.lessons?.length || 0} clases</span>
                     {isOpen ? <ChevronUp size={20} className="text-gray-400" /> : <ChevronDown size={20} className="text-gray-400" />}
                 </div>
             </button>
             {isOpen && (
-                <div className="px-6 py-4 space-y-2 bg-gray-50/50 border-t border-gray-100">
+                <div className="px-6 py-4 space-y-2 bg-black/20 border-t border-white/5">
                     {module.lessons && module.lessons.length > 0 ? (
                         module.lessons.map((lesson: any) => (
-                            <div key={lesson.id} className="flex justify-between items-center py-2 text-gray-600 hover:text-black transition-colors rounded-lg px-2 hover:bg-gray-100/50">
+                            <div key={lesson.id} className="flex justify-between items-center py-2 text-gray-400 hover:text-white transition-colors rounded-lg px-2 hover:bg-white/5">
                                 <div className="flex items-center gap-3">
                                     <PlayCircle size={16} className="text-[#5D5CDE]" />
                                     <span className="font-medium">{lesson.title}</span>
                                 </div>
-                                <span className="text-xs font-mono text-gray-400">10:00</span>
+                                <span className="text-xs font-mono text-gray-600">10:00</span>
                             </div>
                         ))
                     ) : (
-                        <div className="text-sm text-gray-400 italic px-2">No hay lecciones en este módulo aún.</div>
+                        <div className="text-sm text-gray-600 italic px-2">No hay lecciones en este módulo aún.</div>
                     )}
                 </div>
             )}

@@ -22,7 +22,7 @@ export function CourseDetailContent({
     breadcrumbs
 }: CourseDetailContentProps) {
     return (
-        <div className="bg-white min-h-screen">
+        <div className="bg-[#0B0F19] min-h-screen">
             {/* Header / Hero Background Section */}
             <div className="bg-[#0B0F19] text-white pb-24 border-b border-gray-800">
                 <Container className="pt-24">

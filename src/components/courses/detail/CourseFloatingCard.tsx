@@ -91,10 +91,10 @@ export function CourseFloatingCard({
                 </DialogContent>
             </Dialog>
 
-            <div className="bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
+            <div className="bg-white/5 backdrop-blur-xl rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 sticky top-24">
                 {/* Video Preview Header */}
                 <div
-                    className="relative h-48 bg-gray-900 cursor-pointer group"
+                    className="relative h-48 bg-black/50 cursor-pointer group"
                     onClick={() => setIsPreviewOpen(true)}
                 >
                     {videoThumbnail ? (
@@ -105,11 +105,11 @@ export function CourseFloatingCard({
                         </div>
                     )}
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                            <Play className="text-black ml-1" size={32} />
+                        <div className="w-16 h-16 bg-[#5D5CDE]/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                            <Play className="text-white ml-1" size={32} />
                         </div>
                     </div>
-                    <div className="absolute bottom-4 left-0 right-0 text-center font-bold text-white text-sm">
+                    <div className="absolute bottom-4 left-0 right-0 text-center font-bold text-white text-sm tracking-wide">
                         Ver preview del curso
                     </div>
                 </div>
@@ -118,12 +118,12 @@ export function CourseFloatingCard({
                     {/* Price Section */}
                     <div className="space-y-2">
                         <div className="flex items-baseline gap-3">
-                            <span className="text-4xl font-black text-gray-900">{price}</span>
-                            <span className="text-lg text-gray-400 line-through font-medium">{originalPrice}</span>
+                            <span className="text-4xl font-black text-white">{price}</span>
+                            <span className="text-lg text-gray-500 line-through font-medium">{originalPrice}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-sm font-bold">{discount} OFF</span>
-                            <span className="text-red-600 text-sm font-medium">¡Oferta por tiempo limitado!</span>
+                            <span className="bg-red-500/20 text-red-400 border border-red-500/20 px-2 py-0.5 rounded text-sm font-bold">{discount} OFF</span>
+                            <span className="text-red-400 text-sm font-medium">¡Oferta por tiempo limitado!</span>
                         </div>
                     </div>
 
@@ -131,14 +131,14 @@ export function CourseFloatingCard({
                     <div className="space-y-3">
                         {hasAccess ? (
                             <Link href={`/learn/${courseId}`} className="block w-full">
-                                <Button className="w-full h-14 text-lg font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all">
+                                <Button className="w-full h-14 text-lg font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg shiny-hover transition-all">
                                     Continuar Aprendiendo
                                 </Button>
                             </Link>
                         ) : (
                             <Button
                                 onClick={handlePurchase}
-                                className="w-full h-14 text-lg font-bold bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-full shadow-lg hover:shadow-xl transition-all"
+                                className="w-full h-14 text-lg font-bold bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-xl shadow-lg shiny-hover transition-all"
                             >
                                 Comprar Ahora
                             </Button>
@@ -147,27 +147,27 @@ export function CourseFloatingCard({
                     </div>
 
                     {/* Course Include List */}
-                    <div className="space-y-4 pt-6 border-t border-gray-100">
-                        <h4 className="font-bold text-gray-900">Este curso incluye:</h4>
-                        <ul className="space-y-3 text-sm text-gray-600">
+                    <div className="space-y-4 pt-6 border-t border-white/10">
+                        <h4 className="font-bold text-white">Este curso incluye:</h4>
+                        <ul className="space-y-3 text-sm text-gray-400">
                             <li className="flex items-center gap-3">
-                                <Clock size={18} className="shrink-0 text-gray-400" />
+                                <Clock size={18} className="shrink-0 text-[#5D5CDE]" />
                                 <span>{duration} de video bajo demanda</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <BarChart size={18} className="shrink-0 text-gray-400" />
+                                <BarChart size={18} className="shrink-0 text-[#5D5CDE]" />
                                 <span>Nivel: {level}</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <Users size={18} className="shrink-0 text-gray-400" />
+                                <Users size={18} className="shrink-0 text-[#5D5CDE]" />
                                 <span>{students.toLocaleString()} estudiantes</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <CheckCircle2 size={18} className="shrink-0 text-gray-400" />
+                                <CheckCircle2 size={18} className="shrink-0 text-[#5D5CDE]" />
                                 <span>Certificado de finalización</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <Globe size={18} className="shrink-0 text-gray-400" />
+                                <Globe size={18} className="shrink-0 text-[#5D5CDE]" />
                                 <span>Acceso de por vida</span>
                             </li>
                         </ul>
