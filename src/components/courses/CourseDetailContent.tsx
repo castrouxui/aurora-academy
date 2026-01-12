@@ -26,12 +26,12 @@ export function CourseDetailContent({
 }: CourseDetailContentProps) {
     return (
         <div className="bg-[#0B0F19] min-h-screen">
-            {/* Header / Hero Background Section */}
-            <div className="bg-[#0B0F19] text-white pb-24 border-b border-gray-800">
-                <Container className="pt-24">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                        {/* Left Side: Hero Info */}
-                        <div className="lg:col-span-8 py-8">
+            <Container className="pt-24 pb-24">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 relative">
+                    {/* Left Column: Hero + Content */}
+                    <div className="lg:col-span-8 space-y-12">
+                        {/* Hero Section */}
+                        <div className="py-2"> {/* Small padding adjustment */}
                             <CourseHero
                                 title={courseData.title}
                                 description={courseData.description || ""}
@@ -40,19 +40,11 @@ export function CourseDetailContent({
                                 instructor={courseData.instructor}
                             />
                         </div>
-                        {/* Right Side: Spacer (Card will be absolute/sticky) */}
-                        <div className="hidden lg:block lg:col-span-4">
-                            {/* Handled by the absolute positioning below/grid structure */}
-                        </div>
-                    </div>
-                </Container>
-            </div>
 
-            {/* Main Content & Floating Card Container */}
-            <Container className="-mt-12 relative z-10 pb-24">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                    {/* Left Column: Course Details/Tabs */}
-                    <div className="lg:col-span-8 space-y-12 pt-12">
+                        {/* Divider */}
+                        <div className="border-t border-gray-800" />
+
+                        {/* Tabs & Details */}
                         <CourseTabs
                             modules={courseData.modules}
                             totalLessons={totalLessons}
@@ -69,11 +61,24 @@ export function CourseDetailContent({
                         <div id="faq" className="pt-12 border-t border-white/5">
                             <CourseFAQ />
                         </div>
+
+                        {/* Testimonials (Moved inside flow or keep separate?) 
+                             If sticky sidebar should scroll past testimonials, keep testimonials in left col? 
+                             Or usually testimonials are full width at bottom. 
+                             Let's put testimonials at the very bottom outside grid if they are wide.
+                             But if sticky card needs to coexist, it stops at grid bottom. 
+                             Let's keep testimonials outside grid for now as in original designs. */
+                        }
                     </div>
 
                     {/* Right Column: Floating Card */}
-                    <div className="lg:col-span-4 relative">
-                        <div className="-mt-64 relative z-20 sticky top-24"> {/* Negative margin to pull it up into the dark area */}
+                    <div className="hidden lg:block lg:col-span-4 relative">
+                        {/* 
+                            Align top: 
+                            Hero has Breadcrumbs (~30px) + mb-6 (24px) = ~54px.
+                            We add mt-14 (56px) or mt-[52px] to align with Title.
+                        */}
+                        <div className="sticky top-8 mt-[54px] z-20">
                             <CourseFloatingCard
                                 title={courseData.title}
                                 price={courseData.price}
