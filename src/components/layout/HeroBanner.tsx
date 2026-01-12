@@ -17,14 +17,12 @@ export function HeroBanner() {
             <Container className="relative z-10 h-full flex flex-col items-center justify-center">
                 <div className="flex flex-col items-center space-y-8 text-center">
                     <div className="space-y-6 max-w-[900px]">
-                        <h1 className="text-5xl font-black tracking-tight sm:text-6xl md:text-7xl lg:text-8xl/none text-white drop-shadow-xl uppercase">
-                            Invertí en tu futuro.<br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5D5CDE] to-indigo-400">Domina el mercado.</span>
+                        <h1 className="text-4xl font-black tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none text-white drop-shadow-lg mb-6">
+                            Aprendé a invertir desde cero
                         </h1>
-                        <p className="mx-auto max-w-[800px] text-gray-200 text-lg md:text-2xl drop-shadow-md font-medium leading-relaxed">
-                            Carreras intensivas en <strong className="text-white">Trading, Crypto y Finanzas</strong>.
-                            <br className="hidden md:block" />
-                            Online, en vivo y a tu ritmo. 100% Práctico.
+                        <p className="mx-auto max-w-[700px] text-gray-200 md:text-xl drop-shadow-md font-medium leading-relaxed mb-8">
+                            Cursos y formaciones diseñadas por <strong className="text-white">traders con experiencia real en mercados</strong>.
+                            Formación clara, práctica y enfocada en <strong className="text-white">decisiones reales</strong>.
                         </p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
