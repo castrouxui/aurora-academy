@@ -25,7 +25,7 @@ async function main() {
         },
         {
             title: 'Mentoria en Price Action',
-            price: 50000,
+            price: 1,
             description: 'Si quieres vivir del trading, necesitas entender el Price Action. Es así de simple. En este nuevo programa intensivo dominarás la acción del precio.',
             category: 'Mentoria',
             published: true,
@@ -66,12 +66,15 @@ async function main() {
             })
             console.log(`Restored: ${course.title}`)
         } else {
-            // Update image just in case
+            // Update image and price
             await prisma.course.update({
                 where: { id: existing.id },
-                data: { imageUrl: course.imageUrl }
+                data: {
+                    imageUrl: course.imageUrl,
+                    price: course.price
+                }
             })
-            console.log(`Updated image for existing: ${course.title}`)
+            console.log(`Updated image and price for existing: ${course.title}`)
         }
     }
 
