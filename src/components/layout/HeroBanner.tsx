@@ -28,7 +28,7 @@ export function HeroBanner() {
                     <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
                         <Button
                             onClick={openLoginModal}
-                            className="h-14 px-10 text-xl w-full sm:w-auto bg-[#5D5CDE] text-white hover:bg-[#4B4AC0] border-transparent font-bold rounded-full shadow-[0_0_40px_-10px_rgba(93,92,222,0.6)] transition-transform hover:scale-105"
+                            className="h-14 px-10 text-xl w-full sm:w-auto bg-[#5D5CDE] text-white hover:bg-[#4B4AC0] border-transparent font-bold rounded-full shadow-lg shiny-hover transition-transform hover:scale-105"
                         >
                             Aplicar Ahora
                         </Button>

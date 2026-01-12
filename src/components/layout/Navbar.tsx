@@ -123,7 +123,7 @@ export function Navbar() {
                 )}
               </div>
             ) : (
-              <Button variant="default" onClick={openLoginModal} className="bg-primary hover:bg-primary/90 text-white font-medium">
+              <Button variant="default" onClick={openLoginModal} className="bg-primary hover:bg-primary/90 text-white font-bold rounded-full shadow-md shiny-hover px-6">
                 Acceder
               </Button>
             )}

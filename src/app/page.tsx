@@ -12,7 +12,7 @@ export default function Home() {
       <Navbar />
       <div className="pt-24">
         <HeroBanner />
-        <StatsStrip />
+
         <Categories />
         <div id="courses" className="scroll-mt-24">
           <CourseList />
