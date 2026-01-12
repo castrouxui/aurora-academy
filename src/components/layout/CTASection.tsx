@@ -50,8 +50,8 @@ export function CTASection() {
                             <div className="w-12 h-12 md:w-14 md:h-14 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-4 md:mb-6 text-emerald-500">
                                 <Zap size={28} className="md:w-8 md:h-8" />
                             </div>
-                            <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Rápida Salida</h3>
-                            <p className="text-sm md:text-base text-gray-400">Nuestros programas están diseñados para insertarte en el mercado laboral o de prop trading en meses.</p>
+                            <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Educación Financiera</h3>
+                            <p className="text-sm md:text-base text-gray-400">Programas integrales diseñados para que domines los mercados financieros y alcances tu libertad económica.</p>
                         </div>
                     </div>
 

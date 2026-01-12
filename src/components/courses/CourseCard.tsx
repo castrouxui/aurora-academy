@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Star, Video } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, getYouTubeId } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 
 interface CourseProps {
@@ -14,17 +14,28 @@ interface CourseProps {
     image: string;
     tag: string;
     basePath?: string; // Optional base path for link
+    videoUrl?: string; // New prop for video URL
 }
 
 export function CourseCard({ course }: { course: CourseProps }) {
     const href = course.basePath ? `${course.basePath}/${course.id}` : `/courses/${course.id}`;
+
+    // Determine Logic for Image
+    let displayImage = course.image;
+    const isPlaceholder = !course.image || course.image === "/course-placeholder.jpg";
+    const youtubeId = course.videoUrl ? getYouTubeId(course.videoUrl) : null;
+
+    if (isPlaceholder && youtubeId) {
+        displayImage = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+    }
+
     return (
         <Link href={href} className="block h-full group">
             <div className="group h-full flex flex-col bg-white/5 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-white/10 hover:border-white/20 backdrop-blur-sm">
                 <div className="relative h-48 w-full overflow-hidden shrink-0">
-                    {/* Placeholder for image - using a generic div if no real image */}
-                    {course.image && course.image !== "/course-placeholder.jpg" ? (
-                        <img src={course.image} alt={course.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" />
+                    {/* Image Display Logic */}
+                    {displayImage && displayImage !== "/course-placeholder.jpg" ? (
+                        <img src={displayImage} alt={course.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" />
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-gray-500 bg-[#0B0F19]">
                             <Video size={40} />

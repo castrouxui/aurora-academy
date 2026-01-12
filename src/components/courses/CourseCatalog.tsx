@@ -52,7 +52,8 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                         tag: course.category || "General",
                         level: course.level || "Todos los niveles",
                         rawPrice: course.price,
-                        createdAt: course.createdAt
+                        createdAt: course.createdAt,
+                        videoUrl: course.modules?.[0]?.lessons?.[0]?.videoUrl || null // Get first video for thumbnail
                     }));
                     setCourses(formattedCourses);
 
