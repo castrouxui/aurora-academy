@@ -68,7 +68,7 @@ export function Navbar() {
           {/* Desktop Navigation - Centered Mega Menu */}
           <div className="hidden md:flex items-center gap-2">
 
-            {/* Para Estudiantes - MEGA MENU */}
+            {/* 1. Estudiantes - MEGA MENU */}
             <div
               className="relative"
               onMouseEnter={handleStudentsEnter}
@@ -77,14 +77,13 @@ export function Navbar() {
               <button
                 className={`text-sm font-medium transition-all px-4 py-2 rounded-full flex items-center gap-1 cursor-default ${isStudentsMenuOpen ? "text-white bg-white/5" : "text-gray-300 hover:text-white hover:bg-white/5"}`}
               >
-                Para Estudiantes
+                Estudiantes
                 <ChevronDown size={14} className={`transition-transform duration-200 ${isStudentsMenuOpen ? "rotate-180" : ""}`} />
               </button>
 
               {/* Dropdown Content */}
-              {/* Dropdown Content */}
               {isStudentsMenuOpen && (
-                <div className="absolute top-full left-0 w-[650px] -translate-x-[100px] pt-4">
+                <div className="absolute top-full left-0 w-[650px] -translate-x-[50px] pt-4">
                   <div className="bg-[#0B0F19]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden grid grid-cols-[1.5fr_1fr] animate-in fade-in zoom-in-95 duration-200">
 
                     {/* Left Column: Categorías (Primary) */}
@@ -124,25 +123,15 @@ export function Navbar() {
                     </div>
 
                     {/* Right Column: Recursos (Secondary) */}
-                    <div className="bg-white/[0.02] border-l border-white/5 p-6 flex flex-col relative">
-                      <div className="mb-6 flex items-center justify-between">
+                    <div className="bg-white/[0.02] border-l border-white/5 p-6 flex flex-col relative justify-center">
+                      <div className="mb-4 flex items-center justify-between">
                         <h4 className="text-white font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 text-gray-400">
                           <FileText size={14} className="text-blue-400" />
                           Recursos
                         </h4>
                       </div>
 
-                      <div className="space-y-1 flex-1">
-                        <Link href="/about" className="group flex items-center justify-between p-3 rounded-xl hover:bg-white/5 text-gray-300 hover:text-white transition-all">
-                          <div className="flex items-center gap-3">
-                            <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                            <span className="font-medium text-sm">Sobre Nosotros</span>
-                          </div>
-                          <ChevronDown size={14} className="-rotate-90 opacity-0 group-hover:opacity-100 transition-all text-blue-400" />
-                        </Link>
-                      </div>
-
-                      <div className="mt-auto pt-6 border-t border-white/5">
+                      <div className="pt-2 border-t border-white/5">
                         <div className="bg-gradient-to-r from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 rounded-xl p-4">
                           <p className="text-emerald-400 text-xs font-bold mb-1">¡Nuevo Blog!</p>
                           <p className="text-gray-400 text-[10px] mb-2">Noticias y análisis semanales.</p>
@@ -156,19 +145,23 @@ export function Navbar() {
               )}
             </div>
 
-            {/* Pricing - Top Level */}
-            <Link href="/pricing" className={getLinkClass("/pricing")}>
-              Precios
-            </Link>
-
-            {/* Para Empresas - PROXIMAMENTE */}
+            {/* 2. Empresas - PROXIMAMENTE */}
             <div className="relative group cursor-default">
               <button className="text-sm font-medium text-gray-500 flex items-center gap-2 px-4 py-2 cursor-default hover:text-gray-400 transition-colors">
-                Para Empresas
+                Empresas
                 <span className="text-[10px] uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">Próximamente</span>
               </button>
             </div>
 
+            {/* 3. Nosotros */}
+            <Link href="/about" className={getLinkClass("/about")}>
+              Nosotros
+            </Link>
+
+            {/* 4. Precios */}
+            <Link href="/pricing" className={getLinkClass("/pricing")}>
+              Precios
+            </Link>
           </div>
 
           {/* Right Actions & Search (Desktop) */}
@@ -295,7 +288,7 @@ export function Navbar() {
               {/* Main Navigation Links */}
               <div className="flex flex-col space-y-1 mb-8">
                 <div className="pb-4 mb-4 border-b border-white/5">
-                  <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Para Estudiantes</p>
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Estudiantes</p>
                   <Link
                     href="/courses"
                     className={getMobileLinkClass("/courses")}
@@ -315,7 +308,7 @@ export function Navbar() {
                 </div>
 
                 <div className="pb-4 mb-4 border-b border-white/5 opacity-60">
-                  <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Para Empresas</p>
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Empresas</p>
                   <div className="flex items-center gap-3 px-4 py-2">
                     <Building2 className="text-gray-600" size={24} />
                     <span className="text-lg font-bold text-gray-500">Corporativo</span>
