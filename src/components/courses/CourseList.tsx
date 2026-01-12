@@ -18,18 +18,25 @@ export function CourseList() {
                 if (res.ok) {
                     const data = await res.json();
                     // Transform API data to UI format and take top 4
-                    const formattedCourses = data.slice(0, 4).map((course: any) => ({
-                        id: course.id,
-                        title: course.title,
-                        instructor: "Aurora Academy",
-                        rating: 5.0,
-                        reviews: "(120)",
-                        price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
-                        image: course.imageUrl || "/course-placeholder.jpg",
-                        tag: course.category || "General",
-                        rawPrice: course.price,
-                        videoUrl: course.modules?.[0]?.lessons?.[0]?.videoUrl || null // Get first video for thumbnail
-                    }));
+                    const formattedCourses = data.slice(0, 4).map((course: any) => {
+                        const sortedModules = course.modules?.sort((a: any, b: any) => a.position - b.position) || [];
+                        const firstLessonWithVideo = sortedModules
+                            .flatMap((m: any) => m.lessons?.sort((a: any, b: any) => a.position - b.position) || [])
+                            .find((l: any) => l.videoUrl);
+
+                        return {
+                            id: course.id,
+                            title: course.title,
+                            instructor: "Aurora Academy",
+                            rating: 5.0,
+                            reviews: "(120)",
+                            price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
+                            image: course.imageUrl || "/course-placeholder.jpg",
+                            tag: course.category || "General",
+                            rawPrice: course.price,
+                            videoUrl: firstLessonWithVideo?.videoUrl || null
+                        };
+                    });
                     setCourses(formattedCourses);
                 }
             } catch (error) {

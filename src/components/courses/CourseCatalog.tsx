@@ -41,20 +41,28 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                     const data = await res.json();
 
                     // Transform API data to UI format
-                    const formattedCourses = data.map((course: any) => ({
-                        id: course.id,
-                        title: course.title,
-                        instructor: "Aurora Academy", // Default instructor
-                        rating: 5.0, // Default rating
-                        reviews: "(0)",
-                        price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
-                        image: course.imageUrl || "/course-placeholder.jpg",
-                        tag: course.category || "General",
-                        level: course.level || "Todos los niveles",
-                        rawPrice: course.price,
-                        createdAt: course.createdAt,
-                        videoUrl: course.modules?.[0]?.lessons?.[0]?.videoUrl || null // Get first video for thumbnail
-                    }));
+                    const formattedCourses = data.map((course: any) => {
+                        // Find first video efficiently
+                        const sortedModules = course.modules?.sort((a: any, b: any) => a.position - b.position) || [];
+                        const firstLessonWithVideo = sortedModules
+                            .flatMap((m: any) => m.lessons?.sort((a: any, b: any) => a.position - b.position) || [])
+                            .find((l: any) => l.videoUrl);
+
+                        return {
+                            id: course.id,
+                            title: course.title,
+                            instructor: "Aurora Academy", // Default instructor
+                            rating: 5.0, // Default rating
+                            reviews: "(0)",
+                            price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
+                            image: course.imageUrl || "/course-placeholder.jpg",
+                            tag: course.category || "General",
+                            level: course.level || "Todos los niveles",
+                            rawPrice: course.price,
+                            createdAt: course.createdAt,
+                            videoUrl: firstLessonWithVideo?.videoUrl || null
+                        };
+                    });
                     setCourses(formattedCourses);
 
                     const categories = Array.from(new Set(formattedCourses.map((c: any) => c.tag)));

@@ -38,6 +38,13 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
     const [isLoading, setIsLoading] = useState(true);
     const [showPaywall, setShowPaywall] = useState(isLocked);
     const [playbackRate, setPlaybackRate] = useState(1.0);
+    const [hasError, setHasError] = useState(false);
+
+    const handleError = (e: any) => {
+        console.error("Video Player Error:", e);
+        setIsLoading(false);
+        setHasError(true);
+    };
 
     // Strict Mode Tracking: The furthest point the user has reached
     // Initialize with 0. In a real app, you might sync this with the DB for resuming.
@@ -166,11 +173,24 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     onProgress={handleProgress}
                     onDuration={handleDuration}
                     onEnded={handleEnded}
+                    onError={handleError}
                     onBuffer={() => setIsLoading(true)}
                     onBufferEnd={() => setIsLoading(false)}
                     onReady={() => setIsLoading(false)}
                     style={{ pointerEvents: 'none' }} // Prevent native YouTube clicks stealing focus
                 />
+            )}
+
+            {/* Error Overlay */}
+            {hasError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-20">
+                    <div className="text-center p-6">
+                        <p className="text-red-400 font-bold mb-2">Error al cargar el video</p>
+                        <p className="text-xs text-gray-500 max-w-[200px] mx-auto">
+                            Verifica que el link sea válido y que el video no sea "Privado". Usa "No Listado" para YouTube.
+                        </p>
+                    </div>
+                </div>
             )}
 
             {/* Tap/Click Overlay for Play/Pause */}
@@ -187,7 +207,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
             )}
 
             {/* Loading Spinner */}
-            {isLoading && !showPaywall && (
+            {isLoading && !showPaywall && !hasError && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
                     <Loader2 className="h-10 w-10 text-white animate-spin" />
                 </div>
