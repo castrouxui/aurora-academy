@@ -82,9 +82,9 @@ const TESTIMONIALS: Testimonial[] = [
 
 function ReviewCard({ review }: { review: Testimonial }) {
     return (
-        <figure className="relative h-full w-full cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 hover:bg-white/10 transition-all duration-300 backdrop-blur-sm">
-            <div className="flex flex-row items-center gap-3 mb-4">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/20">
+        <figure className="relative h-full w-full cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-[#131722] p-8 transition-all duration-300 hover:border-white/20 hover:bg-[#1A1F2E]">
+            <div className="flex flex-row items-center gap-4 mb-6">
+                <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/10">
                     <Image
                         src={review.image}
                         alt={review.author}
@@ -93,17 +93,15 @@ function ReviewCard({ review }: { review: Testimonial }) {
                     />
                 </div>
                 <div className="flex flex-col">
-                    <figcaption className="text-sm font-bold text-white">
+                    <figcaption className="text-base font-bold text-white">
                         {review.author}
                     </figcaption>
-                    <p className="text-xs font-medium text-[#5D5CDE]">{review.role}</p>
-                </div>
-                <div className="ml-auto">
-                    <Quote className="text-white/20" size={20} />
+                    {/* Optional: Keep role if useful, or remove to match strict reference */}
+                    {/* <p className="text-xs font-medium text-white/40">{review.role}</p> */}
                 </div>
             </div>
-            <blockquote className="text-sm leading-relaxed text-gray-300 font-medium">
-                "{review.text}"
+            <blockquote className="text-base leading-relaxed text-gray-400">
+                {review.text}
             </blockquote>
         </figure>
     );
@@ -118,15 +116,15 @@ function ReviewColumn({
     className?: string;
     duration?: number;
 }) {
-    const columnRef = useRef<HTMLDivElement>(null);
+    // Double the array to ensure smooth infinite scroll
+    const doubledReviews = [...reviews, ...reviews];
 
     return (
         <div
-            ref={columnRef}
             className={cn("animate-marquee space-y-6", className)}
             style={{ "--marquee-duration": `${duration}s` } as React.CSSProperties}
         >
-            {reviews.concat(reviews).map((review, i) => (
+            {doubledReviews.map((review, i) => (
                 <ReviewCard key={`${review.id}-${i}`} review={review} />
             ))}
         </div>
@@ -136,28 +134,23 @@ function ReviewColumn({
 export function TestimonialsSection() {
     return (
         <section className="py-24 bg-[#0B0F19] relative overflow-hidden">
-            {/* Background elements */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none opacity-50" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none opacity-50" />
-
             <Container className="relative z-10">
-                <div className="text-center mb-16 max-w-3xl mx-auto">
-                    <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
+                <div className="text-center mb-20 max-w-3xl mx-auto">
+                    <h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">
                         ¿Qué dicen nuestros <span className="text-[#5D5CDE]">alumnos</span>?
                     </h2>
-                    <p className="text-lg text-gray-400">
-                        La comunidad de Aurora Academy crece día a día. Descubre por qué miles de estudiantes eligen nuestra plataforma para formarse.
+                    <p className="text-xl text-gray-400">
+                        La comunidad de Aurora Academy crece día a día. Descubre por qué miles de estudiantes eligen nuestra plataforma.
                     </p>
                 </div>
 
-                <div className="relative h-[700px] max-h-[80vh] overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]">
-                    <ReviewColumn reviews={TESTIMONIALS.slice(0, 3)} duration={40} />
-                    <ReviewColumn reviews={TESTIMONIALS.slice(3, 6)} duration={50} className="hidden md:block" />
-                    <ReviewColumn reviews={TESTIMONIALS.slice(6, 9)} duration={45} className="hidden lg:block" />
+                <div className="relative h-[800px] max-h-[80vh] overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">
+                    <ReviewColumn reviews={TESTIMONIALS.slice(0, 3)} duration={45} />
+                    <ReviewColumn reviews={TESTIMONIALS.slice(3, 6)} duration={55} className="hidden md:block" />
+                    <ReviewColumn reviews={TESTIMONIALS.slice(6, 9)} duration={50} className="hidden lg:block" />
                 </div>
             </Container>
 
-            {/* Custom Animation Styles */}
             <style jsx global>{`
                 @keyframes marquee {
                     from { transform: translateY(0); }
