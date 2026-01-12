@@ -84,61 +84,61 @@ export function Navbar() {
               {/* Dropdown Content */}
               {isStudentsMenuOpen && (
                 <div className="absolute top-full left-0 w-[600px] -translate-x-[100px] pt-4">
-                  <div className="bg-[#0B0F19]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden grid grid-cols-2 p-2 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="bg-[#0B0F19] border border-white/10 rounded-2xl shadow-2xl overflow-hidden grid grid-cols-2 p-2 animate-in fade-in zoom-in-95 duration-200">
 
-                    {/* Column 1: Carreras */}
+                    {/* Column 1: Categorías */}
                     <div className="p-4 space-y-4">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="text-white font-bold text-sm uppercase tracking-wider flex items-center gap-2">
                           <GraduationCap size={16} className="text-[#5D5CDE]" />
-                          Carreras
+                          Categorías
                         </h4>
-                        <span className="text-[10px] bg-green-500/10 text-green-400 px-2 py-0.5 rounded-full border border-green-500/20 font-medium">Inversión sin riesgo</span>
+                        <span className="text-[10px] bg-green-500/10 text-green-400 px-2 py-0.5 rounded-full border border-green-500/20 font-medium">Actualizado 2024</span>
                       </div>
                       <div className="space-y-1">
-                        <Link href="/courses" className="group flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                        <Link href="/courses?category=Trading" className="group flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
                           <div className="mt-1 p-1.5 rounded-lg bg-[#5D5CDE]/10 text-[#5D5CDE] group-hover:bg-[#5D5CDE] group-hover:text-white transition-colors">
                             <TrendingUp size={16} />
                           </div>
                           <div>
-                            <p className="text-white font-semibold text-sm group-hover:text-[#5D5CDE] transition-colors">Trading Full Stack</p>
-                            <p className="text-gray-500 text-xs mt-0.5">De cero a rentable en 6 meses.</p>
+                            <p className="text-white font-semibold text-sm group-hover:text-[#5D5CDE] transition-colors">Trading Profesional</p>
+                            <p className="text-gray-400 text-xs mt-0.5">Domina el análisis técnico y fundamental.</p>
                           </div>
                         </Link>
-                        <Link href="/courses" className="group flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
+                        <Link href="/courses?category=Criptomonedas" className="group flex items-start gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors">
                           <div className="mt-1 p-1.5 rounded-lg bg-orange-500/10 text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-colors">
                             <PlayCircle size={16} />
                           </div>
                           <div>
-                            <p className="text-white font-semibold text-sm group-hover:text-orange-500 transition-colors">Crypto & DeFi</p>
-                            <p className="text-gray-500 text-xs mt-0.5">Domina el mercado descentralizado.</p>
+                            <p className="text-white font-semibold text-sm group-hover:text-orange-500 transition-colors">Criptomonedas</p>
+                            <p className="text-gray-400 text-xs mt-0.5">Bitcoin, Ethereum y finanzas descentralizadas.</p>
                           </div>
                         </Link>
                       </div>
                     </div>
 
                     {/* Column 2: Recursos */}
-                    <div className="p-4 bg-white/5 rounded-xl space-y-4">
+                    <div className="p-4 bg-[#1F2937] rounded-xl space-y-4">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="text-white font-bold text-sm uppercase tracking-wider flex items-center gap-2">
                           <FileText size={16} className="text-blue-400" />
                           Recursos
                         </h4>
-                        <span className="text-[10px] bg-white/10 text-gray-300 px-2 py-0.5 rounded-full font-medium">Gratuitos</span>
+                        <span className="text-[10px] bg-[#0B0F19] text-gray-300 px-2 py-0.5 rounded-full font-medium border border-white/5">Gratuitos</span>
                       </div>
                       <div className="space-y-3">
                         <div className="flex flex-col gap-2">
-                          <Link href="/pricing" className="text-gray-400 hover:text-white text-sm flex items-center justify-between transition-colors px-2 py-1.5 hover:bg-white/5 rounded-lg">
+                          <Link href="/pricing" className="text-gray-200 hover:text-white text-sm flex items-center justify-between transition-colors px-2 py-2 hover:bg-white/5 rounded-lg font-medium">
                             <span>Precios y Membresías</span>
-                            <ChevronDown size={12} className="-rotate-90" />
+                            <ChevronDown size={14} className="-rotate-90 text-gray-500" />
                           </Link>
-                          <Link href="/about" className="text-gray-400 hover:text-white text-sm flex items-center justify-between transition-colors px-2 py-1.5 hover:bg-white/5 rounded-lg">
+                          <Link href="/about" className="text-gray-200 hover:text-white text-sm flex items-center justify-between transition-colors px-2 py-2 hover:bg-white/5 rounded-lg font-medium">
                             <span>Sobre Nosotros</span>
-                            <ChevronDown size={12} className="-rotate-90" />
+                            <ChevronDown size={14} className="-rotate-90 text-gray-500" />
                           </Link>
-                          <div className="text-gray-500 text-sm flex items-center justify-between px-2 py-1.5 cursor-not-allowed opacity-60">
+                          <div className="text-gray-500 text-sm flex items-center justify-between px-2 py-2 cursor-not-allowed opacity-60">
                             <span>Blog de Noticias</span>
-                            <span className="text-[10px] border border-gray-700 rounded px-1.5">Soon</span>
+                            <span className="text-[10px] border border-gray-600 rounded px-1.5">Soon</span>
                           </div>
                         </div>
                       </div>

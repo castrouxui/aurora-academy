@@ -2,6 +2,9 @@ import { Container } from "@/components/layout/Container";
 import { CourseHero } from "@/components/courses/detail/CourseHero";
 import { CourseFloatingCard } from "@/components/courses/detail/CourseFloatingCard";
 import { CourseTabs } from "@/components/courses/detail/CourseTabs";
+import { InstructorCard } from "@/components/courses/InstructorCard";
+import { CourseFAQ } from "@/components/courses/detail/CourseFAQ";
+import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
 import { CourseSidebar } from "@/components/courses/detail/CourseSidebar"; // Keep for safety if needed, but not used in new layout
@@ -56,6 +59,16 @@ export function CourseDetailContent({
                             totalModules={totalModules}
                             duration={courseData.duration}
                         />
+
+                        {/* Instructor Section */}
+                        <div id="instructor" className="pt-12 border-t border-white/5">
+                            <InstructorCard />
+                        </div>
+
+                        {/* FAQ Section */}
+                        <div id="faq" className="pt-12 border-t border-white/5">
+                            <CourseFAQ />
+                        </div>
                     </div>
 
                     {/* Right Column: Floating Card */}
@@ -80,6 +93,11 @@ export function CourseDetailContent({
                     </div>
                 </div>
             </Container>
+
+            {/* Testimonials */}
+            <div className="border-t border-white/5">
+                <TestimonialsSection />
+            </div>
         </div>
     );
 }
