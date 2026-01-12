@@ -82,9 +82,9 @@ const TESTIMONIALS: Testimonial[] = [
 
 function ReviewCard({ review }: { review: Testimonial }) {
     return (
-        <figure className="relative h-full w-full cursor-pointer overflow-hidden rounded-2xl border border-white/5 bg-white/[0.03] p-6 hover:bg-white/[0.08] hover:border-white/10 transition-all duration-300">
+        <figure className="relative h-full w-full cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 hover:bg-white/10 transition-all duration-300 backdrop-blur-sm">
             <div className="flex flex-row items-center gap-3 mb-4">
-                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/10">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/20">
                     <Image
                         src={review.image}
                         alt={review.author}
@@ -93,16 +93,16 @@ function ReviewCard({ review }: { review: Testimonial }) {
                     />
                 </div>
                 <div className="flex flex-col">
-                    <figcaption className="text-sm font-medium text-white">
+                    <figcaption className="text-sm font-bold text-white">
                         {review.author}
                     </figcaption>
-                    <p className="text-xs font-medium text-white/40">{review.role}</p>
+                    <p className="text-xs font-medium text-[#5D5CDE]">{review.role}</p>
                 </div>
                 <div className="ml-auto">
-                    <Quote className="text-[#5D5CDE]/20" size={20} />
+                    <Quote className="text-white/20" size={20} />
                 </div>
             </div>
-            <blockquote className="text-sm leading-relaxed text-gray-300">
+            <blockquote className="text-sm leading-relaxed text-gray-300 font-medium">
                 "{review.text}"
             </blockquote>
         </figure>
@@ -137,23 +137,23 @@ export function TestimonialsSection() {
     return (
         <section className="py-24 bg-[#0B0F19] relative overflow-hidden">
             {/* Background elements */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-[100px] pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/5 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none opacity-50" />
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none opacity-50" />
 
             <Container className="relative z-10">
                 <div className="text-center mb-16 max-w-3xl mx-auto">
-                    <h2 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60 mb-6">
-                        ¿Qué dicen nuestros alumnos?
+                    <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
+                        ¿Qué dicen nuestros <span className="text-[#5D5CDE]">alumnos</span>?
                     </h2>
                     <p className="text-lg text-gray-400">
                         La comunidad de Aurora Academy crece día a día. Descubre por qué miles de estudiantes eligen nuestra plataforma para formarse.
                     </p>
                 </div>
 
-                <div className="relative h-[600px] max-h-[80vh] overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]">
-                    <ReviewColumn reviews={TESTIMONIALS.slice(0, 3)} duration={35} />
-                    <ReviewColumn reviews={TESTIMONIALS.slice(3, 6)} duration={45} className="hidden md:block" />
-                    <ReviewColumn reviews={TESTIMONIALS.slice(6, 9)} duration={40} className="hidden lg:block" />
+                <div className="relative h-[700px] max-h-[80vh] overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]">
+                    <ReviewColumn reviews={TESTIMONIALS.slice(0, 3)} duration={40} />
+                    <ReviewColumn reviews={TESTIMONIALS.slice(3, 6)} duration={50} className="hidden md:block" />
+                    <ReviewColumn reviews={TESTIMONIALS.slice(6, 9)} duration={45} className="hidden lg:block" />
                 </div>
             </Container>
 
@@ -161,7 +161,7 @@ export function TestimonialsSection() {
             <style jsx global>{`
                 @keyframes marquee {
                     from { transform: translateY(0); }
-                    to { transform: translateY(calc(-50% - 12px)); } /* 12px is half of gap-6 (24px) */
+                    to { transform: translateY(calc(-50% - 12px)); }
                 }
                 .animate-marquee {
                     animation: marquee var(--marquee-duration) linear infinite;
