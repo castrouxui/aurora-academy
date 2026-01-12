@@ -91,16 +91,18 @@ export default function AdminDashboard() {
             {/* KPI Grid */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {kpiData.map((stat) => (
-                    <Link href={stat.href} key={stat.title} className="block transition-transform hover:scale-105">
-                        <Card className="bg-[#1F2937] border-gray-700 h-full hover:border-[#5D5CDE]/50 transition-colors">
+                    <Link href={stat.href} key={stat.title} className="block transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1">
+                        <Card className="bg-white/5 border-white/5 h-full hover:border-[#5D5CDE]/30 hover:shadow-[0_0_20px_rgba(93,92,222,0.1)] transition-all">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium text-gray-400">
                                     {stat.title}
                                 </CardTitle>
-                                <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                                <div className={`p-2 rounded-lg bg-white/5 ${stat.color}`}>
+                                    <stat.icon className="h-4 w-4" />
+                                </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold text-white">{stat.value}</div>
+                                <div className="text-2xl font-black text-white tracking-tight">{stat.value}</div>
                                 <p className="text-xs text-gray-500 mt-1">{stat.change}</p>
                             </CardContent>
                         </Card>
@@ -110,16 +112,16 @@ export default function AdminDashboard() {
 
             {/* Recent Activity Section */}
             <div className="grid gap-6 md:grid-cols-2">
-                <Card className="bg-[#1F2937] border-gray-700 flex flex-col">
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle className="text-white">Ventas Recientes</CardTitle>
+                <Card className="bg-white/5 border-white/5 flex flex-col shadow-xl shadow-black/20">
+                    <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 pb-4">
+                        <CardTitle className="text-lg font-bold text-white">Ventas Recientes</CardTitle>
                         <Link href="/admin/sales">
-                            <Button variant="ghost" className="text-xs text-[#5D5CDE] hover:text-white p-0 h-auto gap-1">
+                            <Button variant="ghost" className="text-xs text-[#5D5CDE] hover:text-white hover:bg-[#5D5CDE]/10 h-auto py-1 px-3 rounded-full gap-1">
                                 Ver todo <ArrowRight size={12} />
                             </Button>
                         </Link>
                     </CardHeader>
-                    <CardContent className="flex-1">
+                    <CardContent className="flex-1 pt-6">
                         {stats.recentSales.length === 0 ? (
                             <div className="text-sm text-gray-500 text-center py-8">
                                 No hay ventas recientes.
@@ -127,13 +129,13 @@ export default function AdminDashboard() {
                         ) : (
                             <div className="space-y-4">
                                 {stats.recentSales.map((sale: any) => (
-                                    <div key={sale.id} className="flex items-center justify-between p-3 rounded-lg bg-[#111827]/50 border border-gray-800">
+                                    <div key={sale.id} className="flex items-center justify-between p-3 rounded-xl bg-black/20 border border-white/5 hover:bg-white/5 transition-colors group">
                                         <div className="flex items-center gap-3">
-                                            <div className="bg-emerald-500/10 p-2 rounded-full text-emerald-500">
+                                            <div className="bg-[#5D5CDE]/10 p-2.5 rounded-full text-[#5D5CDE] group-hover:scale-110 transition-transform">
                                                 <ShoppingCart size={16} />
                                             </div>
                                             <div>
-                                                <p className="text-sm font-medium text-white">{sale.course.title}</p>
+                                                <p className="text-sm font-bold text-white">{sale.course.title}</p>
                                                 <p className="text-xs text-gray-400">{sale.user.name || sale.user.email}</p>
                                             </div>
                                         </div>
@@ -149,16 +151,16 @@ export default function AdminDashboard() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-[#1F2937] border-gray-700 flex flex-col">
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle className="text-white">Estudiantes Recientes</CardTitle>
+                <Card className="bg-white/5 border-white/5 flex flex-col shadow-xl shadow-black/20">
+                    <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 pb-4">
+                        <CardTitle className="text-lg font-bold text-white">Estudiantes Recientes</CardTitle>
                         <Link href="/admin/users">
-                            <Button variant="ghost" className="text-xs text-[#5D5CDE] hover:text-white p-0 h-auto gap-1">
+                            <Button variant="ghost" className="text-xs text-[#5D5CDE] hover:text-white hover:bg-[#5D5CDE]/10 h-auto py-1 px-3 rounded-full gap-1">
                                 Ver todo <ArrowRight size={12} />
                             </Button>
                         </Link>
                     </CardHeader>
-                    <CardContent className="flex-1">
+                    <CardContent className="flex-1 pt-6">
                         {stats.recentStudents.length === 0 ? (
                             <div className="text-sm text-gray-500 text-center py-8">
                                 No hay registros recientes.
@@ -166,15 +168,18 @@ export default function AdminDashboard() {
                         ) : (
                             <div className="space-y-4">
                                 {stats.recentStudents.map((student: any, i: number) => (
-                                    <div key={i} className="flex items-center gap-3 p-2">
+                                    <div key={i} className="flex items-center gap-4 p-3 rounded-xl bg-black/20 border border-white/5 hover:bg-white/5 transition-colors">
                                         <img
                                             src={student.image || `https://ui-avatars.com/api/?name=${student.name}&background=random`}
                                             alt={student.name}
-                                            className="w-8 h-8 rounded-full border border-gray-700"
+                                            className="w-10 h-10 rounded-full border border-gray-700"
                                         />
                                         <div>
-                                            <p className="text-sm font-medium text-white">{student.name}</p>
-                                            <p className="text-xs text-gray-400">{student.email}</p>
+                                            <p className="text-sm font-bold text-white">{student.name}</p>
+                                            <p className="text-xs text-gray-400 font-medium">{student.email}</p>
+                                        </div>
+                                        <div className="ml-auto text-xs text-gray-500">
+                                            Hace un momento
                                         </div>
                                     </div>
                                 ))}

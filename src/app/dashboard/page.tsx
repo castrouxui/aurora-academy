@@ -83,16 +83,18 @@ export default function StudentDashboard() {
             {/* Stats Grid */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {statCards.map((stat) => (
-                    <Card key={stat.title} className="bg-[#111827] border-gray-800">
+                    <Card key={stat.title} className="bg-white/5 border-white/5 shadow-lg group hover:border-[#5D5CDE]/30 hover:bg-white/10 transition-all duration-300">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-gray-200">
+                            <CardTitle className="text-sm font-bold text-gray-300">
                                 {stat.title}
                             </CardTitle>
-                            <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                            <div className={`p-2 rounded-lg bg-white/5 ${stat.color} group-hover:scale-110 transition-transform`}>
+                                <stat.icon className="h-4 w-4" />
+                            </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-white">{stat.value}</div>
-                            <p className="text-xs text-gray-500">{stat.description}</p>
+                            <div className="text-3xl font-black text-white">{stat.value}</div>
+                            <p className="text-xs text-gray-500 font-medium mt-1">{stat.description}</p>
                         </CardContent>
                     </Card>
                 ))}
@@ -100,48 +102,48 @@ export default function StudentDashboard() {
 
             {/* Recent Activity / Continue Learning */}
             <div className="grid gap-6 md:grid-cols-2">
-                <Card className="bg-[#111827] border-gray-800 flex flex-col">
-                    <CardHeader>
+                <Card className="bg-white/5 border-white/5 flex flex-col shadow-xl shadow-black/20">
+                    <CardHeader className="border-b border-white/5 pb-4">
                         <CardTitle className="text-white">Continuar Aprendiendo</CardTitle>
                         <CardDescription className="text-gray-400">
                             Tu actividad reciente
                         </CardDescription>
                     </CardHeader>
-                    <CardContent className="flex-1 flex flex-col justify-center">
+                    <CardContent className="flex-1 flex flex-col justify-center pt-6">
                         {recentCourse ? (
                             <>
-                                <div className="flex items-center justify-between p-4 rounded-lg bg-[#1F2937]/50 border border-gray-700/50 mb-4">
+                                <div className="flex items-center justify-between p-4 rounded-xl bg-black/20 border border-white/5 mb-6 hover:bg-white/5 transition-colors">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-10 w-10 rounded bg-[#5D5CDE]/20 flex items-center justify-center text-[#5D5CDE]">
-                                            <BookOpen size={20} />
+                                        <div className="h-12 w-12 rounded-xl bg-[#5D5CDE]/20 flex items-center justify-center text-[#5D5CDE]">
+                                            <BookOpen size={24} />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-white">{recentCourse.title}</p>
-                                            <div className="flex items-center gap-2 mt-1">
-                                                <div className="h-1.5 w-20 bg-gray-700 rounded-full overflow-hidden">
+                                            <p className="text-base font-bold text-white mb-1">{recentCourse.title}</p>
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-1.5 w-24 bg-gray-800 rounded-full overflow-hidden">
                                                     <div className="h-full bg-[#5D5CDE]" style={{ width: `${recentCourse.progress}%` }} />
                                                 </div>
-                                                <span className="text-xs text-gray-500">{recentCourse.progress}%</span>
+                                                <span className="text-xs font-bold text-[#5D5CDE]">{recentCourse.progress}%</span>
                                             </div>
                                         </div>
                                     </div>
                                     <Link href={`/learn/${recentCourse.id}`}>
-                                        <Button size="sm" variant="ghost" className="text-[#5D5CDE] hover:text-[#5D5CDE] hover:bg-[#5D5CDE]/10">
-                                            <ArrowRight size={16} />
+                                        <Button size="icon" variant="ghost" className="text-gray-400 hover:text-white hover:bg-white/10">
+                                            <ArrowRight size={20} />
                                         </Button>
                                     </Link>
                                 </div>
                                 <Link href={`/learn/${recentCourse.id}`}>
-                                    <Button className="w-full bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-lg">
+                                    <Button className="w-full h-12 bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-xl font-bold shiny-hover shadow-[0_0_20px_rgba(93,92,222,0.3)]">
                                         Continuar curso
                                     </Button>
                                 </Link>
                             </>
                         ) : (
-                            <div className="text-center py-6">
-                                <p className="text-gray-500 mb-4">No has iniciado ningún curso aún.</p>
-                                <Link href="/dashboard/explore">
-                                    <Button variant="outline" className="border-gray-700 text-gray-300 hover:text-white rounded-lg">
+                            <div className="text-center py-8">
+                                <p className="text-gray-400 mb-6 font-medium">No has iniciado ningún curso aún.</p>
+                                <Link href="/courses">
+                                    <Button variant="outline" className="border-white/10 text-white hover:bg-white hover:text-black rounded-xl font-bold shiny-hover">
                                         Explorar Cursos
                                     </Button>
                                 </Link>
@@ -150,33 +152,38 @@ export default function StudentDashboard() {
                     </CardContent>
                 </Card>
 
-                <Card className="bg-[#111827] border-gray-800 flex flex-col">
-                    <CardHeader>
+                <Card className="bg-white/5 border-white/5 flex flex-col shadow-xl shadow-black/20">
+                    <CardHeader className="border-b border-white/5 pb-4">
                         <CardTitle className="text-white">Logros Recientes</CardTitle>
                         <CardDescription className="text-gray-400">
                             Medallas y certificados
                         </CardDescription>
                     </CardHeader>
-                    <CardContent className="flex-1 flex flex-col items-center justify-center py-8 text-center space-y-3">
+                    <CardContent className="flex-1 flex flex-col items-center justify-center py-8 text-center space-y-4">
                         {stats.completed > 0 ? (
                             <>
-                                <div className="h-16 w-16 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500 mb-2">
-                                    <Award size={32} />
+                                <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/5 flex items-center justify-center text-emerald-500 mb-2 border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                                    <Award size={40} />
                                 </div>
-                                <p className="text-sm text-white font-medium">¡Has completado {stats.completed} curso(s)!</p>
+                                <div>
+                                    <p className="text-lg text-white font-bold">¡Excelente trabajo!</p>
+                                    <p className="text-sm text-gray-400">Has completado {stats.completed} curso(s)</p>
+                                </div>
                                 <Link href="/dashboard/certificates">
-                                    <Button variant="link" className="text-emerald-400 hover:text-emerald-300 p-0 h-auto">
-                                        Ver Certificados
+                                    <Button variant="outline" className="text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-300 rounded-lg">
+                                        Ver Mis Certificados
                                     </Button>
                                 </Link>
                             </>
                         ) : (
                             <>
-                                <div className="h-16 w-16 rounded-full bg-gray-800 flex items-center justify-center text-gray-600">
-                                    <Award size={32} />
+                                <div className="h-20 w-20 rounded-2xl bg-gray-800/50 flex items-center justify-center text-gray-600 border border-gray-700">
+                                    <Award size={40} />
                                 </div>
-                                <p className="text-sm text-gray-400">Aún no tienes certificados.</p>
-                                <p className="text-xs text-gray-500">¡Completa tu primer curso para ganar uno!</p>
+                                <div>
+                                    <p className="text-base text-gray-300 font-medium">Aún no tienes certificados</p>
+                                    <p className="text-sm text-gray-500">¡Completa tu primer curso para ganar uno!</p>
+                                </div>
                             </>
                         )}
                     </CardContent>

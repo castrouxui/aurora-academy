@@ -31,12 +31,12 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
 
     return (
         <aside className={cn(
-            "bg-[#111827] border-r border-[#1F2937] flex-col sticky top-0 h-screen shrink-0 hidden md:flex transition-all duration-300 z-10",
+            "bg-[#0B0F19] border-r border-white/5 flex-col sticky top-0 h-screen shrink-0 hidden md:flex transition-all duration-300 z-10",
             isCollapsed ? "w-20" : "w-64"
         )}>
             {/* Header */}
             <div className={cn(
-                "h-16 flex items-center border-b border-[#1F2937] relative",
+                "h-16 flex items-center border-b border-white/5 relative",
                 isCollapsed ? "justify-center px-0" : "px-6"
             )}>
                 {isCollapsed ? (
@@ -49,7 +49,7 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
 
                 <button
                     onClick={() => setIsCollapsed(!isCollapsed)}
-                    className="absolute -right-3 top-1/2 -translate-y-1/2 bg-[#1F2937] border border-gray-700 text-gray-400 hover:text-white rounded-full p-1 shadow-lg z-50"
+                    className="absolute -right-3 top-1/2 -translate-y-1/2 bg-[#0B0F19] border border-white/10 text-gray-400 hover:text-white rounded-full p-1 shadow-lg z-50 transition-colors"
                 >
                     {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
                 </button>
@@ -58,7 +58,7 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
             {/* Navigation */}
             <div className="p-4 flex-1 overflow-y-auto overflow-x-hidden">
                 {!isCollapsed && (
-                    <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 animate-in fade-in duration-300">
+                    <p className="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider mb-4 animate-in fade-in duration-300">
                         {roleLabel}
                     </p>
                 )}
@@ -72,14 +72,15 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
                                 href={item.href}
                                 title={isCollapsed ? item.name : undefined}
                                 className={cn(
-                                    "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors",
+                                    "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group relative overflow-hidden",
                                     isActive
-                                        ? "bg-[#5D5CDE]/10 text-[#5D5CDE]"
-                                        : "text-gray-400 hover:bg-[#1F2937] hover:text-white",
+                                        ? "bg-primary/10 text-primary shadow-[0_0_15px_rgba(93,92,222,0.15)]"
+                                        : "text-gray-400 hover:bg-white/5 hover:text-white",
                                     isCollapsed && "justify-center px-2"
                                 )}
                             >
-                                <item.icon size={20} className="shrink-0" />
+                                {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full" />}
+                                <item.icon size={20} className={cn("shrink-0 transition-transform duration-300", isActive && "scale-110")} />
                                 {!isCollapsed && <span className="truncate">{item.name}</span>}
                             </Link>
                         );
