@@ -80,7 +80,7 @@ function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all duration-300 hover:-translate-y-1"
+            className="group flex items-center gap-2 p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all duration-300 hover:-translate-y-1 shiny-hover"
             aria-label={label}
         >
             <div className="text-gray-400 group-hover:text-blue-400 transition-colors">

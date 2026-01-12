@@ -103,15 +103,15 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                 )}
 
                 {/* Controls Bar */}
-                <div className="flex flex-col md:flex-row gap-4 mb-6">
+                <div className="flex flex-col md:flex-row gap-4 mb-8">
                     <button
                         onClick={() => setIsFilterOpen(true)}
-                        className="flex items-center gap-2 px-5 py-3 rounded-lg bg-[#1F2937] border border-gray-700 text-white hover:bg-gray-700 transition-colors"
+                        className="flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors backdrop-blur-sm"
                     >
                         <SlidersHorizontal size={20} />
-                        <span className="font-medium">Filtros</span>
+                        <span className="font-bold">Filtros</span>
                         {(activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)) > 0 && (
-                            <span className="ml-1 bg-primary text-[10px] text-black w-5 h-5 flex items-center justify-center rounded-sm font-bold">
+                            <span className="ml-2 bg-[#5D5CDE] text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">
                                 {activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)}
                             </span>
                         )}
@@ -123,23 +123,23 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             placeholder="Buscar curso, instructor o categoría..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full h-[50px] rounded-lg bg-[#1F2937] border border-gray-700 pl-11 pr-4 text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-all"
+                            className="w-full h-[50px] rounded-full bg-white/5 border border-white/10 pl-12 pr-6 text-white placeholder-gray-400 focus:outline-none focus:border-[#5D5CDE]/50 focus:ring-1 focus:ring-[#5D5CDE]/50 transition-all backdrop-blur-sm"
                         />
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                     </div>
 
                     <div className="relative group min-w-[200px] h-[50px]">
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="appearance-none w-full h-full px-4 py-3 rounded-lg bg-[#1F2937] border border-gray-700 text-white cursor-pointer hover:bg-gray-700 transition-colors pl-4 pr-10 focus:outline-none"
+                            className="appearance-none w-full h-full px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white cursor-pointer hover:bg-white/10 transition-colors pl-6 pr-12 focus:outline-none backdrop-blur-sm font-medium"
                         >
-                            <option value="popular">Más Populares</option>
-                            <option value="newest">Más Recientes</option>
-                            <option value="price-asc">Menor Precio</option>
-                            <option value="price-desc">Mayor Precio</option>
+                            <option value="popular" className="bg-[#1F2937]">Más Populares</option>
+                            <option value="newest" className="bg-[#1F2937]">Más Recientes</option>
+                            <option value="price-asc" className="bg-[#1F2937]">Menor Precio</option>
+                            <option value="price-desc" className="bg-[#1F2937]">Mayor Precio</option>
                         </select>
-                        <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                        <ChevronDown size={16} className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                     </div>
                 </div>
 

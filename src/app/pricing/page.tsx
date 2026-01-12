@@ -138,18 +138,21 @@ export default function PricingPage() {
 
                     {/* Bundle Card (Full Width Highlight) */}
                     <div className="w-full">
-                        <div className="relative rounded-3xl border border-primary bg-[#1F2937] p-6 md:p-12 shadow-2xl overflow-hidden">
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 rounded-b-xl bg-primary px-6 py-2 text-sm font-bold text-white shadow-lg uppercase tracking-wider">
+                        <div className="relative rounded-3xl border border-[#5D5CDE] bg-[#0B0F19] p-6 md:p-12 shadow-[0_0_50px_rgba(93,92,222,0.15)] overflow-hidden">
+                            {/* Glow Effect */}
+                            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#5D5CDE]/10 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 rounded-b-2xl bg-[#5D5CDE] px-8 py-2 text-sm font-black text-white shadow-lg uppercase tracking-widest">
                                 RECOMENDADO
                             </div>
-                            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 items-center mt-4">
+                            <div className="grid grid-cols-1 gap-12 md:grid-cols-2 items-center mt-8 relative z-10">
                                 <div>
-                                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">{bundlePlan.title}</h3>
-                                    <p className="text-gray-400 text-lg">La formación definitiva para dominar los mercados.</p>
-                                    <ul className="mt-8 space-y-4">
+                                    <h3 className="text-3xl md:text-5xl font-black text-white mb-4">{bundlePlan.title}</h3>
+                                    <p className="text-gray-300 text-xl font-medium">La formación definitiva para dominar los mercados.</p>
+                                    <ul className="mt-8 space-y-5">
                                         {bundlePlan.features.map((feature, idx) => (
-                                            <li key={idx} className="flex items-center gap-3">
-                                                <div className="rounded-full bg-primary/20 p-1">
+                                            <li key={idx} className="flex items-center gap-4">
+                                                <div className="rounded-full bg-[#5D5CDE]/20 p-1.5 text-[#5D5CDE]">
                                                     <PricingCheckmark />
                                                 </div>
                                                 <span className="text-gray-200 text-lg">{feature}</span>
@@ -157,16 +160,16 @@ export default function PricingPage() {
                                         ))}
                                     </ul>
                                 </div>
-                                <div className="rounded-2xl bg-[#0B0F19] p-6 md:p-8 border border-gray-800 flex flex-col items-center justify-center text-center">
-                                    <p className="text-gray-400 mb-2">Precio Paquete</p>
-                                    <div className="text-5xl md:text-6xl font-bold text-white mb-2">
+                                <div className="rounded-3xl bg-white/5 p-8 border border-white/10 flex flex-col items-center justify-center text-center backdrop-blur-sm shadow-2xl">
+                                    <p className="text-gray-400 mb-2 font-medium uppercase tracking-wider text-sm">Precio Paquete</p>
+                                    <div className="text-5xl md:text-6xl font-black text-white mb-2 drop-shadow-lg">
                                         {bundlePlan.price}
                                     </div>
-                                    <p className="text-emerald-400 font-medium mb-8">
-                                        Estás ahorrando $40.000 al invertir en este paquete
+                                    <p className="text-emerald-400 font-bold mb-8 bg-emerald-500/10 px-4 py-2 rounded-full border border-emerald-500/20">
+                                        ¡Ahorras $40.000 con este pack!
                                     </p>
                                     <Button
-                                        className="w-full text-lg h-14 font-bold shadow-lg shadow-primary/25 hover:scale-105 transition-transform"
+                                        className="w-full text-lg h-16 font-bold shadow-[0_0_30px_rgba(93,92,222,0.3)] hover:scale-105 transition-transform bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shiny-hover rounded-2xl"
                                         size="lg"
                                         onClick={() => handlePurchase(bundlePlan.title, bundlePlan.price)}
                                     >
