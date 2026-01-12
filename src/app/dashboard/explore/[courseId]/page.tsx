@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { CourseDetailContent } from "@/components/courses/CourseDetailContent";
+import { getYouTubeId } from "@/lib/utils";
 
 export default async function DashboardCourseDatailPage({ params }: { params: Promise<{ courseId: string }> }) {
     const { courseId } = await params;
@@ -51,13 +52,19 @@ export default async function DashboardCourseDatailPage({ params }: { params: Pr
     const firstLesson = firstModule?.lessons.sort((a, b) => a.position - b.position)[0];
     const previewVideoUrl = firstLesson?.videoUrl || "/hero-video.mp4";
 
+    // Calculate display image (Priority: YouTube > Uploaded > Placeholder)
+    const youtubeId = previewVideoUrl ? getYouTubeId(previewVideoUrl) : null;
+    const displayImage = youtubeId
+        ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
+        : (course.imageUrl || "/course-placeholder.jpg");
+
     // Prepare data for components
     const courseData = {
         id: course.id,
         title: course.title,
         description: course.description,
         price: formattedPrice,
-        imageUrl: course.imageUrl || "/course-placeholder.jpg",
+        imageUrl: displayImage, // Use calculated image for main cover too
         category: course.category,
         modules: course.modules,
         rating: 5.0,
@@ -74,7 +81,7 @@ export default async function DashboardCourseDatailPage({ params }: { params: Pr
             name: "Aurora Academy",
             image: "/logo.svg"
         },
-        videoThumbnail: course.imageUrl || "/course-placeholder.jpg",
+        videoThumbnail: displayImage,
         videoUrl: previewVideoUrl
     };
 
