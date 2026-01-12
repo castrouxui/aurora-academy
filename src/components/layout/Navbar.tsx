@@ -243,99 +243,112 @@ export function Navbar() {
           </div>
         </Container>
 
-        {/* Mobile Menu Overlay */}
-        {isOpen && (
-          <div className="fixed inset-0 z-[9999] bg-[#0B0F19] md:hidden animate-in fade-in slide-in-from-top-5 duration-300">
-            <div className="flex flex-col h-full pt-20 px-6 pb-8 overflow-y-auto">
-              {/* Mobile Search - Prominent */}
-              <div className="relative w-full mb-8">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                  <Search size={20} />
-                </div>
-                <input
-                  type="text"
-                  placeholder="¿Qué quieres aprender hoy?"
-                  className="w-full bg-white/5 border border-white/10 text-white text-lg rounded-2xl py-4 pl-12 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                />
+      </nav>
+
+      {/* Mobile Menu Overlay - Portal/Fixed Layer */}
+      {isOpen && (
+        <div className="fixed inset-0 z-[9999] bg-[#0B0F19] md:hidden animate-in fade-in slide-in-from-top-5 duration-200 flex flex-col">
+
+          {/* Mobile Header (Logo + Close) */}
+          <div className="flex items-center justify-between p-6 border-b border-white/5">
+            <Logo />
+            <button
+              onClick={toggleMenu}
+              className="text-gray-300 hover:text-white focus:outline-none p-2 rounded-full hover:bg-white/5"
+            >
+              <X size={24} />
+            </button>
+          </div>
+
+          <div className="flex flex-col flex-1 px-6 py-8 overflow-y-auto">
+            {/* Mobile Search - Prominent */}
+            <div className="relative w-full mb-8">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+                <Search size={20} />
               </div>
+              <input
+                type="text"
+                placeholder="¿Qué quieres aprender hoy?"
+                className="w-full bg-white/5 border border-white/10 text-white text-lg rounded-2xl py-4 pl-12 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+              />
+            </div>
 
-              {/* Main Navigation Links */}
-              <div className="flex flex-col space-y-1 mb-8">
-                <div className="pb-4 mb-4 border-b border-white/5">
-                  <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Para Estudiantes</p>
-                  <Link
-                    href="/courses"
-                    className={getMobileLinkClass("/courses")}
-                    onClick={toggleMenu}
-                  >
-                    <BookOpen className="mr-4 text-[#5D5CDE]" size={24} />
-                    <span className="text-xl font-bold text-white">Explorar Carreras</span>
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    className={getMobileLinkClass("/pricing")}
-                    onClick={toggleMenu}
-                  >
-                    <TrendingUp className="mr-4 text-gray-500" size={24} />
-                    <span className="text-xl font-bold text-gray-300">Precios</span>
-                  </Link>
-                </div>
-
-                <div className="pb-4 mb-4 border-b border-white/5 opacity-60">
-                  <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Para Empresas</p>
-                  <div className="flex items-center gap-3 px-4 py-2">
-                    <Building2 className="text-gray-600" size={24} />
-                    <span className="text-lg font-bold text-gray-500">Corporativo</span>
-                    <span className="text-[10px] border border-gray-600 text-gray-500 px-2 py-0.5 rounded-full ml-auto">SOON</span>
-                  </div>
-                </div>
-
+            {/* Main Navigation Links */}
+            <div className="flex flex-col space-y-1 mb-8">
+              <div className="pb-4 mb-4 border-b border-white/5">
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Para Estudiantes</p>
                 <Link
-                  href="/about"
-                  className={getMobileLinkClass("/about")}
+                  href="/courses"
+                  className={getMobileLinkClass("/courses")}
                   onClick={toggleMenu}
                 >
-                  <User className="mr-4 text-gray-500" size={24} />
-                  <span className="text-xl font-bold">Nosotros</span>
+                  <BookOpen className="mr-4 text-[#5D5CDE]" size={24} />
+                  <span className="text-xl font-bold text-white">Explorar Carreras</span>
+                </Link>
+                <Link
+                  href="/pricing"
+                  className={getMobileLinkClass("/pricing")}
+                  onClick={toggleMenu}
+                >
+                  <TrendingUp className="mr-4 text-gray-500" size={24} />
+                  <span className="text-xl font-bold text-gray-300">Precios</span>
                 </Link>
               </div>
 
-              {/* User Session / Auth */}
-              <div className="mt-auto">
-                {session ? (
-                  <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                    <div className="flex items-center gap-4 mb-4">
-                      <img src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`} alt="" className="w-12 h-12 rounded-full border border-gray-700" />
-                      <div>
-                        <p className="text-white font-bold text-lg">{session.user?.name}</p>
-                        <p className="text-sm text-gray-400">{session.user?.email}</p>
-                      </div>
-                    </div>
-                    <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"} className="w-full flex items-center justify-center gap-2 bg-[#5D5CDE] text-white py-3 rounded-xl font-bold mb-3 hover:bg-[#4B4AC0]" onClick={toggleMenu}>
-                      <LayoutDashboard size={20} />
-                      Ir al Dashboard
-                    </Link>
-                    <button onClick={() => signOut()} className="w-full flex items-center justify-center gap-2 py-3 text-red-400 hover:bg-white/5 rounded-xl font-medium transition-colors">
-                      <LogOut size={20} />
-                      Cerrar sesión
-                    </button>
-                  </div>
-                ) : (
-                  <Button
-                    className="w-full h-14 text-lg font-bold bg-[#5D5CDE] text-white rounded-2xl shadow-lg shiny-hover"
-                    onClick={() => {
-                      toggleMenu();
-                      openLoginModal();
-                    }}
-                  >
-                    Acceder a la Academia
-                  </Button>
-                )}
+              <div className="pb-4 mb-4 border-b border-white/5 opacity-60">
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Para Empresas</p>
+                <div className="flex items-center gap-3 px-4 py-2">
+                  <Building2 className="text-gray-600" size={24} />
+                  <span className="text-lg font-bold text-gray-500">Corporativo</span>
+                  <span className="text-[10px] border border-gray-600 text-gray-500 px-2 py-0.5 rounded-full ml-auto">SOON</span>
+                </div>
               </div>
+
+              <Link
+                href="/about"
+                className={getMobileLinkClass("/about")}
+                onClick={toggleMenu}
+              >
+                <User className="mr-4 text-gray-500" size={24} />
+                <span className="text-xl font-bold">Nosotros</span>
+              </Link>
+            </div>
+
+            {/* User Session / Auth */}
+            <div className="mt-auto">
+              {session ? (
+                <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
+                  <div className="flex items-center gap-4 mb-4">
+                    <img src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`} alt="" className="w-12 h-12 rounded-full border border-gray-700" />
+                    <div>
+                      <p className="text-white font-bold text-lg">{session.user?.name}</p>
+                      <p className="text-sm text-gray-400">{session.user?.email}</p>
+                    </div>
+                  </div>
+                  <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"} className="w-full flex items-center justify-center gap-2 bg-[#5D5CDE] text-white py-3 rounded-xl font-bold mb-3 hover:bg-[#4B4AC0]" onClick={toggleMenu}>
+                    <LayoutDashboard size={20} />
+                    Ir al Dashboard
+                  </Link>
+                  <button onClick={() => signOut()} className="w-full flex items-center justify-center gap-2 py-3 text-red-400 hover:bg-white/5 rounded-xl font-medium transition-colors">
+                    <LogOut size={20} />
+                    Cerrar sesión
+                  </button>
+                </div>
+              ) : (
+                <Button
+                  className="w-full h-14 text-lg font-bold bg-[#5D5CDE] text-white rounded-2xl shadow-lg shiny-hover"
+                  onClick={() => {
+                    toggleMenu();
+                    openLoginModal();
+                  }}
+                >
+                  Acceder a la Academia
+                </Button>
+              )}
             </div>
           </div>
-        )}
-      </nav>
+        </div>
+      )}
 
       {/* Login Modal */}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
