@@ -91,7 +91,7 @@ export function CourseFloatingCard({
                 </DialogContent>
             </Dialog>
 
-            <div className="bg-white rounded-3xl overflow-hidden shadow-2xl sticky top-24 border border-gray-100">
+            <div className="bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-100">
                 {/* Video Preview Header */}
                 <div
                     className="relative h-48 bg-gray-900 cursor-pointer group"

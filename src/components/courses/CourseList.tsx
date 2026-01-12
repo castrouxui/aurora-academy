@@ -55,16 +55,16 @@ export function CourseList() {
     if (courses.length === 0) return null;
 
     return (
-        <section className="py-24 bg-gray-50/50">
+        <section className="py-24 bg-gray-50/50 dark:bg-[#0B0F19] transition-colors">
             <Container>
                 <div className="text-center mb-16 space-y-4">
                     <span className="bg-[#5D5CDE]/10 text-[#5D5CDE] px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider">
                         Carreras y Cursos
                     </span>
-                    <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">
+                    <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white tracking-tight">
                         Potencia tu perfil profesional
                     </h2>
-                    <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+                    <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
                         Programas intensivos diseñados para insertarte en el mercado rápidamente.
                     </p>
                 </div>

@@ -60,7 +60,7 @@ export function CourseDetailContent({
 
                     {/* Right Column: Floating Card */}
                     <div className="lg:col-span-4 relative">
-                        <div className="-mt-64 relative z-20"> {/* Negative margin to pull it up into the dark area */}
+                        <div className="-mt-64 relative z-20 sticky top-24"> {/* Negative margin to pull it up into the dark area */}
                             <CourseFloatingCard
                                 title={courseData.title}
                                 price={courseData.price}
