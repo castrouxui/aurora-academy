@@ -30,8 +30,8 @@ export function Footer() {
                         </div>
                     </div>
 
-                    {/* Stats */}
-                    <div className="flex flex-wrap justify-center gap-8 md:gap-16">
+                    {/* Stats moved to StatsStrip */}
+                    {/* <div className="flex flex-wrap justify-center gap-8 md:gap-16">
                         <div>
                             <p className="text-3xl font-bold">+10</p>
                             <p className="text-indigo-200 text-sm mt-1">Cursos online</p>
@@ -44,7 +44,7 @@ export function Footer() {
                             <p className="text-3xl font-bold">100%</p>
                             <p className="text-indigo-200 text-sm mt-1">Tasa de éxito</p>
                         </div>
-                    </div>
+                    </div> */}
 
                 </Container>
             </div>

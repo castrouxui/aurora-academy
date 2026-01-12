@@ -1,80 +1,77 @@
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
-import Image from "next/image";
 import Link from "next/link";
+import { Zap, Users, MonitorPlay, Trophy } from "lucide-react";
 
 export function CTASection() {
     return (
-        <section className="py-24">
+        <section className="py-24 bg-black/20">
             <Container>
-                <div className="grid gap-8 lg:grid-cols-2">
-                    {/* Promo Card (Left) */}
-                    <div className="relative overflow-hidden rounded-3xl bg-[#4F46E5] p-8 text-white shadow-2xl md:p-12">
-                        <div className="relative z-10 max-w-lg">
-                            <h2 className="mb-4 text-3xl font-bold md:text-4xl">
-                                Trader de 0 a 100
-                            </h2>
-                            <p className="mb-8 text-indigo-100 md:text-lg">
-                                Domina la psicología, el análisis técnico y la gestión de riesgo.
-                                Instructores expertos te guían desde los fundamentos hasta tu primera operación rentable.
-                            </p>
-                            <Link href="/pricing">
-                                <Button className="h-12 bg-white px-8 text-base font-semibold text-[#4F46E5] hover:bg-gray-100">
-                                    Empezar
+                <div className="text-center max-w-2xl mx-auto mb-16">
+                    <h2 className="text-3xl md:text-5xl font-black text-white mb-6 uppercase tracking-tight">
+                        ¿Por qué elegir <span className="text-[#5D5CDE]">Aurora</span>?
+                    </h2>
+                    <p className="text-gray-400 text-lg">
+                        No somos solo una academia. Somos tu puente hacia la libertad financiera profesional.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+                    {/* Main Feature - Large */}
+                    <div className="md:col-span-2 row-span-1 rounded-3xl bg-[#5D5CDE] p-10 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+                        <div className="relative z-10 h-full flex flex-col justify-between">
+                            <div>
+                                <h3 className="text-3xl font-bold text-white mb-2">Aprende Haciendo</h3>
+                                <p className="text-indigo-100 text-lg max-w-md">Sin teoría aburrida. Analizamos el mercado en vivo y operamos con dinero real desde el día 1.</p>
+                            </div>
+                            <Link href="/courses">
+                                <Button className="w-fit bg-white text-[#5D5CDE] hover:bg-gray-100 font-bold rounded-full px-8 py-6 text-lg shadow-lg">
+                                    Ver Carreras
                                 </Button>
                             </Link>
                         </div>
+                        <MonitorPlay size={200} className="absolute -bottom-10 -right-10 text-white/10 group-hover:text-white/20 transition-colors rotate-12" />
+                    </div>
 
-                        {/* Decorative Circle */}
-                        <div className="absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
-
-                        {/* Ideally we would have a real image of a person here like in the reference. 
-                Using a placeholder or decorative element for now. */}
-                        <div className="absolute bottom-0 right-0 hidden h-64 w-64 translate-x-12 translate-y-12 items-end justify-center md:flex opacity-20 lg:opacity-100 mix-blend-soft-light">
-                            {/* Placeholder graphic until user provides image */}
-                            <div className="h-48 w-48 rounded-t-full bg-white/20 blur-xl"></div>
+                    {/* Feature 2 - Tall */}
+                    <div className="md:col-span-1 row-span-1 rounded-3xl bg-[#1F2937] p-8 relative overflow-hidden group hover:bg-[#2D3748] transition-colors">
+                        <div className="relative z-10">
+                            <div className="w-14 h-14 bg-[#5D5CDE]/20 rounded-2xl flex items-center justify-center mb-6 text-[#5D5CDE]">
+                                <Users size={32} />
+                            </div>
+                            <h3 className="text-2xl font-bold text-white mb-2">Comunidad VIP</h3>
+                            <p className="text-gray-400">Acceso exclusivo a nuestro Discord. Señales, análisis diario y networking con otros traders.</p>
                         </div>
                     </div>
 
-                    {/* Steps Card (Right) */}
-                    <div className="rounded-3xl bg-white p-8 shadow-xl md:p-12 text-slate-900">
-                        <h2 className="mb-8 text-3xl font-bold">Pasos de aprendizaje</h2>
-                        <div className="grid gap-6 md:grid-cols-2">
-                            <StepItem
-                                number="1"
-                                text="Domina los Fundamentos"
-                                bg="bg-indigo-100 text-indigo-700"
-                            />
-                            <StepItem
-                                number="2"
-                                text="Análisis Técnico Profundo"
-                                bg="bg-orange-100 text-orange-700"
-                            />
-                            <StepItem
-                                number="3"
-                                text="Gestión de Riesgo y Psicología"
-                                bg="bg-red-100 text-red-700"
-                            />
-                            <StepItem
-                                number="4"
-                                text="Tu Primera Operación Real"
-                                bg="bg-emerald-100 text-emerald-700"
-                            />
+                    {/* Feature 3 */}
+                    <div className="md:col-span-1 row-span-1 rounded-3xl bg-[#1F2937] p-8 relative overflow-hidden group hover:bg-[#2D3748] transition-colors">
+                        <div className="relative z-10">
+                            <div className="w-14 h-14 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6 text-emerald-500">
+                                <Zap size={32} />
+                            </div>
+                            <h3 className="text-2xl font-bold text-white mb-2">Rápida Salida</h3>
+                            <p className="text-gray-400">Nuestros programas están diseñados para insertarte en el mercado laboral o de prop trading en meses.</p>
                         </div>
+                    </div>
+
+                    {/* Feature 4 - Wide bottom */}
+                    <div className="md:col-span-2 row-span-1 rounded-3xl bg-white p-10 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300">
+                        <div className="relative z-10 text-black">
+                            <h3 className="text-3xl font-bold mb-2">Mentoria Garantizada</h3>
+                            <p className="text-gray-600 text-lg max-w-lg mb-8">
+                                No estarás solo. Tienes acceso directo a tus instructores para resolver dudas y revisar tus operaciones.
+                            </p>
+                            <Link href="/about">
+                                <Button variant="outline" className="border-black text-black hover:bg-black hover:text-white font-bold rounded-full px-8 py-6 text-lg">
+                                    Conocé al Equipo
+                                </Button>
+                            </Link>
+                        </div>
+                        <Trophy size={180} className="absolute -top-6 -right-6 text-gray-100 group-hover:text-gray-200 transition-colors" />
                     </div>
                 </div>
             </Container>
         </section>
-    );
-}
-
-function StepItem({ number, text, bg }: { number: string; text: string; bg: string }) {
-    return (
-        <div className="flex items-center gap-4">
-            <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl font-bold text-xl ${bg}`}>
-                {number}
-            </div>
-            <p className="font-medium text-slate-700">{text}</p>
-        </div>
     );
 }

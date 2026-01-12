@@ -4,6 +4,7 @@ import { Categories } from "@/components/courses/Categories";
 import { CourseList } from "@/components/courses/CourseList";
 import { CTASection } from "@/components/layout/CTASection";
 import { Footer } from "@/components/layout/Footer";
+import { StatsStrip } from "@/components/layout/StatsStrip";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
       <Navbar />
       <div className="pt-24">
         <HeroBanner />
+        <StatsStrip />
         <Categories />
         <div id="courses" className="scroll-mt-24">
           <CourseList />

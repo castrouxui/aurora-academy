@@ -24,7 +24,7 @@
   --card: #1F2937;
   --card-foreground: #ffffff;
 
-  --radius: 0.75rem;
+  --radius: 1rem;
 }
 
 @media (prefers-color-scheme: dark) {
