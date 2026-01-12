@@ -177,3 +177,56 @@ function AdminRecoveryButton() {
         </div>
     );
 }
+
+function DeleteAccountButton() {
+    const [loading, setLoading] = useState(false);
+
+    const handleDelete = async () => {
+        setLoading(true);
+        try {
+            const res = await fetch('/api/user/delete', { method: 'DELETE' });
+            if (res.ok) {
+                signOut({ callbackUrl: '/' });
+            } else {
+                alert("Error al eliminar la cuenta. Intente nuevamente.");
+                setLoading(false);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Error de conexión");
+            setLoading(false);
+        }
+    };
+
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm" className="bg-red-600 hover:bg-red-700 gap-2">
+                    <Trash2 size={14} />
+                    Eliminar
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-[#1F2937] border-gray-700 text-white">
+                <AlertDialogHeader>
+                    <AlertDialogTitle className="flex items-center gap-2 text-red-500">
+                        <AlertTriangle />
+                        ¿Estás absolutamente seguro?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-gray-400">
+                        Esta acción no se puede deshacer. Esto eliminará permanentemente tu cuenta y eliminará tus datos de nuestros servidores. Perderás acceso a todos tus cursos comprados.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel className="bg-transparent border-gray-600 text-white hover:bg-gray-700">Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                        onClick={handleDelete}
+                        disabled={loading}
+                        className="bg-red-600 hover:bg-red-700 text-white border-0"
+                    >
+                        {loading ? "Eliminando..." : "Sí, eliminar mi cuenta"}
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+}
