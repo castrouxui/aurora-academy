@@ -82,7 +82,7 @@ const TESTIMONIALS: Testimonial[] = [
 
 function ReviewCard({ review }: { review: Testimonial }) {
     return (
-        <figure className="relative h-full w-full cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-[#131722] p-8 transition-all duration-300 hover:border-white/20 hover:bg-[#1A1F2E]">
+        <figure className="relative w-full cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-[#131722] p-8 transition-all duration-300 hover:border-white/20 hover:bg-[#1A1F2E]">
             <div className="flex flex-row items-center gap-4 mb-6">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/10">
                     <Image
