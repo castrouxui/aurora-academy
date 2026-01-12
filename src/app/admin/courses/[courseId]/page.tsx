@@ -33,7 +33,7 @@ interface Course {
     id: string;
     title: string;
     description: string;
-    price: string;
+    price: number;
     imageUrl: string;
     category: string;
     level: string;
@@ -397,6 +397,31 @@ export default function CourseEditorPage() {
                                 <option value="Intermedio">Intermedio</option>
                                 <option value="Avanzado">Avanzado</option>
                             </select>
+                        </div>
+                        <span>•</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-gray-500">Precio:</span>
+                            <div className="relative">
+                                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                                <input
+                                    type="number"
+                                    value={course.price || 0}
+                                    onChange={async (e) => {
+                                        const newPrice = parseFloat(e.target.value);
+                                        setCourse({ ...course, price: newPrice });
+                                        try {
+                                            await fetch(`/api/courses/${courseId}`, {
+                                                method: "PATCH",
+                                                headers: { "Content-Type": "application/json" },
+                                                body: JSON.stringify({ price: newPrice }),
+                                            });
+                                        } catch (error) {
+                                            console.error("Failed to update price", error);
+                                        }
+                                    }}
+                                    className="bg-[#1a1f2e] text-white border border-gray-700 rounded px-2 py-0.5 text-xs focus:outline-none focus:border-[#5D5CDE] w-24 pl-4"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
