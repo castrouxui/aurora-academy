@@ -21,6 +21,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 
+const getYouTubeId = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+};
+
 interface Lesson {
     id: string;
     title: string;
@@ -602,12 +608,32 @@ export default function CourseEditorPage() {
                                                         <FileVideo size={32} className="text-emerald-400" />
                                                     </div>
                                                     <div className="text-center w-full px-4">
-                                                        <p className="text-sm text-gray-300 font-medium truncate max-w-full block">{lessonUrl}</p>
-                                                        <p className="text-xs text-gray-500 mt-1 mb-4">Listo para reproducir</p>
-                                                        <label htmlFor="file-upload" className="inline-flex items-center gap-2 text-xs font-medium text-[#5D5CDE] bg-[#5D5CDE]/10 px-3 py-1.5 rounded-lg hover:bg-[#5D5CDE]/20 cursor-pointer transition-colors">
-                                                            <UploadCloud size={12} />
-                                                            Reemplazar video
-                                                        </label>
+                                                        <p className="text-sm text-gray-300 font-medium truncate max-w-full block mb-2">{lessonUrl}</p>
+
+                                                        {getYouTubeId(lessonUrl) ? (
+                                                            <div className="relative aspect-video w-full max-w-[240px] rounded-lg overflow-hidden border border-gray-700 shadow-md mb-3 group/preview">
+                                                                <img
+                                                                    src={`https://img.youtube.com/vi/${getYouTubeId(lessonUrl)}/hqdefault.jpg`}
+                                                                    alt="Video Preview"
+                                                                    className="w-full h-full object-cover"
+                                                                    onError={(e) => {
+                                                                        (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${getYouTubeId(lessonUrl)}/0.jpg`;
+                                                                    }}
+                                                                />
+                                                                <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover/preview:bg-black/20 transition-all">
+                                                                    <FileVideo size={32} className="text-white opacity-80" />
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            <p className="text-xs text-gray-500 mt-1 mb-4">Listo para reproducir</p>
+                                                        )}
+
+                                                        <div className="flex gap-2">
+                                                            <label htmlFor="file-upload" className="inline-flex items-center gap-2 text-xs font-medium text-[#5D5CDE] bg-[#5D5CDE]/10 px-3 py-1.5 rounded-lg hover:bg-[#5D5CDE]/20 cursor-pointer transition-colors">
+                                                                <UploadCloud size={12} />
+                                                                Reemplazar video
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             ) : (
@@ -647,6 +673,10 @@ export default function CourseEditorPage() {
                                                 className="bg-[#1a1f2e] border-gray-800 text-xs pl-9 h-9 placeholder:text-gray-600 focus:border-[#5D5CDE] transition-colors rounded-lg"
                                                 placeholder="O pega una URL directa (YouTube/Vimeo)"
                                             />
+                                            {/* Helper text for YouTube private/unlisted */}
+                                            <p className="text-[10px] text-gray-500 mt-1.5 ml-1">
+                                                Tip: Para videos privados de YouTube, usa la opción "No listado" (Unlisted).
+                                            </p>
                                         </div>
                                     </div>
 
