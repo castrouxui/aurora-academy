@@ -169,7 +169,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     playing={isPlaying}
                     volume={isMuted ? 0 : volume}
                     playbackRate={playbackRate}
-                    controls={false} // We provide custom controls
+                    controls={true} // Use native controls for better compatibility
                     playsinline={true}
                     config={{
                         youtube: {
@@ -199,12 +199,6 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                 </div>
             )}
 
-            {/* Tap/Click Overlay for Play/Pause */}
-            <div
-                className="absolute inset-0 z-10"
-                onClick={handlePlayPause}
-            ></div>
-
             {/* Paywall Overlay */}
             {showPaywall && (
                 <div className="absolute inset-0 z-50">
@@ -216,87 +210,6 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
             {isLoading && !showPaywall && !hasError && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
                     <Loader2 className="h-10 w-10 text-white animate-spin" />
-                </div>
-            )}
-
-            {/* Custom Controls Bar */}
-            {!showPaywall && (
-                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-4 transition-opacity opacity-0 group-hover:opacity-100 z-30">
-                    {/* Progress Slider */}
-                    <div className="mb-4 relative group/slider">
-                        <Slider
-                            value={[currentTime]}
-                            max={previewMode ? 30 : duration || 100}
-                            step={1}
-                            onValueChange={handleSeek}
-                            className="cursor-pointer relative z-10"
-                        />
-                        {/* Buffer/MaxPlayed visualization could go here */}
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            {/* Play/Pause */}
-                            <button onClick={handlePlayPause} className="text-white hover:text-primary transition-colors">
-                                {isPlaying ? <Pause size={24} /> : <Play size={24} fill="currentColor" />}
-                            </button>
-
-                            {/* Volume */}
-                            <div className="flex items-center gap-2 group/volume">
-                                <button onClick={toggleMute} className="text-white hover:text-gray-300">
-                                    {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-                                </button>
-                                <div className="w-0 overflow-hidden group-hover/volume:w-20 transition-all duration-300">
-                                    <Slider
-                                        value={[isMuted ? 0 : volume]}
-                                        max={1}
-                                        step={0.1}
-                                        onValueChange={(val: number[]) => {
-                                            setVolume(val[0]);
-                                            setIsMuted(val[0] === 0);
-                                        }}
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Time Display */}
-                            <span className="text-sm font-medium text-white">
-                                {formatTime(currentTime)} / {previewMode ? "0:30" : formatTime(duration)}
-                            </span>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                            {/* SPEED CONTROL */}
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="sm" className="text-white h-8 min-w-[32px] p-0 hover:bg-white/10 gap-1">
-                                        <Settings size={14} />
-                                        <span className="text-xs font-bold">{playbackRate}x</span>
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="bg-[#1A1F2E] border-gray-800 text-white min-w-[80px]">
-                                    {[0.5, 1.0, 1.25, 1.5, 2.0].map((rate) => (
-                                        <DropdownMenuItem
-                                            key={rate}
-                                            onClick={() => setPlaybackRate(rate)}
-                                            className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white justify-center"
-                                        >
-                                            {rate}x
-                                        </DropdownMenuItem>
-                                    ))}
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Center Play Button (Initial) */}
-            {!isPlaying && !isLoading && !showPaywall && currentTime === 0 && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-                    <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
-                        <Play size={32} fill="currentColor" className="text-white ml-1" />
-                    </div>
                 </div>
             )}
         </div>
