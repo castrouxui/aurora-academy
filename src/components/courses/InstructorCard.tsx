@@ -1,4 +1,4 @@
-import { Star, Users, PlayCircle, Instagram, Send, Twitter } from "lucide-react";
+import { Star, Users, PlayCircle, Instagram, Send, Twitter, BadgeCheck } from "lucide-react";
 // import Image from "next/image";
 
 export function InstructorCard() {
@@ -12,11 +12,12 @@ export function InstructorCard() {
                         <img
                             src="/images/francisco-speaking.png"
                             alt="Fran Castro"
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover object-top"
                         />
                     </div>
-                    <div className="absolute -bottom-2 right-1/2 translate-x-1/2 md:translate-x-0 md:-right-2 bg-[#5D5CDE] text-white text-[10px] font-bold px-2 py-0.5 rounded-lg border border-[#0B0F19] uppercase tracking-wider shadow-lg">
-                        Verificado
+                    {/* Verified Badge Icon */}
+                    <div className="absolute bottom-1 right-1 bg-[#0B0F19] rounded-full text-[#5D5CDE]">
+                        <BadgeCheck size={28} fill="#0B0F19" className="text-[#5D5CDE]" />
                     </div>
                 </div>
 
@@ -36,7 +37,7 @@ export function InstructorCard() {
                         </div>
                         <div className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full border border-white/5">
                             <Users size={14} className="text-[#5D5CDE]" />
-                            <span className="text-white font-bold">15,000+</span>
+                            <span className="text-white font-bold">+1,000</span>
                             <span className="hidden sm:inline">Estudiantes</span>
                         </div>
                         <div className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full border border-white/5">
