@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
+const ReactPlayer = dynamic(() => import("react-player"), { ssr: false }) as any;
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +34,7 @@ interface Lesson {
     title: string;
     description: string;
     videoUrl: string;
+    duration: number;
     published: boolean;
     position: number;
     resources: { id: string; title: string; url: string; type: string }[];
@@ -78,6 +79,7 @@ export default function CourseEditorPage() {
     const [lessonTitle, setLessonTitle] = useState("");
     const [lessonUrl, setLessonUrl] = useState("");
     const [lessonDesc, setLessonDesc] = useState("");
+    const [lessonDuration, setLessonDuration] = useState(0);
     const [isSubmittingLesson, setIsSubmittingLesson] = useState(false);
 
     // Resource State
@@ -156,6 +158,7 @@ export default function CourseEditorPage() {
                         title: lessonTitle,
                         videoUrl: lessonUrl,
                         description: lessonDesc,
+                        duration: lessonDuration // Added
                     }),
                 });
             } else {
@@ -167,7 +170,8 @@ export default function CourseEditorPage() {
                         title: lessonTitle,
                         videoUrl: lessonUrl,
                         description: lessonDesc,
-                        moduleId: activeModuleId
+                        moduleId: activeModuleId,
+                        duration: lessonDuration // Added
                     }),
                 });
             }
