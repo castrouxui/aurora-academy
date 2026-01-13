@@ -96,12 +96,6 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         modules: course.modules,
         rating: 5.0,
         totalRatings: 124, // Could also be dynamic if we had ratings
-        students: studentCount > 0 ? studentCount : (studentCount + 15420), // KEEPING THE HARDCODED BASE for "social proof" requested as "standardized"? 
-        // Wait, user said "Data REAL". But 0 students looks bad.
-        // I will use `studentCount` strictly. If user wants fake data they can ask.
-        // actually, looking at the previous hardcode "15,420", removing it might shock them.
-        // User said "Que esto tenga data real ... pero que TAMEBIEN esté algo estandarizado".
-        // I will use real count.
         students: studentCount,
         lastUpdated: "01/2026",
         language: "Español",
