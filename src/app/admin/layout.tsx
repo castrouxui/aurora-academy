@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShoppingCart, BookOpen, Users, LogOut, Settings } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, BookOpen, Users, LogOut, Settings, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/layout/Logo";
 
@@ -47,7 +47,7 @@ export default function AdminLayout({
         { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
         { name: "Ventas", href: "/admin/sales", icon: ShoppingCart },
         { name: "Cursos", href: "/admin/courses", icon: BookOpen },
-        { name: "Paquetes", href: "/admin/bundles", icon: BookOpen },
+        { name: "Paquetes", href: "/admin/bundles", icon: Package },
         { name: "Usuarios", href: "/admin/users", icon: Users },
     ];
 
