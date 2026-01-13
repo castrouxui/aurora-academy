@@ -6,7 +6,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Play, CheckCircle, Lock, MonitorPlay, FileText, MessageSquare, Download, Trophy, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { CertificateModal } from "@/components/player/CertificateModal";
+import { CertificateModal } from "@/components/certificates/CertificateModal";
 import { VideoPlayer } from "@/components/player/VideoPlayer";
 
 interface Lesson {
