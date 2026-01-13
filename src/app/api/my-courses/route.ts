@@ -29,6 +29,23 @@ export async function GET() {
                             }
                         }
                     }
+                },
+                bundle: {
+                    include: {
+                        courses: {
+                            include: {
+                                modules: {
+                                    include: {
+                                        lessons: {
+                                            select: {
+                                                id: true
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             },
             orderBy: {
@@ -48,20 +65,45 @@ export async function GET() {
 
         const completedLessonIds = new Set(userProgress.map(p => p.lessonId));
 
+        // Use a Map to deduplicate courses (if user bought course separately and then in a bundle)
+        const coursesMap = new Map();
+
+        purchases.forEach(purchase => {
+            // 1. Direct Course Purchase
+            if (purchase.course) {
+                coursesMap.set(purchase.course.id, { ...purchase.course, lastAccessed: purchase.updatedAt });
+            }
+
+            // 2. Bundle Purchase
+            if (purchase.bundle && purchase.bundle.courses) {
+                purchase.bundle.courses.forEach(bundleCourse => {
+                    // Only add if not already present (prioritize direct purchase date or just first encounter)
+                    if (!coursesMap.has(bundleCourse.id)) {
+                        coursesMap.set(bundleCourse.id, { ...bundleCourse, lastAccessed: purchase.updatedAt });
+                    }
+                });
+            }
+        });
+
+        const allCourses = Array.from(coursesMap.values());
+
         // Transform to match the UI expectations
-        const enrolledCourses = purchases.map(purchase => {
-            const course = purchase.course;
+        const enrolledCourses = allCourses.map((course: any) => {
             let totalLessons = 0;
             let completedCount = 0;
 
-            course.modules.forEach(module => {
-                module.lessons.forEach(lesson => {
-                    totalLessons++;
-                    if (completedLessonIds.has(lesson.id)) {
-                        completedCount++;
+            if (course.modules) {
+                course.modules.forEach((module: any) => {
+                    if (module.lessons) {
+                        module.lessons.forEach((lesson: any) => {
+                            totalLessons++;
+                            if (completedLessonIds.has(lesson.id)) {
+                                completedCount++;
+                            }
+                        });
                     }
                 });
-            });
+            }
 
             const progress = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
 
@@ -73,7 +115,7 @@ export async function GET() {
                 progress: progress,
                 totalLessons: totalLessons,
                 completedLessons: completedCount,
-                lastAccessed: purchase.updatedAt.toLocaleDateString()
+                lastAccessed: course.lastAccessed.toLocaleDateString()
             };
         });
 

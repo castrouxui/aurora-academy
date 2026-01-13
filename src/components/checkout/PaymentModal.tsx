@@ -17,7 +17,7 @@ interface PaymentModalProps {
     userId?: string;
 }
 
-export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, courseId, userId }: PaymentModalProps) {
+export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, courseId, bundleId, userId }: PaymentModalProps) {
     useBodyScrollLock(isOpen);
     const { data: session } = useSession();
     const router = useRouter();
