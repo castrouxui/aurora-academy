@@ -106,7 +106,7 @@ export function CoursePlayerClient({ course, isAccess, studentName }: CoursePlay
                     {/* Breadcrumb Navigation */}
                     <div className="px-6 py-4 text-sm text-gray-400 border-b border-gray-800 bg-[#0B0F19]">
                         <div className="max-w-5xl mx-auto w-full flex items-center gap-2">
-                            <Link href="/my-courses" className="flex items-center gap-1 hover:text-white transition-colors">
+                            <Link href="/dashboard/courses" className="flex items-center gap-1 hover:text-white transition-colors">
                                 <ChevronLeft size={16} />
                                 Mis Cursos
                             </Link>
