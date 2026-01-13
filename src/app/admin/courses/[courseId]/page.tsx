@@ -748,7 +748,7 @@ export default function CourseEditorPage() {
 
                                                         {/* Hidden Player for Duration Detection */}
                                                         {lessonUrl && (
-                                                            <div className="hidden">
+                                                            <div className="absolute opacity-0 pointer-events-none select-none -z-50" style={{ width: 1, height: 1, overflow: 'hidden' }}>
                                                                 <ReactPlayer
                                                                     url={lessonUrl}
                                                                     onDuration={(d: number) => {
@@ -757,8 +757,8 @@ export default function CourseEditorPage() {
                                                                     }}
                                                                     playing={false}
                                                                     muted={true}
-                                                                    width="0"
-                                                                    height="0"
+                                                                    width="1px"
+                                                                    height="1px"
                                                                 />
                                                             </div>
                                                         )}
