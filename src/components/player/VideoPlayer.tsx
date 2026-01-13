@@ -162,6 +162,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
         <div className="relative aspect-video bg-black rounded-lg overflow-hidden group border border-gray-800">
             {hasWindow && (
                 <ReactPlayer
+                    key={url}
                     ref={playerRef}
                     url={url}
                     width="100%"
