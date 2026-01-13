@@ -42,7 +42,12 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
 
     useEffect(() => {
         setHasWindow(true);
-    }, []);
+        // Timeout fallback for loading state
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, [url]);
 
     // Fullscreen change listener
     useEffect(() => {
@@ -170,7 +175,6 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     onReady={() => setIsLoading(false)}
                     onStart={() => setIsLoading(false)}
                     onEnded={onComplete}
-                    style={{ pointerEvents: 'none' }} // Critical: Disable all interaction with iframe
                 />
             </div>
 
