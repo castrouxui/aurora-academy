@@ -145,7 +145,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                 {/* Prevent context menu on overlay too */}
             </div>
 
-            <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0 z-0">
                 <ReactPlayer
                     key={url}
                     ref={playerRef}
