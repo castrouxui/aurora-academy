@@ -26,9 +26,9 @@ export async function POST(request: Request) {
             console.log(`[WEBHOOK] Payment Status: ${paymentData.status}`);
 
             if (paymentData.status === "approved") {
-                const { user_id, course_id } = paymentData.metadata;
+                const { user_id, course_id, bundle_id } = paymentData.metadata;
 
-                if (user_id && course_id) {
+                if (user_id && (course_id || bundle_id)) {
                     // Check if purchase already exists
                     const existingPurchase = await prisma.purchase.findFirst({
                         where: { paymentId: id }
@@ -43,14 +43,15 @@ export async function POST(request: Request) {
                         data: {
                             userId: user_id,
                             courseId: course_id,
+                            bundleId: bundle_id,
                             amount: paymentData.transaction_amount || 0,
                             status: 'approved',
                             paymentId: id,
-                            preferenceId: "", // Optional or fetch if needed
+                            preferenceId: "",
                         }
                     });
 
-                    console.log(`[WEBHOOK] Purchase saved for User ${user_id} Course ${course_id}`);
+                    console.log(`[WEBHOOK] Purchase saved for User ${user_id} - ${bundle_id ? `Bundle ${bundle_id}` : `Course ${course_id}`}`);
                 }
             }
         }

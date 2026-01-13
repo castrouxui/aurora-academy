@@ -82,6 +82,20 @@ model Course {
   updatedAt   DateTime   @updatedAt
   modules     Module[]
   purchases   Purchase[]
+  bundles     Bundle[]
+}
+
+model Bundle {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  price       Decimal
+  imageUrl    String?
+  published   Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  courses     Course[]
+  purchases   Purchase[]
 }
 
 model Module {
@@ -132,16 +146,19 @@ model Resource {
 model Purchase {
   id           String   @id @default(cuid())
   userId       String
-  courseId     String
+  courseId     String?
+  bundleId     String?
   amount       Decimal
   status       String
   paymentId    String?
   preferenceId String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  course       Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course       Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  bundle       Bundle?  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([courseId])
+  @@index([bundleId])
 }

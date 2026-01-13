@@ -35,13 +35,18 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
     useEffect(() => {
         async function fetchCourses() {
             try {
-                // Fetch published courses from API
-                const res = await fetch("/api/courses?published=true");
-                if (res.ok) {
-                    const data = await res.json();
+                // Fetch published courses and bundles in parallel
+                const [coursesRes, bundlesRes] = await Promise.all([
+                    fetch("/api/courses?published=true"),
+                    fetch("/api/bundles")
+                ]);
+
+                if (coursesRes.ok && bundlesRes.ok) {
+                    const coursesData = await coursesRes.json();
+                    const bundlesData = await bundlesRes.json();
 
                     // Transform API data to UI format
-                    const formattedCourses = data.map((course: any) => {
+                    const formattedCourses = coursesData.map((course: any) => {
                         // Find first video efficiently
                         const sortedModules = course.modules?.sort((a: any, b: any) => a.position - b.position) || [];
                         const firstLessonWithVideo = sortedModules
@@ -51,8 +56,8 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                         return {
                             id: course.id,
                             title: course.title,
-                            instructor: "Aurora Academy", // Default instructor
-                            rating: 5.0, // Default rating
+                            instructor: "Aurora Academy",
+                            rating: 5.0,
                             reviews: "(0)",
                             price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
                             image: course.imageUrl || "/course-placeholder.jpg",
@@ -60,12 +65,34 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             level: course.level || "Todos los niveles",
                             rawPrice: course.price,
                             createdAt: course.createdAt,
-                            videoUrl: firstLessonWithVideo?.videoUrl || null
+                            videoUrl: firstLessonWithVideo?.videoUrl || null,
+                            type: 'course'
                         };
                     });
-                    setCourses(formattedCourses);
 
-                    const categories = Array.from(new Set(formattedCourses.map((c: any) => c.tag)));
+                    const formattedBundles = bundlesData
+                        .filter((b: any) => b.published)
+                        .map((bundle: any) => ({
+                            id: bundle.id,
+                            title: bundle.title,
+                            instructor: "Paquete",
+                            rating: 5.0,
+                            reviews: `(${bundle.courses?.length || 0} cursos)`,
+                            price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(bundle.price)),
+                            image: bundle.imageUrl || "/bundle-placeholder.jpg",
+                            tag: "Pack", // Distinct tag
+                            level: "Todos los niveles",
+                            rawPrice: bundle.price,
+                            createdAt: bundle.createdAt,
+                            videoUrl: null,
+                            type: 'bundle',
+                            courseCount: bundle.courses?.length || 0
+                        }));
+
+                    const allItems = [...formattedBundles, ...formattedCourses];
+                    setCourses(allItems);
+
+                    const categories = Array.from(new Set(allItems.map((c: any) => c.tag)));
                     setAvailableCategories(categories as string[]);
                 }
             } catch (error) {

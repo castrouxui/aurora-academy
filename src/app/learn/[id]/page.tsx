@@ -39,8 +39,17 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
             const purchase = await prisma.purchase.findFirst({
                 where: {
                     userId: session.user.id,
-                    courseId: id,
-                    status: 'approved'
+                    status: 'approved',
+                    OR: [
+                        { courseId: id },
+                        {
+                            bundle: {
+                                courses: {
+                                    some: { id: id }
+                                }
+                            }
+                        }
+                    ]
                 }
             });
             if (purchase) {

@@ -15,10 +15,11 @@ interface CourseProps {
     tag: string;
     basePath?: string; // Optional base path for link
     videoUrl?: string; // New prop for video URL
+    type?: 'course' | 'bundle';
 }
 
 export function CourseCard({ course }: { course: CourseProps }) {
-    const href = course.basePath ? `${course.basePath}/${course.id}` : `/courses/${course.id}`;
+    const href = course.type === 'bundle' ? `/bundles/${course.id}` : (course.basePath ? `${course.basePath}/${course.id}` : `/courses/${course.id}`);
 
     // Determine Logic for Image
     let displayImage = course.image;

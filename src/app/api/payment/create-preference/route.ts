@@ -14,13 +14,13 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { title, price, quantity, userId, courseId } = body;
+        const { title, price, quantity, userId, courseId, bundleId } = body;
 
-        let dbCourse;
-        if (!courseId && title) {
+        let dbItem;
+        if (!courseId && !bundleId && title) {
             // Fallback: Find course by title
-            const { prisma } = await import("@/lib/prisma"); // Dynamic import to avoid circular dep issues if any, or just consistent usage
-            dbCourse = await prisma.course.findFirst({
+            const { prisma } = await import("@/lib/prisma");
+            dbItem = await prisma.course.findFirst({
                 where: { title: title }
             });
         }
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         const preferenceBody = {
             items: [
                 {
-                    id: 'course-id',
+                    id: bundleId || courseId || 'unknown',
                     title: title,
                     unit_price: numericPrice,
                     quantity: 1,
@@ -53,7 +53,8 @@ export async function POST(req: NextRequest) {
             // auto_return removed to fix creation error
             metadata: {
                 user_id: userId,
-                course_id: courseId || dbCourse?.id,
+                course_id: courseId || (dbItem && !bundleId ? dbItem.id : undefined),
+                bundle_id: bundleId,
             },
             notification_url: `${baseUrl}/api/webhooks/mercadopago`,
         };

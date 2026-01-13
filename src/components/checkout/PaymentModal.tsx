@@ -13,6 +13,7 @@ interface PaymentModalProps {
     courseTitle: string;
     coursePrice: string; // "$40.000"
     courseId?: string;
+    bundleId?: string;
     userId?: string;
 }
 
@@ -76,6 +77,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             price: coursePrice,
                             quantity: 1,
                             courseId: courseId,
+                            bundleId: bundleId,
                             userId: effectiveUserId
                         }),
                     });
