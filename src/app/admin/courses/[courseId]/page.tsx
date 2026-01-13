@@ -9,7 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Video, Trash2, Edit, Save, PlusCircle, LayoutList, ChevronUp, ChevronDown, Check, X, GripVertical, MoreVertical, FileVideo, UploadCloud, FolderPlus, EyeOff, Loader2, LinkIcon, File, ArrowLeft, Eye, Layers, DollarSign, BarChart, Tag, Globe, Image as ImageIcon } from "lucide-react";
+import { Upload, X, Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Video, FileText, MoreVertical, Link as LinkIcon, Image as ImageIcon, CheckCircle, AlertCircle, Loader2, FolderPlus, ArrowLeft, Layers, Globe, Eye, EyeOff, UploadCloud, BarChart, Tag, DollarSign, FileVideo, File as FileIcon } from "lucide-react";
+import { toast } from "sonner";
+import { storage } from "@/lib/firebase"; // Import initialized storage
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { useUploadThing } from "@/lib/uploadthing";
@@ -89,6 +92,7 @@ export default function CourseEditorPage() {
 
     // Upload State
     const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
 
     // Price Local State
     const [priceInput, setPriceInput] = useState("");
@@ -285,11 +289,44 @@ export default function CourseEditorPage() {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // Validations
+        if (file.size > 512 * 1024 * 1024) {
+            toast.error("El archivo excede el límite de 512MB");
+            return;
+        }
+
         setIsUploading(true);
+        setUploadProgress(0);
+
         try {
-            await startVideoUpload([file]);
+            // Firebase Storage Upload
+            const storagePath = `courses/${params.courseId}/lessons/${Date.now()}_${file.name}`;
+            const fileRef = ref(storage, storagePath);
+            const uploadTask = uploadBytesResumable(fileRef, file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    setUploadProgress(Math.round(progress));
+                },
+                (error) => {
+                    console.error("Upload error:", error);
+                    toast.error("Error al subir el video: " + error.message);
+                    setIsUploading(false);
+                },
+                async () => {
+                    // Upload completed successfully
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    setLessonUrl(downloadURL);
+                    setLessonDuration(0); // Reset duration so new video is re-detected
+                    setIsUploading(false);
+                    toast.success("Video subido correctamente");
+                }
+            );
+
         } catch (error) {
-            console.error("Upload failed", error);
+            console.error("Upload setup error:", error);
+            toast.error("Error al iniciar la subida");
             setIsUploading(false);
         }
     };
@@ -856,7 +893,7 @@ export default function CourseEditorPage() {
                                                         <div key={resource.id} className="group flex items-center justify-between p-3 rounded-lg hover:bg-[#1a1f2e] transition-colors border border-transparent hover:border-gray-800">
                                                             <div className="flex items-center gap-3 overflow-hidden">
                                                                 <div className="h-8 w-8 rounded bg-[#5D5CDE]/10 flex items-center justify-center text-[#5D5CDE]">
-                                                                    <File size={14} />
+                                                                    <FileIcon size={14} />
                                                                 </div>
                                                                 <div className="flex flex-col min-w-0">
                                                                     <span className="text-xs text-gray-200 font-medium truncate">{resource.title}</span>
