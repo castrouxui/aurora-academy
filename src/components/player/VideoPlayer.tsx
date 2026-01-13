@@ -2,8 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { PaywallOverlay } from "./PaywallOverlay";
-import { Play, Pause, Volume2, VolumeX, Loader2, Settings } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Loader2, Settings, Lock, AlertCircle } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +11,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn, getYouTubeId } from '@/lib/utils';
+
 
 // Dynamic import to avoid SSR issues with ReactPlayer. 
 // Using main entry point to ensure compatibility.
@@ -29,131 +30,78 @@ interface VideoPlayerProps {
 }
 
 export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, courseId, onComplete, onPurchase }: VideoPlayerProps) {
+    console.log('[VideoPlayer] Received URL:', url);
     const playerRef = useRef<any>(null); // ReactPlayer ref
     const [hasWindow, setHasWindow] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [volume, setVolume] = useState(1);
-    const [isMuted, setIsMuted] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [showPaywall, setShowPaywall] = useState(isLocked);
-    const [playbackRate, setPlaybackRate] = useState(1.0);
     const [hasError, setHasError] = useState(false);
+    const [duration, setDuration] = useState(0);
+    const [progress, setProgress] = useState(0);
 
-    const handleError = (e: any) => {
-        console.error("Video Player Error:", e);
-        setIsLoading(false);
-        setHasError(true);
-    };
-
-    // Strict Mode Tracking: The furthest point the user has reached
-    // Initialize with 0. In a real app, you might sync this with the DB for resuming.
-    const [maxPlayed, setMaxPlayed] = useState(0);
+    const youtubeId = getYouTubeId(url);
+    console.log('[VideoPlayer] Computed YouTube ID:', youtubeId);
 
     // Ensure client-side rendering
     useEffect(() => {
         setHasWindow(true);
     }, []);
 
-    // Effect for Preview Mode limit
-    useEffect(() => {
-        if (previewMode && !isLocked && currentTime >= 30) {
-            setIsPlaying(false);
-            setShowPaywall(true);
-        }
-    }, [currentTime, previewMode, isLocked]);
-
-    const handlePlayPause = () => {
-        if (showPaywall) return;
-        setIsPlaying(!isPlaying);
+    const handlePlay = () => {
+        setIsPlaying(true);
     };
 
-    const handleProgress = (state: { playedSeconds: number; loadedSeconds: number; played: number }) => {
-        // Only update if we are actually playing
-        if (!isPlaying && !isLoading) {
-            // Sometimes progress fires when paused, ignore hard updates
-        }
-
-        const time = state.playedSeconds;
-        setCurrentTime(time);
-
-        // Update maxPlayed if we are legitimately watching new content
-        // We add a small buffer (e.g. 1s) to allow for minor jumps or timer jitter
-        if (time > maxPlayed) {
-            setMaxPlayed(time);
-        }
-
-        // Preview Mode Check
-        if (previewMode && !isLocked && time >= 30) {
-            setIsPlaying(false);
-            setShowPaywall(true);
-        }
-    };
-
-    const handleDuration = (duration: number) => {
-        setDuration(duration);
+    const handleError = (e: any) => {
+        console.error("Video Error:", e);
+        setHasError(true);
         setIsLoading(false);
     };
 
-    const handleSeek = (value: number[]) => {
-        const seekTime = value[0];
-
-        // STRICT MODE Check
-        // Allow seeking only up to maxPlayed + small buffer (e.g., 2s) to be generous
-        const allowedSeekLimit = Math.max(maxPlayed, 2);
-
-        // If try to seek past allowed limit
-        if (seekTime > allowedSeekLimit + 1) {
-            // Block seeking forward
-            // Force player back to maxPlayed or just ignore
-            // We'll just reset the UI slider to maxPlayed logic in next render or force seek to maxPlayed
-            if (playerRef.current) {
-                playerRef.current.seekTo(maxPlayed, 'seconds');
-                setCurrentTime(maxPlayed);
-            }
-            return;
-        }
-
-        // Preview Mode Constrain
-        if (previewMode && seekTime > 30) {
-            return;
-        }
-
-        if (playerRef.current) {
-            playerRef.current.seekTo(seekTime, 'seconds');
-            setCurrentTime(seekTime);
-        }
-    };
-
-    const handleEnded = () => {
-        setIsPlaying(false);
-        // Mark as fully watched locally so they can replay freely
-        setMaxPlayed(duration);
-
-        if (onComplete && !previewMode && !isLocked) {
-            onComplete();
-        }
-    };
-
-    const toggleMute = () => {
-        setIsMuted(!isMuted);
-    };
-
-    const formatTime = (time: number) => {
-        if (isNaN(time)) return "0:00";
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-    };
+    if (!hasWindow) return null;
 
     if (isLocked) {
         return (
-            <div className="relative aspect-video bg-black rounded-lg overflow-hidden border border-gray-800">
+            <div className="relative aspect-video bg-black rounded-lg overflow-hidden border border-gray-800 flex items-center justify-center">
                 {thumbnail && (
                     <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: `url(${thumbnail})` }}></div>
                 )}
-                <PaywallOverlay courseId={courseId} onPurchase={onPurchase} />
+                <div className="z-10 text-center p-4">
+                    <Lock className="w-12 h-12 text-white/50 mx-auto mb-2" />
+                    <p className="text-white font-bold">Contenido Bloqueado</p>
+                    {onPurchase && (
+                        <Button variant="link" onClick={onPurchase} className="text-[#5D5CDE] mt-2">
+                            Desbloquear
+                        </Button>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+    if (youtubeId) {
+        return (
+            <div className="relative aspect-video bg-black rounded-lg overflow-hidden border border-gray-800 group">
+                <iframe
+                    src={`https://www.youtube.com/embed/${youtubeId}?autoplay=${isPlaying ? 1 : 0}&rel=0&modestbranding=1`}
+                    title="YouTube video player"
+                    className="absolute inset-0 w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    onLoad={() => setIsLoading(false)}
+                />
+                {!isPlaying && (
+                    <div
+                        className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 cursor-pointer"
+                        onClick={handlePlay}
+                    >
+                        {thumbnail && (
+                            <img src={thumbnail} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="" />
+                        )}
+                        <div className="w-16 h-16 rounded-full bg-[#5D5CDE] flex items-center justify-center text-white shadow-lg transition-transform hover:scale-110">
+                            <Play fill="currentColor" className="w-6 h-6 ml-1" />
+                        </div>
+                    </div>
+                )}
             </div>
         );
     }
@@ -168,22 +116,28 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     width="100%"
                     height="100%"
                     playing={isPlaying}
-                    volume={isMuted ? 0 : volume}
-                    playbackRate={playbackRate}
-                    controls={true} // Use native controls for better compatibility
-                    playsinline={true}
+                    onProgress={(state: any) => {
+                        setProgress(state.played);
+                    }}
                     config={{
+                        // Cast config to any to avoid generic type issues if package types are mismatched
                         youtube: {
-                            playerVars: { showinfo: 0, controls: 1, rel: 0, playsinline: 1, modestbranding: 1 }
+                            playerVars: {
+                                showinfo: 0,
+                                rel: 0,
+                                modestbranding: 1
+                            }
                         }
                     } as any}
-                    onProgress={handleProgress as any}
-                    onDuration={handleDuration}
-                    onEnded={handleEnded}
+                    style={{ position: 'absolute', top: 0, left: 0 }}
+                    playsinline={true}
                     onError={handleError}
-                    onBuffer={() => setIsLoading(true)}
-                    onBufferEnd={() => setIsLoading(false)}
-                    onReady={() => setIsLoading(false)}
+                    onReady={() => {
+                        setIsLoading(false);
+                        if (playerRef.current) {
+                            setDuration(playerRef.current.getDuration());
+                        }
+                    }}
                     onStart={() => setIsLoading(false)}
                 />
             )}
@@ -200,17 +154,10 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                 </div>
             )}
 
-            {/* Paywall Overlay */}
-            {showPaywall && (
-                <div className="absolute inset-0 z-50">
-                    <PaywallOverlay courseId={courseId} onPurchase={onPurchase} />
-                </div>
-            )}
-
             {/* Loading Spinner */}
-            {isLoading && !showPaywall && !hasError && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-                    <Loader2 className="h-10 w-10 text-white animate-spin" />
+            {isLoading && (
+                <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/10">
+                    <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
                 </div>
             )}
         </div>

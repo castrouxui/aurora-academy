@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Video, Trash2, Edit, Save, PlusCircle, LayoutList, ChevronUp, ChevronDown, Check, X, GripVertical, MoreVertical, FileVideo, UploadCloud, FolderPlus, EyeOff, Loader2, LinkIcon, File, ArrowLeft, Eye, Layers, DollarSign, BarChart, Tag, Globe } from "lucide-react";
+import { Plus, Video, Trash2, Edit, Save, PlusCircle, LayoutList, ChevronUp, ChevronDown, Check, X, GripVertical, MoreVertical, FileVideo, UploadCloud, FolderPlus, EyeOff, Loader2, LinkIcon, File, ArrowLeft, Eye, Layers, DollarSign, BarChart, Tag, Globe, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { useUploadThing } from "@/lib/uploadthing";
@@ -248,6 +248,33 @@ export default function CourseEditorPage() {
         }
     });
 
+    const { startUpload: startImageUpload } = useUploadThing("courseImage", {
+        onClientUploadComplete: async (res) => {
+            if (res && res[0] && course) {
+                const newImageUrl = res[0].url;
+                // Optimistic Update
+                setCourse({ ...course, imageUrl: newImageUrl });
+                setIsUploading(false);
+
+                // Persist
+                try {
+                    await fetch(`/api/courses/${courseId}`, {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ imageUrl: newImageUrl }),
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        },
+        onUploadError: (error) => {
+            console.error(error);
+            setIsUploading(false);
+            alert(`Error uploading image: ${error.message}`);
+        }
+    });
+
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -257,6 +284,19 @@ export default function CourseEditorPage() {
             await startVideoUpload([file]);
         } catch (error) {
             console.error("Upload failed", error);
+            setIsUploading(false);
+        }
+    };
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsUploading(true);
+        try {
+            await startImageUpload([file]);
+        } catch (error) {
+            console.error("Image upload failed", error);
             setIsUploading(false);
         }
     };
@@ -398,6 +438,63 @@ export default function CourseEditorPage() {
                                 <><EyeOff size={16} className="mr-2" /> Publicar Curso</>
                             )}
                         </Button>
+                    </div>
+                </div>
+
+                {/* Course Cover Image */}
+                <div className="bg-[#1F2937]/30 border border-gray-800 p-6 rounded-2xl">
+                    <div className="flex flex-col md:flex-row gap-8 items-start">
+                        <div className="w-full md:w-1/3 aspect-video relative rounded-xl overflow-hidden bg-[#0f1118] border border-gray-700 shadow-2xl group">
+                            {course.imageUrl ? (
+                                <>
+                                    <img
+                                        src={course.imageUrl}
+                                        alt="Course cover"
+                                        className="w-full h-full object-cover transition-opacity group-hover:opacity-50"
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <label className="cursor-pointer bg-black/80 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors flex items-center gap-2">
+                                            <UploadCloud size={16} /> Cambiar Portada
+                                            <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading} />
+                                        </label>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="w-full h-full flex flex-col items-center justify-center text-gray-500 gap-2">
+                                    <ImageIcon size={40} className="opacity-50" />
+                                    <span className="text-xs font-medium">Sin imagen</span>
+                                    <label className="mt-2 cursor-pointer bg-[#5D5CDE]/10 text-[#5D5CDE] px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-[#5D5CDE]/20 transition-colors">
+                                        Subir Imagen
+                                        <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading} />
+                                    </label>
+                                </div>
+                            )}
+                            {isUploading && (
+                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-20">
+                                    <Loader2 className="animate-spin text-white h-8 w-8" />
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex-1 space-y-4">
+                            <div>
+                                <h3 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
+                                    <ImageIcon size={20} className="text-[#5D5CDE]" /> Portada del Curso
+                                </h3>
+                                <p className="text-sm text-gray-400 leading-relaxed">
+                                    Esta imagen se mostrará en el catálogo de cursos y en la cabecera de la página del curso.
+                                    <br />Recomendado: 1920x1080px (16:9). Formatos: PNG, JPG, WebP.
+                                </p>
+                            </div>
+
+                            {!course.imageUrl && (
+                                <div className="flex gap-4">
+                                    <label className="cursor-pointer bg-[#5D5CDE] text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-[#4B4AC0] transition-colors shadow-lg shadow-[#5D5CDE]/20 flex items-center gap-2">
+                                        <UploadCloud size={18} /> Subir Portada
+                                        <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={isUploading} />
+                                    </label>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 

@@ -3,13 +3,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PaymentModal } from "@/components/checkout/PaymentModal";
-import { Play, PlayCircle, Clock, BarChart, Users, Globe, Captions, CheckCircle2, X } from "lucide-react";
+import { Play, PlayCircle, Clock, BarChart, Users, Globe, Captions, CheckCircle2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import Link from "next/link";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { VideoPlayer } from "@/components/player/VideoPlayer";
-import { getYouTubeId } from "@/lib/utils";
 
 interface CourseFloatingCardProps {
     title: string;
@@ -45,7 +42,6 @@ export function CourseFloatingCard({
     const { data: session } = useSession();
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
     const handlePurchase = () => {
         if (!session) {
@@ -54,10 +50,6 @@ export function CourseFloatingCard({
         }
         setIsPaymentModalOpen(true);
     };
-
-    // Normalize Video URL to ensure ReactPlayer detects YouTube correctly
-    const youtubeId = videoUrl ? getYouTubeId(videoUrl) : null;
-    const playerUrl = youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : videoUrl;
 
     return (
         <>
@@ -75,58 +67,20 @@ export function CourseFloatingCard({
                 courseId={courseId}
             />
 
-            {/* Preview Modal */}
-            <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-                <DialogContent className="sm:max-w-4xl p-0 bg-black border-gray-800 overflow-hidden">
-                    <button
-                        onClick={() => setIsPreviewOpen(false)}
-                        className="absolute top-4 right-4 z-[60] bg-black/50 p-2 rounded-full text-white hover:bg-black/80 transition-colors"
-                    >
-                        <X size={24} />
-                    </button>
-                    <div className="aspect-video w-full">
-                        {videoUrl ? (
-                            <VideoPlayer
-                                url={playerUrl || ""}
-                                thumbnail={videoThumbnail}
-                                title={`Vista Previa: ${title}`}
-                                isLocked={false}
-                                previewMode={true}
-                                onPurchase={() => {
-                                    setIsPreviewOpen(false);
-                                    handlePurchase();
-                                }}
-                            />
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-white">
-                                Video no disponible
-                            </div>
-                        )}
-                    </div>
-                </DialogContent>
-            </Dialog>
-
             <div className="bg-white/5 backdrop-blur-xl rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 sticky top-24">
-                {/* Video Preview Header */}
-                <div
-                    className="relative h-48 bg-black/50 cursor-pointer group"
-                    onClick={() => setIsPreviewOpen(true)}
-                >
+                {/* Course Cover Image */}
+                <div className="relative aspect-video bg-black/50 border-b border-white/5">
                     {videoThumbnail ? (
-                        <div className="absolute inset-0 bg-cover bg-center opacity-80 group-hover:opacity-60 transition-opacity" style={{ backgroundImage: `url(${videoThumbnail})` }}></div>
+                        <img
+                            src={videoThumbnail}
+                            alt={`Portada de ${title}`}
+                            className="w-full h-full object-cover"
+                        />
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-gray-500">
                             <PlayCircle size={48} />
                         </div>
                     )}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-16 h-16 bg-[#5D5CDE]/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                            <Play className="text-white ml-1" size={32} />
-                        </div>
-                    </div>
-                    <div className="absolute bottom-4 left-0 right-0 text-center font-bold text-white text-sm tracking-wide">
-                        Ver preview del curso
-                    </div>
                 </div>
 
                 <div className="p-6 md:p-8 space-y-6">

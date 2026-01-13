@@ -24,14 +24,15 @@ export function CourseCard({ course }: { course: CourseProps }) {
     let displayImage = course.image;
     /* 
        Priority:
-       1. YouTube Thumbnail (if video exists) - Because we don't have a custom image uploader yet,
-          and the seeded images are generic.
-       2. Custom Image (if no video)
-       3. Placeholder (if no image and no video)
+       1. Custom Image (if uploaded and not placeholder)
+       2. YouTube Thumbnail (hqdefault for safety)
+       3. Placeholder
     */
+    const isCustomImage = displayImage && displayImage !== "/course-placeholder.jpg";
     const youtubeId = course.videoUrl ? getYouTubeId(course.videoUrl) : null;
 
-    if (youtubeId) {
+    if (!isCustomImage && youtubeId) {
+        // Use hqdefault because maxresdefault is seemingly missing for some videos (gray screen)
         displayImage = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
     }
 

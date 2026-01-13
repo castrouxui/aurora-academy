@@ -53,11 +53,11 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     const firstLesson = firstModule?.lessons.sort((a, b) => a.position - b.position)[0];
     const previewVideoUrl = firstLesson?.videoUrl || "/hero-video.mp4";
 
-    // Calculate display image (Priority: YouTube > Uploaded > Placeholder)
+    // Calculate display image (Priority: Uploaded > YouTube (HQ) > Placeholder)
     const youtubeId = previewVideoUrl ? getYouTubeId(previewVideoUrl) : null;
-    const displayImage = youtubeId
-        ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
-        : (course.imageUrl || "/course-placeholder.jpg");
+    const displayImage = course.imageUrl || (youtubeId
+        ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
+        : "/course-placeholder.jpg");
 
     // Prepare data for components
     const courseData = {
@@ -83,7 +83,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
             image: "/logo.svg"
         },
         videoThumbnail: displayImage,
-        videoUrl: previewVideoUrl
+        videoUrl: youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : previewVideoUrl
     };
 
     return (
