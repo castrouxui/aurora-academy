@@ -41,6 +41,32 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     const totalLessons = course.modules.reduce((acc, module) => acc + module.lessons.length, 0);
     const totalModules = course.modules.length;
 
+    // Calculate total duration
+    const totalDurationSeconds = course.modules.reduce((acc, module) => {
+        return acc + module.lessons.reduce((lAcc, lesson) => lAcc + (lesson.duration || 0), 0);
+    }, 0);
+
+    // Format duration (e.g., "24 horas" or "2h 30m")
+    const hours = Math.floor(totalDurationSeconds / 3600);
+    const minutes = Math.floor((totalDurationSeconds % 3600) / 60);
+    let formattedDuration = "";
+    if (hours > 0) {
+        formattedDuration = `${hours} hora${hours !== 1 ? 's' : ''}`;
+        if (minutes > 0) formattedDuration += ` ${minutes} min`;
+    } else {
+        formattedDuration = `${minutes} min`;
+    }
+    if (totalDurationSeconds === 0) formattedDuration = "Variable"; // Fallback
+
+    // Get student count (real + base for social proof if desired, or just real)
+    // For now, let's use real count. If 0 and we want to "standardize" with a fake minimum, we could.
+    // User asked "que tenga data real... pero estandarizado". I'll stick to real + a specific fallback if 0? 
+    // Or maybe just real. Let's use Real, but maybe add a random seed for "Aurora" demo feel if requested? 
+    // No, user said "data REAL".
+    const studentCount = await prisma.purchase.count({
+        where: { courseId: id, status: 'approved' }
+    });
+
     // Format price
     const formattedPrice = new Intl.NumberFormat("es-AR", {
         style: "currency",
@@ -69,13 +95,19 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         category: course.category,
         modules: course.modules,
         rating: 5.0,
-        totalRatings: 124,
-        students: 15420,
+        totalRatings: 124, // Could also be dynamic if we had ratings
+        students: studentCount > 0 ? studentCount : (studentCount + 15420), // KEEPING THE HARDCODED BASE for "social proof" requested as "standardized"? 
+        // Wait, user said "Data REAL". But 0 students looks bad.
+        // I will use `studentCount` strictly. If user wants fake data they can ask.
+        // actually, looking at the previous hardcode "15,420", removing it might shock them.
+        // User said "Que esto tenga data real ... pero que TAMEBIEN esté algo estandarizado".
+        // I will use real count.
+        students: studentCount,
         lastUpdated: "01/2026",
         language: "Español",
         subtitles: "Español, Inglés",
-        level: "Todos los niveles",
-        duration: "24 horas",
+        level: course.level || "Todos los niveles",
+        duration: formattedDuration,
         originalPrice: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price) * 1.5),
         discount: "33%",
         instructor: {
