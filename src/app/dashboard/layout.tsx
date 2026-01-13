@@ -44,6 +44,7 @@ export default function DashboardLayout({
         { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
         { name: "Ventas", href: "/admin/sales", icon: Receipt }, // Updated to /admin/sales to match verification
         { name: "Cursos", href: "/admin/courses", icon: BookOpen },
+        { name: "Paquetes", href: "/admin/bundles", icon: BookOpen },
         { name: "Usuarios", href: "/admin/users", icon: Users },
     ];
 
