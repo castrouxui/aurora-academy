@@ -2,16 +2,10 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { Play, Pause, Volume2, VolumeX, Loader2, Settings, Lock, AlertCircle } from "lucide-react";
-import { Slider } from "@/components/ui/slider";
+import { Play, Pause, Volume2, VolumeX, Loader2, Settings, Lock, AlertCircle, Maximize, Minimize } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { cn, getYouTubeId } from '@/lib/utils';
+import { CustomControls } from "./CustomControls";
 
 
 // Dynamic import to avoid SSR issues with ReactPlayer. 
@@ -30,25 +24,79 @@ interface VideoPlayerProps {
 }
 
 export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, courseId, onComplete, onPurchase }: VideoPlayerProps) {
-    console.log('[VideoPlayer] Received URL:', url);
-    const playerRef = useRef<any>(null); // ReactPlayer ref
+    const playerRef = useRef<any>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
     const [hasWindow, setHasWindow] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
+
+    // Playback State
+    const [volume, setVolume] = useState(0.8);
+    const [muted, setMuted] = useState(false);
+    const [played, setPlayed] = useState(0); // 0 to 1
+    const [playedSeconds, setPlayedSeconds] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [progress, setProgress] = useState(0);
+    const [isSeeking, setIsSeeking] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
-    const youtubeId = getYouTubeId(url);
-    console.log('[VideoPlayer] Computed YouTube ID:', youtubeId);
-
-    // Ensure client-side rendering
     useEffect(() => {
         setHasWindow(true);
     }, []);
 
-    const handlePlay = () => {
-        setIsPlaying(true);
+    // Fullscreen change listener
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    }, []);
+
+    const handlePlayPause = () => {
+        setIsPlaying(!isPlaying);
+    };
+
+    const handleVolumeChange = (newVolume: number) => {
+        setVolume(newVolume);
+        setMuted(newVolume === 0);
+    };
+
+    const handleToggleMute = () => {
+        setMuted(!muted);
+    };
+
+    const handleSeekChange = (newPlayed: number) => {
+        setPlayed(newPlayed / 100);
+        // We don't seek immediately to avoid stuttering, only on mouse up
+    };
+
+    const handleSeekMouseDown = () => {
+        setIsSeeking(true);
+    };
+
+    const handleSeekMouseUp = (newPlayed: number) => {
+        setIsSeeking(false);
+        playerRef.current?.seekTo(newPlayed / 100);
+    };
+
+    const handleToggleFullscreen = () => {
+        if (!containerRef.current) return;
+        if (!document.fullscreenElement) {
+            containerRef.current.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable fullscreen: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    };
+
+    const handleProgress = (state: { played: number; playedSeconds: number }) => {
+        // We only update progress if not seeking
+        if (!isSeeking) {
+            setPlayed(state.played);
+            setPlayedSeconds(state.playedSeconds);
+        }
     };
 
     const handleError = (e: any) => {
@@ -78,37 +126,21 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
         );
     }
 
-    if (youtubeId) {
-        return (
-            <div className="relative aspect-video bg-black rounded-lg overflow-hidden border border-gray-800 group">
-                <iframe
-                    src={`https://www.youtube.com/embed/${youtubeId}?autoplay=${isPlaying ? 1 : 0}&rel=0&modestbranding=1`}
-                    title="YouTube video player"
-                    className="absolute inset-0 w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    onLoad={() => setIsLoading(false)}
-                />
-                {!isPlaying && (
-                    <div
-                        className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 cursor-pointer"
-                        onClick={handlePlay}
-                    >
-                        {thumbnail && (
-                            <img src={thumbnail} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="" />
-                        )}
-                        <div className="w-16 h-16 rounded-full bg-[#5D5CDE] flex items-center justify-center text-white shadow-lg transition-transform hover:scale-110">
-                            <Play fill="currentColor" className="w-6 h-6 ml-1" />
-                        </div>
-                    </div>
-                )}
-            </div>
-        );
-    }
-
     return (
-        <div className="relative aspect-video bg-black rounded-lg overflow-hidden group border border-gray-800">
-            {hasWindow && (
+        <div
+            ref={containerRef}
+            className="relative aspect-video bg-black rounded-lg overflow-hidden group border border-gray-800 select-none"
+            onContextMenu={(e) => e.preventDefault()} // Block context menu
+        >
+            {/* Click Overlay to toggle play/pause */}
+            <div
+                className="absolute inset-0 z-10 cursor-pointer"
+                onClick={handlePlayPause}
+            >
+                {/* Prevent context menu on overlay too */}
+            </div>
+
+            <div className="absolute inset-0 pointer-events-none">
                 <ReactPlayer
                     key={url}
                     ref={playerRef}
@@ -116,39 +148,68 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     width="100%"
                     height="100%"
                     playing={isPlaying}
-                    onProgress={(state: any) => {
-                        setProgress(state.played);
-                    }}
+                    volume={volume}
+                    muted={muted}
+                    onProgress={handleProgress}
+                    onDuration={setDuration}
                     config={{
-                        // Cast config to any to avoid generic type issues if package types are mismatched
                         youtube: {
                             playerVars: {
                                 showinfo: 0,
+                                controls: 0,
+                                modestbranding: 1,
                                 rel: 0,
-                                modestbranding: 1
+                                disablekb: 1,
+                                iv_load_policy: 3,
+                                fs: 0
                             }
                         }
                     } as any}
-                    style={{ position: 'absolute', top: 0, left: 0 }}
                     playsinline={true}
                     onError={handleError}
-                    onReady={() => {
-                        setIsLoading(false);
-                        if (playerRef.current) {
-                            setDuration(playerRef.current.getDuration());
-                        }
-                    }}
+                    onReady={() => setIsLoading(false)}
                     onStart={() => setIsLoading(false)}
+                    onEnded={onComplete}
+                    style={{ pointerEvents: 'none' }} // Critical: Disable all interaction with iframe
                 />
+            </div>
+
+            {/* Custom Controls */}
+            <CustomControls
+                isPlaying={isPlaying}
+                onPlayPause={handlePlayPause}
+                volume={volume}
+                onVolumeChange={handleVolumeChange}
+                muted={muted}
+                onToggleMute={handleToggleMute}
+                played={played}
+                onSeek={handleSeekChange}
+                onSeekMouseDown={handleSeekMouseDown}
+                onSeekMouseUp={handleSeekMouseUp}
+                duration={duration}
+                playedSeconds={playedSeconds}
+                isFullscreen={isFullscreen}
+                onToggleFullscreen={handleToggleFullscreen}
+            />
+
+            {/* Big Play Button (Initial State or Paused) */}
+            {!isPlaying && !isLoading && (
+                <div
+                    className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
+                >
+                    <div className="w-20 h-20 rounded-full bg-[#5D5CDE]/90 flex items-center justify-center text-white shadow-[0_0_30px_rgba(93,92,222,0.5)] backdrop-blur-sm transition-transform group-hover:scale-110">
+                        <Play fill="currentColor" className="w-8 h-8 ml-1" />
+                    </div>
+                </div>
             )}
 
             {/* Error Overlay */}
             {hasError && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-20">
+                <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-30">
                     <div className="text-center p-6">
                         <p className="text-red-400 font-bold mb-2">Error al cargar el video</p>
                         <p className="text-xs text-gray-500 max-w-[200px] mx-auto">
-                            Verifica que el link sea válido y que el video no sea "Privado". Usa "No Listado" para YouTube.
+                            Video no disponible o privado.
                         </p>
                     </div>
                 </div>
@@ -156,7 +217,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
 
             {/* Loading Spinner */}
             {isLoading && (
-                <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/10">
+                <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/10">
                     <div className="w-10 h-10 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
                 </div>
             )}
