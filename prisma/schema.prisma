@@ -34,12 +34,12 @@ model Session {
 }
 
 model User {
-  id            String     @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String?    @unique
+  email         String?        @unique
   emailVerified DateTime?
   image         String?
-  role          String     @default("ESTUDIANTE")
+  role          String         @default("ESTUDIANTE")
   accounts      Account[]
   purchases     Purchase[]
   sessions      Session[]
@@ -53,8 +53,8 @@ model UserProgress {
   completed Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, lessonId])
   @@index([userId])
@@ -98,18 +98,18 @@ model Module {
 }
 
 model Lesson {
-  id          String     @id @default(cuid())
+  id          String         @id @default(cuid())
   title       String
   description String?
   videoUrl    String?
-  duration    Int        @default(0)
+  duration    Int            @default(0)
   content     String?
   position    Int
-  published   Boolean    @default(false)
+  published   Boolean        @default(false)
   moduleId    String
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  module      Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  module      Module         @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   resources   Resource[]
   progress    UserProgress[]
 
