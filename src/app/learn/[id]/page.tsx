@@ -72,7 +72,9 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
                 id: lesson.id,
                 title: lesson.title,
                 description: lesson.description || "",
-                duration: "10:00", // Default or stored
+                duration: lesson.duration
+                    ? `${Math.floor(lesson.duration / 60)}:${Math.floor(lesson.duration % 60).toString().padStart(2, '0')}`
+                    : "00:00",
                 completed: completedLessonIds.has(lesson.id),
                 type: "video" as const,
                 current: false,
