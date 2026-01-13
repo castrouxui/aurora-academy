@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { PricingCheckmark } from "@/components/pricing/PricingCheckmark";
-import { ChevronDown, ChevronUp, PlayCircle, Check } from "lucide-react";
+import { ChevronDown, ChevronUp, PlayCircle, Check, FileText } from "lucide-react";
 
 interface CourseTabsProps {
     modules: any[];
@@ -103,10 +103,15 @@ function ModuleAccordion({ module }: { module: any }) {
                         module.lessons.map((lesson: any) => (
                             <div key={lesson.id} className="flex justify-between items-center py-2 text-gray-400 hover:text-white transition-colors rounded-lg px-2 hover:bg-white/5">
                                 <div className="flex items-center gap-3">
-                                    <PlayCircle size={16} className="text-[#5D5CDE]" />
+                                    {lesson.videoUrl ? <PlayCircle size={16} className="text-[#5D5CDE]" /> : <FileText size={16} className="text-gray-500" />}
                                     <span className="font-medium">{lesson.title}</span>
                                 </div>
-                                <span className="text-xs font-mono text-gray-600">10:00</span>
+                                {/* Duration Display */}
+                                {lesson.duration > 0 && (
+                                    <span className="text-xs font-mono text-gray-500">
+                                        {Math.floor(lesson.duration / 60)}:{Math.floor(lesson.duration % 60).toString().padStart(2, '0')}
+                                    </span>
+                                )}
                             </div>
                         ))
                     ) : (

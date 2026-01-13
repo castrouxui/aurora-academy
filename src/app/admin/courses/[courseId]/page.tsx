@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+const ReactPlayer = dynamic(() => import("react-player/lazy"), { ssr: false });
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -738,6 +740,23 @@ export default function CourseEditorPage() {
                                                             </div>
                                                         ) : (
                                                             <p className="text-xs text-gray-500 mt-1 mb-4">Listo para reproducir</p>
+                                                        )}
+
+                                                        {/* Hidden Player for Duration Detection */}
+                                                        {lessonUrl && (
+                                                            <div className="hidden">
+                                                                <ReactPlayer
+                                                                    url={lessonUrl}
+                                                                    onDuration={(d: number) => {
+                                                                        console.log("Duration detected:", d);
+                                                                        setLessonDuration(d);
+                                                                    }}
+                                                                    playing={false}
+                                                                    muted={true}
+                                                                    width="0"
+                                                                    height="0"
+                                                                />
+                                                            </div>
                                                         )}
 
                                                         <div className="flex gap-2">

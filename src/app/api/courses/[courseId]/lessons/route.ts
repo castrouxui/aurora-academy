@@ -16,7 +16,7 @@ export async function POST(
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const { title, videoUrl, description, moduleId } = await req.json();
+        const { title, videoUrl, description, moduleId, duration } = await req.json();
 
         if (!title || !moduleId) {
             return new NextResponse("Missing title or module ID", { status: 400 });
@@ -34,6 +34,7 @@ export async function POST(
                 title,
                 videoUrl,
                 description,
+                duration: duration || 0, // Default to 0 if not provided
                 position: newPosition,
                 moduleId: moduleId,
                 published: true // Auto-publish for simplicity in MVP

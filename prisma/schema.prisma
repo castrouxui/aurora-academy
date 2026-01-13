@@ -102,6 +102,7 @@ model Lesson {
   title       String
   description String?
   videoUrl    String?
+  duration    Int        @default(0)
   content     String?
   position    Int
   published   Boolean    @default(false)
