@@ -25,6 +25,7 @@ import {
     DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const getYouTubeId = (url: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -733,6 +734,7 @@ export default function CourseEditorPage() {
                                     </div>
 
                                     {/* Video Upload Section */}
+                                    {/* Video Upload Section */}
                                     <div className="space-y-3">
                                         <div className="flex items-center justify-between">
                                             <Label className="text-sm font-medium text-gray-300">Video de la Clase</Label>
@@ -743,113 +745,133 @@ export default function CourseEditorPage() {
                                             )}
                                         </div>
 
-                                        <div className={`relative group border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center transition-all duration-300 ease-out 
-                                            ${lessonUrl ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-gray-700 bg-[#1a1f2e]/30 hover:bg-[#1a1f2e] hover:border-[#5D5CDE]/50'}`}>
+                                        <Tabs defaultValue="upload" className="w-full">
+                                            <TabsList className="grid w-full grid-cols-2 mb-4 bg-[#1a1f2e] border border-gray-800">
+                                                <TabsTrigger value="upload" className="data-[state=active]:bg-[#5D5CDE] data-[state=active]:text-white text-gray-400">
+                                                    <UploadCloud size={16} className="mr-2" /> Subir Archivo
+                                                </TabsTrigger>
+                                                <TabsTrigger value="url" className="data-[state=active]:bg-[#5D5CDE] data-[state=active]:text-white text-gray-400">
+                                                    <LinkIcon size={16} className="mr-2" /> URL Externa
+                                                </TabsTrigger>
+                                            </TabsList>
 
-                                            {isUploading ? (
-                                                <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
-                                                    <div className="relative">
-                                                        <div className="h-12 w-12 rounded-full border-4 border-gray-700"></div>
-                                                        <div className="absolute top-0 left-0 h-12 w-12 rounded-full border-4 border-[#5D5CDE] border-t-transparent animate-spin"></div>
-                                                    </div>
-                                                    <div className="text-center">
-                                                        <p className="text-sm font-medium text-white">Subiendo tu video...</p>
-                                                        <p className="text-xs text-gray-500 mt-1">Esto puede tardar unos segundos</p>
-                                                    </div>
-                                                </div>
-                                            ) : lessonUrl ? (
-                                                <div className="w-full flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                                    <div className="h-16 w-16 rounded-2xl bg-[#0f1118] flex items-center justify-center border border-gray-700 shadow-lg">
-                                                        <FileVideo size={32} className="text-emerald-400" />
-                                                    </div>
-                                                    <div className="text-center w-full px-4">
-                                                        <p className="text-sm text-gray-300 font-medium truncate max-w-full block mb-2">{lessonUrl}</p>
+                                            <TabsContent value="upload" className="mt-0">
+                                                <div className={`relative group border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center transition-all duration-300 ease-out 
+                                                    ${lessonUrl && !getYouTubeId(lessonUrl) ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-gray-700 bg-[#1a1f2e]/30 hover:bg-[#1a1f2e] hover:border-[#5D5CDE]/50'}`}>
 
-                                                        {getYouTubeId(lessonUrl) ? (
-                                                            <div className="relative aspect-video w-full max-w-[240px] rounded-lg overflow-hidden border border-gray-700 shadow-md mb-3 group/preview">
-                                                                <img
-                                                                    src={`https://img.youtube.com/vi/${getYouTubeId(lessonUrl)}/hqdefault.jpg`}
-                                                                    alt="Video Preview"
-                                                                    className="w-full h-full object-cover"
-                                                                    onError={(e) => {
-                                                                        (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${getYouTubeId(lessonUrl)}/0.jpg`;
-                                                                    }}
-                                                                />
-                                                                <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover/preview:bg-black/20 transition-all">
-                                                                    <FileVideo size={32} className="text-white opacity-80" />
+                                                    {isUploading ? (
+                                                        <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
+                                                            <div className="relative">
+                                                                <div className="h-12 w-12 rounded-full border-4 border-gray-700"></div>
+                                                                <div className="absolute top-0 left-0 h-12 w-12 rounded-full border-4 border-[#5D5CDE] border-t-transparent animate-spin"></div>
+                                                            </div>
+                                                            <div className="text-center">
+                                                                <p className="text-sm font-medium text-white">Subiendo tu video...</p>
+                                                                <p className="text-xs text-gray-500 mt-1">Esto puede tardar unos segundos</p>
+                                                            </div>
+                                                        </div>
+                                                    ) : lessonUrl && !getYouTubeId(lessonUrl) ? (
+                                                        <div className="w-full flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                                            <div className="h-16 w-16 rounded-2xl bg-[#0f1118] flex items-center justify-center border border-gray-700 shadow-lg">
+                                                                <FileVideo size={32} className="text-emerald-400" />
+                                                            </div>
+                                                            <div className="text-center w-full px-4">
+                                                                <p className="text-sm text-gray-300 font-medium truncate max-w-full block mb-2">Video cargado exitosamente</p>
+                                                                <p className="text-xs text-gray-500 mb-4 break-all opacity-60">{lessonUrl}</p>
+
+                                                                <div className="flex gap-2 justify-center">
+                                                                    <label htmlFor="file-upload" className="inline-flex items-center gap-2 text-xs font-medium text-[#5D5CDE] bg-[#5D5CDE]/10 px-3 py-1.5 rounded-lg hover:bg-[#5D5CDE]/20 cursor-pointer transition-colors">
+                                                                        <UploadCloud size={12} />
+                                                                        Reemplazar video
+                                                                    </label>
                                                                 </div>
                                                             </div>
-                                                        ) : (
-                                                            <p className="text-xs text-gray-500 mt-1 mb-4">Listo para reproducir</p>
-                                                        )}
-
-                                                        {/* Hidden Player for Duration Detection */}
-                                                        {lessonUrl && (
-                                                            <div className="absolute opacity-0 pointer-events-none select-none -z-50" style={{ width: 1, height: 1, overflow: 'hidden' }}>
-                                                                <ReactPlayer
-                                                                    url={lessonUrl}
-                                                                    onDuration={(d: number) => {
-                                                                        console.log("Duration detected:", d);
-                                                                        setLessonDuration(d);
-                                                                    }}
-                                                                    playing={false}
-                                                                    muted={true}
-                                                                    width="1px"
-                                                                    height="1px"
-                                                                />
-                                                            </div>
-                                                        )}
-
-                                                        <div className="flex gap-2">
-                                                            <label htmlFor="file-upload" className="inline-flex items-center gap-2 text-xs font-medium text-[#5D5CDE] bg-[#5D5CDE]/10 px-3 py-1.5 rounded-lg hover:bg-[#5D5CDE]/20 cursor-pointer transition-colors">
-                                                                <UploadCloud size={12} />
-                                                                Reemplazar video
-                                                            </label>
                                                         </div>
-                                                    </div>
+                                                    ) : (
+                                                        <>
+                                                            <div className="h-14 w-14 rounded-2xl bg-[#1a1f2e] group-hover:bg-[#5D5CDE] transition-colors flex items-center justify-center mb-4 shadow-xl border border-gray-700 group-hover:border-[#5D5CDE]">
+                                                                <UploadCloud className="h-7 w-7 text-gray-400 group-hover:text-white transition-colors" />
+                                                            </div>
+                                                            <p className="text-sm text-gray-300 font-medium mb-1">
+                                                                Arrastra tu video aquí
+                                                            </p>
+                                                            <p className="text-xs text-gray-500 mb-4">
+                                                                o haz clic para explorar tus archivos
+                                                            </p>
+                                                            <span className="text-[10px] text-gray-600 bg-gray-900 px-2 py-1 rounded border border-gray-800">
+                                                                MP4, WebM • Max 2GB
+                                                            </span>
+                                                        </>
+                                                    )}
+                                                    <input
+                                                        id="file-upload"
+                                                        type="file"
+                                                        accept="video/*"
+                                                        className="absolute inset-0 opacity-0 cursor-pointer"
+                                                        onChange={handleFileUpload}
+                                                        disabled={isUploading}
+                                                    />
                                                 </div>
-                                            ) : (
-                                                <>
-                                                    <div className="h-14 w-14 rounded-2xl bg-[#1a1f2e] group-hover:bg-[#5D5CDE] transition-colors flex items-center justify-center mb-4 shadow-xl border border-gray-700 group-hover:border-[#5D5CDE]">
-                                                        <UploadCloud className="h-7 w-7 text-gray-400 group-hover:text-white transition-colors" />
-                                                    </div>
-                                                    <p className="text-sm text-gray-300 font-medium mb-1">
-                                                        Arrastra tu video aquí
-                                                    </p>
-                                                    <p className="text-xs text-gray-500 mb-4">
-                                                        o haz clic para explorar tus archivos
-                                                    </p>
-                                                    <span className="text-[10px] text-gray-600 bg-gray-900 px-2 py-1 rounded border border-gray-800">
-                                                        MP4, WebM • Max 2GB
-                                                    </span>
-                                                </>
-                                            )}
-                                            <input
-                                                id="file-upload"
-                                                type="file"
-                                                accept="video/*"
-                                                className="absolute inset-0 opacity-0 cursor-pointer"
-                                                onChange={handleFileUpload}
-                                                disabled={isUploading}
-                                            />
-                                        </div>
+                                            </TabsContent>
 
-                                        {/* URL fallback */}
-                                        <div className="relative mt-2">
-                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <LinkIcon size={14} className="text-gray-500" />
+                                            <TabsContent value="url" className="mt-0">
+                                                <div className="space-y-4 p-6 bg-[#1a1f2e]/30 rounded-2xl border border-gray-700">
+                                                    <div className="space-y-2">
+                                                        <Label className="text-xs text-gray-400">Enlace del video (YouTube, Vimeo)</Label>
+                                                        <div className="relative">
+                                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                                <LinkIcon size={14} className="text-gray-500" />
+                                                            </div>
+                                                            <Input
+                                                                value={lessonUrl}
+                                                                onChange={(e) => setLessonUrl(e.target.value)}
+                                                                className="bg-[#0b0e14] border-gray-800 text-sm pl-9 h-10 placeholder:text-gray-600 focus:border-[#5D5CDE] transition-colors rounded-xl"
+                                                                placeholder="https://youtu.be/..."
+                                                            />
+                                                        </div>
+                                                        <p className="text-[10px] text-gray-500">
+                                                            Tip: Para videos privados de YouTube, usa la opción "No listado" (Unlisted).
+                                                        </p>
+                                                    </div>
+
+                                                    {getYouTubeId(lessonUrl) && (
+                                                        <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-gray-700 shadow-lg group/preview">
+                                                            <img
+                                                                src={`https://img.youtube.com/vi/${getYouTubeId(lessonUrl)}/hqdefault.jpg`}
+                                                                alt="Video Preview"
+                                                                className="w-full h-full object-cover"
+                                                                onError={(e) => {
+                                                                    (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${getYouTubeId(lessonUrl)}/0.jpg`;
+                                                                }}
+                                                            />
+                                                            <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover/preview:bg-black/20 transition-all">
+                                                                <FileVideo size={48} className="text-white opacity-90 drop-shadow-lg" />
+                                                            </div>
+                                                            <div className="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-2 py-1 rounded">
+                                                                Vista Previa
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </TabsContent>
+                                        </Tabs>
+
+                                        {/* Hidden Player for Duration Detection - Keep this globally to detect duration from either source */}
+                                        {lessonUrl && (
+                                            <div className="absolute opacity-0 pointer-events-none select-none -z-50" style={{ width: 1, height: 1, overflow: 'hidden' }}>
+                                                <ReactPlayer
+                                                    url={lessonUrl}
+                                                    onDuration={(d: number) => {
+                                                        console.log("Duration detected:", d);
+                                                        setLessonDuration(d);
+                                                    }}
+                                                    playing={false}
+                                                    muted={true}
+                                                    width="1px"
+                                                    height="1px"
+                                                />
                                             </div>
-                                            <Input
-                                                value={lessonUrl}
-                                                onChange={(e) => setLessonUrl(e.target.value)}
-                                                className="bg-[#1a1f2e] border-gray-800 text-xs pl-9 h-9 placeholder:text-gray-600 focus:border-[#5D5CDE] transition-colors rounded-lg"
-                                                placeholder="O pega una URL directa (YouTube/Vimeo)"
-                                            />
-                                            {/* Helper text for YouTube private/unlisted */}
-                                            <p className="text-[10px] text-gray-500 mt-1.5 ml-1">
-                                                Tip: Para videos privados de YouTube, usa la opción "No listado" (Unlisted).
-                                            </p>
-                                        </div>
+                                        )}
                                     </div>
 
                                     {/* Description */}
