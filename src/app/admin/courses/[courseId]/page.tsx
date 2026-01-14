@@ -290,8 +290,8 @@ export default function CourseEditorPage() {
         if (!file) return;
 
         // Validations
-        if (file.size > 512 * 1024 * 1024) {
-            toast.error("El archivo excede el límite de 512MB");
+        if (file.size > 2 * 1024 * 1024 * 1024) {
+            toast.error("El archivo excede el límite de 2GB");
             return;
         }
 
@@ -820,7 +820,7 @@ export default function CourseEditorPage() {
                                                         o haz clic para explorar tus archivos
                                                     </p>
                                                     <span className="text-[10px] text-gray-600 bg-gray-900 px-2 py-1 rounded border border-gray-800">
-                                                        MP4, WebM • Max 512MB
+                                                        MP4, WebM • Max 2GB
                                                     </span>
                                                 </>
                                             )}
@@ -1029,7 +1029,7 @@ export default function CourseEditorPage() {
                                                         <Video size={16} className="text-gray-500 group-hover:text-[#5D5CDE]" />
                                                         <span className="text-sm text-gray-300 flex-1 group-hover:text-white">{lesson.title}</span>
                                                         {lesson.videoUrl && (
-                                                            <code className="text-xs bg-gray-900 px-1 py-0.5 rounded text-gray-400 border border-gray-700">MP4, WebM • Max 1GB</code>
+                                                            <code className="text-xs bg-gray-900 px-1 py-0.5 rounded text-gray-400 border border-gray-700">MP4, WebM • Max 2GB</code>
                                                         )}
                                                     </div>
                                                 ))}
