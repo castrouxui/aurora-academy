@@ -706,204 +706,222 @@ export default function CourseEditorPage() {
                     {/* Add Lesson Dialog (Shared) */}
                     <Dialog open={isAddLessonOpen} onOpenChange={setIsAddLessonOpen}>
                         <DialogContent className="bg-[#0f111a] border border-gray-800 text-white sm:max-w-[600px] shadow-2xl p-0 overflow-hidden rounded-2xl">
-                            {/* Premium Header */}
-                            <DialogHeader className="px-6 py-5 border-b border-gray-800 bg-[#141824]/50 backdrop-blur-sm">
-                                <DialogTitle className="text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                                    {activeLessonId ? "Editar Contenido" : "Nueva Clase"}
-                                </DialogTitle>
-                                <p className="text-xs text-gray-500 mt-1">
-                                    {activeLessonId ? "Administra el contenido y los recursos de esta lección." : "Agrega una nueva lección al módulo."}
-                                </p>
-                            </DialogHeader>
+                            <form onSubmit={handleAddLesson} className="flex flex-col h-[85vh]">
+                                <DialogHeader className="px-6 py-5 border-b border-gray-800 bg-[#141824]/50 backdrop-blur-sm">
+                                    <DialogTitle className="text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                                        {activeLessonId ? "Editar Contenido" : "Nueva Clase"}
+                                    </DialogTitle>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        {activeLessonId ? "Administra el contenido y los recursos de esta lección." : "Agrega una nueva lección al módulo."}
+                                    </p>
+                                </DialogHeader>
 
-                            <form onSubmit={handleAddLesson} className="flex flex-col max-h-[85vh]">
-                                <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
-
-                                    {/* Title Section */}
-                                    <div className="space-y-3">
-                                        <Label className="text-sm font-medium text-gray-300">Título de la Clase</Label>
-                                        <div className="relative group">
-                                            <Input
-                                                value={lessonTitle}
-                                                onChange={(e) => setLessonTitle(e.target.value)}
-                                                className="bg-[#1a1f2e] border-gray-700 focus:border-[#5D5CDE] text-white h-12 rounded-xl transition-all pl-4 text-base shadow-sm group-hover:border-gray-600"
-                                                placeholder="Ej: Introducción a Velas Japonesas"
-                                                required
-                                            />
-                                        </div>
+                                <Tabs defaultValue="content" className="flex-1 flex flex-col overflow-hidden">
+                                    <div className="px-6 border-b border-gray-800 bg-[#1a1f2e]/50">
+                                        <TabsList className="bg-transparent h-12 p-0 w-full justify-start gap-6">
+                                            <TabsTrigger
+                                                value="content"
+                                                className="h-12 rounded-none border-b-2 border-transparent data-[state=active]:border-[#5D5CDE] data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 text-gray-400 data-[state=active]:text-white font-medium bg-transparent"
+                                            >
+                                                Contenido
+                                            </TabsTrigger>
+                                            <TabsTrigger
+                                                value="resources"
+                                                disabled={!activeLessonId}
+                                                className="h-12 rounded-none border-b-2 border-transparent data-[state=active]:border-[#5D5CDE] data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 text-gray-400 data-[state=active]:text-white font-medium bg-transparent disabled:opacity-30"
+                                            >
+                                                Recursos Adicionales
+                                            </TabsTrigger>
+                                        </TabsList>
                                     </div>
 
-                                    {/* Video Upload Section */}
-                                    {/* Video Upload Section */}
-                                    <div className="space-y-3">
-                                        <div className="flex items-center justify-between">
-                                            <Label className="text-sm font-medium text-gray-300">Video de la Clase</Label>
-                                            {lessonUrl && (
-                                                <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                                                    Video cargado
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        <Tabs defaultValue="upload" className="w-full">
-                                            <TabsList className="grid w-full grid-cols-2 mb-4 bg-[#1a1f2e] border border-gray-800">
-                                                <TabsTrigger value="upload" className="data-[state=active]:bg-[#5D5CDE] data-[state=active]:text-white text-gray-400">
-                                                    <UploadCloud size={16} className="mr-2" /> Subir Archivo
-                                                </TabsTrigger>
-                                                <TabsTrigger value="url" className="data-[state=active]:bg-[#5D5CDE] data-[state=active]:text-white text-gray-400">
-                                                    <LinkIcon size={16} className="mr-2" /> URL Externa
-                                                </TabsTrigger>
-                                            </TabsList>
-
-                                            <TabsContent value="upload" className="mt-0">
-                                                <div className={`relative group border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center transition-all duration-300 ease-out 
-                                                    ${lessonUrl && !getYouTubeId(lessonUrl) ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-gray-700 bg-[#1a1f2e]/30 hover:bg-[#1a1f2e] hover:border-[#5D5CDE]/50'}`}>
-
-                                                    {isUploading ? (
-                                                        <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
-                                                            <div className="relative">
-                                                                <div className="h-12 w-12 rounded-full border-4 border-gray-700"></div>
-                                                                <div className="absolute top-0 left-0 h-12 w-12 rounded-full border-4 border-[#5D5CDE] border-t-transparent animate-spin"></div>
-                                                            </div>
-                                                            <div className="text-center">
-                                                                <p className="text-sm font-medium text-white">Subiendo tu video...</p>
-                                                                <p className="text-xs text-gray-500 mt-1">Esto puede tardar unos segundos</p>
-                                                            </div>
-                                                        </div>
-                                                    ) : lessonUrl && !getYouTubeId(lessonUrl) ? (
-                                                        <div className="w-full flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                                            <div className="h-16 w-16 rounded-2xl bg-[#0f1118] flex items-center justify-center border border-gray-700 shadow-lg">
-                                                                <FileVideo size={32} className="text-emerald-400" />
-                                                            </div>
-                                                            <div className="text-center w-full px-4">
-                                                                <p className="text-sm text-gray-300 font-medium truncate max-w-full block mb-2">Video cargado exitosamente</p>
-                                                                <p className="text-xs text-gray-500 mb-4 break-all opacity-60">{lessonUrl}</p>
-
-                                                                <div className="flex gap-2 justify-center">
-                                                                    <label htmlFor="file-upload" className="inline-flex items-center gap-2 text-xs font-medium text-[#5D5CDE] bg-[#5D5CDE]/10 px-3 py-1.5 rounded-lg hover:bg-[#5D5CDE]/20 cursor-pointer transition-colors">
-                                                                        <UploadCloud size={12} />
-                                                                        Reemplazar video
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    ) : (
-                                                        <>
-                                                            <div className="h-14 w-14 rounded-2xl bg-[#1a1f2e] group-hover:bg-[#5D5CDE] transition-colors flex items-center justify-center mb-4 shadow-xl border border-gray-700 group-hover:border-[#5D5CDE]">
-                                                                <UploadCloud className="h-7 w-7 text-gray-400 group-hover:text-white transition-colors" />
-                                                            </div>
-                                                            <p className="text-sm text-gray-300 font-medium mb-1">
-                                                                Arrastra tu video aquí
-                                                            </p>
-                                                            <p className="text-xs text-gray-500 mb-4">
-                                                                o haz clic para explorar tus archivos
-                                                            </p>
-                                                            <span className="text-[10px] text-gray-600 bg-gray-900 px-2 py-1 rounded border border-gray-800">
-                                                                MP4, WebM • Max 2GB
-                                                            </span>
-                                                        </>
-                                                    )}
-                                                    <input
-                                                        id="file-upload"
-                                                        type="file"
-                                                        accept="video/*"
-                                                        className="absolute inset-0 opacity-0 cursor-pointer"
-                                                        onChange={handleFileUpload}
-                                                        disabled={isUploading}
+                                    <div className="flex-1 overflow-y-auto bg-[#0f111a]">
+                                        <TabsContent value="content" className="p-6 space-y-6 mt-0">
+                                            {/* Title Section */}
+                                            <div className="space-y-3">
+                                                <Label className="text-sm font-medium text-gray-300">Título de la Clase</Label>
+                                                <div className="relative group">
+                                                    <Input
+                                                        value={lessonTitle}
+                                                        onChange={(e) => setLessonTitle(e.target.value)}
+                                                        className="bg-[#1a1f2e] border-gray-700 focus:border-[#5D5CDE] text-white h-12 rounded-xl transition-all pl-4 text-base shadow-sm group-hover:border-gray-600"
+                                                        placeholder="Ej: Introducción a Velas Japonesas"
+                                                        required
                                                     />
                                                 </div>
-                                            </TabsContent>
+                                            </div>
 
-                                            <TabsContent value="url" className="mt-0">
-                                                <div className="space-y-4 p-6 bg-[#1a1f2e]/30 rounded-2xl border border-gray-700">
-                                                    <div className="space-y-2">
-                                                        <Label className="text-xs text-gray-400">Enlace del video (YouTube, Vimeo)</Label>
-                                                        <div className="relative">
-                                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                                <LinkIcon size={14} className="text-gray-500" />
-                                                            </div>
-                                                            <Input
-                                                                value={lessonUrl}
-                                                                onChange={(e) => setLessonUrl(e.target.value)}
-                                                                className="bg-[#0b0e14] border-gray-800 text-sm pl-9 h-10 placeholder:text-gray-600 focus:border-[#5D5CDE] transition-colors rounded-xl"
-                                                                placeholder="https://youtu.be/..."
-                                                            />
-                                                        </div>
-                                                        <p className="text-[10px] text-gray-500">
-                                                            Tip: Para videos privados de YouTube, usa la opción "No listado" (Unlisted).
-                                                        </p>
-                                                    </div>
-
-                                                    {getYouTubeId(lessonUrl) && (
-                                                        <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-gray-700 shadow-lg group/preview">
-                                                            <img
-                                                                src={`https://img.youtube.com/vi/${getYouTubeId(lessonUrl)}/hqdefault.jpg`}
-                                                                alt="Video Preview"
-                                                                className="w-full h-full object-cover"
-                                                                onError={(e) => {
-                                                                    (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${getYouTubeId(lessonUrl)}/0.jpg`;
-                                                                }}
-                                                            />
-                                                            <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover/preview:bg-black/20 transition-all">
-                                                                <FileVideo size={48} className="text-white opacity-90 drop-shadow-lg" />
-                                                            </div>
-                                                            <div className="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-2 py-1 rounded">
-                                                                Vista Previa
-                                                            </div>
-                                                        </div>
+                                            {/* Video Upload Section */}
+                                            <div className="space-y-3">
+                                                <div className="flex items-center justify-between">
+                                                    <Label className="text-sm font-medium text-gray-300">Video de la Clase</Label>
+                                                    {lessonUrl && (
+                                                        <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                                                            Video cargado
+                                                        </span>
                                                     )}
                                                 </div>
-                                            </TabsContent>
-                                        </Tabs>
 
-                                        {/* Hidden Player for Duration Detection - Keep this globally to detect duration from either source */}
-                                        {lessonUrl && (
-                                            <div className="absolute opacity-0 pointer-events-none select-none -z-50" style={{ width: 1, height: 1, overflow: 'hidden' }}>
-                                                <ReactPlayer
-                                                    url={lessonUrl}
-                                                    onDuration={(d: number) => {
-                                                        console.log("Duration detected:", d);
-                                                        setLessonDuration(d);
-                                                    }}
-                                                    playing={false}
-                                                    muted={true}
-                                                    width="1px"
-                                                    height="1px"
+                                                <Tabs defaultValue="upload" className="w-full">
+                                                    <TabsList className="grid w-full grid-cols-2 mb-4 bg-[#1a1f2e] border border-gray-800">
+                                                        <TabsTrigger value="upload" className="data-[state=active]:bg-[#5D5CDE] data-[state=active]:text-white text-gray-400">
+                                                            <UploadCloud size={16} className="mr-2" /> Subir Archivo
+                                                        </TabsTrigger>
+                                                        <TabsTrigger value="url" className="data-[state=active]:bg-[#5D5CDE] data-[state=active]:text-white text-gray-400">
+                                                            <LinkIcon size={16} className="mr-2" /> URL Externa
+                                                        </TabsTrigger>
+                                                    </TabsList>
+
+                                                    <TabsContent value="upload" className="mt-0">
+                                                        <div className={`relative group border-2 border-dashed rounded-2xl p-8 flex flex-col items-center justify-center transition-all duration-300 ease-out
+                                                            ${lessonUrl && !getYouTubeId(lessonUrl) ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-gray-700 bg-[#1a1f2e]/30 hover:bg-[#1a1f2e] hover:border-[#5D5CDE]/50'}`}>
+
+                                                            {isUploading ? (
+                                                                <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
+                                                                    <div className="relative">
+                                                                        <div className="h-12 w-12 rounded-full border-4 border-gray-700"></div>
+                                                                        <div className="absolute top-0 left-0 h-12 w-12 rounded-full border-4 border-[#5D5CDE] border-t-transparent animate-spin"></div>
+                                                                    </div>
+                                                                    <div className="text-center">
+                                                                        <p className="text-sm font-medium text-white">Subiendo tu video...</p>
+                                                                        <p className="text-xs text-gray-500 mt-1">Esto puede tardar unos segundos</p>
+                                                                    </div>
+                                                                </div>
+                                                            ) : lessonUrl && !getYouTubeId(lessonUrl) ? (
+                                                                <div className="w-full flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                                                    <div className="h-16 w-16 rounded-2xl bg-[#0f1118] flex items-center justify-center border border-gray-700 shadow-lg">
+                                                                        <FileVideo size={32} className="text-emerald-400" />
+                                                                    </div>
+                                                                    <div className="text-center w-full px-4">
+                                                                        <p className="text-sm text-gray-300 font-medium truncate max-w-full block mb-2">Video cargado exitosamente</p>
+                                                                        <p className="text-xs text-gray-500 mb-4 break-all opacity-60">{lessonUrl}</p>
+
+                                                                        <div className="flex gap-2 justify-center">
+                                                                            <label htmlFor="file-upload" className="relative z-50 inline-flex items-center gap-2 text-xs font-medium text-[#5D5CDE] bg-[#5D5CDE]/10 px-3 py-1.5 rounded-lg hover:bg-[#5D5CDE]/20 cursor-pointer transition-colors">
+                                                                                <UploadCloud size={12} />
+                                                                                Reemplazar video
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <>
+                                                                    <div className="h-14 w-14 rounded-2xl bg-[#1a1f2e] group-hover:bg-[#5D5CDE] transition-colors flex items-center justify-center mb-4 shadow-xl border border-gray-700 group-hover:border-[#5D5CDE]">
+                                                                        <UploadCloud className="h-7 w-7 text-gray-400 group-hover:text-white transition-colors" />
+                                                                    </div>
+                                                                    <p className="text-sm text-gray-300 font-medium mb-1">
+                                                                        Arrastra tu video aquí
+                                                                    </p>
+                                                                    <p className="text-xs text-gray-500 mb-4">
+                                                                        o haz clic para explorar tus archivos
+                                                                    </p>
+                                                                    <span className="text-[10px] text-gray-600 bg-gray-900 px-2 py-1 rounded border border-gray-800">
+                                                                        MP4, WebM • Max 2GB
+                                                                    </span>
+                                                                </>
+                                                            )}
+                                                            <input
+                                                                id="file-upload"
+                                                                type="file"
+                                                                accept="video/*"
+                                                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50"
+                                                                onChange={handleFileUpload}
+                                                                disabled={isUploading}
+                                                            />
+                                                        </div>
+                                                    </TabsContent>
+
+                                                    <TabsContent value="url" className="mt-0">
+                                                        <div className="space-y-4 p-6 bg-[#1a1f2e]/30 rounded-2xl border border-gray-700">
+                                                            <div className="space-y-2">
+                                                                <Label className="text-xs text-gray-400">Enlace del video (YouTube, Vimeo)</Label>
+                                                                <div className="relative">
+                                                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                                        <LinkIcon size={14} className="text-gray-500" />
+                                                                    </div>
+                                                                    <Input
+                                                                        value={lessonUrl}
+                                                                        onChange={(e) => setLessonUrl(e.target.value)}
+                                                                        className="bg-[#0b0e14] border-gray-800 text-sm pl-9 h-10 placeholder:text-gray-600 focus:border-[#5D5CDE] transition-colors rounded-xl"
+                                                                        placeholder="https://youtu.be/..."
+                                                                    />
+                                                                </div>
+                                                                <p className="text-[10px] text-gray-500">
+                                                                    Tip: Para videos privados de YouTube, usa la opción "No listado" (Unlisted).
+                                                                </p>
+                                                            </div>
+
+                                                            {getYouTubeId(lessonUrl) && (
+                                                                <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-gray-700 shadow-lg group/preview">
+                                                                    <img
+                                                                        src={`https://img.youtube.com/vi/${getYouTubeId(lessonUrl)}/hqdefault.jpg`}
+                                                                        alt="Video Preview"
+                                                                        className="w-full h-full object-cover"
+                                                                        onError={(e) => {
+                                                                            (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${getYouTubeId(lessonUrl)}/0.jpg`;
+                                                                        }}
+                                                                    />
+                                                                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover/preview:bg-black/20 transition-all">
+                                                                        <FileVideo size={48} className="text-white opacity-90 drop-shadow-lg" />
+                                                                    </div>
+                                                                    <div className="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-2 py-1 rounded">
+                                                                        Vista Previa
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </TabsContent>
+                                                </Tabs>
+
+                                                {/* Hidden Player for Duration Detection */}
+                                                {lessonUrl && (
+                                                    <div className="absolute opacity-0 pointer-events-none select-none -z-50" style={{ width: 1, height: 1, overflow: 'hidden' }}>
+                                                        <ReactPlayer
+                                                            url={lessonUrl}
+                                                            onDuration={(d: number) => {
+                                                                console.log("Duration detected:", d);
+                                                                setLessonDuration(d);
+                                                            }}
+                                                            playing={false}
+                                                            muted={true}
+                                                            width="1px"
+                                                            height="1px"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Description */}
+                                            <div className="space-y-3">
+                                                <Label className="text-sm font-medium text-gray-300">Descripción</Label>
+                                                <Textarea
+                                                    value={lessonDesc}
+                                                    onChange={(e) => setLessonDesc(e.target.value)}
+                                                    className="bg-[#1a1f2e] border-gray-700 focus:border-[#5D5CDE] min-h-[100px] text-sm text-gray-300 rounded-xl resize-none p-4"
+                                                    placeholder="¿De qué trata esta clase?"
                                                 />
                                             </div>
-                                        )}
-                                    </div>
+                                        </TabsContent>
 
-                                    {/* Description */}
-                                    <div className="space-y-3">
-                                        <Label className="text-sm font-medium text-gray-300">Descripción</Label>
-                                        <Textarea
-                                            value={lessonDesc}
-                                            onChange={(e) => setLessonDesc(e.target.value)}
-                                            className="bg-[#1a1f2e] border-gray-700 focus:border-[#5D5CDE] min-h-[100px] text-sm text-gray-300 rounded-xl resize-none p-4"
-                                            placeholder="¿De qué trata esta clase?"
-                                        />
-                                    </div>
-
-                                    {/* Resources Section - Collapsible or distinct */}
-                                    {activeLessonId && (
-                                        <div className="pt-6 border-t border-gray-800">
-                                            <div className="flex items-center justify-between mb-4">
-                                                <Label className="text-sm font-medium text-white flex items-center gap-2">
-                                                    <FolderPlus size={16} className="text-[#5D5CDE]" />
-                                                    Recursos Adicionales
-                                                </Label>
+                                        <TabsContent value="resources" className="p-6 space-y-6 mt-0">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <div>
+                                                    <h3 className="text-sm font-medium text-white mb-1">Recursos de la Clase</h3>
+                                                    <p className="text-xs text-gray-500">Archivos PDF, imágenes o enlaces complementarios.</p>
+                                                </div>
                                                 <span className="text-[10px] text-gray-500 bg-[#1a1f2e] px-2 py-0.5 rounded border border-gray-800">
                                                     Archivos descargables
                                                 </span>
                                             </div>
 
-                                            <div className="bg-[#0b0e14] rounded-xl border border-gray-800 p-1 space-y-1 mb-4">
+                                            {/* Existing Resources List */}
+                                            <div className="bg-[#0b0e14] rounded-xl border border-gray-800 p-1 space-y-1">
                                                 {course?.modules
                                                     .find(m => m.id === activeModuleId)
                                                     ?.lessons.find(l => l.id === activeLessonId)
                                                     ?.resources.length === 0 && (
-                                                        <div className="text-center py-6">
+                                                        <div className="text-center py-8">
+                                                            <FolderPlus className="mx-auto h-8 w-8 text-gray-700 mb-2" />
                                                             <p className="text-xs text-gray-500 italic">No hay recursos agregados aún.</p>
                                                         </div>
                                                     )}
@@ -935,76 +953,79 @@ export default function CourseEditorPage() {
                                                 }
                                             </div>
 
-                                            <div className="flex gap-2 p-3 bg-[#1a1f2e]/50 rounded-xl border border-gray-800 items-start">
-                                                <div className="flex-1 space-y-2">
-                                                    <Input
-                                                        value={resourceTitle}
-                                                        onChange={(e) => setResourceTitle(e.target.value)}
-                                                        placeholder="Nombre del archivo (Ej: PDF Resumen)"
-                                                        className="h-9 bg-[#0b0e14] border-gray-700 text-xs focus:ring-1 focus:ring-[#5D5CDE]"
-                                                    />
-                                                    <div className="flex gap-2">
-                                                        <div className="relative flex-1">
-                                                            <Input
-                                                                value={resourceUrl}
-                                                                onChange={(e) => setResourceUrl(e.target.value)}
-                                                                placeholder="URL o subir archivo..."
-                                                                className="h-9 bg-[#0b0e14] border-gray-700 text-xs pl-8 focus:ring-1 focus:ring-[#5D5CDE]"
-                                                            />
-                                                            <LinkIcon size={12} className="absolute top-2.5 left-2.5 text-gray-600" />
+                                            {/* Add New Resource Form */}
+                                            <div className="pt-4 border-t border-gray-800">
+                                                <Label className="text-xs font-medium text-gray-400 mb-3 block">Nuevo Recurso</Label>
+                                                <div className="flex gap-2 p-3 bg-[#1a1f2e]/50 rounded-xl border border-gray-800 items-start">
+                                                    <div className="flex-1 space-y-2">
+                                                        <Input
+                                                            value={resourceTitle}
+                                                            onChange={(e) => setResourceTitle(e.target.value)}
+                                                            placeholder="Nombre del archivo (Ej: PDF Resumen)"
+                                                            className="h-9 bg-[#0b0e14] border-gray-700 text-xs focus:ring-1 focus:ring-[#5D5CDE]"
+                                                        />
+                                                        <div className="flex gap-2">
+                                                            <div className="relative flex-1">
+                                                                <Input
+                                                                    value={resourceUrl}
+                                                                    onChange={(e) => setResourceUrl(e.target.value)}
+                                                                    placeholder="URL o subir archivo..."
+                                                                    className="h-9 bg-[#0b0e14] border-gray-700 text-xs pl-8 focus:ring-1 focus:ring-[#5D5CDE]"
+                                                                />
+                                                                <LinkIcon size={12} className="absolute top-2.5 left-2.5 text-gray-600" />
+                                                            </div>
+                                                            <label className={`cursor-pointer h-9 w-9 flex items-center justify-center rounded-lg bg-[#1F2937] hover:bg-gray-700 border border-gray-600 transition-colors ${isUploading ? 'opacity-50' : ''}`}>
+                                                                {isUploading ? <Loader2 size={14} className="animate-spin text-gray-400" /> : <UploadCloud size={14} className="text-gray-300" />}
+                                                                <input type="file" className="hidden" onChange={handleResourceUpload} disabled={isUploading} />
+                                                            </label>
                                                         </div>
-                                                        <label className={`cursor-pointer h-9 w-9 flex items-center justify-center rounded-lg bg-[#1F2937] hover:bg-gray-700 border border-gray-600 transition-colors ${isUploading ? 'opacity-50' : ''}`}>
-                                                            {isUploading ? <Loader2 size={14} className="animate-spin text-gray-400" /> : <UploadCloud size={14} className="text-gray-300" />}
-                                                            <input type="file" className="hidden" onChange={handleResourceUpload} disabled={isUploading} />
-                                                        </label>
                                                     </div>
+                                                    <Button
+                                                        type="button"
+                                                        onClick={handleAddResource}
+                                                        disabled={!resourceTitle || !resourceUrl || isAddingResource}
+                                                        className="h-[76px] w-12 bg-[#5D5CDE]/10 hover:bg-[#5D5CDE]/20 border border-[#5D5CDE]/20 text-[#5D5CDE] rounded-xl flex items-center justify-center"
+                                                    >
+                                                        {isAddingResource ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus size={20} />}
+                                                    </Button>
                                                 </div>
-                                                <Button
-                                                    type="button"
-                                                    onClick={handleAddResource}
-                                                    disabled={!resourceTitle || !resourceUrl || isAddingResource}
-                                                    className="h-[76px] w-12 bg-[#5D5CDE]/10 hover:bg-[#5D5CDE]/20 border border-[#5D5CDE]/20 text-[#5D5CDE] rounded-xl flex items-center justify-center"
-                                                >
-                                                    {isAddingResource ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus size={20} />}
-                                                </Button>
                                             </div>
-                                        </div>
-                                    )}
+                                        </TabsContent>
+                                    </div>
 
-                                </div>
-
-                                {/* Footer Actions */}
-                                <DialogFooter className="px-6 py-4 border-t border-gray-800 bg-[#141824]/50 backdrop-blur-sm gap-3">
-                                    {activeLessonId && (
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            disabled={isSubmittingLesson}
-                                            onClick={handleDeleteLesson}
-                                            className="text-red-400 hover:text-red-300 hover:bg-red-400/10 mr-auto px-4"
-                                        >
-                                            <Trash2 size={16} className="mr-2" />
-                                            Eliminar Clase
-                                        </Button>
-                                    )}
-                                    <Button type="button" variant="outline" onClick={() => setIsAddLessonOpen(false)} className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white">
-                                        Cancelar
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        disabled={isSubmittingLesson || isUploading}
-                                        className="bg-gradient-to-r from-[#5D5CDE] to-[#4B4AC0] hover:from-[#4B4AC0] hover:to-[#3e3db3] text-white shadow-lg shadow-[#5D5CDE]/25 px-8 transition-all hover:scale-[1.02] active:scale-[0.98]"
-                                    >
-                                        {isSubmittingLesson ? (
-                                            <>
-                                                <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                                                Guardando...
-                                            </>
-                                        ) : (
-                                            activeLessonId ? "Guardar Cambios" : "Crear Clase"
+                                    {/* Footer Actions */}
+                                    <DialogFooter className="px-6 py-4 border-t border-gray-800 bg-[#141824]/50 backdrop-blur-sm gap-3">
+                                        {activeLessonId && (
+                                            <Button
+                                                type="button"
+                                                variant="ghost"
+                                                disabled={isSubmittingLesson}
+                                                onClick={handleDeleteLesson}
+                                                className="text-red-400 hover:text-red-300 hover:bg-red-400/10 mr-auto px-4"
+                                            >
+                                                <Trash2 size={16} className="mr-2" />
+                                                Eliminar Clase
+                                            </Button>
                                         )}
-                                    </Button>
-                                </DialogFooter>
+                                        <Button type="button" variant="outline" onClick={() => setIsAddLessonOpen(false)} className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white">
+                                            Cancelar
+                                        </Button>
+                                        <Button
+                                            type="submit"
+                                            disabled={isSubmittingLesson || isUploading}
+                                            className="bg-gradient-to-r from-[#5D5CDE] to-[#4B4AC0] hover:from-[#4B4AC0] hover:to-[#3e3db3] text-white shadow-lg shadow-[#5D5CDE]/25 px-8 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                        >
+                                            {isSubmittingLesson ? (
+                                                <>
+                                                    <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                                                    Guardando...
+                                                </>
+                                            ) : (
+                                                activeLessonId ? "Guardar Cambios" : "Crear Clase"
+                                            )}
+                                        </Button>
+                                    </DialogFooter>
+                                </Tabs>
                             </form>
                         </DialogContent>
                     </Dialog>
