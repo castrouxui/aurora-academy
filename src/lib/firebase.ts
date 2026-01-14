@@ -12,6 +12,12 @@ const firebaseConfig = {
 
 // Initialize Firebase (singleton pattern)
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
+// Validation for Storage
+if (!firebaseConfig.storageBucket) {
+    console.error("FIREBASE ERROR: 'storageBucket' is missing in configuration. Check your .env setup.");
+}
+
 const storage = getStorage(app);
 
 export { storage };
