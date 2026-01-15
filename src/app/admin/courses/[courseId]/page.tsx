@@ -100,7 +100,6 @@ export default function CourseEditorPage() {
     // Refs for calculation
     const lastUploadTime = useRef<number>(0);
     const lastUploadBytes = useRef<number>(0);
-    const activeFileRef = useRef<File | null>(null);
 
     // Price Local State
     const [priceInput, setPriceInput] = useState("");
@@ -231,118 +230,166 @@ export default function CourseEditorPage() {
         }
     };
 
+    // UploadThing Hooks
+    // UploadThing Hooks
+    // We need 'file' in scope for calculation, but it's not available here. 
+    // We'll store the 'activeFile' in a ref or state when upload starts to calculate speed.
+    const activeFileRef = useRef<File | null>(null);
 
+    const { startUpload: startVideoUpload } = useUploadThing("chapterVideo", {
+        onClientUploadComplete: (res) => {
+            if (res && res[0]) {
+                const uploadedUrl = res[0].url;
+                setLessonUrl(uploadedUrl);
+                setIsUploading(false);
+                toast.success("Video subido correctamente");
+                setLessonDuration(0); // Reset duration so new video is re-detected
+
+                // Auto-save if editing an existing lesson
+                if (activeLessonId) {
+                    toast.loading("Guardando video...", { id: "autosave-video" });
+                    fetch(`/api/lessons/${activeLessonId}`, {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            videoUrl: uploadedUrl,
+                        }),
+                    }).then(async (response) => {
+                        if (response.ok) {
+                            toast.success("Video guardado y vinculado a la clase", { id: "autosave-video" });
+                            // Refresh course data to ensure everything is synced
+                            fetchCourse();
+                        } else {
+                            toast.error("Error al guardar el video en la base de datos", { id: "autosave-video" });
+                        }
+                    }).catch(err => {
+                        console.error("Auto-save error:", err);
+                        toast.error("Error de conexión al guardar", { id: "autosave-video" });
+                    });
+                }
+            }
+        },
+        onUploadError: (error) => {
+            console.error(error);
+            setIsUploading(false);
+            toast.error(`Error uploading video: ${error.message}`);
+        },
+        onUploadProgress: (progress) => {
+            setUploadProgress(progress);
+
+            // Calculate Speed and ETA if we have the file ref
+            if (activeFileRef.current) {
+                const now = Date.now();
+                const timeDiff = (now - lastUploadTime.current) / 1000; // seconds
+
+                if (timeDiff >= 1) { // Update every second
+                    const fileSize = activeFileRef.current.size;
+                    const currentBytes = (progress / 100) * fileSize;
+                    const bytesDiff = currentBytes - lastUploadBytes.current;
+
+                    if (bytesDiff > 0) {
+                        const speed = bytesDiff / timeDiff; // bytes/sec
+
+                        // Speed to MB/s
+                        const speedMB = (speed / (1024 * 1024)).toFixed(2);
+                        setUploadSpeed(`${speedMB} MB/s`);
+
+                        // Remaining Time
+                        const remainingBytes = fileSize - currentBytes;
+                        const secondsLeft = remainingBytes / speed;
+
+                        if (isFinite(secondsLeft)) {
+                            if (secondsLeft < 60) {
+                                setTimeRemaining(`${Math.ceil(secondsLeft)} seg`);
+                            } else {
+                                const mins = Math.floor(secondsLeft / 60);
+                                const secs = Math.ceil(secondsLeft % 60);
+                                setTimeRemaining(`${mins} min ${secs} seg`);
+                            }
+                        }
+
+                        lastUploadTime.current = now;
+                        lastUploadBytes.current = currentBytes;
+                    }
+                }
+            }
+        }
+    });
+
+    const { startUpload: startResourceUpload } = useUploadThing("courseAttachment", {
+        onClientUploadComplete: (res) => {
+            if (res && res[0]) {
+                setResourceUrl(res[0].url);
+                if (!resourceTitle) {
+                    setResourceTitle(res[0].name);
+                }
+                setIsUploading(false);
+            }
+        },
+        onUploadError: (error) => {
+            console.error(error);
+            setIsUploading(false);
+            alert(`Error uploading resource: ${error.message}`);
+        }
+    });
+
+    const { startUpload: startImageUpload } = useUploadThing("courseImage", {
+        onClientUploadComplete: async (res) => {
+            if (res && res[0] && course) {
+                const newImageUrl = res[0].url;
+                // Optimistic Update
+                setCourse({ ...course, imageUrl: newImageUrl });
+                setIsUploading(false);
+
+                // Persist
+                try {
+                    await fetch(`/api/courses/${courseId}`, {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ imageUrl: newImageUrl }),
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        },
+        onUploadError: (error) => {
+            console.error(error);
+            setIsUploading(false);
+            alert(`Error uploading image: ${error.message}`);
+        }
+    });
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (!file) return;
+
+        if (!file) {
+            return;
+        }
 
         // Validations
-        if (file.size > 5 * 1024 * 1024 * 1024) { // 5GB Limit
-            toast.error("El archivo excede el límite de 5GB de Firebase");
+        if (file.size > 2 * 1024 * 1024 * 1024) {
+            toast.error("El archivo excede el límite de 2GB");
             return;
         }
 
         setIsUploading(true);
         setUploadProgress(0);
-        setUploadSpeed("Iniciando...");
+        setUploadSpeed("Calculando...");
         setTimeRemaining("Calculando...");
         lastUploadTime.current = Date.now();
         lastUploadBytes.current = 0;
         activeFileRef.current = file;
 
         try {
-            // Create Storage Ref
-            const storageRef = ref(storage, `courses/${courseId}/lessons/${Date.now()}_${file.name}`);
+            await startVideoUpload([file]);
 
-            // Start Upload Task
-            const uploadTask = uploadBytesResumable(storageRef, file);
-
-            // Listen for state changes, errors, and completion
-            uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                    // Progress
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    setUploadProgress(progress);
-
-                    // Speed & ETA Calculation
-                    const now = Date.now();
-                    const timeDiff = (now - lastUploadTime.current) / 1000; // seconds
-
-                    if (timeDiff >= 1) { // Update every second
-                        const currentBytes = snapshot.bytesTransferred;
-                        const bytesDiff = currentBytes - lastUploadBytes.current;
-
-                        if (bytesDiff > 0) {
-                            const speed = bytesDiff / timeDiff; // bytes/sec
-
-                            // Speed to MB/s
-                            const speedMB = (speed / (1024 * 1024)).toFixed(2);
-                            setUploadSpeed(`${speedMB} MB/s`);
-
-                            // Remaining Time
-                            const remainingBytes = snapshot.totalBytes - currentBytes;
-                            const secondsLeft = remainingBytes / speed;
-
-                            if (isFinite(secondsLeft)) {
-                                if (secondsLeft < 60) {
-                                    setTimeRemaining(`${Math.ceil(secondsLeft)} seg`);
-                                } else {
-                                    const mins = Math.floor(secondsLeft / 60);
-                                    const secs = Math.ceil(secondsLeft % 60);
-                                    setTimeRemaining(`${mins} min ${secs} seg`);
-                                }
-                            }
-
-                            lastUploadTime.current = now;
-                            lastUploadBytes.current = currentBytes;
-                        }
-                    }
-                },
-                (error) => {
-                    // Error
-                    console.error("Firebase Upload Error:", error);
-                    setIsUploading(false);
-                    toast.error(`Error al subir: ${error.message}`);
-                },
-                async () => {
-                    // Success
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
-                    setLessonUrl(downloadURL);
-                    setIsUploading(false);
-                    toast.success("Video subido correctamente");
-                    setLessonDuration(0);
-
-                    // Auto-save logic
-                    if (activeLessonId) {
-                        toast.loading("Guardando video...", { id: "autosave-video" });
-                        fetch(`/api/lessons/${activeLessonId}`, {
-                            method: "PATCH",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                videoUrl: downloadURL,
-                            }),
-                        }).then(async (response) => {
-                            if (response.ok) {
-                                toast.success("Video guardado y vinculado a la clase", { id: "autosave-video" });
-                                fetchCourse();
-                            } else {
-                                toast.error("Error al guardar el video en la base de datos", { id: "autosave-video" });
-                            }
-                        }).catch(err => {
-                            console.error("Auto-save error:", err);
-                            toast.error("Error de conexión al guardar", { id: "autosave-video" });
-                        });
-                    }
-                }
-            );
+            // Note: Success handling is done in onClientUploadComplete
 
         } catch (error: any) {
             console.error("Upload setup error:", error);
+            // Error handling is also done in onUploadError callback of useUploadThing
             setIsUploading(false);
-            toast.error("Error al iniciar la subida");
         }
     };
 
@@ -365,27 +412,7 @@ export default function CourseEditorPage() {
 
         setIsUploading(true);
         try {
-            const storageRef = ref(storage, `courses/${courseId}/resources/${Date.now()}_${file.name}`);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-
-            uploadTask.on(
-                "state_changed",
-                () => { },
-                (error) => {
-                    console.error("Resource upload failed", error);
-                    setIsUploading(false);
-                    toast.error("Error al subir recurso");
-                },
-                async () => {
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
-                    setResourceUrl(downloadURL);
-                    if (!resourceTitle) {
-                        setResourceTitle(file.name);
-                    }
-                    setIsUploading(false);
-                }
-            );
+            await startResourceUpload([file]);
         } catch (error) {
             console.error("Resource upload failed", error);
             setIsUploading(false);
