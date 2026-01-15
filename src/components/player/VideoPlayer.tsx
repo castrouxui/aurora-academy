@@ -132,11 +132,20 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
     }
 
     // ReactPlayer needs a file extension hint for UploadThing URLs
+    // AND: We need to rewrite the domain because utfs.io is returning 404s for this app
     const getPlayableUrl = (originalUrl: string) => {
-        if (originalUrl.includes("utfs.io") && !originalUrl.endsWith(".mp4")) {
-            return `${originalUrl}#.mp4`;
+        let url = originalUrl;
+
+        // Fix for 404s: Replace generic utfs.io with app-specific domain
+        if (url.includes("utfs.io")) {
+            url = url.replace("utfs.io", "ovtcwtlzxz.ufs.sh");
         }
-        return originalUrl;
+
+        // Add format hint for ReactPlayer
+        if ((url.includes("utfs.io") || url.includes("ufs.sh")) && !url.endsWith(".mp4")) {
+            return `${url}#.mp4`;
+        }
+        return url;
     };
 
     // ...
