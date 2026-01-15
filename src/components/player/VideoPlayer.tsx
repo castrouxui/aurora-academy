@@ -131,6 +131,16 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
         );
     }
 
+    // ReactPlayer needs a file extension hint for UploadThing URLs
+    const getPlayableUrl = (originalUrl: string) => {
+        if (originalUrl.includes("utfs.io") && !originalUrl.endsWith(".mp4")) {
+            return `${originalUrl}#.mp4`;
+        }
+        return originalUrl;
+    };
+
+    // ...
+
     return (
         <div
             ref={containerRef}
@@ -149,7 +159,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                 <ReactPlayer
                     key={url}
                     ref={playerRef}
-                    url={url}
+                    url={getPlayableUrl(url)}
                     width="100%"
                     height="100%"
                     playing={isPlaying}
