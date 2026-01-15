@@ -207,6 +207,11 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                 </div>
             )}
 
+            {/* DEBUG OVERLAY */}
+            <div className="absolute top-0 left-0 bg-black/80 text-white text-xs p-2 z-50 pointer-events-none">
+                DEBUG URL: {url}
+            </div>
+
             {/* Error Overlay */}
             {hasError && (
                 <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-30">
