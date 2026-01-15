@@ -12,8 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Upload, X, Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Video, FileText, MoreVertical, Link as LinkIcon, Image as ImageIcon, CheckCircle, AlertCircle, Loader2, FolderPlus, ArrowLeft, Layers, Globe, Eye, EyeOff, UploadCloud, BarChart, Tag, DollarSign, FileVideo, File as FileIcon } from "lucide-react";
 import { toast } from "sonner";
-import { storage } from "@/lib/firebase"; // Import initialized storage
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
 import Link from "next/link";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { useUploadThing } from "@/lib/uploadthing";
@@ -232,6 +231,11 @@ export default function CourseEditorPage() {
     };
 
     // UploadThing Hooks
+    // UploadThing Hooks
+    // We need 'file' in scope for calculation, but it's not available here. 
+    // We'll store the 'activeFile' in a ref or state when upload starts to calculate speed.
+    const activeFileRef = useRef<File | null>(null);
+
     const { startUpload: startVideoUpload } = useUploadThing("chapterVideo", {
         onClientUploadComplete: (res) => {
             if (res && res[0]) {
@@ -242,10 +246,47 @@ export default function CourseEditorPage() {
         onUploadError: (error) => {
             console.error(error);
             setIsUploading(false);
-            alert(`Error uploading video: ${error.message}`);
+            toast.error(`Error uploading video: ${error.message}`);
         },
-        onUploadProgress: (p) => {
-            // Optional: You could update a progress state here
+        onUploadProgress: (progress) => {
+            setUploadProgress(progress);
+
+            // Calculate Speed and ETA if we have the file ref
+            if (activeFileRef.current) {
+                const now = Date.now();
+                const timeDiff = (now - lastUploadTime.current) / 1000; // seconds
+
+                if (timeDiff >= 1) { // Update every second
+                    const fileSize = activeFileRef.current.size;
+                    const currentBytes = (progress / 100) * fileSize;
+                    const bytesDiff = currentBytes - lastUploadBytes.current;
+
+                    if (bytesDiff > 0) {
+                        const speed = bytesDiff / timeDiff; // bytes/sec
+
+                        // Speed to MB/s
+                        const speedMB = (speed / (1024 * 1024)).toFixed(2);
+                        setUploadSpeed(`${speedMB} MB/s`);
+
+                        // Remaining Time
+                        const remainingBytes = fileSize - currentBytes;
+                        const secondsLeft = remainingBytes / speed;
+
+                        if (isFinite(secondsLeft)) {
+                            if (secondsLeft < 60) {
+                                setTimeRemaining(`${Math.ceil(secondsLeft)} seg`);
+                            } else {
+                                const mins = Math.floor(secondsLeft / 60);
+                                const secs = Math.ceil(secondsLeft % 60);
+                                setTimeRemaining(`${mins} min ${secs} seg`);
+                            }
+                        }
+
+                        lastUploadTime.current = now;
+                        lastUploadBytes.current = currentBytes;
+                    }
+                }
+            }
         }
     });
 
@@ -308,70 +349,27 @@ export default function CourseEditorPage() {
 
         setIsUploading(true);
         setUploadProgress(0);
-        setUploadSpeed("");
+        setUploadSpeed("Calculando...");
         setTimeRemaining("Calculando...");
         lastUploadTime.current = Date.now();
         lastUploadBytes.current = 0;
+        activeFileRef.current = file;
 
         try {
-            // Firebase Storage Upload
-            const storagePath = `courses/${params.courseId}/lessons/${Date.now()}_${file.name}`;
-            const fileRef = ref(storage, storagePath);
-            const uploadTask = uploadBytesResumable(fileRef, file);
+            await startVideoUpload([file]);
 
-            uploadTask.on('state_changed',
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    setUploadProgress(Math.round(progress));
+            // Note: UploadThing's startUpload doesn't expose onUploadProgress in the promise config directly in all versions.
+            // However, the hook itself exposes isUploading and we can't easily get granular progress 
+            // without using the Components or check if the hook version supports it.
+            // If the current version doesn't support it in startUpload options, we might rely on the main hook callbacks.
+            // But wait, useUploadThing hook DEFINITION has onUploadProgress. Let's use THAT one instead of passing it to startUpload.
 
-                    // Calculate Speed and ETA
-                    const now = Date.now();
-                    const timeDiff = (now - lastUploadTime.current) / 1000; // seconds
-
-                    if (timeDiff >= 1) { // Update every second to avoid flickering
-                        const bytesDiff = snapshot.bytesTransferred - lastUploadBytes.current;
-                        const speed = bytesDiff / timeDiff; // bytes/sec
-
-                        // Speed to MB/s
-                        const speedMB = (speed / (1024 * 1024)).toFixed(2);
-                        setUploadSpeed(`${speedMB} MB/s`);
-
-                        // Remaining Time
-                        const remainingBytes = snapshot.totalBytes - snapshot.bytesTransferred;
-                        const secondsLeft = remainingBytes / speed;
-
-                        if (isFinite(secondsLeft)) {
-                            if (secondsLeft < 60) {
-                                setTimeRemaining(`${Math.ceil(secondsLeft)} seg`);
-                            } else {
-                                const mins = Math.floor(secondsLeft / 60);
-                                const secs = Math.ceil(secondsLeft % 60);
-                                setTimeRemaining(`${mins} min ${secs} seg`);
-                            }
-                        }
-
-                        lastUploadTime.current = now;
-                        lastUploadBytes.current = snapshot.bytesTransferred;
-                    }
-                },
-                (error) => {
-                    console.error("Upload error:", error);
-                    toast.error("Error al subir el video: " + error.message);
-                    setIsUploading(false);
-                },
-                async () => {
-                    // Upload completed successfully
-                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                    setLessonUrl(downloadURL);
-                    setLessonDuration(0); // Reset duration so new video is re-detected
-                    setIsUploading(false);
-                    toast.success("Video subido correctamente");
-                }
-            );
+            toast.success("Video subido correctamente");
+            setLessonDuration(0); // Reset duration so new video is re-detected
 
         } catch (error: any) {
             console.error("Upload setup error:", error);
-            toast.error("Error al iniciar la subida");
+            // Error handling is also done in onUploadError callback of useUploadThing
             setIsUploading(false);
         }
     };
