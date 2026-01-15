@@ -239,10 +239,34 @@ export default function CourseEditorPage() {
     const { startUpload: startVideoUpload } = useUploadThing("chapterVideo", {
         onClientUploadComplete: (res) => {
             if (res && res[0]) {
-                setLessonUrl(res[0].url);
+                const uploadedUrl = res[0].url;
+                setLessonUrl(uploadedUrl);
                 setIsUploading(false);
                 toast.success("Video subido correctamente");
                 setLessonDuration(0); // Reset duration so new video is re-detected
+
+                // Auto-save if editing an existing lesson
+                if (activeLessonId) {
+                    toast.loading("Guardando video...", { id: "autosave-video" });
+                    fetch(`/api/lessons/${activeLessonId}`, {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            videoUrl: uploadedUrl,
+                        }),
+                    }).then(async (response) => {
+                        if (response.ok) {
+                            toast.success("Video guardado y vinculado a la clase", { id: "autosave-video" });
+                            // Refresh course data to ensure everything is synced
+                            fetchCourse();
+                        } else {
+                            toast.error("Error al guardar el video en la base de datos", { id: "autosave-video" });
+                        }
+                    }).catch(err => {
+                        console.error("Auto-save error:", err);
+                        toast.error("Error de conexión al guardar", { id: "autosave-video" });
+                    });
+                }
             }
         },
         onUploadError: (error) => {
