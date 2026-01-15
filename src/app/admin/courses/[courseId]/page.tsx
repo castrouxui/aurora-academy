@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import dynamic from "next/dynamic";
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false }) as any;
 import { useParams, useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { Upload, X, Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Video, FileText, MoreVertical, Link as LinkIcon, Image as ImageIcon, CheckCircle, AlertCircle, Loader2, FolderPlus, ArrowLeft, Layers, Globe, Eye, EyeOff, UploadCloud, BarChart, Tag, DollarSign, FileVideo, File as FileIcon } from "lucide-react";
 import { toast } from "sonner";
 import { storage } from "@/lib/firebase"; // Import initialized storage
@@ -94,6 +95,12 @@ export default function CourseEditorPage() {
     // Upload State
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadSpeed, setUploadSpeed] = useState("");
+    const [timeRemaining, setTimeRemaining] = useState("");
+
+    // Refs for calculation
+    const lastUploadTime = useRef<number>(0);
+    const lastUploadBytes = useRef<number>(0);
 
     // Price Local State
     const [priceInput, setPriceInput] = useState("");
@@ -301,6 +308,10 @@ export default function CourseEditorPage() {
 
         setIsUploading(true);
         setUploadProgress(0);
+        setUploadSpeed("");
+        setTimeRemaining("Calculando...");
+        lastUploadTime.current = Date.now();
+        lastUploadBytes.current = 0;
 
         try {
             // Firebase Storage Upload
@@ -312,6 +323,36 @@ export default function CourseEditorPage() {
                 (snapshot) => {
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     setUploadProgress(Math.round(progress));
+
+                    // Calculate Speed and ETA
+                    const now = Date.now();
+                    const timeDiff = (now - lastUploadTime.current) / 1000; // seconds
+
+                    if (timeDiff >= 1) { // Update every second to avoid flickering
+                        const bytesDiff = snapshot.bytesTransferred - lastUploadBytes.current;
+                        const speed = bytesDiff / timeDiff; // bytes/sec
+
+                        // Speed to MB/s
+                        const speedMB = (speed / (1024 * 1024)).toFixed(2);
+                        setUploadSpeed(`${speedMB} MB/s`);
+
+                        // Remaining Time
+                        const remainingBytes = snapshot.totalBytes - snapshot.bytesTransferred;
+                        const secondsLeft = remainingBytes / speed;
+
+                        if (isFinite(secondsLeft)) {
+                            if (secondsLeft < 60) {
+                                setTimeRemaining(`${Math.ceil(secondsLeft)} seg`);
+                            } else {
+                                const mins = Math.floor(secondsLeft / 60);
+                                const secs = Math.ceil(secondsLeft % 60);
+                                setTimeRemaining(`${mins} min ${secs} seg`);
+                            }
+                        }
+
+                        lastUploadTime.current = now;
+                        lastUploadBytes.current = snapshot.bytesTransferred;
+                    }
                 },
                 (error) => {
                     console.error("Upload error:", error);
@@ -780,16 +821,21 @@ export default function CourseEditorPage() {
                                                             ${lessonUrl && !getYouTubeId(lessonUrl) ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-gray-700 bg-[#1a1f2e]/30 hover:bg-[#1a1f2e] hover:border-[#5D5CDE]/50'}`}>
 
                                                             {isUploading ? (
-                                                                <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300">
-                                                                    <div className="relative">
-                                                                        <div className="h-12 w-12 rounded-full border-4 border-gray-700"></div>
-                                                                        <div className="absolute top-0 left-0 h-12 w-12 rounded-full border-4 border-[#5D5CDE] border-t-transparent animate-spin"></div>
+                                                                <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-300 w-full max-w-xs">
+                                                                    <div className="w-full space-y-2">
+                                                                        <div className="flex justify-between text-xs text-gray-300">
+                                                                            <span className="font-medium">Subiendo video...</span>
+                                                                            <span>{uploadProgress}%</span>
+                                                                        </div>
+                                                                        <Progress value={uploadProgress} className="h-2 bg-gray-700" />
+                                                                        <div className="flex justify-between text-[10px] text-gray-500">
+                                                                            <span>{uploadSpeed || "Calculando..."}</span>
+                                                                            <span>ETA: {timeRemaining || "..."}</span>
+                                                                        </div>
                                                                     </div>
-                                                                    <div className="text-center">
-                                                                        <p className="text-sm font-medium text-white">Subiendo tu video...</p>
-                                                                        <p className="text-xs text-gray-500 mt-1">Esto puede tardar unos segundos</p>
-                                                                    </div>
+
                                                                 </div>
+
                                                             ) : lessonUrl && !getYouTubeId(lessonUrl) ? (
                                                                 <div className="w-full flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
                                                                     <div className="h-16 w-16 rounded-2xl bg-[#0f1118] flex items-center justify-center border border-gray-700 shadow-lg">
@@ -1091,7 +1137,7 @@ export default function CourseEditorPage() {
                         </div>
                     )}
                 </div>
-            </div>
+            </div >
         </div >
     );
 }
