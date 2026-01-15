@@ -241,6 +241,8 @@ export default function CourseEditorPage() {
             if (res && res[0]) {
                 setLessonUrl(res[0].url);
                 setIsUploading(false);
+                toast.success("Video subido correctamente");
+                setLessonDuration(0); // Reset duration so new video is re-detected
             }
         },
         onUploadError: (error) => {
@@ -358,14 +360,7 @@ export default function CourseEditorPage() {
         try {
             await startVideoUpload([file]);
 
-            // Note: UploadThing's startUpload doesn't expose onUploadProgress in the promise config directly in all versions.
-            // However, the hook itself exposes isUploading and we can't easily get granular progress 
-            // without using the Components or check if the hook version supports it.
-            // If the current version doesn't support it in startUpload options, we might rely on the main hook callbacks.
-            // But wait, useUploadThing hook DEFINITION has onUploadProgress. Let's use THAT one instead of passing it to startUpload.
-
-            toast.success("Video subido correctamente");
-            setLessonDuration(0); // Reset duration so new video is re-detected
+            // Note: Success handling is done in onClientUploadComplete
 
         } catch (error: any) {
             console.error("Upload setup error:", error);
