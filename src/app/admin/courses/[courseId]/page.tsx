@@ -15,7 +15,9 @@ import { toast } from "sonner";
 
 import Link from "next/link";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { useUploadThing } from "@/lib/uploadthing";
+import { useUploadThing } from "@/lib/uploadthing"; // Keep for now if needed, but we are removing usage.
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "@/lib/firebase";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -100,6 +102,7 @@ export default function CourseEditorPage() {
     // Refs for calculation
     const lastUploadTime = useRef<number>(0);
     const lastUploadBytes = useRef<number>(0);
+    const activeFileRef = useRef<File | null>(null);
 
     // Price Local State
     const [priceInput, setPriceInput] = useState("");
@@ -230,18 +233,7 @@ export default function CourseEditorPage() {
         }
     };
 
-    // UploadThing Hooks
-    // UploadThing Hooks
-    // We need 'file' in scope for calculation, but it's not available here. 
-    // We'll store the 'activeFile' in a ref or state when upload starts to calculate speed.
-    // Firebase Import
-    import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-    import { storage } from "@/lib/firebase";
 
-    // ... (rest of imports)
-
-    // NO UploadThing hook needed for manual control
-    // const { startUpload: startVideoUpload } ...
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -362,7 +354,34 @@ export default function CourseEditorPage() {
 
         setIsUploading(true);
         try {
-            await startImageUpload([file]);
+            const storageRef = ref(storage, `courses/${courseId}/images/${Date.now()}_${file.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on(
+                "state_changed",
+                () => { }, // No progress needed for images
+                (error) => {
+                    console.error("Image upload failed", error);
+                    setIsUploading(false);
+                    toast.error("Error al subir imagen");
+                },
+                async () => {
+                    const newImageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                    if (course) {
+                        setCourse({ ...course, imageUrl: newImageUrl });
+                        setIsUploading(false);
+                        try {
+                            await fetch(`/api/courses/${courseId}`, {
+                                method: "PATCH",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ imageUrl: newImageUrl }),
+                            });
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+                }
+            );
         } catch (error) {
             console.error("Image upload failed", error);
             setIsUploading(false);
@@ -375,7 +394,27 @@ export default function CourseEditorPage() {
 
         setIsUploading(true);
         try {
-            await startResourceUpload([file]);
+            const storageRef = ref(storage, `courses/${courseId}/resources/${Date.now()}_${file.name}`);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on(
+                "state_changed",
+                () => { },
+                (error) => {
+                    console.error("Resource upload failed", error);
+                    setIsUploading(false);
+                    toast.error("Error al subir recurso");
+                },
+                async () => {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+                    setResourceUrl(downloadURL);
+                    if (!resourceTitle) {
+                        setResourceTitle(file.name);
+                    }
+                    setIsUploading(false);
+                }
+            );
         } catch (error) {
             console.error("Resource upload failed", error);
             setIsUploading(false);
