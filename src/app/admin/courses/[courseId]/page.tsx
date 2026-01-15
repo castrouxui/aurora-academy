@@ -15,9 +15,7 @@ import { toast } from "sonner";
 
 import Link from "next/link";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { useUploadThing } from "@/lib/uploadthing"; // Keep for now if needed, but we are removing usage.
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { storage } from "@/lib/firebase";
+import { useUploadThing } from "@/lib/uploadthing";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -354,34 +352,7 @@ export default function CourseEditorPage() {
 
         setIsUploading(true);
         try {
-            const storageRef = ref(storage, `courses/${courseId}/images/${Date.now()}_${file.name}`);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-
-            uploadTask.on(
-                "state_changed",
-                () => { }, // No progress needed for images
-                (error) => {
-                    console.error("Image upload failed", error);
-                    setIsUploading(false);
-                    toast.error("Error al subir imagen");
-                },
-                async () => {
-                    const newImageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                    if (course) {
-                        setCourse({ ...course, imageUrl: newImageUrl });
-                        setIsUploading(false);
-                        try {
-                            await fetch(`/api/courses/${courseId}`, {
-                                method: "PATCH",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ imageUrl: newImageUrl }),
-                            });
-                        } catch (e) {
-                            console.error(e);
-                        }
-                    }
-                }
-            );
+            await startImageUpload([file]);
         } catch (error) {
             console.error("Image upload failed", error);
             setIsUploading(false);
