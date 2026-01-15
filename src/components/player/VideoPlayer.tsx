@@ -233,6 +233,10 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                         <p className="text-xs text-gray-500 max-w-[200px] mx-auto">
                             Video no disponible o privado.
                         </p>
+                        {/* DEBUG LINK FOR USER */}
+                        <a href={url.replace("#.mp4", "")} target="_blank" rel="noopener noreferrer" className="block mt-4 text-blue-400 hover:text-blue-300 underline z-50 pointer-events-auto">
+                            PROBAR ENLACE DIRECTO
+                        </a>
                     </div>
                 </div>
             )}
