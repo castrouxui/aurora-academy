@@ -287,15 +287,11 @@ export default function CourseEditorPage() {
     });
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("handleFileUpload trigger");
         const file = e.target.files?.[0];
 
         if (!file) {
-            console.log("No file selected");
             return;
         }
-
-        toast.info(`Archivo seleccionado: ${file.name}`);
 
         // Validations
         if (file.size > 2 * 1024 * 1024 * 1024) {
@@ -305,10 +301,8 @@ export default function CourseEditorPage() {
 
         setIsUploading(true);
         setUploadProgress(0);
-        toast.loading("Iniciando subida...", { id: "upload-toast" });
 
         try {
-            console.log("Starting Firebase upload...");
             // Firebase Storage Upload
             const storagePath = `courses/${params.courseId}/lessons/${Date.now()}_${file.name}`;
             const fileRef = ref(storage, storagePath);
@@ -321,14 +315,11 @@ export default function CourseEditorPage() {
                 },
                 (error) => {
                     console.error("Upload error:", error);
-                    toast.dismiss("upload-toast");
                     toast.error("Error al subir el video: " + error.message);
                     setIsUploading(false);
                 },
                 async () => {
                     // Upload completed successfully
-                    console.log("Upload complete");
-                    toast.dismiss("upload-toast");
                     const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
                     setLessonUrl(downloadURL);
                     setLessonDuration(0); // Reset duration so new video is re-detected
@@ -339,8 +330,7 @@ export default function CourseEditorPage() {
 
         } catch (error: any) {
             console.error("Upload setup error:", error);
-            toast.dismiss("upload-toast");
-            toast.error("Error crítico: " + (error?.message || "Desconocido"));
+            toast.error("Error al iniciar la subida");
             setIsUploading(false);
         }
     };
