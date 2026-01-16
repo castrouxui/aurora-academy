@@ -157,7 +157,12 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
             onContextMenu={(e) => e.preventDefault()} // Block context menu
         >
             {/* Click Overlay to toggle play/pause */}
-
+            <div
+                className="absolute inset-0 z-10 cursor-pointer"
+                onClick={handlePlayPause}
+            >
+                {/* Prevent context menu on overlay too */}
+            </div>
 
             <div className="absolute inset-0 z-0">
                 <ReactPlayer
@@ -170,7 +175,12 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     volume={volume}
                     muted={muted}
                     onProgress={handleProgress}
-                    onDuration={setDuration}
+                    onDuration={(d: number) => {
+                        setDuration(d);
+                        setIsLoading(false);
+                    }}
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
                     config={{
                         youtube: {
                             playerVars: {
@@ -180,7 +190,8 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                                 rel: 0,
                                 disablekb: 1,
                                 iv_load_policy: 3,
-                                fs: 0
+                                fs: 0,
+                                origin: typeof window !== 'undefined' ? window.location.origin : undefined
                             }
                         },
                         file: {
