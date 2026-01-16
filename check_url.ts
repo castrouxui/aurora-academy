@@ -3,15 +3,12 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log("Searching for courses with 'Mentoria'...");
+    const targetId = "cmkb3mgzw0000d3a47s50rk9t";
+    console.log(`Checking ID: ${targetId}`);
 
-    const courses = await prisma.course.findMany({
-        where: {
-            title: {
-                contains: "Mentoria",
-                // mode: 'insensitive' // SQLite doesn't support generic insensitive, but let's try basic
-            }
-        },
+    // Check if it's a Course
+    const course = await prisma.course.findUnique({
+        where: { id: targetId },
         include: {
             modules: {
                 include: {
@@ -21,21 +18,33 @@ async function main() {
         }
     });
 
-    if (courses.length === 0) {
-        console.log("No courses found.");
-    }
+    if (course) {
+        console.log("=== FOUND COURSE ===");
+        console.log(`Course Title: ${course.title}`);
 
-    courses.forEach((c: any) => {
-        console.log(`Course Found: "${c.title}" (ID: ${c.id})`);
-        c.modules.forEach((m: any) => {
-            console.log(`  Module: ${m.title}`);
-            m.lessons.forEach((l: any) => {
-                console.log(`    - Lesson: ${l.title} (ID: ${l.id})`);
-                console.log(`      URL: ${l.videoUrl}`);
+        course.modules.forEach((mod: any) => {
+            console.log(`Module: ${mod.title}`);
+            mod.lessons.forEach((l: any) => {
+                console.log(`  - Lesson: ${l.title} (ID: ${l.id})`);
+                console.log(`    URL: ${l.videoUrl}`);
             });
         });
-        console.log("------------------------------------------------");
+        return;
+    }
+
+    // Check if it's a Lesson
+    const lesson = await prisma.lesson.findUnique({
+        where: { id: targetId }
     });
+
+    if (lesson) {
+        console.log("=== FOUND LESSON ===");
+        console.log(`Title: ${lesson.title}`);
+        console.log(`URL: ${lesson.videoUrl}`);
+        return;
+    }
+
+    console.log("ID not found in Course or Lesson tables.");
 }
 
 main()

@@ -157,12 +157,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
             onContextMenu={(e) => e.preventDefault()} // Block context menu
         >
             {/* Click Overlay to toggle play/pause */}
-            <div
-                className="absolute inset-0 z-10 cursor-pointer"
-                onClick={handlePlayPause}
-            >
-                {/* Prevent context menu on overlay too */}
-            </div>
+
 
             <div className="absolute inset-0 z-0">
                 <ReactPlayer
