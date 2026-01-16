@@ -141,6 +141,14 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
     // ReactPlayer needs a file extension hint for UploadThing URLs
     // AND: We need to rewrite the domain because utfs.io is returning 404s for this app
     const getPlayableUrl = (originalUrl: string) => {
+        if (!originalUrl) return "";
+
+        // Check if it's a YouTube video first
+        const youtubeId = getYouTubeId(originalUrl);
+        if (youtubeId) {
+            return `https://www.youtube.com/watch?v=${youtubeId}`;
+        }
+
         let url = originalUrl;
 
         // Fix for 404s: Replace generic utfs.io with app-specific domain

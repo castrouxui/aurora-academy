@@ -3,7 +3,24 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-    const targetId = "cmkb3mgzw0000d3a47s50rk9t";
+    const targetId = process.argv[2];
+
+    if (!targetId) {
+        console.log("No ID provided. Listing recent lessons to help you find one:");
+        const lessons = await prisma.lesson.findMany({
+            take: 5,
+            orderBy: { createdAt: 'desc' }
+        });
+        lessons.forEach((l: any) => {
+            console.log(`ID: ${l.id}`);
+            console.log(`Title: ${l.title}`);
+            console.log(`URL: ${l.videoUrl}`);
+            console.log("---");
+        });
+        console.log("\nUsage: npx ts-node check_url.ts <ID>");
+        return;
+    }
+
     console.log(`Checking ID: ${targetId}`);
 
     // Check if it's a Course
