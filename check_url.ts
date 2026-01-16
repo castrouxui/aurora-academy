@@ -1,22 +1,44 @@
 
-import { prisma } from "./src/lib/prisma";
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-async function checkLesson() {
-    const lessons = await prisma.lesson.findMany({
-        take: 10,
-        orderBy: { updatedAt: 'desc' },
-        select: {
-            id: true,
-            title: true,
-            videoUrl: true,
-            updatedAt: true
+async function main() {
+    console.log("Searching for courses with 'Mentoria'...");
+
+    const courses = await prisma.course.findMany({
+        where: {
+            title: {
+                contains: "Mentoria",
+                // mode: 'insensitive' // SQLite doesn't support generic insensitive, but let's try basic
+            }
+        },
+        include: {
+            modules: {
+                include: {
+                    lessons: true
+                }
+            }
         }
     });
 
-    console.log("Found Lessons:", JSON.stringify(lessons, null, 2));
+    if (courses.length === 0) {
+        console.log("No courses found.");
+    }
+
+    courses.forEach((c: any) => {
+        console.log(`Course Found: "${c.title}" (ID: ${c.id})`);
+        c.modules.forEach((m: any) => {
+            console.log(`  Module: ${m.title}`);
+            m.lessons.forEach((l: any) => {
+                console.log(`    - Lesson: ${l.title} (ID: ${l.id})`);
+                console.log(`      URL: ${l.videoUrl}`);
+            });
+        });
+        console.log("------------------------------------------------");
+    });
 }
 
-checkLesson()
+main()
     .then(() => process.exit(0))
     .catch((e) => {
         console.error(e);

@@ -823,7 +823,7 @@ export default function CourseEditorPage() {
                                                     )}
                                                 </div>
 
-                                                <Tabs defaultValue="upload" className="w-full">
+                                                <Tabs defaultValue="url" className="w-full">
                                                     <TabsList className="grid w-full grid-cols-2 mb-4 bg-[#1a1f2e] border border-gray-800">
                                                         <TabsTrigger value="upload" className="data-[state=active]:bg-[#5D5CDE] data-[state=active]:text-white text-gray-400">
                                                             <UploadCloud size={16} className="mr-2" /> Subir Archivo
