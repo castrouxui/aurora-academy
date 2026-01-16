@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { cn, getYouTubeId, formatDuration } from '@/lib/utils';
 import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { CoursePlayerClient } from "./CoursePlayerClient";
@@ -67,23 +67,21 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
         select: { lessonId: true }
     }) : [];
 
-    const completedLessonIds = new Set(userProgress.map(p => p.lessonId));
+    const completedLessonIds = new Set(userProgress.map((p: { lessonId: string }) => p.lessonId));
 
     // Transform for client component
     // We map generic lesson fields to our frontend interface
     const clientCourse = {
         id: course.id,
         title: course.title,
-        modules: course.modules.map(mod => ({
+        modules: course.modules.map((mod: any) => ({
             id: mod.id,
             title: mod.title,
-            lessons: mod.lessons.map(lesson => ({
+            lessons: mod.lessons.map((lesson: any) => ({
                 id: lesson.id,
                 title: lesson.title,
                 description: lesson.description || "",
-                duration: lesson.duration
-                    ? `${Math.floor(lesson.duration / 60)}:${Math.floor(lesson.duration % 60).toString().padStart(2, '0')}`
-                    : "00:00",
+                duration: formatDuration(lesson.duration),
                 completed: completedLessonIds.has(lesson.id),
                 type: "video" as const,
                 current: false,

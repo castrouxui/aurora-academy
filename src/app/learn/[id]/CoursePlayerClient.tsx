@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Play, CheckCircle, Lock, MonitorPlay, FileText, MessageSquare, Download, Trophy, ChevronLeft } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatDuration } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CertificateModal } from "@/components/certificates/CertificateModal";
 import { VideoPlayer } from "@/components/player/VideoPlayer";
@@ -135,9 +135,7 @@ export function CoursePlayerClient({ course, isAccess, studentName }: CoursePlay
                                                 ...m,
                                                 lessons: m.lessons.map(l => {
                                                     if (l.id === activeLesson.id) {
-                                                        const mins = Math.floor(newDuration / 60);
-                                                        const secs = Math.floor(newDuration % 60).toString().padStart(2, '0');
-                                                        return { ...l, duration: `${mins}:${secs}` };
+                                                        return { ...l, duration: formatDuration(newDuration) };
                                                     }
                                                     return l;
                                                 })
