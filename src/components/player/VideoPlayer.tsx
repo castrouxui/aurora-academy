@@ -21,9 +21,10 @@ interface VideoPlayerProps {
     courseId?: string;
     onComplete?: () => void;
     onPurchase?: () => void;
+    onDuration?: (duration: number) => void;
 }
 
-export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, courseId, onComplete, onPurchase }: VideoPlayerProps) {
+export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, courseId, onComplete, onPurchase, onDuration }: VideoPlayerProps) {
     const playerRef = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [hasWindow, setHasWindow] = useState(false);
@@ -177,6 +178,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     onDuration={(d: number) => {
                         setDuration(d);
                         setIsLoading(false);
+                        if (onDuration) onDuration(d);
                     }}
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}

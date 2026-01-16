@@ -125,6 +125,32 @@ export function CoursePlayerClient({ course, isAccess, studentName }: CoursePlay
                                     isLocked={isCurrentLessonLocked || false}
                                     previewMode={isPreviewMode}
                                     courseId={course.id}
+                                    onDuration={(d: number) => {
+                                        // Auto-update duration if it's currently 0 (00:00)
+                                        if (activeLesson.duration === "00:00" && d > 0) {
+                                            const newDuration = Math.floor(d);
+
+                                            // Optimistic update
+                                            setLocalModules(prev => prev.map(m => ({
+                                                ...m,
+                                                lessons: m.lessons.map(l => {
+                                                    if (l.id === activeLesson.id) {
+                                                        const mins = Math.floor(newDuration / 60);
+                                                        const secs = Math.floor(newDuration % 60).toString().padStart(2, '0');
+                                                        return { ...l, duration: `${mins}:${secs}` };
+                                                    }
+                                                    return l;
+                                                })
+                                            })));
+
+                                            // API persist
+                                            fetch(`/api/lessons/${activeLesson.id}`, {
+                                                method: "PATCH",
+                                                headers: { "Content-Type": "application/json" },
+                                                body: JSON.stringify({ duration: newDuration })
+                                            }).catch(err => console.error("Failed to update duration", err));
+                                        }
+                                    }}
                                 />
                             ) : (
                                 <div className="aspect-video bg-gray-900 flex items-center justify-center text-gray-400">
