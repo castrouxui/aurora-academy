@@ -42,6 +42,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
 
     useEffect(() => {
         setHasWindow(true);
+        console.log("[VideoPlayer] RECEIVED URL:", url);
         // Timeout fallback for loading state
         const timer = setTimeout(() => {
             setIsLoading(false);
@@ -117,36 +118,17 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
         setIsLoading(false);
     };
 
-    if (!hasWindow) return null;
-
-    if (isLocked) {
-        return (
-            <div className="relative aspect-video bg-black rounded-lg overflow-hidden border border-gray-800 flex items-center justify-center">
-                {thumbnail && (
-                    <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: `url(${thumbnail})` }}></div>
-                )}
-                <div className="z-10 text-center p-4">
-                    <Lock className="w-12 h-12 text-white/50 mx-auto mb-2" />
-                    <p className="text-white font-bold">Contenido Bloqueado</p>
-                    {onPurchase && (
-                        <Button variant="link" onClick={onPurchase} className="text-[#5D5CDE] mt-2">
-                            Desbloquear
-                        </Button>
-                    )}
-                </div>
-            </div>
-        );
-    }
-
-    // ReactPlayer needs a file extension hint for UploadThing URLs
-    // AND: We need to rewrite the domain because utfs.io is returning 404s for this app
     const getPlayableUrl = (originalUrl: string) => {
         if (!originalUrl) return "";
+
+        console.log("[VideoPlayer] Processing URL:", originalUrl);
 
         // Check if it's a YouTube video first
         const youtubeId = getYouTubeId(originalUrl);
         if (youtubeId) {
-            return `https://www.youtube.com/watch?v=${youtubeId}`;
+            const ytUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
+            console.log("[VideoPlayer] Detected YouTube ID:", youtubeId, "->", ytUrl);
+            return ytUrl;
         }
 
         let url = originalUrl;
@@ -160,6 +142,8 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
         if ((url.includes("utfs.io") || url.includes("ufs.sh")) && !url.endsWith(".mp4")) {
             return `${url}#.mp4`;
         }
+
+        console.log("[VideoPlayer] Final Playable URL:", url);
         return url;
     };
 
