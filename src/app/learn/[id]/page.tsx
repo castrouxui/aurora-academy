@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import { cn, getYouTubeId, formatDuration } from '@/lib/utils';
 import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
