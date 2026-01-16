@@ -90,11 +90,18 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
         }))
     };
 
+    // 4. Determine Back Link
+    const userRole = session?.user?.role;
+    const backLink = (userRole === "ADMIN" || userRole === "INSTRUCTOR")
+        ? "/admin/courses"
+        : "/dashboard/courses";
+
     return (
         <CoursePlayerClient
             course={clientCourse}
             isAccess={isAccess}
             studentName={session?.user?.name || "Invitado"}
+            backLink={backLink}
         />
     );
 }

@@ -35,9 +35,10 @@ interface CoursePlayerProps {
     };
     isAccess: boolean; // Does user own this course?
     studentName: string;
+    backLink: string;
 }
 
-export function CoursePlayerClient({ course, isAccess, studentName }: CoursePlayerProps) {
+export function CoursePlayerClient({ course, isAccess, studentName, backLink }: CoursePlayerProps) {
     const [activeTab, setActiveTab] = useState("description");
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [isCertificateOpen, setIsCertificateOpen] = useState(false);
@@ -106,7 +107,7 @@ export function CoursePlayerClient({ course, isAccess, studentName }: CoursePlay
                     {/* Breadcrumb Navigation */}
                     <div className="px-6 py-4 text-sm text-gray-400 border-b border-gray-800 bg-[#0B0F19]">
                         <div className="max-w-5xl mx-auto w-full flex items-center gap-2">
-                            <Link href="/dashboard/courses" className="flex items-center gap-1 hover:text-white transition-colors">
+                            <Link href={backLink} className="flex items-center gap-1 hover:text-white transition-colors">
                                 <ChevronLeft size={16} />
                                 Mis Cursos
                             </Link>
@@ -116,7 +117,7 @@ export function CoursePlayerClient({ course, isAccess, studentName }: CoursePlay
                     </div>
 
                     {/* Video Player Container */}
-                    <div className="bg-black w-full flex justify-center bg-[#050505]">
+                    <div className="bg-black w-full flex justify-center bg-[#050505] py-10">
                         <div className="w-full max-w-5xl">
                             {activeLesson ? (
                                 <VideoPlayer
