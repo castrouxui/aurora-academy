@@ -59,6 +59,13 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
     }, []);
 
     const handlePlayPause = () => {
+        // Force synchronous play for YouTube to satisfy browser autoplay policies
+        if (!isPlaying && playerRef.current) {
+            const internalPlayer = playerRef.current.getInternalPlayer('youtube');
+            if (internalPlayer && typeof internalPlayer.playVideo === 'function') {
+                internalPlayer.playVideo();
+            }
+        }
         setIsPlaying(!isPlaying);
     };
 
