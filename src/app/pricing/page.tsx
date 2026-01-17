@@ -112,7 +112,7 @@ export default function PricingPage() {
                                                 key={bundle.id}
                                                 title={displayTitle}
                                                 price={`$${bundlePrice.toLocaleString('es-AR')}`}
-                                                periodicity="único"
+                                                periodicity="mes"
                                                 tag={tag}
                                                 description={
                                                     <div className="flex flex-col gap-2 h-8 justify-center">

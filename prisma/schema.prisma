@@ -43,7 +43,9 @@ model User {
   accounts      Account[]
   purchases     Purchase[]
   sessions      Session[]
+  sessions      Session[]
   progress      UserProgress[]
+  subscriptions Subscription[]
 }
 
 model UserProgress {
@@ -96,7 +98,9 @@ model Bundle {
   updatedAt   DateTime   @updatedAt
   courses     Course[]
   items       MembershipItem[]
+  items       MembershipItem[]
   purchases   Purchase[]
+  subscriptions Subscription[]
 }
 
 model MembershipItem {
@@ -109,6 +113,24 @@ model MembershipItem {
   updatedAt DateTime @updatedAt
   bundle    Bundle   @relation(fields: [bundleId], references: [id], onDelete: Cascade)
 
+  bundle    Bundle   @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+
+  @@index([bundleId])
+}
+
+model Subscription {
+  id             String   @id @default(cuid())
+  userId         String
+  bundleId       String
+  mercadoPagoId  String   @unique // preapproval_id
+  status         String   // pending, authorized, paused, cancelled
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bundle         Bundle   @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
   @@index([bundleId])
 }
 
