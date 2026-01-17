@@ -102,9 +102,29 @@ export default function PricingPage() {
                                             title={bundle.title}
                                             price={`$${bundlePrice.toLocaleString('es-AR')}`}
                                             periodicity="único"
-                                            students={bundle.description || "Acceso Completo"} // Use description as subtitle
+                                            description={
+                                                <div className="flex flex-col gap-2">
+                                                    {/* Render description items if formatted with newlines or bullets */}
+                                                    {bundle.description ? (
+                                                        <div className="text-gray-300 leading-relaxed">
+                                                            {bundle.description.split(/[\n•°]/).map((line: string, i: number) =>
+                                                                line.trim() ? <p key={i} className="mb-1">{line.trim()}</p> : null
+                                                            )}
+                                                        </div>
+                                                    ) : (
+                                                        <p>Acceso Completo</p>
+                                                    )}
+
+                                                    {/* Savings Highlight */}
+                                                    {savings > 0 && (
+                                                        <div className="mt-2 text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 text-xs uppercase tracking-wide shadow-[0_0_10px_rgba(52,211,153,0.1)]">
+                                                            ¡Ahorras ${savings.toLocaleString('es-AR')}!
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            }
                                             features={features}
-                                            isRecommended={false} // logic can be added later if needed
+                                            isRecommended={false}
                                             buttonText="Obtener Oferta"
                                             onAction={() => handlePurchase(bundle.title, bundle.price.toString(), undefined, bundle.id)}
                                         />

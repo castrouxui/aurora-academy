@@ -7,7 +7,7 @@ interface PricingCardProps {
     title: string;
     price: string;
     periodicity: string;
-    students: string;
+    description: React.ReactNode;
     features: string[];
     isRecommended?: boolean;
     buttonText?: string;
@@ -15,13 +15,11 @@ interface PricingCardProps {
     className?: string; // Allow custom classes
 }
 
-// ... props interface remains same
-
 export function PricingCard({
     title,
     price,
     periodicity,
-    students,
+    description,
     features,
     isRecommended = false,
     buttonText = "Suscribirse",
@@ -54,7 +52,9 @@ export function PricingCard({
                         ARS / {periodicity}
                     </span>
                 </div>
-                <p className="mt-2 text-sm text-gray-400 font-medium">{students}</p>
+                <div className="mt-4 text-sm text-gray-400 font-medium space-y-2">
+                    {description}
+                </div>
             </div>
 
             <ul className="mb-8 flex-1 space-y-4">
