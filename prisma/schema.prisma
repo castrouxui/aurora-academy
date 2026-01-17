@@ -111,8 +111,6 @@ model MembershipItem {
   updatedAt DateTime @updatedAt
   bundle    Bundle   @relation(fields: [bundleId], references: [id], onDelete: Cascade)
 
-  bundle    Bundle   @relation(fields: [bundleId], references: [id], onDelete: Cascade)
-
   @@index([bundleId])
 }
 
