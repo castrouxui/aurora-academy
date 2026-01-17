@@ -97,7 +97,23 @@ export default function MyMembershipsPage() {
                                 <div className="p-6 md:p-8 flex flex-col md:flex-row gap-8">
                                     <div className="flex-1 space-y-4">
                                         <div className="flex items-center gap-3">
-                                            <Badge className="bg-[#5D5CDE]/20 text-[#bebeff] border-0">Activo</Badge>
+                                            {(() => {
+                                                const sub = bundle.subscriptions?.[0];
+                                                const status = sub?.status || 'active'; // Default to active if purchased via legacy/one-time
+
+                                                let badgeStyle = "bg-[#5D5CDE]/20 text-[#bebeff] border-0";
+                                                let statusText = "Activo";
+
+                                                if (status === 'paused') {
+                                                    badgeStyle = "bg-yellow-500/20 text-yellow-400 border-0";
+                                                    statusText = "Pago Pendiente";
+                                                } else if (status === 'cancelled') {
+                                                    badgeStyle = "bg-red-500/20 text-red-400 border-0";
+                                                    statusText = "Cancelado";
+                                                }
+
+                                                return <Badge className={badgeStyle}>{statusText}</Badge>;
+                                            })()}
                                             <h2 className="text-2xl font-bold text-white">{bundle.title}</h2>
                                         </div>
                                         <p className="text-gray-400">{bundle.description}</p>

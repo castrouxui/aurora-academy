@@ -67,7 +67,10 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 setIsLoading(true);
                 setInitError(null); // Reset error
                 try {
-                    const response = await fetch('/api/payment/create-preference', {
+                    // Determine endpoint based on bundleId presence
+                    const endpoint = bundleId ? '/api/payment/create-subscription' : '/api/payment/create-preference';
+
+                    const response = await fetch(endpoint, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -78,7 +81,8 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             quantity: 1,
                             courseId: courseId,
                             bundleId: bundleId,
-                            userId: effectiveUserId
+                            userId: effectiveUserId,
+                            email: session?.user?.email // Pass email for subscription
                         }),
                     });
 

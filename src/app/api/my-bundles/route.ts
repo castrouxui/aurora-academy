@@ -21,7 +21,11 @@ export async function GET() {
                 bundle: {
                     include: {
                         courses: true,
-                        items: true
+                        items: true,
+                        subscriptions: {
+                            where: { userId: session.user.id },
+                            take: 1
+                        }
                     } as any
                 }
             },
