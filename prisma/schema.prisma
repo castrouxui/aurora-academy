@@ -43,7 +43,6 @@ model User {
   accounts      Account[]
   purchases     Purchase[]
   sessions      Session[]
-  sessions      Session[]
   progress      UserProgress[]
   subscriptions Subscription[]
 }
@@ -97,7 +96,6 @@ model Bundle {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   courses     Course[]
-  items       MembershipItem[]
   items       MembershipItem[]
   purchases   Purchase[]
   subscriptions Subscription[]
