@@ -84,52 +84,53 @@ export default function PricingPage() {
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12">
-                                {bundles.map((bundle) => {
-                                    // Calculate savings
-                                    const totalValue = bundle.courses.reduce((sum: number, course: any) => sum + parseFloat(course.price), 0);
-                                    const bundlePrice = parseFloat(bundle.price);
-                                    const savings = totalValue - bundlePrice;
+                                {bundles
+                                    .sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
+                                    .map((bundle) => {
+                                        // Calculate savings
+                                        const totalValue = bundle.courses.reduce((sum: number, course: any) => sum + parseFloat(course.price), 0);
+                                        const bundlePrice = parseFloat(bundle.price);
+                                        const savings = totalValue - bundlePrice;
 
-                                    // Combine features: Course Titles + Membership Items
-                                    const features = [
-                                        ...bundle.courses.map((c: any) => c.title),
-                                        ...bundle.items.map((i: any) => i.name)
-                                    ];
+                                        // Extract tag from title (e.g. "Title (Tag Content)")
+                                        let displayTitle = bundle.title;
+                                        let tag = undefined;
+                                        const match = bundle.title.match(/\((.*?)\)/);
+                                        if (match) {
+                                            tag = match[1]; // Get content inside parenthesis
+                                            displayTitle = bundle.title.replace(/\(.*?\)/, '').trim(); // Remove tag from title
+                                        }
 
-                                    return (
-                                        <PricingCard
-                                            key={bundle.id}
-                                            title={bundle.title}
-                                            price={`$${bundlePrice.toLocaleString('es-AR')}`}
-                                            periodicity="único"
-                                            description={
-                                                <div className="flex flex-col gap-2">
-                                                    {/* Render description items if formatted with newlines or bullets */}
-                                                    {bundle.description ? (
-                                                        <div className="text-gray-300 leading-relaxed">
-                                                            {bundle.description.split(/[\n•°]/).map((line: string, i: number) =>
-                                                                line.trim() ? <p key={i} className="mb-1">{line.trim()}</p> : null
-                                                            )}
-                                                        </div>
-                                                    ) : (
-                                                        <p>Acceso Completo</p>
-                                                    )}
+                                        // Combine features: Course Titles + Membership Items
+                                        const features = [
+                                            ...bundle.courses.map((c: any) => c.title),
+                                            ...bundle.items.map((i: any) => i.name)
+                                        ];
 
-                                                    {/* Savings Highlight */}
-                                                    {savings > 0 && (
-                                                        <div className="mt-2 text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 text-xs uppercase tracking-wide shadow-[0_0_10px_rgba(52,211,153,0.1)]">
-                                                            ¡Ahorras ${savings.toLocaleString('es-AR')}!
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            }
-                                            features={features}
-                                            isRecommended={false}
-                                            buttonText="Obtener Oferta"
-                                            onAction={() => handlePurchase(bundle.title, bundle.price.toString(), undefined, bundle.id)}
-                                        />
-                                    );
-                                })}
+                                        return (
+                                            <PricingCard
+                                                key={bundle.id}
+                                                title={displayTitle}
+                                                price={`$${bundlePrice.toLocaleString('es-AR')}`}
+                                                periodicity="único"
+                                                tag={tag}
+                                                description={
+                                                    <div className="flex flex-col gap-2 h-8 justify-center">
+                                                        {/* Savings Highlight Only - Description text removed as requested */}
+                                                        {savings > 0 && (
+                                                            <div className="text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 text-xs uppercase tracking-wide shadow-[0_0_10px_rgba(52,211,153,0.1)]">
+                                                                ¡Ahorras ${savings.toLocaleString('es-AR')}!
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                }
+                                                features={features}
+                                                isRecommended={false}
+                                                buttonText="Obtener Oferta"
+                                                onAction={() => handlePurchase(bundle.title, bundle.price.toString(), undefined, bundle.id)}
+                                            />
+                                        );
+                                    })}
                             </div>
                         )
                     }

@@ -10,6 +10,7 @@ interface PricingCardProps {
     description: React.ReactNode;
     features: string[];
     isRecommended?: boolean;
+    tag?: string;
     buttonText?: string;
     onAction?: () => void;
     className?: string; // Allow custom classes
@@ -22,6 +23,7 @@ export function PricingCard({
     description,
     features,
     isRecommended = false,
+    tag,
     buttonText = "Suscribirse",
     onAction,
     className,
@@ -36,9 +38,12 @@ export function PricingCard({
                 className
             )}
         >
-            {isRecommended && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-[#5D5CDE] px-4 py-1.5 text-xs font-bold text-white shadow-lg uppercase tracking-wide">
-                    Recomendado
+            {(isRecommended || tag) && (
+                <div className={cn(
+                    "absolute -top-4 left-1/2 -translate-x-1/2 rounded-full px-4 py-1.5 text-xs font-bold text-white shadow-lg uppercase tracking-wide whitespace-nowrap",
+                    isRecommended ? "bg-[#5D5CDE]" : "bg-emerald-500"
+                )}>
+                    {tag || "Recomendado"}
                 </div>
             )}
 
