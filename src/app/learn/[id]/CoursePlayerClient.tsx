@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
-import { Play, CheckCircle, Lock, MonitorPlay, FileText, MessageSquare, Download, Trophy, ChevronLeft } from "lucide-react";
+import { Play, CheckCircle, Lock, MonitorPlay, FileText, MessageSquare, Download, Trophy, ChevronLeft, FolderPlus, File as FileIcon } from "lucide-react";
 import { cn, formatDuration } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CertificateModal } from "@/components/certificates/CertificateModal";
@@ -19,6 +19,7 @@ interface Lesson {
     current?: boolean;
     locked?: boolean;
     videoUrl?: string;
+    resources?: { id: string; title: string; url: string; type: string }[];
 }
 
 interface Module {
@@ -225,20 +226,46 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                         <p>Tus apuntes personales para esta clase irán aquí.</p>
                                     </div>
                                 )}
-                                {activeTab === "resources" && (
+                                {activeTab === "resources" && activeLesson && (
                                     <div className="space-y-3">
-                                        <div className="flex items-center justify-between p-4 rounded-lg bg-card/40 border border-gray-800 hover:border-gray-700 transition-colors cursor-pointer">
-                                            <div className="flex items-center gap-3">
-                                                <div className="p-2 rounded bg-blue-500/10 text-blue-400">
-                                                    <Download size={20} />
+                                        {activeLesson.resources && activeLesson.resources.length > 0 ? (
+                                            activeLesson.resources.map((resource: any) => (
+                                                <div key={resource.id} className="flex items-center justify-between p-4 rounded-lg bg-card/40 border border-gray-800 hover:border-gray-700 transition-colors group">
+                                                    <div className="flex items-center gap-3 overflow-hidden">
+                                                        <div className="p-2 rounded bg-blue-500/10 text-blue-400 shrink-0">
+                                                            {resource.type === 'PDF' ? <FileText size={20} /> : <Download size={20} />}
+                                                        </div>
+                                                        <div className="min-w-0">
+                                                            <p className="font-medium text-gray-200 truncate">{resource.title}</p>
+                                                            <p className="text-xs text-gray-500 flex items-center gap-1">
+                                                                <span className="uppercase">{resource.type || 'Archivo'}</span>
+                                                                <span>•</span>
+                                                                <span className="truncate max-w-[200px] opacity-70">{resource.url}</span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <a
+                                                        href={resource.url}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="ml-4 flex items-center gap-2 bg-[#1F2937] hover:bg-white hover:text-black text-xs font-bold py-2 px-4 rounded-lg transition-all"
+                                                    >
+                                                        <Download size={14} />
+                                                        <span className="hidden sm:inline">Abrir</span>
+                                                    </a>
                                                 </div>
-                                                <div>
-                                                    <p className="font-medium text-gray-200">Recursos de la clase</p>
-                                                    <p className="text-xs text-gray-500">Próximamente</p>
+                                            ))
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center py-16 text-center border border-dashed border-gray-800 rounded-xl bg-gray-900/30">
+                                                <div className="bg-gray-800/50 p-4 rounded-full mb-3">
+                                                    <FolderPlus className="h-8 w-8 text-gray-600" />
                                                 </div>
+                                                <p className="text-gray-300 font-medium">No hay recursos disponibles</p>
+                                                <p className="text-sm text-gray-500 mt-1 max-w-sm">
+                                                    Esta clase no tiene archivos adjuntos o material complementario por el momento.
+                                                </p>
                                             </div>
-                                            <Button variant="ghost" size="sm" disabled>Descargar</Button>
-                                        </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
