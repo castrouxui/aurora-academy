@@ -95,7 +95,21 @@ model Bundle {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   courses     Course[]
+  items       MembershipItem[]
   purchases   Purchase[]
+}
+
+model MembershipItem {
+  id        String   @id @default(cuid())
+  bundleId  String
+  name      String
+  content   String?  // URL or extended text
+  type      String   @default("LINK") // LINK, TEXT
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  bundle    Bundle   @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+
+  @@index([bundleId])
 }
 
 model Module {

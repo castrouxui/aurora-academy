@@ -25,6 +25,19 @@ export async function POST(req: NextRequest) {
             });
         }
 
+        if (bundleId) {
+            const { prisma } = await import("@/lib/prisma");
+            const bundle = await prisma.bundle.findUnique({
+                where: { id: bundleId }
+            });
+            if (bundle) {
+                // Use server-side price
+                // bundle.price is Decimal from Prisma, ensure we convert to number
+                // @ts-ignore
+                price = Number(bundle.price);
+            }
+        }
+
         // Clean price string
         // Clean price string, ensuring it handles numbers or strings
         const numericPrice = typeof price === 'number' ? price : Number(String(price).replace(/[^0-9]/g, ''));

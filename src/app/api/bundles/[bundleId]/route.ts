@@ -16,7 +16,7 @@ export async function PATCH(
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const { title, description, price, imageUrl, published, courseIds } = await req.json();
+        const { title, description, price, imageUrl, published, courseIds, items } = await req.json();
 
         // Prepare update data
         const updateData: any = {
@@ -34,12 +34,34 @@ export async function PATCH(
             };
         }
 
+        // Handle Membership Items
+        if (items) {
+            // Because managing update/create/delete is complex, we will delete all and recreate for now 
+            // (assuming low volume of items per bundle).
+            // A transaction would be better, but this simple approach works for MVP.
+
+            // First operation: Update bundle scalar fields
+            // Second operation: Delete existing items
+            // Third operation: Create new items
+
+            // To do this cleanly with Prisma's nested writes:
+            updateData.items = {
+                deleteMany: {},
+                create: items.map((item: any) => ({
+                    name: item.name,
+                    content: item.content,
+                    type: item.type || "LINK"
+                }))
+            };
+        }
+
         const bundle = await prisma.bundle.update({
             where: { id: bundleId },
             data: updateData,
             include: {
-                courses: true
-            }
+                courses: true,
+                items: true
+            } as any
         });
 
         return NextResponse.json(bundle);
@@ -82,8 +104,9 @@ export async function GET(
         const bundle = await prisma.bundle.findUnique({
             where: { id: bundleId },
             include: {
-                courses: true
-            }
+                courses: true,
+                items: true
+            } as any
         });
 
         if (!bundle) {

@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Save, Trash, UploadCloud, ImageIcon, Eye, EyeOff, Loader2, Package, Search } from "lucide-react";
+import { ArrowLeft, Save, Trash, UploadCloud, ImageIcon, Eye, EyeOff, Loader2, Package, Search, Plus, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useUploadThing } from "@/lib/uploadthing";
@@ -32,6 +32,11 @@ export default function BundleEditorPage() {
     const [imageUrl, setImageUrl] = useState("");
     const [selectedCourseIds, setSelectedCourseIds] = useState<Set<string>>(new Set());
 
+    // Items State
+    const [items, setItems] = useState<any[]>([]);
+    const [newItemName, setNewItemName] = useState("");
+    const [newItemContent, setNewItemContent] = useState("");
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -52,6 +57,7 @@ export default function BundleEditorPage() {
                 setDescription(bundleData.description || "");
                 setPrice(bundleData.price.toString());
                 setImageUrl(bundleData.imageUrl || "");
+                setItems(bundleData.items || []);
 
                 // Set Selected Courses
                 const currentIds = new Set(bundleData.courses.map((c: any) => c.id));
@@ -79,12 +85,13 @@ export default function BundleEditorPage() {
                     description,
                     price,
                     imageUrl,
-                    courseIds: Array.from(selectedCourseIds)
+                    courseIds: Array.from(selectedCourseIds),
+                    items
                 }),
             });
 
             if (res.ok) {
-                toast.success("Paquete actualizado correctamente");
+                toast.success("Membresía actualizada correctamente");
                 router.refresh();
             } else {
                 toast.error("Error al guardar cambios");
@@ -107,7 +114,7 @@ export default function BundleEditorPage() {
             });
             if (res.ok) {
                 setBundle({ ...bundle, published: !bundle.published });
-                toast.success(bundle.published ? "Paquete ocultado" : "Paquete publicado");
+                toast.success(bundle.published ? "Membresía oculta" : "Membresía publicada");
             }
         } catch (error) {
             console.error(error);
@@ -117,13 +124,24 @@ export default function BundleEditorPage() {
     };
 
     const handleDelete = async () => {
-        if (!confirm("¿Estás seguro de eliminar este paquete?")) return;
+        if (!confirm("¿Estás seguro de eliminar esta membresía?")) return;
         try {
             const res = await fetch(`/api/bundles/${bundleId}`, { method: "DELETE" });
             if (res.ok) router.push("/admin/bundles");
         } catch (error) {
             console.error(error);
         }
+    };
+
+    const addItem = () => {
+        if (!newItemName) return;
+        setItems([...items, {
+            name: newItemName,
+            content: newItemContent,
+            type: newItemContent.startsWith("http") ? "LINK" : "TEXT"
+        }]);
+        setNewItemName("");
+        setNewItemContent("");
     };
 
     const { startUpload } = useUploadThing("courseImage", {
@@ -285,56 +303,109 @@ export default function BundleEditorPage() {
                     </div>
                 </div>
 
-                {/* Right Column: Course Selection */}
-                <div className="bg-[#1F2937]/30 border border-gray-800 p-6 rounded-2xl flex flex-col h-[600px]">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-white">Cursos Incluidos</h3>
-                        <Badge variant="secondary" className="bg-[#5D5CDE]/20 text-[#5D5CDE]">
-                            {selectedCourseIds.size} seleccionados
-                        </Badge>
-                    </div>
+                {/* Right Column: Course & Items Selection */}
+                <div className="space-y-6">
+                    {/* Courses */}
+                    <div className="bg-[#1F2937]/30 border border-gray-800 p-6 rounded-2xl flex flex-col h-[400px]">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-white">Cursos Incluidos</h3>
+                            <Badge variant="secondary" className="bg-[#5D5CDE]/20 text-[#5D5CDE]">
+                                {selectedCourseIds.size} seleccionados
+                            </Badge>
+                        </div>
 
-                    <div className="relative mb-4">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
-                        <Input
-                            placeholder="Buscar cursos..."
-                            className="bg-[#121620] border-gray-600 pl-9"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
+                        <div className="relative mb-4">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
+                            <Input
+                                placeholder="Buscar cursos..."
+                                className="bg-[#121620] border-gray-600 pl-9"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
 
-                    <div className="flex-1 overflow-y-auto space-y-2 pr-2">
-                        {filteredCourses.map((course) => {
-                            const isSelected = selectedCourseIds.has(course.id);
-                            return (
-                                <div
-                                    key={course.id}
-                                    onClick={() => toggleCourse(course.id)}
-                                    className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${isSelected
+                        <div className="flex-1 overflow-y-auto space-y-2 pr-2">
+                            {filteredCourses.map((course) => {
+                                const isSelected = selectedCourseIds.has(course.id);
+                                return (
+                                    <div
+                                        key={course.id}
+                                        onClick={() => toggleCourse(course.id)}
+                                        className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${isSelected
                                             ? "bg-[#5D5CDE]/10 border-[#5D5CDE] shadow-[0_0_10px_rgba(93,92,222,0.1)]"
                                             : "bg-[#121620]/50 border-gray-700 hover:border-gray-500"
-                                        }`}
-                                >
-                                    <Checkbox
-                                        checked={isSelected}
-                                        readOnly
-                                        className={isSelected ? "border-[#5D5CDE] text-[#5D5CDE]" : "border-gray-500"}
-                                    />
-                                    <div className="flex-1">
-                                        <p className={`text-sm font-medium ${isSelected ? "text-white" : "text-gray-300"}`}>
-                                            {course.title}
-                                        </p>
-                                        <p className="text-xs text-gray-500 truncate">
-                                            {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(course.price)}
-                                        </p>
+                                            }`}
+                                    >
+                                        <Checkbox
+                                            checked={isSelected}
+                                            readOnly
+                                            className={isSelected ? "border-[#5D5CDE] text-[#5D5CDE]" : "border-gray-500"}
+                                        />
+                                        <div className="flex-1">
+                                            <p className={`text-sm font-medium ${isSelected ? "text-white" : "text-gray-300"}`}>
+                                                {course.title}
+                                            </p>
+                                            <p className="text-xs text-gray-500 truncate">
+                                                {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(course.price)}
+                                            </p>
+                                        </div>
                                     </div>
+                                );
+                            })}
+                            {filteredCourses.length === 0 && (
+                                <p className="text-center text-gray-500 py-8 text-sm">No se encontraron cursos.</p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Membership Items */}
+                    <div className="bg-[#1F2937]/30 border border-gray-800 p-6 rounded-2xl">
+                        <h3 className="text-lg font-semibold text-white mb-4">Items Extra (Links / Accesos)</h3>
+
+                        <div className="space-y-3 mb-4">
+                            {items.map((item, idx) => (
+                                <div key={idx} className="flex gap-2 items-start bg-[#121620] p-3 rounded-lg border border-gray-700">
+                                    <div className="flex-1 space-y-1">
+                                        <p className="text-sm font-medium text-white">{item.name}</p>
+                                        <p className="text-xs text-[#5D5CDE] truncate">{item.content}</p>
+                                    </div>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6 text-gray-500 hover:text-red-400"
+                                        onClick={() => setItems(items.filter((_, i) => i !== idx))}
+                                    >
+                                        <Trash size={14} />
+                                    </Button>
                                 </div>
-                            );
-                        })}
-                        {filteredCourses.length === 0 && (
-                            <p className="text-center text-gray-500 py-8 text-sm">No se encontraron cursos.</p>
-                        )}
+                            ))}
+                            {items.length === 0 && (
+                                <p className="text-sm text-gray-500 text-center py-2">No hay items extra</p>
+                            )}
+                        </div>
+
+                        <div className="flex gap-2">
+                            <Input
+                                placeholder="Nombre (ej. Comunidad)"
+                                className="bg-[#121620] border-gray-600 h-9 text-sm"
+                                value={newItemName}
+                                onChange={(e) => setNewItemName(e.target.value)}
+                            />
+                            <Input
+                                placeholder="URL o Texto"
+                                className="bg-[#121620] border-gray-600 h-9 text-sm"
+                                value={newItemContent}
+                                onChange={(e) => setNewItemContent(e.target.value)}
+                            />
+                            <Button
+                                size="sm"
+                                className="bg-[#5D5CDE] hover:bg-[#4B4AC0]"
+                                onClick={addItem}
+                                disabled={!newItemName}
+                            >
+                                <Plus size={16} />
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

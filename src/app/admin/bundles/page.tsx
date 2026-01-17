@@ -102,19 +102,19 @@ export default function AdminBundlesPage() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex items-center gap-3">
                     <Package size={28} className="text-[#5D5CDE]" />
-                    <h1 className="text-3xl font-bold text-white">Gestionar Paquetes</h1>
+                    <h1 className="text-3xl font-bold text-white">Gestionar Membresías</h1>
                 </div>
 
                 <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
                     <DialogTrigger asChild>
                         <Button className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white gap-2">
                             <Plus size={16} />
-                            Nuevo Paquete
+                            Nueva Membresía
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="bg-[#1F2937] border-gray-700 text-white">
                         <DialogHeader>
-                            <DialogTitle>Crear Nuevo Paquete</DialogTitle>
+                            <DialogTitle>Crear Nueva Membresía</DialogTitle>
                         </DialogHeader>
                         <form onSubmit={handleCreate} className="space-y-4 py-4">
                             <div className="space-y-2">
@@ -169,7 +169,7 @@ export default function AdminBundlesPage() {
                 </div>
             ) : bundles.length === 0 ? (
                 <div className="text-center py-20 bg-[#1F2937]/50 rounded-xl border border-dashed border-gray-700">
-                    <p className="text-gray-400">No hay paquetes creados aún.</p>
+                    <p className="text-gray-400">No hay membresías creadas aún.</p>
                 </div>
             ) : (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -219,9 +219,9 @@ export default function AdminBundlesPage() {
                                         </AlertDialogTrigger>
                                         <AlertDialogContent className="bg-[#1F2937] border-gray-700 text-white">
                                             <AlertDialogHeader>
-                                                <AlertDialogTitle>¿Eliminar paquete?</AlertDialogTitle>
+                                                <AlertDialogTitle>¿Eliminar membresía?</AlertDialogTitle>
                                                 <AlertDialogDescription className="text-gray-400">
-                                                    Esta acción es irreversible. Se borrará el paquete pero NO los cursos que contiene.
+                                                    Esta acción es irreversible. Se borrará la membresía pero NO los cursos que contiene.
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>

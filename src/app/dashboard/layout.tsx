@@ -44,13 +44,14 @@ export default function DashboardLayout({
         { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
         { name: "Ventas", href: "/admin/sales", icon: Receipt }, // Updated to /admin/sales to match verification
         { name: "Cursos", href: "/admin/courses", icon: BookOpen },
-        { name: "Paquetes", href: "/admin/bundles", icon: Package },
+        { name: "Membresías", href: "/admin/bundles", icon: Package },
         { name: "Usuarios", href: "/admin/users", icon: Users },
     ];
 
     const studentNav = [
         { name: "Inicio", href: "/dashboard", icon: LayoutDashboard },
         { name: "Mis Cursos", href: "/dashboard/courses", icon: BookOpen },
+        { name: "Membresías", href: "/dashboard/memberships", icon: Package },
         { name: "Explorar", href: "/dashboard/explore", icon: Compass },
         { name: "Certificados", href: "/dashboard/certificates", icon: GraduationCap },
     ];

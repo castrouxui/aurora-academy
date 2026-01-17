@@ -53,8 +53,9 @@ export async function GET(req: Request) {
                         title: true,
                         price: true
                     }
-                }
-            },
+                },
+                items: true
+            } as any,
             orderBy: {
                 createdAt: 'desc'
             }

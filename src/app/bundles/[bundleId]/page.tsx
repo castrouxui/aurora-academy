@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, ArrowLeft, CheckCircle2, MonitorPlay, Layers, ShieldCheck } from "lucide-react";
+import { Loader2, ArrowLeft, CheckCircle2, MonitorPlay, Layers, ShieldCheck, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Container } from "@/components/layout/Container";
@@ -114,6 +114,28 @@ export default function PublicBundlePage() {
                                             </div>
                                         </Link>
                                     ))}
+
+                                    {/* Membership Items */}
+                                    {bundle.items?.length > 0 && (
+                                        <div className="mt-4 pt-4 border-t border-white/10">
+                                            <h3 className="text-lg font-semibold text-white mb-4">Beneficios Extra</h3>
+                                            <div className="grid gap-3">
+                                                {bundle.items.map((item: any) => (
+                                                    <div key={item.id} className="flex items-center gap-4 p-4 rounded-xl bg-[#5D5CDE]/10 border border-[#5D5CDE]/20">
+                                                        <div className="w-10 h-10 rounded-lg bg-[#5D5CDE]/20 flex items-center justify-center shrink-0">
+                                                            {item.type === 'LINK' ? <LinkIcon size={18} className="text-[#5D5CDE]" /> : <CheckCircle2 size={18} className="text-[#5D5CDE]" />}
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-white font-medium">{item.name}</p>
+                                                            <p className="text-sm text-gray-400">
+                                                                {item.type === 'LINK' ? 'Acceso exclusivo al comprar' : 'Incluido en la membresía'}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
