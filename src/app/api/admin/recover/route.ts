@@ -80,8 +80,8 @@ export async function POST() {
                 }
             }
 
-            // Resolve Course
-            if (!courseId) {
+            // Resolve Course or Bundle
+            if (!courseId && !metadata.bundle_id) {
                 const description = p.description || "";
                 const title = p.additional_info?.items?.[0]?.title || description;
 
@@ -90,15 +90,25 @@ export async function POST() {
                     continue;
                 }
 
+                // Try Course
                 const course = await prisma.course.findFirst({
-                    where: { title: { contains: title } }
+                    where: { title: { contains: title, mode: 'insensitive' } }
                 });
 
                 if (course) {
                     courseId = course.id;
                 } else {
-                    logs.push(`[SKIP] Course not found: "${title}"`);
-                    continue;
+                    // Try Bundle
+                    const bundle = await prisma.bundle.findFirst({
+                        where: { title: { contains: title, mode: 'insensitive' } }
+                    });
+
+                    if (bundle) {
+                        metadata.bundle_id = bundle.id; // Correctly detecting usage
+                    } else {
+                        logs.push(`[SKIP] Item not found (Course/Bundle): "${title}"`);
+                        continue;
+                    }
                 }
             }
 
@@ -109,7 +119,8 @@ export async function POST() {
                         paymentId,
                         userId,
                         courseId,
-                        amount, // Prisma handles Decimal/Number conversion
+                        bundleId: metadata.bundle_id, // Add bundleId support
+                        amount,
                         status: 'approved',
                         preferenceId: anyP.order?.id?.toString() || "",
                     }
