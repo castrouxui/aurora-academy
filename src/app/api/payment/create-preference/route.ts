@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
 
         const body = await req.json();
         const { title, price, quantity, userId, courseId, bundleId } = body;
+        let finalPrice = price;
 
         let dbItem;
         if (!courseId && !bundleId && title) {
@@ -34,13 +35,13 @@ export async function POST(req: NextRequest) {
                 // Use server-side price
                 // bundle.price is Decimal from Prisma, ensure we convert to number
                 // @ts-ignore
-                price = Number(bundle.price);
+                finalPrice = Number(bundle.price);
             }
         }
 
         // Clean price string
         // Clean price string, ensuring it handles numbers or strings
-        const numericPrice = typeof price === 'number' ? price : Number(String(price).replace(/[^0-9]/g, ''));
+        const numericPrice = typeof finalPrice === 'number' ? finalPrice : Number(String(finalPrice).replace(/[^0-9]/g, ''));
 
         // Determine Base URL for callbacks
         // Priority: Env Var -> Request Origin -> Production Fallback -> Localhost
