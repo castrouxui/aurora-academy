@@ -35,6 +35,7 @@ export function CourseDetailContent({
                             <CourseHero
                                 title={courseData.title}
                                 description={courseData.description || ""}
+                                shortDescription={courseData.shortDescription}
                                 rating={courseData.rating}
                                 totalRatings={courseData.totalRatings}
                                 instructor={courseData.instructor}

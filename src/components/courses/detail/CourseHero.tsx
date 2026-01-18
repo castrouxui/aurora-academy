@@ -6,6 +6,7 @@ import Link from "next/link";
 interface CourseHeroProps {
     title: string;
     description: string;
+    shortDescription?: string;
     rating: number;
     totalRatings: number;
     instructor: {
@@ -19,6 +20,7 @@ interface CourseHeroProps {
 export function CourseHero({
     title,
     description,
+    shortDescription,
     rating,
     totalRatings,
     instructor
@@ -37,7 +39,7 @@ export function CourseHero({
                     {title}
                 </h1>
                 <p className="text-xl text-gray-300 leading-relaxed max-w-2xl">
-                    {description}
+                    {shortDescription || description}
                 </p>
 
                 <div className="flex flex-wrap items-center gap-6 text-sm pt-4">

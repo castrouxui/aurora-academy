@@ -55,6 +55,7 @@ interface Course {
     id: string;
     title: string;
     description: string;
+    shortDescription?: string;
     price: number;
     imageUrl: string;
     category: string;
@@ -612,6 +613,33 @@ export default function CourseEditorPage() {
                 </div>
 
                 {/* Metadata Controls Bar */}
+                <div className="bg-[#1F2937]/50 border border-gray-800 p-6 rounded-2xl space-y-3">
+                    <Label className="text-sm font-medium text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                        <FileText size={16} /> Bajada del Curso (Resumen)
+                    </Label>
+                    <p className="text-xs text-gray-500">Breve descripción que aparecerá en la tarjeta y encabezado del curso (Hero).</p>
+                    <Textarea
+                        value={course.shortDescription || ""}
+                        onChange={(e) => setCourse({ ...course, shortDescription: e.target.value })}
+                        onBlur={async () => {
+                            if (!course) return;
+                            try {
+                                await fetch(`/api/courses/${courseId}`, {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ shortDescription: course.shortDescription }),
+                                });
+                                toast.success("Bajada guardada");
+                            } catch (error) {
+                                console.error(error);
+                                toast.error("Error al guardar la bajada");
+                            }
+                        }}
+                        className="bg-[#0b0e14] border-gray-700 focus:border-[#5D5CDE] min-h-[80px] text-base text-gray-300 rounded-xl resize-none p-4 leading-relaxed"
+                        placeholder="Resumen corto e impactante..."
+                    />
+                </div>
+
                 <div className="bg-[#1F2937]/50 border border-gray-800 p-6 rounded-2xl space-y-3">
                     <Label className="text-sm font-medium text-gray-400 uppercase tracking-wider flex items-center gap-2">
                         <FileText size={16} /> Descripción del Curso

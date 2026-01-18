@@ -74,6 +74,7 @@ model Course {
   id          String     @id @default(cuid())
   title       String
   description String?
+  shortDescription String? @db.Text // "Bajada"
   price       Decimal
   imageUrl    String?
   category    String     @default("General")
