@@ -14,6 +14,7 @@ interface PricingCardProps {
     buttonText?: string;
     onAction?: () => void;
     className?: string; // Allow custom classes
+    specialFeature?: { title: string; description: string };
 }
 
 export function PricingCard({
@@ -27,7 +28,23 @@ export function PricingCard({
     buttonText = "Suscribirse",
     onAction,
     className,
+    specialFeature, // Destructure new prop
 }: PricingCardProps) {
+    // Create a local props object for internal usage consistency if needed, 
+    // but better to just use the destructured variable.
+    // I will adjust the usage in the previous step's replacement mentally or via correction if needed.
+    // Actually, in the previous step I used `props.specialFeature`, which will fail because I didn't have `props` defined.
+    // I need to correct that usage here. Or rather, I can't "correct" the previous step, so I must match the variable name `specialFeature` here and ensure the usages use `specialFeature` not `props.specialFeature`.
+
+    // Wait, since I already wrote `props.specialFeature` in the file, this file is currently broken.
+    // I need to use `replace_file_content` to fix the usage of `props.specialFeature` to `specialFeature` AND update the interface.
+    // But since I can't edit multiple distinct chunks easily in one go if they are far apart, I'll do the interface first, then fix the usage.
+    // Actually, the previous tool call might have succeeded in writing the bad code.
+
+    // Strategy: 
+    // 1. Update Interface.
+    // 2. Fix the usage of `props.specialFeature` -> `specialFeature` in the component body to match the destructuring.
+
     return (
         <div
             className={cn(
@@ -70,6 +87,19 @@ export function PricingCard({
                     </li>
                 ))}
             </ul>
+
+            {/* Special Feature Banner (e.g. for Master Plan) */}
+            {specialFeature && (
+                <div className="mb-6 rounded-xl bg-gradient-to-br from-[#5D5CDE]/20 to-purple-900/40 border border-[#5D5CDE]/30 p-4">
+                    <p className="text-sm font-bold text-white mb-1 flex items-center gap-2">
+                        <span className="text-lg">🌟</span>
+                        {specialFeature.title}
+                    </p>
+                    <p className="text-xs text-gray-300 leading-relaxed">
+                        {specialFeature.description}
+                    </p>
+                </div>
+            )}
 
             <Button
                 onClick={onAction}

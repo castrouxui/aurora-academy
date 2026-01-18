@@ -104,15 +104,40 @@ export default function PricingPage() {
                                         }
 
                                         // Highlight "Plan Pro"
-                                        const isPro = displayTitle.toLowerCase().includes("pro");
+                                        const lowerTitle = displayTitle.toLowerCase();
+                                        const isPro = lowerTitle.includes("pro");
+                                        const isMaster = lowerTitle.includes("master");
+
                                         const isRecommended = isPro;
                                         if (isPro) tag = "EL MÁS ELEGIDO";
 
                                         // Combine features: Course Titles + Membership Items
-                                        const features = [
+                                        let features = [
                                             ...bundle.courses.map((c: any) => c.title),
                                             ...bundle.items.map((i: any) => i.name)
                                         ];
+
+                                        // Tiered Logic (X-style)
+                                        if (isPro) {
+                                            features = [
+                                                "Todo lo del plan Starter y:",
+                                                ...features
+                                            ];
+                                        } else if (isMaster) {
+                                            features = [
+                                                "Todo lo del plan Pro y:",
+                                                ...features
+                                            ];
+                                        }
+
+                                        // Special Master Feature
+                                        let specialFeature = undefined;
+                                        if (isMaster) {
+                                            specialFeature = {
+                                                title: "Reunión 1 a 1 Exclusiva",
+                                                description: "Agenda una reunión mensual privada con Fran Castro para mentoría personalizada."
+                                            };
+                                        }
 
                                         return (
                                             <PricingCard
@@ -121,6 +146,7 @@ export default function PricingPage() {
                                                 price={`$${bundlePrice.toLocaleString('es-AR')}`}
                                                 periodicity="mes"
                                                 tag={tag}
+                                                specialFeature={specialFeature}
                                                 description={
                                                     <div className="flex flex-col gap-2 h-8 justify-center">
                                                         {/* Savings Highlight Only - Description text removed as requested */}
