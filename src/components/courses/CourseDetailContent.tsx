@@ -51,6 +51,7 @@ export function CourseDetailContent({
                             totalModules={totalModules}
                             duration={courseData.duration}
                             description={courseData.description}
+                            learningOutcomes={courseData.learningOutcomes}
                         />
 
                         {/* Instructor Section */}

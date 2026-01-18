@@ -59,6 +59,7 @@ interface Course {
     imageUrl: string;
     category: string;
     level: string;
+    learningOutcomes?: string;
     published: boolean;
     modules: Module[];
 }

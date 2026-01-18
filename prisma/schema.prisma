@@ -78,6 +78,7 @@ model Course {
   imageUrl    String?
   category    String     @default("General")
   level       String     @default("Todos los niveles")
+  learningOutcomes String? @db.Text // Stored as newline-separated text
   published   Boolean    @default(false)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt

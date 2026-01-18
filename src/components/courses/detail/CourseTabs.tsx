@@ -11,11 +11,30 @@ interface CourseTabsProps {
     duration: string;
 }
 
-export function CourseTabs({ modules = [], totalLessons, totalModules, duration, description }: CourseTabsProps & { description: string }) {
+export function CourseTabs({ modules = [], totalLessons, totalModules, duration, description, learningOutcomes }: CourseTabsProps & { description: string, learningOutcomes?: string }) {
     const [activeTab, setActiveTab] = useState("overview");
+
+    const learningPoints = learningOutcomes ? learningOutcomes.split('\n').filter(line => line.trim() !== '') : [];
 
     return (
         <div className="space-y-12">
+            {/* What you'll learn - Restored & Dynamic */}
+            {learningPoints.length > 0 && (
+                <div className="border border-white/10 p-8 rounded-3xl bg-white/5">
+                    <h2 className="text-2xl font-black text-white mb-6 font-headings">Lo que aprenderás</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                        {learningPoints.map((item, i) => (
+                            <div key={i} className="flex items-start gap-3">
+                                <div className="mt-1 p-1 bg-[#5D5CDE]/20 rounded-full text-[#5D5CDE]">
+                                    <Check size={14} className="text-[#5D5CDE]" />
+                                </div>
+                                <span className="text-gray-300 font-medium leading-relaxed">{item}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Description */}
             <div>
                 <h2 className="text-2xl font-black text-white mb-4 font-headings">Descripción</h2>
