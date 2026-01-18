@@ -135,6 +135,13 @@ export default function PricingPage() {
                                         const isRecommended = isPro;
                                         if (isPro) tag = "EL MÁS ELEGIDO";
 
+                                        // Dynamic CTA Copy based on plan
+                                        let buttonText = "Empezar Ahora";
+                                        const lowerTitle = displayTitle.toLowerCase();
+                                        if (lowerTitle.includes("starter")) buttonText = "Comenzar Hoy";
+                                        else if (lowerTitle.includes("pro")) buttonText = "Quiero ser Pro";
+                                        else if (lowerTitle.includes("master")) buttonText = "Dominar el Mercado";
+
                                         // Combine features: Course Titles + Membership Items
                                         const features = [
                                             ...bundle.courses.map((c: any) => c.title),
@@ -160,7 +167,7 @@ export default function PricingPage() {
                                                 }
                                                 features={features}
                                                 isRecommended={isRecommended}
-                                                buttonText="Obtener Oferta"
+                                                buttonText={buttonText}
                                                 onAction={() => handlePurchase(bundle.title, bundle.price.toString(), undefined, bundle.id)}
                                             />
                                         );
