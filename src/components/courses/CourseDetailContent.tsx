@@ -50,6 +50,7 @@ export function CourseDetailContent({
                             totalLessons={totalLessons}
                             totalModules={totalModules}
                             duration={courseData.duration}
+                            description={courseData.description}
                         />
 
                         {/* Instructor Section */}

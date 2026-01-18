@@ -397,12 +397,19 @@ export default function CourseEditorPage() {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        // Validation: 8MB limit
+        if (file.size > 8 * 1024 * 1024) {
+            toast.error("La imagen no puede superar los 8MB");
+            return;
+        }
+
         setIsUploading(true);
         try {
             await startImageUpload([file]);
         } catch (error) {
             console.error("Image upload failed", error);
             setIsUploading(false);
+            // toast.error is handled by onUploadError, but double check
         }
     };
 
@@ -601,6 +608,33 @@ export default function CourseEditorPage() {
                             )}
                         </div>
                     </div>
+                </div>
+
+                {/* Metadata Controls Bar */}
+                <div className="bg-[#1F2937]/50 border border-gray-800 p-6 rounded-2xl space-y-3">
+                    <Label className="text-sm font-medium text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                        <FileText size={16} /> Descripción del Curso
+                    </Label>
+                    <Textarea
+                        value={course.description || ""}
+                        onChange={(e) => setCourse({ ...course, description: e.target.value })}
+                        onBlur={async () => {
+                            if (!course) return;
+                            try {
+                                await fetch(`/api/courses/${courseId}`, {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ description: course.description }),
+                                });
+                                toast.success("Descripción guardada");
+                            } catch (error) {
+                                console.error(error);
+                                toast.error("Error al guardar la descripción");
+                            }
+                        }}
+                        className="bg-[#0b0e14] border-gray-700 focus:border-[#5D5CDE] min-h-[120px] text-base text-gray-300 rounded-xl resize-none p-4 leading-relaxed"
+                        placeholder="Escribe una descripción completa del curso..."
+                    />
                 </div>
 
                 {/* Metadata Controls Bar */}

@@ -11,30 +11,16 @@ interface CourseTabsProps {
     duration: string;
 }
 
-export function CourseTabs({ modules = [], totalLessons, totalModules, duration }: CourseTabsProps) {
+export function CourseTabs({ modules = [], totalLessons, totalModules, duration, description }: CourseTabsProps & { description: string }) {
     const [activeTab, setActiveTab] = useState("overview");
 
     return (
         <div className="space-y-12">
-            {/* What you'll learn */}
-            <div className="border border-white/10 p-8 rounded-3xl bg-white/5">
-                <h2 className="text-2xl font-black text-white mb-6 font-headings">Lo que aprenderás</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                    {[
-                        "Dominarás el análisis técnico desde cero a avanzado",
-                        "Aprenderás a gestionar el riesgo como un profesional",
-                        "Entenderás la psicología del trading y el control emocional",
-                        "Desarrollarás tu propia estrategia de trading rentable",
-                        "Conocerás los diferentes mercados financieros y cómo operarlos",
-                        "Interpretarás gráficos y patrones de velas japonesas"
-                    ].map((item, i) => (
-                        <div key={i} className="flex items-start gap-3">
-                            <div className="mt-1 p-1 bg-[#5D5CDE]/20 rounded-full text-[#5D5CDE]">
-                                <Check size={14} className="text-[#5D5CDE]" />
-                            </div>
-                            <span className="text-gray-300 font-medium leading-relaxed">{item}</span>
-                        </div>
-                    ))}
+            {/* Description */}
+            <div>
+                <h2 className="text-2xl font-black text-white mb-4 font-headings">Descripción</h2>
+                <div className="space-y-4 text-gray-300 leading-relaxed text-lg whitespace-pre-wrap">
+                    {description ? description : "Sin descripción disponible."}
                 </div>
             </div>
 
@@ -61,22 +47,6 @@ export function CourseTabs({ modules = [], totalLessons, totalModules, duration 
                     <li>Ganas de aprender y disciplina para estudiar.</li>
                     <li>Un ordenador o dispositivo móvil con acceso a internet.</li>
                 </ul>
-            </div>
-
-            {/* Description */}
-            <div>
-                <h2 className="text-2xl font-black text-white mb-4 font-headings">Descripción</h2>
-                <div className="space-y-4 text-gray-300 leading-relaxed text-lg">
-                    <p>
-                        Este curso completo de Trading Profesional está diseñado para llevarte desde un nivel principiante hasta un nivel avanzado, proporcionándote todas las herramientas necesarias para operar en los mercados financieros con confianza y consistencia.
-                    </p>
-                    <p>
-                        Aprenderás no solo análisis técnico y fundamental, sino también aspectos cruciales como la gestión monetaria y la psicología del trading, que son los pilares fundamentales de cualquier trader exitoso.
-                    </p>
-                    <p>
-                        El curso incluye ejemplos prácticos en tiempo real, análisis de casos de estudio y ejercicios para reforzar tu aprendizaje. Además, tendrás acceso a nuestra comunidad exclusiva donde podrás compartir tus análisis y resolver dudas.
-                    </p>
-                </div>
             </div>
         </div>
     );
