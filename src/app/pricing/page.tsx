@@ -42,46 +42,19 @@ export default function PricingPage() {
         fetchBundles();
     }, []);
 
-    const handlePurchase = async (title: string, price: string, courseId?: string, bundleId?: string) => {
+    const handlePurchase = (title: string, price: string, courseId?: string, bundleId?: string) => {
         if (!session) {
             setIsLoginModalOpen(true);
             return;
         }
 
-        try {
-            // Determine endpoint: Subscription for Bundles, Preference for Courses
-            const endpoint = bundleId ? '/api/payment/create-subscription' : '/api/payment/create-preference';
-            const toastMessage = bundleId ? "Procesando suscripción..." : "Procesando compra...";
-
-            // Simple Loading Feedback (could be state)
-            const btn = document.activeElement as HTMLButtonElement;
-            if (btn) btn.disabled = true;
-
-            const response = await fetch(endpoint, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    title,
-                    price,
-                    quantity: 1,
-                    userId: session.user?.id,
-                    email: session.user?.email,
-                    courseId,
-                    bundleId,
-                }),
-            });
-
-            const data = await response.json();
-
-            if (data.init_point) {
-                window.location.href = data.init_point;
-            } else {
-                console.error("No init_point", data);
-                // toast.error("Error al iniciar el pago"); 
-            }
-        } catch (error) {
-            console.error("Payment error:", error);
-        }
+        setSelectedCourse({
+            title,
+            price,
+            courseId,
+            bundleId
+        });
+        setIsPaymentModalOpen(true);
     };
 
     return (
