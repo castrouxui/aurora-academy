@@ -105,10 +105,6 @@ export default function PricingPage() {
             {/* Trading Path Section */}
             <section className="relative z-10 pb-16">
                 <Container>
-                    <h2 className="mb-12 text-center text-3xl md:text-4xl font-bold text-white">
-                        Carrera de Trading
-                    </h2>
-
                     {/* Dynamic Bundle Grid */}
                     {
                         loading ? (
@@ -134,6 +130,11 @@ export default function PricingPage() {
                                             displayTitle = bundle.title.replace(/\(.*?\)/, '').trim(); // Remove tag from title
                                         }
 
+                                        // Highlight "Plan Pro"
+                                        const isPro = displayTitle.toLowerCase().includes("pro");
+                                        const isRecommended = isPro;
+                                        if (isPro) tag = "EL MÁS ELEGIDO";
+
                                         // Combine features: Course Titles + Membership Items
                                         const features = [
                                             ...bundle.courses.map((c: any) => c.title),
@@ -158,7 +159,7 @@ export default function PricingPage() {
                                                     </div>
                                                 }
                                                 features={features}
-                                                isRecommended={false}
+                                                isRecommended={isRecommended}
                                                 buttonText="Obtener Oferta"
                                                 onAction={() => handlePurchase(bundle.title, bundle.price.toString(), undefined, bundle.id)}
                                             />
