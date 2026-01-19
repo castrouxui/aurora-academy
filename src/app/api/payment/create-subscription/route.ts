@@ -17,8 +17,10 @@ export async function POST(req: NextRequest) {
         const { title, price, userId, bundleId, email, couponCode } = body;
         let finalPrice = price;
 
+        // Import Prisma needed for Bundle price check AND Coupon validation
+        const { prisma } = await import("@/lib/prisma");
+
         if (bundleId) {
-            const { prisma } = await import("@/lib/prisma");
             const bundle = await prisma.bundle.findUnique({
                 where: { id: bundleId }
             });
@@ -28,6 +30,9 @@ export async function POST(req: NextRequest) {
                 finalPrice = Number(bundle.price);
             }
         }
+
+        // 2. Clean price string (ensure reference price is number)
+        let numericPrice = typeof finalPrice === 'number' ? finalPrice : Number(String(finalPrice).replace(/[^0-9]/g, ''));
 
         // 3. Apply Coupon if provided
         let appliedCouponId = undefined;
