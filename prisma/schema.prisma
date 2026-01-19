@@ -182,6 +182,7 @@ model Purchase {
   userId       String
   courseId     String?
   bundleId     String?
+  couponId     String?
   amount       Decimal
   status       String
   paymentId    String?
@@ -191,8 +192,25 @@ model Purchase {
   course       Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
   bundle       Bundle?  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coupon       Coupon?  @relation(fields: [couponId], references: [id])
 
   @@index([userId])
   @@index([courseId])
   @@index([bundleId])
+  @@index([couponId])
+}
+
+model Coupon {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  discount    Decimal   // Percentage value (0-100)
+  type        String    @default("PERCENTAGE") // PERCENTAGE | FIXED
+  expiresAt   DateTime?
+  limit       Int?      // Max global usages
+  used        Int       @default(0)
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  purchases   Purchase[]
 }

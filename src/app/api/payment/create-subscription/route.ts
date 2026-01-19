@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { title, price, userId, bundleId, email } = body;
+        const { title, price, userId, bundleId, email, couponCode } = body;
         let finalPrice = price;
 
         if (bundleId) {
@@ -29,7 +29,33 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        const numericPrice = typeof finalPrice === 'number' ? finalPrice : Number(String(finalPrice).replace(/[^0-9]/g, ''));
+        // 3. Apply Coupon if provided
+        let appliedCouponId = undefined;
+        if (couponCode) {
+            const coupon = await prisma.coupon.findUnique({
+                where: { code: couponCode }
+            });
+
+            if (coupon && coupon.active) {
+                // Check limits & expiry (Double check server side)
+                const isExpired = coupon.expiresAt && new Date() > coupon.expiresAt;
+                const isExhausted = coupon.limit && coupon.used >= coupon.limit;
+
+                if (!isExpired && !isExhausted) {
+                    appliedCouponId = coupon.id;
+                    if (coupon.type === 'PERCENTAGE') {
+                        // Discount is e.g. 20 for 20%
+                        const discountAmount = numericPrice * (Number(coupon.discount) / 100);
+                        numericPrice = numericPrice - discountAmount;
+                    } else {
+                        // Fixed amount discount
+                        numericPrice = numericPrice - Number(coupon.discount);
+                    }
+                    // Ensure price doesn't go below 0
+                    numericPrice = Math.max(0, numericPrice);
+                }
+            }
+        }
 
         // Determine Base URL for callbacks
         const origin = req.headers.get('origin');
@@ -50,7 +76,8 @@ export async function POST(req: NextRequest) {
             status: "pending",
             external_reference: JSON.stringify({
                 user_id: userId,
-                bundle_id: bundleId
+                bundle_id: bundleId,
+                coupon_id: appliedCouponId
             })
         };
 

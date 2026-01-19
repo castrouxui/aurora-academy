@@ -14,20 +14,31 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { title, price, quantity, userId, courseId, bundleId } = body;
+        const { title, price, quantity, userId, courseId, bundleId, couponCode } = body;
         let finalPrice = price;
 
+        const { prisma } = await import("@/lib/prisma");
+
+        // 1. Resolve Base Price (Course or Bundle)
         let dbItem;
         if (!courseId && !bundleId && title) {
             // Fallback: Find course by title
-            const { prisma } = await import("@/lib/prisma");
             dbItem = await prisma.course.findFirst({
                 where: { title: title }
             });
+            if (dbItem) {
+                // @ts-ignore
+                finalPrice = Number(dbItem.price);
+            }
+        } else if (courseId) {
+            const course = await prisma.course.findUnique({ where: { id: courseId } });
+            if (course) {
+                // @ts-ignore
+                finalPrice = Number(course.price);
+            }
         }
 
         if (bundleId) {
-            const { prisma } = await import("@/lib/prisma");
             const bundle = await prisma.bundle.findUnique({
                 where: { id: bundleId }
             });
@@ -39,9 +50,36 @@ export async function POST(req: NextRequest) {
             }
         }
 
-        // Clean price string
-        // Clean price string, ensuring it handles numbers or strings
-        const numericPrice = typeof finalPrice === 'number' ? finalPrice : Number(String(finalPrice).replace(/[^0-9]/g, ''));
+        // 2. Clean price string (ensure reference price is number)
+        let numericPrice = typeof finalPrice === 'number' ? finalPrice : Number(String(finalPrice).replace(/[^0-9]/g, ''));
+
+        // 3. Apply Coupon if provided
+        let appliedCouponId = undefined;
+        if (couponCode) {
+            const coupon = await prisma.coupon.findUnique({
+                where: { code: couponCode }
+            });
+
+            if (coupon && coupon.active) {
+                // Check limits & expiry (Double check server side)
+                const isExpired = coupon.expiresAt && new Date() > coupon.expiresAt;
+                const isExhausted = coupon.limit && coupon.used >= coupon.limit;
+
+                if (!isExpired && !isExhausted) {
+                    appliedCouponId = coupon.id;
+                    if (coupon.type === 'PERCENTAGE') {
+                        // Discount is e.g. 20 for 20%
+                        const discountAmount = numericPrice * (Number(coupon.discount) / 100);
+                        numericPrice = numericPrice - discountAmount;
+                    } else {
+                        // Fixed amount discount
+                        numericPrice = numericPrice - Number(coupon.discount);
+                    }
+                    // Ensure price doesn't go below 0
+                    numericPrice = Math.max(0, numericPrice);
+                }
+            }
+        }
 
         // Determine Base URL for callbacks
         // Priority: Env Var -> Request Origin -> Production Fallback -> Localhost
@@ -69,6 +107,7 @@ export async function POST(req: NextRequest) {
                 user_id: userId,
                 course_id: courseId || (dbItem && !bundleId ? dbItem.id : undefined),
                 bundle_id: bundleId,
+                coupon_id: appliedCouponId,
             },
             notification_url: `${baseUrl}/api/webhooks/mercadopago`,
         };
