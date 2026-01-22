@@ -11,10 +11,19 @@ export async function POST(req: Request) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const { lessonId, completed } = await req.json();
+        const { lessonId, completed, seconds, totalDuration } = await req.json();
 
         if (!lessonId) {
             return new NextResponse("Missing lessonId", { status: 400 });
+        }
+
+        // Logic: Mark as completed if user manually sets it OR if watched > 90%
+        let isCompleted = completed;
+        if (seconds && totalDuration && totalDuration > 0) {
+            const progressPercentage = seconds / totalDuration;
+            if (progressPercentage >= 0.9) {
+                isCompleted = true;
+            }
         }
 
         // Upsert progress: create if not exists, update if exists
@@ -26,12 +35,14 @@ export async function POST(req: Request) {
                 }
             },
             update: {
-                completed: completed
+                completed: isCompleted,
+                lastPlayedTime: seconds || 0
             },
             create: {
                 userId: session.user.id,
                 lessonId: lessonId,
-                completed: completed
+                completed: isCompleted || false,
+                lastPlayedTime: seconds || 0
             }
         });
 

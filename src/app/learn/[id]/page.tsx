@@ -59,16 +59,19 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
         }
     }
 
-    // 3. Fetch User Progress
+    // 3. Fetch User Progress (All progress, not just completed)
     const userProgress = session?.user?.id ? await prisma.userProgress.findMany({
         where: {
-            userId: session.user.id,
-            completed: true
+            userId: session.user.id
         },
-        select: { lessonId: true }
+        select: {
+            lessonId: true,
+            completed: true,
+            lastPlayedTime: true
+        }
     }) : [];
 
-    const completedLessonIds = new Set(userProgress.map((p: { lessonId: string }) => p.lessonId));
+    const progressMap = new Map(userProgress.map((p: any) => [p.lessonId, p]));
 
     // Transform for client component
     // We map generic lesson fields to our frontend interface
@@ -83,7 +86,8 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
                 title: lesson.title,
                 description: lesson.description || "",
                 duration: formatDuration(lesson.duration),
-                completed: completedLessonIds.has(lesson.id),
+                completed: progressMap.get(lesson.id)?.completed || false,
+                lastPlayedTime: progressMap.get(lesson.id)?.lastPlayedTime || 0,
                 type: "video" as const,
                 current: false,
                 videoUrl: lesson.videoUrl || ""

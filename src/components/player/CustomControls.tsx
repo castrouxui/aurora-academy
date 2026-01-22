@@ -20,6 +20,8 @@ interface CustomControlsProps {
     playedSeconds: number;
     isFullscreen: boolean;
     onToggleFullscreen: () => void;
+    playbackRate: number;
+    onPlaybackRateChange: (rate: number) => void;
 }
 
 function formatDuration(seconds: number) {
@@ -51,7 +53,9 @@ export function CustomControls({
     duration,
     playedSeconds,
     isFullscreen,
-    onToggleFullscreen
+    onToggleFullscreen,
+    playbackRate,
+    onPlaybackRateChange
 }: CustomControlsProps) {
     return (
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent px-4 pb-4 pt-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
@@ -104,6 +108,27 @@ export function CustomControls({
                 </div>
 
                 <div className="flex items-center gap-4">
+                    {/* Playback Rate */}
+                    <div className="relative group/speed scale-90 sm:scale-100">
+                        <button className="text-white hover:text-[#5D5CDE] text-xs font-bold transition-colors w-8">
+                            {playbackRate}x
+                        </button>
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/speed:flex flex-col bg-[#0B0F19] border border-gray-800 rounded-lg overflow-hidden shadow-xl p-1">
+                            {[0.5, 1.0, 1.5, 2.0].map((rate) => (
+                                <button
+                                    key={rate}
+                                    onClick={() => onPlaybackRateChange(rate)}
+                                    className={cn(
+                                        "px-3 py-1.5 text-xs font-medium hover:bg-white/10 transition-colors rounded text-center min-w-[50px]",
+                                        playbackRate === rate ? "text-[#5D5CDE] bg-[#5D5CDE]/10" : "text-gray-300"
+                                    )}
+                                >
+                                    {rate}x
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     {/* Fullscreen */}
                     <button onClick={onToggleFullscreen} className="text-white hover:text-[#5D5CDE] transition-colors">
                         {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
