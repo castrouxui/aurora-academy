@@ -14,6 +14,7 @@ interface Lesson {
     title: string;
     description?: string;
     duration: string;
+    durationSeconds?: number;
     completed: boolean;
     lastPlayedTime?: number;
     type: string;
@@ -105,27 +106,16 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
     const handleProgressUpdate = (seconds: number, total: number) => {
         if (!activeLesson) return;
 
-        // Update local state for sidebar (throttled visual update could be added here if needed, 
-        // but typically we trust the video player to handle its own seek state. 
-        // We only really need to update the SIDEBAR progress bar if we add one).
-
-        // Let's update localModules to reflect lastPlayedTime for resumption
-        // We don't want to re-render the whole list every second, so maybe we skip this 
-        // unless we want a live progress bar in the sidebar. 
-        // User ASKED for "Barra de completado de la derecha se vaya completando".
-        // SO WE MUST UPDATE STATE.
-
-        // To avoid performance issues, maybe update every 5 seconds or 1%?
-        // For now, let's try direct update and see if React handles it. 
-        // If it lags, we move to a separate component for the progress ring.
-
+        // Update local state immediately for smooth UI
         setLocalModules(prev => prev.map(m => ({
             ...m,
             lessons: m.lessons.map(l => {
                 if (l.id === activeLesson.id) {
-                    // Only update if changed significantly to reduce renders? 
-                    // Actually React transition might be smooth enough.
-                    return { ...l, lastPlayedTime: seconds };
+                    return {
+                        ...l,
+                        lastPlayedTime: seconds,
+                        durationSeconds: total > 0 ? total : l.durationSeconds
+                    };
                 }
                 return l;
             })
@@ -137,17 +127,38 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
             clearTimeout(progressTimeoutRef[activeLesson.id]);
         }
 
-        progressTimeoutRef[activeLesson.id] = setTimeout(() => {
-            fetch("/api/progress", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    lessonId: activeLesson.id,
-                    seconds: Math.floor(seconds),
-                    totalDuration: Math.floor(total),
-                    completed: false // Let the backend decide completion based on %
-                })
-            }).catch(console.error);
+        progressTimeoutRef[activeLesson.id] = setTimeout(async () => {
+            try {
+                const res = await fetch("/api/progress", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        lessonId: activeLesson.id,
+                        seconds: Math.floor(seconds),
+                        totalDuration: Math.floor(total),
+                        completed: false // Let the backend decide completion based on %
+                    })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+
+                    // If backend says it's completed, update local state to reflect that!
+                    if (data.completed && !activeLesson.completed) {
+                        setLocalModules(prev => prev.map(m => ({
+                            ...m,
+                            lessons: m.lessons.map(l => {
+                                if (l.id === activeLesson.id) {
+                                    return { ...l, completed: true };
+                                }
+                                return l;
+                            })
+                        })));
+                    }
+                }
+            } catch (error) {
+                console.error("Failed to update progress", error);
+            }
         }, 2000);
     };
 
@@ -420,7 +431,9 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                                 {lesson.lastPlayedTime && !lesson.completed && (
                                                     <div
                                                         className="absolute bottom-0 left-0 h-[2px] bg-primary/50 transition-all duration-500"
-                                                        style={{ width: `${Math.min((lesson.lastPlayedTime / 600) * 100, 100)}%` }} // Rough estimate as we lack total seconds in interface
+                                                        style={{
+                                                            width: `${Math.min((lesson.lastPlayedTime / (lesson.durationSeconds || 600)) * 100, 100)}%`
+                                                        }}
                                                     />
                                                 )}
 
