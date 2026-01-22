@@ -43,6 +43,9 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
 
     useEffect(() => {
         setHasWindow(true);
+    }, []);
+
+    useEffect(() => {
         console.log("[VideoPlayer] RECEIVED URL:", url);
         // Timeout fallback for loading state
         const timer = setTimeout(() => {

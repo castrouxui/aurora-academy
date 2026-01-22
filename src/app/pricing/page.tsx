@@ -106,7 +106,8 @@ export default function PricingPage() {
                                         // Highlight "Plan Pro"
                                         const lowerTitle = displayTitle.toLowerCase();
                                         const isPro = lowerTitle.includes("pro");
-                                        const isMaster = lowerTitle.includes("master");
+                                        // Broaden detection for Master plan to ensure feature visibility
+                                        const isMaster = lowerTitle.includes("master") || lowerTitle.includes("mentoria") || lowerTitle.includes("completo");
 
                                         const isRecommended = isPro;
                                         if (isPro) tag = "EL MÁS ELEGIDO";
