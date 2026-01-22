@@ -171,9 +171,40 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight">
                                 {courseTitle}
                             </h2>
-                            <div className="flex items-end gap-2 mt-4">
-                                <span className="text-4xl font-bold text-white tracking-tight">{coursePrice}</span>
-                                <span className="text-gray-500 font-medium mb-1.5">ARS</span>
+                            <div className="flex flex-col mt-4">
+                                {appliedCoupon ? (
+                                    <>
+                                        <div className="flex items-center gap-2 text-gray-500 line-through text-sm">
+                                            <span>{coursePrice}</span>
+                                            <span>ARS</span>
+                                        </div>
+                                        <div className="flex items-end gap-2 text-green-400">
+                                            {(() => {
+                                                // Helper to parse price string "$45.000" -> 45000
+                                                const numericParams = Number(coursePrice.replace(/[^0-9]/g, ''));
+                                                let final = numericParams;
+                                                if (appliedCoupon.type === 'PERCENTAGE') {
+                                                    final = final - (final * (appliedCoupon.discount / 100));
+                                                } else {
+                                                    final = final - appliedCoupon.discount;
+                                                }
+                                                return (
+                                                    <>
+                                                        <span className="text-4xl font-bold tracking-tight">
+                                                            ${Math.max(0, final).toLocaleString('es-AR')}
+                                                        </span>
+                                                        <span className="text-green-500/80 font-medium mb-1.5">ARS</span>
+                                                    </>
+                                                );
+                                            })()}
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="flex items-end gap-2">
+                                        <span className="text-4xl font-bold text-white tracking-tight">{coursePrice}</span>
+                                        <span className="text-gray-500 font-medium mb-1.5">ARS</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
