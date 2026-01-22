@@ -158,9 +158,9 @@ export function Navbar() {
               Nosotros
             </Link>
 
-            {/* 4. Precios */}
+            {/* 4. Membresías */}
             <Link href="/pricing" className={getLinkClass("/pricing")}>
-              Precios
+              Membresías
             </Link>
           </div>
 
@@ -303,7 +303,7 @@ export function Navbar() {
                     onClick={toggleMenu}
                   >
                     <TrendingUp className="mr-4 text-gray-500" size={24} />
-                    <span className="text-xl font-bold text-gray-300">Precios</span>
+                    <span className="text-xl font-bold text-gray-300">Membresías</span>
                   </Link>
                 </div>
 

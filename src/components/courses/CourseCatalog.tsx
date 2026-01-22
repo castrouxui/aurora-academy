@@ -35,15 +35,11 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
     useEffect(() => {
         async function fetchCourses() {
             try {
-                // Fetch published courses and bundles in parallel
-                const [coursesRes, bundlesRes] = await Promise.all([
-                    fetch("/api/courses?published=true"),
-                    fetch("/api/bundles")
-                ]);
+                // Fetch published courses only (Bundles are now in /pricing only)
+                const coursesRes = await fetch("/api/courses?published=true");
 
-                if (coursesRes.ok && bundlesRes.ok) {
+                if (coursesRes.ok) {
                     const coursesData = await coursesRes.json();
-                    const bundlesData = await bundlesRes.json();
 
                     // Transform API data to UI format
                     const formattedCourses = coursesData.map((course: any) => {
@@ -70,29 +66,9 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                         };
                     });
 
-                    const formattedBundles = bundlesData
-                        .filter((b: any) => b.published)
-                        .map((bundle: any) => ({
-                            id: bundle.id,
-                            title: bundle.title,
-                            instructor: "Paquete",
-                            rating: 5.0,
-                            reviews: `(${bundle.courses?.length || 0} cursos)`,
-                            price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(bundle.price)),
-                            image: bundle.imageUrl || "/bundle-placeholder.jpg",
-                            tag: "Pack", // Distinct tag
-                            level: "Todos los niveles",
-                            rawPrice: bundle.price,
-                            createdAt: bundle.createdAt,
-                            videoUrl: null,
-                            type: 'bundle',
-                            courseCount: bundle.courses?.length || 0
-                        }));
+                    setCourses(formattedCourses);
 
-                    const allItems = [...formattedBundles, ...formattedCourses];
-                    setCourses(allItems);
-
-                    const categories = Array.from(new Set(allItems.map((c: any) => c.tag)));
+                    const categories = Array.from(new Set(formattedCourses.map((c: any) => c.tag)));
                     setAvailableCategories(categories as string[]);
                 }
             } catch (error) {

@@ -43,6 +43,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
     const [activeTab, setActiveTab] = useState("description");
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [isCertificateOpen, setIsCertificateOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     // Determine initial active lesson
     // If has access, first uncompleted or last played. 
@@ -101,25 +102,34 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
         <div className="flex h-screen flex-col bg-[#0B0F19] text-white overflow-hidden">
             <Navbar />
 
-            <div className="flex flex-1 overflow-hidden pt-16">
+            <div className="flex flex-1 overflow-hidden pt-16 flex-col lg:flex-row relative">
                 {/* Main Content Area */}
-                <div className="flex flex-1 flex-col overflow-y-auto">
+                <div className="flex flex-1 flex-col overflow-y-auto w-full">
 
-                    {/* Breadcrumb Navigation */}
-                    <div className="px-6 py-4 text-sm text-gray-400 border-b border-gray-800 bg-[#0B0F19]">
-                        <div className="max-w-5xl mx-auto w-full flex items-center gap-2">
-                            <Link href={backLink} className="flex items-center gap-1 hover:text-white transition-colors">
+                    {/* Breadcrumb Navigation - Mobile Optimized */}
+                    <div className="px-4 lg:px-6 py-3 lg:py-4 text-xs lg:text-sm text-gray-400 border-b border-gray-800 bg-[#0B0F19] flex justify-between items-center w-full">
+                        <div className="flex items-center gap-2 truncate">
+                            <Link href={backLink} className="flex items-center gap-1 hover:text-white transition-colors shrink-0">
                                 <ChevronLeft size={16} />
-                                Mis Cursos
+                                <span className="hidden sm:inline">Mis Cursos</span>
                             </Link>
-                            <span className="text-gray-700">/</span>
-                            <span className="text-gray-200 font-medium truncate">{course.title}</span>
+                            <span className="text-gray-700 hidden sm:inline">/</span>
+                            <span className="text-gray-200 font-medium truncate max-w-[150px] sm:max-w-md">{course.title}</span>
                         </div>
+
+                        {/* Mobile Sidebar Toggle Button */}
+                        <button
+                            onClick={() => setMobileMenuOpen(true)}
+                            className="lg:hidden flex items-center gap-2 bg-[#5D5CDE]/10 text-[#5D5CDE] px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-[#5D5CDE]/20 transition-all border border-[#5D5CDE]/20"
+                        >
+                            <FileText size={14} />
+                            Ver Temario
+                        </button>
                     </div>
 
-                    {/* Video Player Container */}
-                    <div className="bg-black w-full flex justify-center bg-[#050505] py-10">
-                        <div className="w-full max-w-5xl">
+                    {/* Video Player Container - Full Width on Mobile */}
+                    <div className="bg-black w-full flex justify-center bg-[#050505] py-0 lg:py-10 aspect-video lg:aspect-auto border-b border-gray-800 lg:border-none">
+                        <div className="w-full lg:max-w-5xl h-full lg:h-auto">
                             {activeLesson ? (
                                 <VideoPlayer
                                     url={activeLesson.videoUrl || "/hero-video.mp4"} // Fallback video
@@ -153,7 +163,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                     }}
                                 />
                             ) : (
-                                <div className="aspect-video bg-gray-900 flex items-center justify-center text-gray-400">
+                                <div className="w-full h-full aspect-video bg-gray-900 flex items-center justify-center text-gray-400">
                                     Selecciona una lección
                                 </div>
                             )}
@@ -161,10 +171,10 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                     </div>
 
                     {/* Content Tabs Area */}
-                    <div className="flex-1 bg-[#0B0F19] p-6 lg:p-8">
+                    <div className="flex-1 bg-[#0B0F19] p-4 lg:p-8">
                         <div className="mx-auto max-w-5xl">
-                            <div className="mb-6 border-b border-gray-800">
-                                <nav className="-mb-px flex space-x-8">
+                            <div className="mb-6 border-b border-gray-800 overflow-x-auto">
+                                <nav className="-mb-px flex space-x-6 lg:space-x-8">
                                     {["description", "notes", "resources"].map((tab) => (
                                         <button
                                             key={tab}
@@ -185,21 +195,21 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                             </div>
 
                             {/* Tab Content */}
-                            <div className="min-h-[200px]">
+                            <div className="min-h-[200px] pb-20 lg:pb-0">
                                 {activeTab === "description" && activeLesson && (
                                     <>
                                         <div className="space-y-4">
-                                            <h2 className="text-2xl font-bold">{activeLesson.title}</h2>
-                                            <p className="text-gray-400 leading-relaxed">
+                                            <h2 className="text-xl lg:text-2xl font-bold">{activeLesson.title}</h2>
+                                            <p className="text-sm lg:text-base text-gray-400 leading-relaxed">
                                                 {activeLesson.description || "Sin descripción disponible para esta lección."}
                                             </p>
                                         </div>
-                                        <div className="pt-4 flex items-center justify-end">
+                                        <div className="pt-6 flex items-center justify-end">
                                             <Button
                                                 onClick={() => handleToggleComplete(activeLesson.id, activeLesson.completed)}
                                                 variant={activeLesson.completed ? "outline" : "default"}
                                                 className={cn(
-                                                    "gap-2 transition-all",
+                                                    "gap-2 transition-all w-full sm:w-auto",
                                                     activeLesson.completed
                                                         ? "border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10"
                                                         : "bg-[#5D5CDE] text-white hover:bg-[#4B4AC0]"
@@ -236,11 +246,11 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                                             {resource.type === 'PDF' ? <FileText size={20} /> : <Download size={20} />}
                                                         </div>
                                                         <div className="min-w-0">
-                                                            <p className="font-medium text-gray-200 truncate">{resource.title}</p>
+                                                            <p className="font-medium text-gray-200 truncate text-sm lg:text-base">{resource.title}</p>
                                                             <p className="text-xs text-gray-500 flex items-center gap-1">
                                                                 <span className="uppercase">{resource.type || 'Archivo'}</span>
-                                                                <span>•</span>
-                                                                <span className="truncate max-w-[200px] opacity-70">{resource.url}</span>
+                                                                <span className="hidden sm:inline">•</span>
+                                                                <span className="truncate max-w-[200px] opacity-70 hidden sm:inline">{resource.url}</span>
                                                             </p>
                                                         </div>
                                                     </div>
@@ -248,7 +258,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                                         href={resource.url}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="ml-4 flex items-center gap-2 bg-[#1F2937] hover:bg-white hover:text-black text-xs font-bold py-2 px-4 rounded-lg transition-all"
+                                                        className="ml-4 flex items-center gap-2 bg-[#1F2937] hover:bg-white hover:text-black text-xs font-bold py-2 px-3 lg:px-4 rounded-lg transition-all"
                                                     >
                                                         <Download size={14} />
                                                         <span className="hidden sm:inline">Abrir</span>
@@ -273,12 +283,29 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                     </div>
                 </div>
 
-                {/* Sidebar (Curriculum) */}
+                {/* Sidebar (Curriculum) - Desktop & Mobile Overlay */}
+                {/* Mobile Overlay Background */}
+                <div
+                    className={cn(
+                        "fixed inset-0 bg-black/80 z-40 lg:hidden transition-opacity duration-300",
+                        mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+                    )}
+                    onClick={() => setMobileMenuOpen(false)}
+                />
+
                 <div className={cn(
-                    "w-96 border-l border-gray-800 bg-[#121620] flex flex-col transition-all duration-300",
-                    !sidebarOpen && "hidden"
+                    "fixed inset-y-0 right-0 z-50 w-80 bg-[#121620] border-l border-gray-800 shadow-2xl transform transition-transform duration-300 lg:relative lg:transform-none lg:w-96 lg:flex lg:flex-col lg:z-auto",
+                    mobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"
                 )}>
-                    <div className="p-5 border-b border-gray-800">
+                    {/* Mobile Close Button */}
+                    <button
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="lg:hidden absolute top-4 right-4 text-gray-400 hover:text-white"
+                    >
+                        <ChevronLeft size={24} className="rotate-180" />
+                    </button>
+
+                    <div className="p-5 border-b border-gray-800 pt-12 lg:pt-5">
                         <div className="flex items-center justify-between mb-2">
                             <h3 className="font-semibold text-white">Contenido del Curso</h3>
                             <span className={cn(
