@@ -88,47 +88,56 @@ export default function PricingPage() {
                             <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12">
                                 {bundles
                                     .sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
-                                    .map((bundle) => {
+                                    .map((bundle, index, allBundles) => {
                                         // Calculate savings
                                         const totalValue = bundle.courses.reduce((sum: number, course: any) => sum + parseFloat(course.price), 0);
                                         const bundlePrice = parseFloat(bundle.price);
                                         const savings = totalValue - bundlePrice;
 
-                                        // Extract tag from title (e.g. "Title (Tag Content)")
+                                        // Extract tag from title
                                         let displayTitle = bundle.title;
                                         let tag = undefined;
                                         const match = bundle.title.match(/\((.*?)\)/);
                                         if (match) {
-                                            tag = match[1]; // Get content inside parenthesis
-                                            displayTitle = bundle.title.replace(/\(.*?\)/, '').trim(); // Remove tag from title
+                                            tag = match[1];
+                                            displayTitle = bundle.title.replace(/\(.*?\)/, '').trim();
                                         }
 
-                                        // Highlight "Plan Pro"
+                                        // Identify Plan Level
                                         const lowerTitle = displayTitle.toLowerCase();
-                                        const isPro = lowerTitle.includes("pro");
-                                        // Broaden detection for Master plan to ensure feature visibility
                                         const isMaster = lowerTitle.includes("master") || lowerTitle.includes("mentoria") || lowerTitle.includes("completo");
+                                        const isPro = !isMaster && index === 1; // Middle plan is usually Pro/Recommended if not Master
 
                                         const isRecommended = isPro;
                                         if (isPro) tag = "EL MÁS ELEGIDO";
 
-                                        // Combine features: Course Titles + Membership Items
-                                        let features = [
+                                        // --- Feature Deduplication Logic ---
+                                        let features: string[] = [];
+
+                                        // Get current raw features
+                                        const currentFeatures = [
                                             ...bundle.courses.map((c: any) => c.title),
                                             ...bundle.items.map((i: any) => i.name)
                                         ];
 
-                                        // Tiered Logic (X-style)
-                                        if (isPro) {
+                                        if (index > 0) {
+                                            // Check against previous plan
+                                            const previousBundle = allBundles[index - 1];
+                                            let previousTitle = previousBundle.title.replace(/\(.*?\)/, '').trim();
+
+                                            // Simple heuristic: If it's a higher tier, assume it includes the previous one
+                                            // In a perfect world we'd check ID intersection, but for visual clarity this is safer:
                                             features = [
-                                                "Todo lo del plan Starter y:",
-                                                ...features
+                                                `Todo lo del plan ${previousTitle} y:`,
+                                                // Filter out features that might be in the previous plan (by name exact match)
+                                                // If names differ slightly, they will show up.
+                                                ...currentFeatures.filter(f =>
+                                                    !previousBundle.courses.some((pc: any) => pc.title === f) &&
+                                                    !previousBundle.items.some((pi: any) => pi.name === f)
+                                                )
                                             ];
-                                        } else if (isMaster) {
-                                            features = [
-                                                "Todo lo del plan Pro y:",
-                                                ...features
-                                            ];
+                                        } else {
+                                            features = currentFeatures;
                                         }
 
                                         // Special Master Feature
