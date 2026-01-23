@@ -158,10 +158,10 @@ export default function PricingPage() {
                                                 tag={tag}
                                                 specialFeature={specialFeature}
                                                 description={
-                                                    <div className="flex flex-col gap-2 min-h-[40px] justify-center">
+                                                    <div className="flex flex-col gap-2 min-h-[40px] justify-center items-center">
                                                         {/* Savings Highlight */}
                                                         {savings > 0 && (
-                                                            <div className="text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 text-xs uppercase tracking-wide shadow-[0_0_10px_rgba(52,211,153,0.1)] w-fit mx-auto">
+                                                            <div className="text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 text-xs uppercase tracking-wide shadow-[0_0_10px_rgba(52,211,153,0.1)] w-fit">
                                                                 ¡Ahorras ${savings.toLocaleString('es-AR')}!
                                                             </div>
                                                         )}

@@ -33,7 +33,7 @@ export function PricingCard({
     return (
         <div
             className={cn(
-                "relative flex flex-col rounded-2xl border p-5 shadow-xl transition-all duration-300 hover:scale-[1.02]",
+                "relative flex flex-col rounded-2xl border p-8 shadow-xl transition-all duration-300 hover:scale-[1.02]",
                 isRecommended
                     ? "border-[#5D5CDE] bg-white/10 shadow-[0_0_30px_rgba(93,92,222,0.15)]"
                     : "border-white/5 bg-white/5 hover:bg-white/10 hover:border-white/10",
