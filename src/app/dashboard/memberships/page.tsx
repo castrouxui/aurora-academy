@@ -1,186 +1,252 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { Container } from "@/components/layout/Container";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Package, MonitorPlay, Copy, Check } from "lucide-react";
-import Link from "next/link";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { ExternalLink, Package, CheckCircle, CreditCard, AlertTriangle, Loader2, XCircle, Check } from "lucide-react";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function MyMembershipsPage() {
-    const { data: session, status } = useSession();
-    const router = useRouter();
+    // State for Subscription Management
+    const [subscription, setSubscription] = useState<any>(null);
+    const [loadingSub, setLoadingSub] = useState(true);
+    const [actionLoading, setActionLoading] = useState(false);
+
+    // State for Catalog
     const [bundles, setBundles] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [copiedId, setCopiedId] = useState<string | null>(null);
+    const [loadingCatalog, setLoadingCatalog] = useState(true);
 
     useEffect(() => {
-        if (status === "unauthenticated") {
-            router.push("/");
-        }
-    }, [status, router]);
+        fetchData();
+    }, []);
 
-    useEffect(() => {
-        async function fetchBundles() {
-            try {
-                const res = await fetch("/api/my-bundles");
-                if (res.ok) {
-                    const data = await res.json();
-                    setBundles(data);
+    const fetchData = async () => {
+        try {
+            // 1. Check for Active Subscription
+            const subRes = await fetch("/api/subscription");
+            if (subRes.ok) {
+                const subData = await subRes.json();
+                if (subData.active) {
+                    setSubscription(subData);
+                    setLoadingSub(false);
+                    return; // If active, we don't need the catalog right away (or maybe show it below?)
                 }
-            } catch (error) {
-                console.error("Fetch error", error);
-            } finally {
-                setLoading(false);
             }
-        }
+            setLoadingSub(false);
 
-        if (session?.user) {
-            fetchBundles();
+            // 2. If no active subscription, fetch Catalog
+            const bundleRes = await fetch("/api/published-bundles");
+            if (bundleRes.ok) {
+                const bundleData = await bundleRes.json();
+                setBundles(bundleData);
+            }
+        } catch (error) {
+            console.error("Error fetching membership data", error);
+        } finally {
+            setLoadingSub(false);
+            setLoadingCatalog(false);
         }
-    }, [session]);
-
-    const handleCopy = (text: string, id: string) => {
-        navigator.clipboard.writeText(text);
-        setCopiedId(id);
-        toast.success("Link copiado al portapapeles");
-        setTimeout(() => setCopiedId(null), 2000);
     };
 
-    if (status === "loading" || loading) {
+    const handleCancel = async () => {
+        if (!confirm("¿Estás seguro de que querés cancelar tu suscripción? Perderás el acceso al finalizar el período actual.")) return;
+
+        setActionLoading(true);
+        try {
+            const res = await fetch("/api/subscription", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    action: "cancel",
+                    subscriptionId: subscription.subscription.id
+                })
+            });
+
+            if (res.ok) {
+                toast.success("Suscripción cancelada correctamente.");
+                window.location.reload();
+            } else {
+                toast.error("Hubo un error al cancelar.");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error de conexión.");
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const handleSubscribe = async (bundleId: string, title: string, price: number) => {
+        try {
+            // Initiate flow
+            window.location.href = `/checkout?bundleId=${bundleId}`;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
+    if (loadingSub) {
         return (
             <div className="min-h-screen pt-4 pb-12 bg-[#0B0F19]">
                 <Container>
                     <Skeleton className="h-8 w-48 bg-gray-800 mb-8" />
-                    <div className="grid gap-6">
-                        {[1, 2].map((i) => (
-                            <Skeleton key={i} className="h-40 w-full bg-gray-800 rounded-xl" />
-                        ))}
+                    <Skeleton className="h-64 w-full bg-gray-800 rounded-xl" />
+                </Container>
+            </div>
+        );
+    }
+
+    // VIEW 1: ACTIVE SUBSCRIPTION (Management)
+    if (subscription) {
+        return (
+            <div className="min-h-screen pt-4 pb-12 bg-[#0B0F19]">
+                <Container>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-white mb-2">Mi Membresía</h1>
+                            <p className="text-gray-400">Gestioná tu suscripción actual.</p>
+                        </div>
+                    </div>
+
+                    <div className="max-w-3xl mx-auto">
+                        {subscription.subscription.status === 'authorized' ? (
+                            <Card className="bg-gradient-to-br from-[#1F2937] to-[#111827] border-[#5D5CDE]/30 shadow-lg shadow-[#5D5CDE]/10">
+                                <CardHeader>
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <CardTitle className="text-2xl text-white flex items-center gap-2">
+                                                {subscription.bundleTitle}
+                                                <span className="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1">
+                                                    <CheckCircle size={12} /> Activa
+                                                </span>
+                                            </CardTitle>
+                                            <CardDescription className="text-gray-400 mt-1">
+                                                Plan Mensual - Renovación automática
+                                            </CardDescription>
+                                        </div>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="bg-black/20 p-4 rounded-lg border border-white/5">
+                                            <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Estado</p>
+                                            <p className="font-medium text-white">Al día</p>
+                                        </div>
+                                        <div className="bg-black/20 p-4 rounded-lg border border-white/5">
+                                            <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Próximo Cobro</p>
+                                            <p className="font-medium text-white">Gestionado por Mercado Pago</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="border-t border-white/5 pt-6">
+                                        <h3 className="text-lg font-semibold text-white mb-4">Acciones</h3>
+                                        <div className="flex flex-col sm:flex-row gap-4">
+                                            <Button
+                                                variant="destructive"
+                                                onClick={handleCancel}
+                                                disabled={actionLoading}
+                                                className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                                            >
+                                                {actionLoading ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : <XCircle className="mr-2 h-4 w-4" />}
+                                                Cancelar Suscripción
+                                            </Button>
+                                        </div>
+                                        <p className="text-xs text-gray-500 mt-4 flex items-center gap-2">
+                                            <AlertTriangle size={12} />
+                                            Si cancelás, mantendrás el acceso hasta el final del ciclo de facturación actual.
+                                        </p>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            <Card className="bg-[#1F2937] border-gray-700 opacity-75">
+                                <CardHeader>
+                                    <CardTitle className="text-white flex items-center gap-2">
+                                        {subscription.bundleTitle}
+                                        <span className="text-xs bg-red-500/10 text-red-400 px-2 py-1 rounded-full border border-red-500/20">
+                                            Cancelada / Pausada
+                                        </span>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-gray-400 mb-4">Esta suscripción ya no se renueva automáticamente.</p>
+                                    <Button variant="outline" onClick={() => window.location.href = '/checkout'}>
+                                        Volver a Suscribirse
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        )}
                     </div>
                 </Container>
             </div>
         );
     }
 
+    // VIEW 2: CATALOG (No Subscription)
     return (
         <div className="min-h-screen pt-4 pb-12 bg-[#0B0F19]">
             <Container>
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                    <div>
-                        <h1 className="text-3xl font-bold text-white mb-2">Mis Membresías</h1>
-                        <p className="text-gray-400">Accede a tus beneficios exclusivos y cursos.</p>
-                    </div>
+                <div className="mb-10 text-center">
+                    <h1 className="text-4xl font-bold text-white mb-4">Elegí tu Plan</h1>
+                    <p className="text-gray-400 max-w-2xl mx-auto">
+                        Accedé a contenido exclusivo y llevá tu aprendizaje al siguiente nivel con nuestras membresías premium.
+                    </p>
                 </div>
 
-                {bundles.length === 0 ? (
+                {loadingCatalog ? (
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[1, 2, 3].map((i) => (
+                            <Skeleton key={i} className="h-96 w-full bg-gray-800 rounded-xl" />
+                        ))}
+                    </div>
+                ) : bundles.length === 0 ? (
                     <div className="text-center py-20 bg-[#111827] rounded-xl border border-gray-800">
                         <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-white mb-2">
-                            No tienes membresías activas
-                        </h3>
-                        <p className="text-gray-400 mb-6">
-                            Explora nuestros paquetes para acceder a beneficios exclusivos.
-                        </p>
-                        <Link href="/courses">
-                            <Button className="bg-[#5D5CDE] hover:bg-[#4B4AC0]">Explorar Paquetes</Button>
-                        </Link>
+                        <h3 className="text-xl font-semibold text-white mb-2">No hay membresías disponibles</h3>
+                        <p className="text-gray-400">Vuelve pronto para ver nuevos planes.</p>
                     </div>
                 ) : (
-                    <div className="space-y-6">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {bundles.map((bundle) => (
-                            <div key={bundle.id} className="bg-[#111827] border border-gray-800 rounded-2xl overflow-hidden">
-                                <div className="p-6 md:p-8 flex flex-col md:flex-row gap-8">
-                                    <div className="flex-1 space-y-4">
-                                        <div className="flex items-center gap-3">
-                                            {(() => {
-                                                const sub = bundle.subscriptions?.[0];
-                                                const status = sub?.status || 'active'; // Default to active if purchased via legacy/one-time
-
-                                                let badgeStyle = "bg-[#5D5CDE]/20 text-[#bebeff] border-0";
-                                                let statusText = "Activo";
-
-                                                if (status === 'paused') {
-                                                    badgeStyle = "bg-yellow-500/20 text-yellow-400 border-0";
-                                                    statusText = "Pago Pendiente";
-                                                } else if (status === 'cancelled') {
-                                                    badgeStyle = "bg-red-500/20 text-red-400 border-0";
-                                                    statusText = "Cancelado";
-                                                }
-
-                                                return <Badge className={badgeStyle}>{statusText}</Badge>;
-                                            })()}
-                                            <h2 className="text-2xl font-bold text-white">{bundle.title}</h2>
-                                        </div>
-                                        <p className="text-gray-400">{bundle.description}</p>
-
-                                        <div className="pt-4 flex flex-wrap gap-3">
-                                            {/* Course Count */}
-                                            <Link href="/dashboard/courses">
-                                                <Button variant="outline" className="border-gray-700 text-gray-300 hover:text-white hover:bg-white/5 gap-2">
-                                                    <MonitorPlay size={16} />
-                                                    {bundle.courses.length} Cursos incluidos
-                                                </Button>
-                                            </Link>
-                                        </div>
+                            <Card key={bundle.id} className="bg-[#111827] border-gray-800 flex flex-col hover:border-[#5D5CDE]/50 transition-colors">
+                                <CardHeader>
+                                    <CardTitle className="text-2xl text-white">{bundle.title}</CardTitle>
+                                    <CardDescription className="text-gray-400 line-clamp-2">{bundle.description}</CardDescription>
+                                </CardHeader>
+                                <CardContent className="flex-1">
+                                    <div className="mb-6">
+                                        <span className="text-4xl font-bold text-white">${Number(bundle.price).toLocaleString('es-AR')}</span>
+                                        <span className="text-gray-500">/mes</span>
                                     </div>
-
-                                    {/* Actionable Items Section */}
-                                    <div className="w-full md:w-[400px] bg-[#0B0F19] rounded-xl p-5 border border-gray-800">
-                                        <h3 className="text-sm font-semibold text-gray-300 mb-4 uppercase tracking-wider">Tus Accesos</h3>
-                                        <div className="space-y-3">
-                                            {bundle.items && bundle.items.length > 0 ? (
-                                                bundle.items.map((item: any) => (
-                                                    <div key={item.id} className="flex flex-col gap-2 p-3 rounded-lg bg-[#1F2937] border border-gray-700">
-                                                        <span className="font-medium text-white">{item.name}</span>
-                                                        {item.type === 'LINK' ? (
-                                                            <div className="flex gap-2">
-                                                                <a
-                                                                    href={item.content}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    className="flex-1"
-                                                                >
-                                                                    <Button size="sm" className="w-full bg-[#5D5CDE] hover:bg-[#4B4AC0] h-8 text-xs">
-                                                                        <ExternalLink size={12} className="mr-2" />
-                                                                        Abrir Link
-                                                                    </Button>
-                                                                </a>
-                                                                <Button
-                                                                    size="icon"
-                                                                    variant="ghost"
-                                                                    className="h-8 w-8 text-gray-400 hover:text-white"
-                                                                    onClick={() => handleCopy(item.content, item.id)}
-                                                                >
-                                                                    {copiedId === item.id ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
-                                                                </Button>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="bg-black/30 p-2 rounded text-sm text-gray-300 font-mono break-all flex items-center justify-between gap-2">
-                                                                <span>{item.content}</span>
-                                                                <Button
-                                                                    size="icon"
-                                                                    variant="ghost"
-                                                                    className="h-6 w-6 text-gray-500 hover:text-white shrink-0"
-                                                                    onClick={() => handleCopy(item.content, item.id)}
-                                                                >
-                                                                    {copiedId === item.id ? <Check size={12} className="text-green-500" /> : <Copy size={12} />}
-                                                                </Button>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                ))
-                                            ) : (
-                                                <p className="text-sm text-gray-500 italic">No hay items extra en esta membresía.</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                    <ul className="space-y-3">
+                                        <li className="flex items-center text-gray-300 text-sm">
+                                            <Check className="h-4 w-4 text-emerald-400 mr-2" />
+                                            Acceso a {bundle.courses?.length || 0} cursos
+                                        </li>
+                                        <li className="flex items-center text-gray-300 text-sm">
+                                            <Check className="h-4 w-4 text-emerald-400 mr-2" />
+                                            Certificados incluidos
+                                        </li>
+                                        <li className="flex items-center text-gray-300 text-sm">
+                                            <Check className="h-4 w-4 text-emerald-400 mr-2" />
+                                            Soporte prioritario
+                                        </li>
+                                    </ul>
+                                </CardContent>
+                                <CardFooter>
+                                    <Button
+                                        className="w-full bg-[#5D5CDE] hover:bg-[#4b4ac6]"
+                                        onClick={() => window.location.href = `/checkout?bundleId=${bundle.id}`}
+                                    >
+                                        Suscribirme Ahora
+                                    </Button>
+                                </CardFooter>
+                            </Card>
                         ))}
                     </div>
                 )}
