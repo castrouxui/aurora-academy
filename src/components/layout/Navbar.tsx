@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"; // Added hooks
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
@@ -192,7 +193,7 @@ export function Navbar() {
             {session?.user ? (
               <div className="relative">
                 <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-3 focus:outline-none hover:bg-white/5 p-1 pr-3 rounded-full transition-colors border border-transparent hover:border-white/5">
-                  <img src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" className="w-8 h-8 rounded-full border border-gray-700" />
+                  <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700" />
                   <span className="text-sm font-medium text-gray-300 hidden lg:block max-w-[100px] truncate">{session.user.name?.split(' ')[0] || 'User'}</span>
                   <ChevronDown size={14} className="text-gray-500 hidden lg:block" />
                 </button>
@@ -235,7 +236,7 @@ export function Navbar() {
             {/* Small Search Icon for Mobile Header maybe? No, keep it clean. */}
             {session && (
               <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"}>
-                <img src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" className="w-8 h-8 rounded-full border border-gray-700" />
+                <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700" />
               </Link>
             )}
             <button
@@ -331,7 +332,7 @@ export function Navbar() {
                 {session ? (
                   <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
                     <div className="flex items-center gap-4 mb-4">
-                      <img src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`} alt="" className="w-12 h-12 rounded-full border border-gray-700" />
+                      <Image src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`} alt="" width={48} height={48} className="rounded-full border border-gray-700" />
                       <div>
                         <p className="text-white font-bold text-lg">{session.user?.name}</p>
                         <p className="text-sm text-gray-400">{session.user?.email}</p>

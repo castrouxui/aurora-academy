@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, ArrowLeft, CheckCircle2, MonitorPlay, Layers, ShieldCheck, Link as LinkIcon } from "lucide-react";
@@ -146,7 +147,16 @@ export default function PublicBundlePage() {
                                 <Card className="bg-[#121620] border-gray-800 shadow-2xl overflow-hidden">
                                     <div className="aspect-video relative bg-gray-800">
                                         {bundle.imageUrl ? (
-                                            <img src={bundle.imageUrl} alt={bundle.title} className="w-full h-full object-cover" />
+                                            <div className="relative w-full h-full">
+                                                <Image
+                                                    src={bundle.imageUrl}
+                                                    alt={bundle.title}
+                                                    fill
+                                                    className="object-cover"
+                                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                                    priority
+                                                />
+                                            </div>
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center text-gray-600">
                                                 <Layers size={48} />

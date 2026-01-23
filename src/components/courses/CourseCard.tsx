@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Star, Video } from 'lucide-react';
 import { cn, getYouTubeId } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
@@ -43,7 +44,13 @@ export function CourseCard({ course }: { course: CourseProps }) {
                 <div className="relative h-48 w-full overflow-hidden shrink-0">
                     {/* Image Display Logic */}
                     {displayImage && displayImage !== "/course-placeholder.jpg" ? (
-                        <img src={displayImage} alt={course.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" />
+                        <Image
+                            src={displayImage}
+                            alt={course.title}
+                            fill
+                            className="object-cover transform group-hover:scale-110 transition-transform duration-500"
+                            sizes="(max-width: 768px) 100vw, 300px"
+                        />
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-gray-500 bg-[#0B0F19]">
                             <Video size={40} />
