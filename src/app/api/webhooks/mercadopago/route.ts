@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import MercadoPagoConfig, { Payment, PreApproval } from "mercadopago";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/email";
+import { cancelSubscription } from "@/lib/mercadopago";
 
 // Initialize client lazily to avoid build-time errors if env is missing
 const getClient = () => {
@@ -98,8 +99,37 @@ export async function POST(request: Request) {
                          <p>¡Esperamos verte pronto!</p>`
                     );
                 } else if (subscriptionData.status === 'authorized') {
-                    // Optionally send "Subscription Active" (Manual or recurrence)
-                    // Usually handled by the initial payment receipt, but good for reactivations
+                    // 1. AUTO-CANCEL OLD SUBSCRIPTIONS (Upgrade/Downgrade Logic)
+                    // Find all OTHER active/authorized subscriptions for this user
+                    const previousSubs = await prisma.subscription.findMany({
+                        where: {
+                            userId: updated.userId,
+                            status: 'authorized',
+                            mercadoPagoId: { not: id } // Exclude current one
+                        }
+                    });
+
+                    if (previousSubs.length > 0) {
+                        console.log(`[WEBHOOK] Found ${previousSubs.length} old subscriptions to cancel for User ${updated.userId}`);
+
+                        for (const oldSub of previousSubs) {
+                            // A. Cancel in Mercado Pago
+                            if (oldSub.mercadoPagoId) {
+                                await cancelSubscription(oldSub.mercadoPagoId);
+                            }
+
+                            // B. Update in DB
+                            await prisma.subscription.update({
+                                where: { id: oldSub.id },
+                                data: {
+                                    status: 'cancelled',
+                                    updatedAt: new Date()
+                                }
+                            });
+
+                            console.log(`[WEBHOOK] Auto-cancelled old subscription ${oldSub.mercadoPagoId}`);
+                        }
+                    }
                 }
             }
 
