@@ -159,12 +159,6 @@ export default function PricingPage() {
                                                 specialFeature={specialFeature}
                                                 description={
                                                     <div className="flex flex-col gap-2 min-h-[40px] justify-center">
-                                                        {/* Description from DB */}
-                                                        {bundle.description && (
-                                                            <p className="text-sm text-gray-300 leading-snug">
-                                                                {bundle.description}
-                                                            </p>
-                                                        )}
                                                         {/* Savings Highlight */}
                                                         {savings > 0 && (
                                                             <div className="text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 text-xs uppercase tracking-wide shadow-[0_0_10px_rgba(52,211,153,0.1)] w-fit mx-auto">
