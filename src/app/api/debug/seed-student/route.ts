@@ -1,12 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
+        const { searchParams } = new URL(req.url);
+        const email = searchParams.get("email");
+
         // 1. Find the user (flexible search)
         const user = await prisma.user.findFirst({
             where: {
                 OR: [
+                    email ? { email: { equals: email, mode: 'insensitive' } } : {},
                     { email: { contains: "student", mode: 'insensitive' } },
                     { email: { contains: "alumno", mode: 'insensitive' } },
                     { name: { contains: "student", mode: 'insensitive' } }
