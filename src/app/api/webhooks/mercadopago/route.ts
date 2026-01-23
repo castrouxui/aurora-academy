@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import MercadoPagoConfig, { Payment } from "mercadopago";
+
+import MercadoPagoConfig, { Payment, PreApproval } from "mercadopago";
 import { prisma } from "@/lib/prisma";
 
 // Initialize client lazily to avoid build-time errors if env is missing
@@ -54,6 +55,24 @@ export async function POST(request: Request) {
                     console.log(`[WEBHOOK] Purchase saved for User ${user_id} - ${bundle_id ? `Bundle ${bundle_id}` : `Course ${course_id}`}`);
                 }
             }
+        } else if ((topic === "preapproval" || topic === "subscription_preapproval") && id) {
+            // SUBSCRIPTION STATUS UPDATE
+            const client = getClient();
+            const preApproval = new PreApproval(client);
+            const subscriptionData = await preApproval.get({ id });
+
+            console.log(`[WEBHOOK] Subscription ${id} Status: ${subscriptionData.status}`);
+
+            // Update local DB status (authorized, paused, cancelled)
+            const updated = await prisma.subscription.update({
+                where: { mercadoPagoId: id },
+                data: {
+                    status: subscriptionData.status,
+                    updatedAt: new Date()
+                }
+            });
+
+            console.log(`[WEBHOOK] Updated Subscription ${id} to ${subscriptionData.status}`);
         }
 
         return NextResponse.json({ status: "success" });

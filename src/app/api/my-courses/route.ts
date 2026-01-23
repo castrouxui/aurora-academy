@@ -53,6 +53,29 @@ export async function GET() {
             }
         });
 
+        // 2. Fetch Active Subscriptions
+        const subscriptions = await prisma.subscription.findMany({
+            where: {
+                userId: session.user.id,
+                status: 'authorized' // ONLY ACTIVE SUBSCRIPTIONS
+            },
+            include: {
+                bundle: {
+                    include: {
+                        courses: {
+                            include: {
+                                modules: {
+                                    include: {
+                                        lessons: { select: { id: true } }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
         const userProgress = await prisma.userProgress.findMany({
             where: {
                 userId: session.user.id,
@@ -80,6 +103,18 @@ export async function GET() {
                     // Only add if not already present (prioritize direct purchase date or just first encounter)
                     if (!coursesMap.has(bundleCourse.id)) {
                         coursesMap.set(bundleCourse.id, { ...bundleCourse, lastAccessed: purchase.updatedAt });
+                    }
+                });
+            }
+        });
+
+        // 3. Process Subscriptions (Grant temporary access)
+        subscriptions.forEach(sub => {
+            if (sub.bundle && sub.bundle.courses) {
+                sub.bundle.courses.forEach(bundleCourse => {
+                    // Add if not present (Subscription grants access just like a purchase)
+                    if (!coursesMap.has(bundleCourse.id)) {
+                        coursesMap.set(bundleCourse.id, { ...bundleCourse, lastAccessed: sub.updatedAt });
                     }
                 });
             }

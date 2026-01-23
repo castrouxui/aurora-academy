@@ -92,6 +92,19 @@ export async function POST(req: NextRequest) {
             body: subscriptionBody
         });
 
+        // SAVE TO DB (Vital for logic)
+        if (result.id) {
+            await prisma.subscription.create({
+                data: {
+                    userId: userId,
+                    bundleId: bundleId,
+                    mercadoPagoId: result.id,
+                    status: 'pending' // waits for webhook 'authorized'
+                }
+            });
+            console.log(`[SUBSCRIPTION] Saved pending subscription ${result.id} for user ${userId}`);
+        }
+
         return NextResponse.json({
             id: result.id,
             init_point: result.init_point
