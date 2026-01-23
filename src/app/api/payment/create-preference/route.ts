@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
         // Determine Base URL for callbacks
         // Priority: Env Var -> Request Origin -> Production Fallback -> Localhost
         const origin = req.headers.get('origin');
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (req.headers.get("origin") ?? "https://aurora-academy.onrender.com");
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (req.headers.get("origin") ?? "https://auroracademy.net");
 
         const preference = new Preference(client);
 

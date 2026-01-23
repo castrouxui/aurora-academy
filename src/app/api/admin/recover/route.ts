@@ -46,6 +46,15 @@ export async function POST() {
             let userId = metadata.user_id;
             let courseId = metadata.course_id;
 
+            // Verify if metadata userId exists in current DB
+            if (userId) {
+                const existingUser = await prisma.user.findUnique({ where: { id: userId } });
+                if (!existingUser) {
+                    console.log(`[WARN] Metadata userId ${userId} not found. Falling back to email.`);
+                    userId = null; // Force fallback to email lookup
+                }
+            }
+
             // Check if purchase exists
             const exists = await prisma.purchase.findFirst({
                 where: { paymentId: paymentId }
