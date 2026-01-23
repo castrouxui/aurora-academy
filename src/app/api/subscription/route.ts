@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { getMercadoPagoClient } from "@/lib/mercadopago";
 import { PreApproval } from "mercadopago";
+import { sendEmail } from "@/lib/email";
 
 export async function GET() {
     const session = await getServerSession(authOptions);
@@ -64,6 +65,17 @@ export async function POST(req: Request) {
                 where: { id: subscriptionId },
                 data: { status: "cancelled" }
             });
+
+            // SEND CANCELLATION EMAIL
+            if (session.user.email) {
+                await sendEmail(
+                    session.user.email,
+                    "Suscripción Cancelada - Aurora Academy",
+                    `<p>Hola ${session.user.name || ''},</p>
+                    <p>Confirmamos que tu suscripción ha sido cancelada exitosamente desde el panel de control.</p>
+                    <p>Tendrás acceso hasta el final del período actual.</p>`
+                );
+            }
 
             return NextResponse.json({ success: true, message: "Subscription cancelled" });
         }

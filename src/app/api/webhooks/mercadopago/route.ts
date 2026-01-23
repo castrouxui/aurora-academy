@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import MercadoPagoConfig, { Payment, PreApproval } from "mercadopago";
 import { prisma } from "@/lib/prisma";
+import { sendEmail } from "@/lib/email";
 
 // Initialize client lazily to avoid build-time errors if env is missing
 const getClient = () => {
@@ -52,6 +53,18 @@ export async function POST(request: Request) {
                         }
                     });
 
+                    // SEND RECEIPT EMAIL
+                    const user = await prisma.user.findUnique({ where: { id: user_id } });
+                    if (user?.email) {
+                        await sendEmail(
+                            user.email,
+                            "¡Pago Confirmado! - Aurora Academy",
+                            `<h1>¡Gracias por tu compra, ${user.name || ''}!</h1>
+                             <p>Hemos recibido tu pago correctamente. Ya tenés acceso inmediato a tu contenido.</p>
+                             <p>Podés empezar a aprender ahora mismo en <a href="https://auroracademy.net/dashboard">Tu Panel</a>.</p>`
+                        );
+                    }
+
                     console.log(`[WEBHOOK] Purchase saved for User ${user_id} - ${bundle_id ? `Bundle ${bundle_id}` : `Course ${course_id}`}`);
                 }
             }
@@ -69,8 +82,26 @@ export async function POST(request: Request) {
                 data: {
                     status: subscriptionData.status,
                     updatedAt: new Date()
-                }
+                },
+                include: { user: true, bundle: true }
             });
+
+            // SEND CANCELLATION/APPROVAL EMAIL
+            if (updated.user.email) {
+                if (subscriptionData.status === 'cancelled') {
+                    await sendEmail(
+                        updated.user.email,
+                        "Suscripción Cancelada - Aurora Academy",
+                        `<p>Hola ${updated.user.name || ''},</p>
+                         <p>Confirmamos que tu suscripción al plan <strong>${updated.bundle.title}</strong> ha sido cancelada.</p>
+                         <p>Tendrás acceso hasta el final del período actual.</p>
+                         <p>¡Esperamos verte pronto!</p>`
+                    );
+                } else if (subscriptionData.status === 'authorized') {
+                    // Optionally send "Subscription Active" (Manual or recurrence)
+                    // Usually handled by the initial payment receipt, but good for reactivations
+                }
+            }
 
             console.log(`[WEBHOOK] Updated Subscription ${id} to ${subscriptionData.status}`);
         }
