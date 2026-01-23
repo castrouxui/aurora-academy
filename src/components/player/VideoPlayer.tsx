@@ -42,6 +42,28 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
     const [isSeeking, setIsSeeking] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [playbackRate, setPlaybackRate] = useState(1.0); // Default 1x
+    const [showControls, setShowControls] = useState(false);
+    const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Handle Control Visibility
+    const handleShowControls = () => {
+        setShowControls(true);
+        if (controlsTimeoutRef.current) {
+            clearTimeout(controlsTimeoutRef.current);
+        }
+        // Hide after 3 seconds if playing
+        if (isPlaying) {
+            controlsTimeoutRef.current = setTimeout(() => {
+                setShowControls(false);
+            }, 3000);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (isPlaying) {
+            setShowControls(false);
+        }
+    };
 
     useEffect(() => {
         setHasWindow(true);
@@ -71,6 +93,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
             }
         }
         setIsPlaying(!isPlaying);
+        handleShowControls(); // Ensure controls show on interaction
     };
 
     const handleVolumeChange = (newVolume: number) => {
@@ -98,12 +121,26 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
 
     const handleToggleFullscreen = () => {
         if (!containerRef.current) return;
-        if (!document.fullscreenElement) {
-            containerRef.current.requestFullscreen().catch(err => {
-                console.error(`Error attempting to enable fullscreen: ${err.message}`);
-            });
+
+        // Try standard fullscreen API first
+        if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
+            if (containerRef.current.requestFullscreen) {
+                containerRef.current.requestFullscreen();
+            } else if ((containerRef.current as any).webkitRequestFullscreen) {
+                (containerRef.current as any).webkitRequestFullscreen();
+            } else if (playerRef.current) {
+                // Fallback for iOS video element specific
+                const video = playerRef.current.getInternalPlayer();
+                if (video && video.webkitEnterFullscreen) {
+                    video.webkitEnterFullscreen();
+                }
+            }
         } else {
-            document.exitFullscreen();
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if ((document as any).webkitExitFullscreen) {
+                (document as any).webkitExitFullscreen();
+            }
         }
     };
 
@@ -160,10 +197,15 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
             ref={containerRef}
             className="relative aspect-video bg-black rounded-lg overflow-hidden group border border-gray-800 select-none"
             onContextMenu={(e) => e.preventDefault()}
+            onMouseMove={handleShowControls}
+            onMouseLeave={handleMouseLeave}
+            onTouchStart={handleShowControls} // Mobile tap
+            onClick={handleShowControls} // Ensure click also triggers
         >
             <div
                 className="absolute inset-0 z-10 cursor-pointer"
                 onClick={handlePlayPause}
+                onDoubleClick={handleToggleFullscreen} // Double tap to fullscreen is nice
             />
 
             <div className="absolute inset-0 z-0">
@@ -219,6 +261,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                 onToggleFullscreen={handleToggleFullscreen}
                 playbackRate={playbackRate}
                 onPlaybackRateChange={handlePlaybackRateChange}
+                isVisible={showControls || !isPlaying} // Always show when paused
             />
 
             {/* Big Play Button (Initial State or Paused) */}

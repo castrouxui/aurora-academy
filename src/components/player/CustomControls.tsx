@@ -22,6 +22,7 @@ interface CustomControlsProps {
     onToggleFullscreen: () => void;
     playbackRate: number;
     onPlaybackRateChange: (rate: number) => void;
+    isVisible: boolean;
 }
 
 function formatDuration(seconds: number) {
@@ -55,10 +56,14 @@ export function CustomControls({
     isFullscreen,
     onToggleFullscreen,
     playbackRate,
-    onPlaybackRateChange
+    onPlaybackRateChange,
+    isVisible
 }: CustomControlsProps) {
     return (
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent px-4 pb-4 pt-12 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
+        <div className={cn(
+            "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent px-4 pb-4 pt-12 transition-opacity duration-300 z-30",
+            isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+        )}>
             {/* Progress Bar */}
             <div className="mb-4 flex items-center gap-2 group/slider">
                 <Slider
