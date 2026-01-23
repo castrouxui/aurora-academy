@@ -11,7 +11,8 @@ interface Sale {
     status: string;
     createdAt: string;
     user: { name: string; email: string };
-    course: { title: string };
+    course?: { title: string };
+    bundle?: { title: string };
     paymentId: string;
 }
 
@@ -149,7 +150,9 @@ export default function AdminSalesPage() {
                                 <tbody>
                                     {sales.map((sale) => (
                                         <tr key={sale.id} className="border-b border-gray-800 hover:bg-[#111827]/50 transition-colors">
-                                            <td className="px-4 py-3 font-medium text-white">{sale.course.title}</td>
+                                            <td className="px-4 py-3 font-medium text-white">
+                                                {sale.course?.title || sale.bundle?.title || "Ítem desconocido"}
+                                            </td>
                                             <td className="px-4 py-3">
                                                 <div className="flex flex-col">
                                                     <span className="text-gray-300">{sale.user.name || "Sin nombre"}</span>

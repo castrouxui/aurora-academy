@@ -37,7 +37,8 @@ export async function GET(req: Request) {
             orderBy: { createdAt: 'desc' },
             include: {
                 user: { select: { name: true, email: true } },
-                course: { select: { title: true } }
+                course: { select: { title: true } },
+                bundle: { select: { title: true } }
             }
         });
 

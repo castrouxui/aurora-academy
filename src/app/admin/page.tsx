@@ -135,7 +135,9 @@ export default function AdminDashboard() {
                                                 <ShoppingCart size={16} />
                                             </div>
                                             <div>
-                                                <p className="text-sm font-bold text-white">{sale.course.title}</p>
+                                                <p className="text-sm font-bold text-white">
+                                                    {sale.course?.title || sale.bundle?.title || "Ítem desconocido"}
+                                                </p>
                                                 <p className="text-xs text-gray-400">{sale.user.name || sale.user.email}</p>
                                             </div>
                                         </div>

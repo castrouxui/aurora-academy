@@ -38,7 +38,8 @@ export async function GET() {
                 where: { status: 'approved' },
                 include: {
                     user: { select: { name: true, email: true, image: true } },
-                    course: { select: { title: true } }
+                    course: { select: { title: true } },
+                    bundle: { select: { title: true } }
                 }
             }),
             // Recent Students

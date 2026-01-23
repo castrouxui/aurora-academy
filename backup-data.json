@@ -1,0 +1,1613 @@
+{
+  "users": [
+    {
+      "id": "cmk74lb8j0000f23yibt7yx6t",
+      "name": "Francisco Castro",
+      "email": "anakinchomper@gmail.com",
+      "emailVerified": null,
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocJshxRKsggdXJs9DznOlbOmUMiQuSqONEFu8dSDCtVf8kHSQWUI=s96-c",
+      "role": "STUDENT"
+    },
+    {
+      "id": "cmk7lw5pz0000660dqahfvmue",
+      "name": "Belén Salustro",
+      "email": "laurasalustro@gmail.com",
+      "emailVerified": null,
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocKRuRvCOqZOBTq_ChxpjGN10R1LDG-v0hNL_VLrcxe9vsXVjmJh2g=s96-c",
+      "role": "ESTUDIANTE"
+    },
+    {
+      "id": "cmk7tfk3500047l7dgi3mybck",
+      "name": "Usuario Recuperado",
+      "email": "joseca5tro@hotmail.com",
+      "emailVerified": null,
+      "image": "https://ui-avatars.com/api/?name=joseca5tro@hotmail.com&background=random",
+      "role": "ESTUDIANTE"
+    },
+    {
+      "id": "cmk7tfkgn00097l7dcnjupxbm",
+      "name": "Usuario Recuperado",
+      "email": "kjacquier@hotmail.com",
+      "emailVerified": null,
+      "image": "https://ui-avatars.com/api/?name=kjacquier@hotmail.com&background=random",
+      "role": "ESTUDIANTE"
+    },
+    {
+      "id": "admin-user-id",
+      "name": "Francisco Castro",
+      "email": "admin@aurora.com",
+      "emailVerified": null,
+      "image": "/images/francisco-speaking.png",
+      "role": "ADMIN"
+    },
+    {
+      "id": "cmkbl48mp0004cdxbsnhw7dj4",
+      "name": "José Castro",
+      "email": "castrouxui@gmail.com",
+      "emailVerified": null,
+      "image": "https://lh3.googleusercontent.com/a/ACg8ocKZ6svgAoZkRCdpyWe_r6g0RKv3NLHUChTg-SI4aiLXdU4xiHzd=s96-c",
+      "role": "ESTUDIANTE"
+    },
+    {
+      "id": "cmkiy2ooo000011z52yb77o4b",
+      "name": "Usuario Recuperado",
+      "email": "francastromt@hotmail.com",
+      "emailVerified": null,
+      "image": "https://ui-avatars.com/api/?name=francastromt@hotmail.com&background=random",
+      "role": "ESTUDIANTE"
+    }
+  ],
+  "courses": [
+    {
+      "id": "cmk76jxm700002i3ojyfpjbm5",
+      "title": "Mentoria en Price Action",
+      "description": "Dominar el Price Action (Acción del Precio) significa aprender a leer el mercado en su estado más puro, sin indicadores que retrasen tu visión. En este programa, dejarás de depender de herramientas externas para convertirte en un lector experto de la psicología de masas plasmada en el gráfico:\n\nPrice Action: El Arte de Leer el Mercado en Tiempo Real\n\nTu entrenamiento comienza con el dominio de las Velas Japonesas y la Oferta y Demanda. Aprenderás que cada vela es una batalla ganada o perdida entre compradores y vendedores. Entenderás la dinámica de la subasta del mercado, identificando las zonas donde el \"Smart Money\" deja su huella y donde la liquidez realmente se concentra.\n\nEn el módulo de Estructura y Reconocimientos, profundizaremos en la identificación de Soportes y Resistencias desde una perspectiva de flujo de órdenes. Aprenderás a distinguir los diferentes Tipos de Quiebres (reales vs. falsos) y cómo el mercado realiza sus testeos antes de iniciar un movimiento explosivo. Entenderás los tipos de reconocimientos de zona para no entrar nunca antes de tiempo.\n\nLa parte operativa se centra en la Gestión Profesional del Trade. Aprenderás a configurar tu operatoria mediante Take Profit y Stop Loss basados exclusivamente en la estructura del precio, buscando siempre ratios de riesgo-beneficio positivos. Sabrás exactamente dónde colocar tu salida para proteger tu capital y dónde retirarte con ganancias antes de que el mercado gire.\n\nFinalmente, este curso te dará la confianza para operar con un gráfico limpio. Al integrar el análisis del Volumen con la acción del precio, descubrirás cómo confirmar la intención detrás de cada movimiento. Es el paso definitivo para quienes buscan una metodología robusta, lógica y, sobre todo, altamente efectiva en cualquier marco temporal.\n\n¿Estás listo para ver el mercado con total claridad y sin ruidos? Inscribite hoy y dominá la técnica que separa a los aficionados de los profesionales.",
+      "shortDescription": null,
+      "price": "100000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJOwVP0i1HzIbv7eJq1KyWX24kCaPHmfh5sT9x",
+      "category": "General",
+      "level": "Intermedio",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-09T17:58:47.791Z",
+      "updatedAt": "2026-01-18T22:20:46.756Z",
+      "modules": [
+        {
+          "id": "cmk76k5yv00022i3oac237bln",
+          "title": "Mentoria Completa",
+          "position": 1,
+          "courseId": "cmk76jxm700002i3ojyfpjbm5",
+          "createdAt": "2026-01-09T17:58:58.616Z",
+          "updatedAt": "2026-01-09T17:58:58.616Z",
+          "lessons": [
+            {
+              "id": "cmk76riob00042i3oqtw6bdqz",
+              "title": "Clase Completa",
+              "description": "Esta sesión se enfoca en comprender por qué se mueve el precio, dejando de lado los indicadores tradicionales para centrarse en la mecánica pura del mercado.\n\n 1. Fundamentos y Velas Japonesas (Psicología de Masa)\n\nEn lugar de memorizar patrones aislados, analizamos qué nos dice el cuerpo y la mecha de la vela sobre el sentimiento del mercado.\n\n* Anatomía del precio: Apertura, cierre, máximos y mínimos.\n* Lectura de intención: Velas de expansión vs. velas de indecisión.\n* Contextualización: Por qué una misma vela significa algo distinto según dónde aparezca.\n\n 2. Soportes y Resistencias (Zonas de Reacción)\n\nEvolucionamos el concepto de \"líneas simples\" a **zonas de interés**.\n\n* Niveles dinámicos y estáticos: Identificación de techos y suelos históricos.\n* Cambio de polaridad: Cuando un soporte se convierte en resistencia y la validación del \"retest\".\n* Zonas de trampa: Cómo identificar falsos rompimientos diseñados para captar liquidez.\n\n3. Dinámica de Oferta y Demanda (Order Blocks)\n\nEl núcleo de la acción del precio. Aquí entendemos dónde están las órdenes de compra y venta de los grandes jugadores.\n\n* Desequilibrios (Imbalances): Movimientos fuertes que dejan órdenes pendientes.\n* Zonas de Oferta (Supply) y Demanda (Demand): Identificación de los puntos de origen de las tendencias.\n* Mitigación: Por qué el precio tiende a regresar a estas zonas antes de continuar su camino.\n\n 4. El Rol Crítico del Volumen\n\nEl volumen es el único indicador que confirma la validez de un movimiento de precio.\n\n* Esfuerzo vs. Resultado: Si el precio sube con poco volumen, ¿es una subida genuina o una trampa?\n* Análisis de VSA (Volume Spread Analysis): Relación entre el rango de la vela y el volumen transaccionado.\n* Clímax de parada: Identificación de finales de tendencia a través de picos de volumen.\n\n 5. Conceptos de Wyckoff (Ciclos de Mercado)\n\nCerramos la clase con la metodología que explica la manipulación y las fases del mercado.\n\nLas 3 Leyes de Wyckoff: Oferta y Demanda, Causa y Efecto, Esfuerzo y Resultado.\n* Fases del Mercado:\n* Acumulación: El \"Smart Money\" compra sin mover el precio.\n* Distribución: El dinero institucional sale de sus posiciones.\n\n---\n\nResumen del Aprendizaje\n\nAl finalizar la clase, el alumno será capaz de dejar de ver \"velas de colores\" para empezar a ver interacción entre compradores y vendedores, identificando con alta probabilidad hacia dónde se dirige el flujo de órdenes institucional.\n",
+              "videoUrl": "https://youtu.be/nctE34Mfppk",
+              "duration": 10957,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk76k5yv00022i3oac237bln",
+              "createdAt": "2026-01-09T18:04:41.676Z",
+              "updatedAt": "2026-01-17T15:03:48.933Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmkb3mgzw0000d3a47s50rk9t",
+      "title": "Mentoria Introducción al Mercado de Capitales",
+      "description": "Este curso de Introducción al Mercado de Capitales es el primer paso fundamental para cualquier persona que desee tomar las riendas de su futuro financiero. Aquí aprenderás que el mercado no es un lugar exclusivo para expertos, sino un ecosistema de oportunidades accesible para todos aquellos que se atrevan a pasar del ahorro a la inversión inteligente.\n\nPrimeros Pasos: El Despertar del Inversor\n\nTu camino comienza entendiendo el Funcionamiento del Mercado. Descubrirás el ecosistema financiero, comprendiendo los roles de la CNV como regulador y de BYMA como el lugar donde sucede la magia, además de aprender a elegir tu primer Bróker (ALyC). Entenderás por fin la diferencia vital entre ahorrar y \"poner el dinero a trabajar\" para canalizarlo hacia la producción real.\n\nEn el módulo de Perfil del Inversor y Riesgo, aprenderás que no existe una inversión perfecta, sino una inversión adecuada para vos. Definirás si sos un inversor conservador, moderado o agresivo, y entenderás la relación inquebrantable entre riesgo y retorno. Aprenderás a trazar tu horizonte de inversión y a usar la diversificación como tu principal escudo protector.\n\nLa parte técnica se divide en los dos grandes pilares de la bolsa. Primero, los Instrumentos de Renta Variable, donde aprenderás qué significa ser dueño de una empresa a través de acciones y cómo los Cedears te permiten invertir en los gigantes de Wall Street desde tu cuenta local. Entenderás cómo ganar dinero tanto por la suba de precios como por el cobro de dividendos. Luego, exploraremos la Renta Fija, donde aprenderás a ser acreedor del Estado o de empresas privadas mediante Bonos y ONs, asegurándote el cobro de intereses periódicos de manera previsible.\n\nPara quienes buscan simplicidad, descubriremos los Fondos Comunes de Inversión (FCI). Aprenderás a elegir el fondo adecuado según tu necesidad de liquidez, desde los Money Market hasta fondos de acciones, delegando la administración profesional de tu capital para que expertos trabajen por vos.\n\nFinalmente, el curso culmina con la Operativa Práctica, donde la teoría se convierte en acción. Aprenderás paso a paso cómo abrir tu cuenta comitente, cómo leer una pantalla de trading sin marearte y cómo cargar tus primeras órdenes a mercado o límite. Al terminar, estarás listo para realizar tu primera inversión con total seguridad, comprendiendo perfectamente las comisiones e impuestos involucrados.\n\n¿Estás listo para dejar de ver el mercado desde afuera y empezar a construir tu patrimonio? Inscribite hoy y transformá tus ahorros en inversiones reales.",
+      "shortDescription": null,
+      "price": "45000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJIhZhSoOQSHyutNkZVmn8WFwo14l6brCz0Yi3",
+      "category": "General",
+      "level": "Principiante",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-12T11:47:52.076Z",
+      "updatedAt": "2026-01-18T22:20:30.239Z",
+      "modules": [
+        {
+          "id": "cmkb3moct0002d3a4wkuqc7sz",
+          "title": "Mercado de Capitales",
+          "position": 1,
+          "courseId": "cmkb3mgzw0000d3a47s50rk9t",
+          "createdAt": "2026-01-12T11:48:01.613Z",
+          "updatedAt": "2026-01-12T11:48:01.613Z",
+          "lessons": [
+            {
+              "id": "cmkhav01y0001say0e3aptip9",
+              "title": "Introducción al Mercado de Capitales",
+              "description": "Clase 1: Funcionamiento del Mercado\n\nContenido: El rol de la CNV (Comisión Nacional de Valores), BYMA, cajas de valores y el rol del Bróker (ALyC).\n\nAprendizaje: Diferencia entre ahorro e inversión, y cómo el mercado de capitales ayuda a canalizar el ahorro hacia la producción.\n\nClase 2: Perfil del Inversor y Riesgo\n\nContenido: Definición de perfiles (conservador, moderado, agresivo) y la relación riesgo-retorno.\n\nAprendizaje: Cómo determinar un horizonte de inversión y entender la importancia de la diversificación inicial.\n\nClase 3: Instrumentos de Renta Variable (Acciones y Cedears)\n\nContenido: Qué es una acción, derechos del accionista y qué son los Cedears para invertir en empresas del exterior desde lo local.\n\nAprendizaje: Conceptos básicos de dividendos y cómo se gana dinero con la suba de precios de las empresas.\n\nClase 4: Instrumentos de Renta Fija (Bonos y ONs)\n\nContenido: Introducción a los títulos públicos y a las Obligaciones Negociables (deuda de empresas privadas).\n\nAprendizaje: Cómo cobrar intereses periódicos y la diferencia entre ser \"dueño\" (acciones) y ser \"acreedor\" (bonos).\n\nClase 5: Fondos Comunes de Inversión (FCI)\n\nContenido: Tipos de fondos (Money Market, renta fija, renta variable).\n\nAprendizaje: Cómo delegar la administración del dinero en profesionales mediante el uso de carteras administradas.\n\nClase 6: Operativa Práctica\n\nContenido: Cómo abrir una cuenta comitente, lectura de pantallas de trading y tipos de órdenes (a mercado y límite).\n\nAprendizaje: El paso a paso para realizar la primera compra de un activo y entender las comisiones e impuestos básicos.",
+              "videoUrl": "https://www.youtube.com/watch?v=JVEGbATtGyk",
+              "duration": 11043,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkb3moct0002d3a4wkuqc7sz",
+              "createdAt": "2026-01-16T19:57:04.390Z",
+              "updatedAt": "2026-01-17T15:15:26.600Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmkb3vwqf0001yj6t5lbqq7h8",
+      "title": "Mentoria Analisis Tecnico",
+      "description": "¿Te ha pasado que compras y el precio cae inmediatamente? Eso es falta de Análisis Técnico. El mercado deja huellas antes de moverse, y en este curso aprenderás a rastrearlas.\n\nNo necesitas ser un genio matemático, necesitas las herramientas correctas para:\n\nValidar Rupturas: Distingue entre un movimiento real y una \"trampa de toros\" (Bull Trap).\n\nMedias Móviles: Úsalas como soportes dinámicos para subirte a la tendencia sin riesgo.\n\nVolumen: El detector de mentiras. Aprende a ver si hay dinero real respaldando el movimiento.\n\nDeja de regalar tu dinero entrando tarde. Aprende a entrar con los profesionales. 🔥 Afina tu puntería y entra al curso ahora.",
+      "shortDescription": null,
+      "price": "150000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJ2MDPHyLowIuzXV8j2bLyc5oEkBGmfJpxKnRi",
+      "category": "General",
+      "level": "Todos los niveles",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-12T11:55:12.374Z",
+      "updatedAt": "2026-01-18T22:21:08.798Z",
+      "modules": [
+        {
+          "id": "cmkcp5ob00001dq49o5q4fis5",
+          "title": "Mentoria",
+          "position": 1,
+          "courseId": "cmkb3vwqf0001yj6t5lbqq7h8",
+          "createdAt": "2026-01-13T14:38:26.125Z",
+          "updatedAt": "2026-01-13T14:38:26.125Z",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "cmkbfyovj0000iv7p7dwuyjbc",
+      "title": "Curso de Opciones Financieras",
+      "description": "Llevá tu perfil como inversor a la frontera del conocimiento bursátil con este programa de Opciones Financieras, el instrumento más versátil y potente del mercado. Este curso te permitirá dejar de ser un espectador para convertirte en un estratega capaz de ganar en cualquier escenario:\n\nMaestría en Opciones: Maximizá Ganancias y Blindá tu Cartera\n\nTu formación comienza con los Conceptos Básicos, donde dominarás el universo de los derivados financieros. Aprenderás a diferenciar con precisión entre opciones Call y Put, identificando los elementos clave como el activo subyacente y el precio de ejercicio. Al finalizar esta etapa, leerás la nomenclatura del mercado como un profesional, sabiendo exactamente qué oportunidad se esconde tras cada sigla.\n\nEn el módulo de Operatoria y Valuación, descubrirás la ciencia detrás del precio de las opciones. Aprenderás a distinguir entre opciones Americanas y Europeas, y dominarás los conceptos de valor intrínseco y extrínseco para saber cuándo una opción está ITM, ATM u OTM. Además, entenderás la paridad Put-Call para armar posiciones sintéticas y gestionarás garantías con la eficiencia de un operador institucional.\n\nPasarás a la acción con las Estrategias con Opciones I, donde aprenderás las herramientas fundamentales de cobertura y generación de renta. Desde el Lanzamiento Cubierto para \"hacer tasa\" hasta el Protective Put para asegurar tus acciones contra caídas, dominarás el cálculo de ganancias máximas y puntos de equilibrio (breakeven) con un análisis gráfico riguroso de tu perfil de riesgo.\n\nElevarás tu sofisticación con las Estrategias Avanzadas II, adentrándote en el armado de estructuras complejas como Spreads, Conos, Cunas y Mariposas. Estas herramientas te permitirán beneficiarte de la volatilidad extrema o de mercados laterales, optimizando el uso de tu capital para obtener retornos apalancados que otros instrumentos no pueden ofrecer.\n\nFinalmente, dominarás el Modelo Black & Scholes, la fórmula ganadora del Premio Nobel que revolucionó las finanzas. Aprenderás a aplicar este método matemático para determinar el valor teórico de una prima y, lo más importante, a proyectar variaciones de precio en base a tus objetivos de análisis técnico, dándote una ventaja competitiva estadística insuperable.\n\n¿Estás listo para operar con la herramienta definitiva de los profesionales? Inscribite hoy y descubrí cómo las opciones pueden transformar tu rentabilidad para siempre.",
+      "shortDescription": null,
+      "price": "55000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJbfET2p9QTe5Vo3qKwXOL8DRx6btI07kJPcAd",
+      "category": "General",
+      "level": "Avanzado",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-12T17:33:17.551Z",
+      "updatedAt": "2026-01-18T22:21:24.858Z",
+      "modules": [
+        {
+          "id": "cmkbfz6os0002iv7pylh3sq0v",
+          "title": "¡Comenzando con Opciones!",
+          "position": 1,
+          "courseId": "cmkbfyovj0000iv7p7dwuyjbc",
+          "createdAt": "2026-01-12T17:33:40.636Z",
+          "updatedAt": "2026-01-12T17:33:40.636Z",
+          "lessons": [
+            {
+              "id": "cmke3q3a300015b9gphv8vaee",
+              "title": "Introducción",
+              "description": "Contenido: Definición de derivados financieros y contrato de opción. Diferencias entre opciones Call (compra) y Put (venta).\n\nAprendizaje: Identificación de los elementos que componen una opción (activo subyacente, precio de ejercicio, fecha de vencimiento) y cómo leer la nomenclatura técnica de las especies en el mercado.",
+              "videoUrl": "https://utfs.io/f/30KHQePr0sHJHZ66KMWSxAXHgnULYsik7rvzC4tDoJf2hydB",
+              "duration": 616,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkbfz6os0002iv7pylh3sq0v",
+              "createdAt": "2026-01-14T14:13:59.451Z",
+              "updatedAt": "2026-01-17T15:16:32.226Z"
+            }
+          ]
+        },
+        {
+          "id": "cmkhhw7gt0001fnm0w5bevkgp",
+          "title": "Panel y Ordenes",
+          "position": 2,
+          "courseId": "cmkbfyovj0000iv7p7dwuyjbc",
+          "createdAt": "2026-01-16T23:13:57.965Z",
+          "updatedAt": "2026-01-16T23:13:57.965Z",
+          "lessons": [
+            {
+              "id": "cmkhhwrog0003fnm07zgh8zfh",
+              "title": "Panel y Ordenes",
+              "description": "Contenido: Tipos de ejercicio (opciones Americanas vs. Europeas). Conceptos de valor intrínseco y extrínseco (ITM, ATM y OTM).\n\nAprendizaje: Determinación de los factores que afectan el precio de la prima, gestión de garantías, paridad Put-Call y el armado de posiciones sintéticas combinando acciones y opciones.",
+              "videoUrl": "https://utfs.io/f/30KHQePr0sHJy7qWq7vHtDPGZe4oISCRsEdFaOi95z3yNX0j",
+              "duration": 398,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkhhw7gt0001fnm0w5bevkgp",
+              "createdAt": "2026-01-16T23:14:24.160Z",
+              "updatedAt": "2026-01-17T15:16:38.553Z"
+            }
+          ]
+        },
+        {
+          "id": "cmkhhy1e80005fnm0drll5cjm",
+          "title": "Estrategias Parte 1",
+          "position": 3,
+          "courseId": "cmkbfyovj0000iv7p7dwuyjbc",
+          "createdAt": "2026-01-16T23:15:23.408Z",
+          "updatedAt": "2026-01-16T23:15:23.408Z",
+          "lessons": [
+            {
+              "id": "cmkhhybsx0007fnm05cbqvln7",
+              "title": "Estrategia Parte 1",
+              "description": "Contenido: Introducción a las estrategias básicas: Compra y Venta de Call/Put, Lanzamiento Cubierto y Descubierto, Protective Put y Collar.\n\nAprendizaje: Cálculo de la ganancia y pérdida máxima, puntos de equilibrio (breakeven) y análisis gráfico del perfil de riesgo para cada estrategia inicial.",
+              "videoUrl": "",
+              "duration": 398,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkhhy1e80005fnm0drll5cjm",
+              "createdAt": "2026-01-16T23:15:36.897Z",
+              "updatedAt": "2026-01-17T15:16:45.983Z"
+            }
+          ]
+        },
+        {
+          "id": "cmkhhyubf0009fnm0ppm6ax3o",
+          "title": "Estrategias Parte 2",
+          "position": 4,
+          "courseId": "cmkbfyovj0000iv7p7dwuyjbc",
+          "createdAt": "2026-01-16T23:16:00.892Z",
+          "updatedAt": "2026-01-16T23:16:00.892Z",
+          "lessons": [
+            {
+              "id": "cmkhhz1py000bfnm0eyjy60zb",
+              "title": "Estrategias Parte 2",
+              "description": "Contenido: Armado de estrategias complejas y combinadas: Spreads (Bull y Bear), Sintéticos, Conos (Straddles), Cunas (Strangles) y Mariposas (Butterflies).\n\nAprendizaje: Uso de estrategias de volatilidad para beneficiarse de movimientos fuertes del mercado o de la lateralización de los precios, optimizando el uso del capital.",
+              "videoUrl": "",
+              "duration": 398,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkhhyubf0009fnm0ppm6ax3o",
+              "createdAt": "2026-01-16T23:16:10.486Z",
+              "updatedAt": "2026-01-17T15:16:52.204Z"
+            }
+          ]
+        },
+        {
+          "id": "cmkhhzyr3000dfnm05vmru8bg",
+          "title": "Metodo Black and Scholes",
+          "position": 5,
+          "courseId": "cmkbfyovj0000iv7p7dwuyjbc",
+          "createdAt": "2026-01-16T23:16:53.295Z",
+          "updatedAt": "2026-01-16T23:16:53.295Z",
+          "lessons": [
+            {
+              "id": "cmkhi070c000ffnm0u56s2clw",
+              "title": "Método Final",
+              "description": "Contenido: Introducción al método matemático de valuación de opciones desarrollado por Black, Scholes y Merton. Supuestos y limitaciones del modelo.\n\nAprendizaje: Aplicación práctica de la fórmula para determinar el valor teórico de una prima y cómo proyectar variaciones en el precio de la opción en base a objetivos de análisis técnico.",
+              "videoUrl": "",
+              "duration": 398,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkhhzyr3000dfnm05vmru8bg",
+              "createdAt": "2026-01-16T23:17:03.997Z",
+              "updatedAt": "2026-01-17T15:16:58.582Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmkb45yfn0000l51swh07aw37",
+      "title": "Mentoria Gestion de Cartera",
+      "description": "Llevar la gestión de tus inversiones al siguiente nivel requiere dejar de elegir activos al azar y empezar a diseñar portafolios con rigor científico. Este programa de Gestión de Cartera te ofrece las herramientas cuantitativas y tecnológicas para administrar el riesgo y maximizar el retorno como un verdadero gestor de fondos profesional:\n\nGestión de Cartera: Ingeniería Financiera para Inversores Profesionales\n\nTu formación comienza con la Teoría Moderna de Portafolio de Markowitz, donde descubrirás el poder matemático de la diversificación. Aprenderás a construir la Frontera Eficiente, identificando la combinación exacta de activos que maximiza tu retorno para cada nivel de riesgo. Entenderás cómo las correlaciones entre activos permiten reducir el riesgo global de tu cartera, optimizando la relación media-varianza de manera estratégica.\n+2\n\nEn el módulo del Modelo CAPM, profundizaremos en la relación entre el riesgo sistemático del mercado y el retorno esperado. Aprenderás a calcular el Beta de tu cartera y a utilizar la Línea del Mercado de Valores (SML) para identificar con precisión qué activos están sobrevalorados o infravalorados, asegurándote de que cada inversión compense correctamente el riesgo asumido.\n\nPara blindar tu capital, dominaremos el VaR (Value at Risk), la métrica estándar de la industria para medir la pérdida máxima potencial. Aprenderás a gestionar el riesgo de caída (downside risk) con niveles de confianza del 95% o 99%, estableciendo límites operativos claros que te permitirán saber exactamente cuánto dinero está en riesgo en condiciones normales de mercado.\n\nLa sofisticación de tu análisis llegará con la Simulación de Monte Carlo. Mediante el modelado estocástico, proyectarás miles de escenarios posibles para tus inversiones, permitiéndote evaluar la probabilidad de éxito de tus estrategias a largo plazo más allá de los promedios lineales, comprendiendo la dispersión real de los resultados posibles.\n\nTodo este conocimiento se vuelve ejecutable a través de Modelos de Python para Finanzas. Aprenderás a utilizar librerías potentes como Pandas, NumPy y Scipy para automatizar la descarga de datos históricos y programar algoritmos de optimización. Podrás calcular matrices de covarianza y rebalancear tus carteras de forma objetiva, rápida y sin sesgos emocionales.\n\nFinalmente, aprenderás a medir tu éxito mediante el Ratio de Sharpe y Métricas de Performance. Utilizarás indicadores como el Alfa de Jensen y el ratio de Sortino para evaluar tu desempeño ajustado por riesgo. Al terminar, tendrás la capacidad de demostrar que tus retornos son el resultado de una gestión sólida y eficiente, diferenciándote de quienes simplemente confían en la suerte.\n\n¿Estás listo para aplicar la ciencia de datos a tus inversiones y gestionar tu patrimonio con precisión quirúrgica? Inscribite hoy y dominá la ingeniería de carteras.",
+      "shortDescription": null,
+      "price": "200000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJyxkqUhvHtDPGZe4oISCRsEdFaOi95z3yNX0j",
+      "category": "General",
+      "level": "Avanzado",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-12T12:03:01.138Z",
+      "updatedAt": "2026-01-18T22:21:16.574Z",
+      "modules": [
+        {
+          "id": "cmkbcxkoe0001r99rc5z43ael",
+          "title": "MModulo 1",
+          "position": 1,
+          "courseId": "cmkb45yfn0000l51swh07aw37",
+          "createdAt": "2026-01-12T16:08:26.606Z",
+          "updatedAt": "2026-01-12T16:08:26.606Z",
+          "lessons": [
+            {
+              "id": "cmkbd4ieo0003r99rb0hbb62k",
+              "title": "Clase 1",
+              "description": "1. Modelo de Markowitz (Teoría Moderna de Portafolio)\nContenido: Optimización de media-varianza y el concepto de diversificación eficiente.\n\nAprendizaje: Cómo construir la \"Frontera Eficiente\" para encontrar la combinación de activos que maximiza el retorno para un nivel de riesgo dado, o minimiza el riesgo para un retorno objetivo, entendiendo cómo las correlaciones reducen el riesgo global.\n\n2. Modelo CAPM (Capital Asset Pricing Model)\nContenido: Relación entre el riesgo sistemático (mercado) y el retorno esperado. Cálculo del Beta de una cartera.\n\nAprendizaje: Determinación de si un activo está compensando correctamente el riesgo asumido y comprensión de la línea del mercado de valores (SML) para identificar activos sobrevalorados o infravalorados.\n\n3. VaR (Value at Risk)\nContenido: Medición estadística de la pérdida máxima potencial en un horizonte de tiempo y con un nivel de confianza determinado (ej. 95% o 99%).\n\nAprendizaje: Gestión profesional del riesgo de caída (downside risk) para establecer límites operativos y entender cuánto dinero está realmente en riesgo en condiciones normales de mercado.\n\n4. Simulación de Monte Carlo\nContenido: Modelado estocástico para proyectar miles de escenarios posibles de precios y retornos basados en variables aleatorias.\n\nAprendizaje: Evaluación de la probabilidad de éxito de una estrategia de inversión a largo plazo y comprensión de la dispersión de resultados posibles, más allá de un simple promedio lineal.\n\n5. Modelos de Python para Finanzas\nContenido: Implementación técnica utilizando librerías como Pandas, NumPy, Matplotlib y Scipy.optimize.\n\nAprendizaje: Automatización de la descarga de datos históricos (vía APIs como Yahoo Finance), cálculo automático de matrices de covarianza y programación de algoritmos de optimización para rebalancear carteras de forma objetiva y rápida.\n\n6. Ratio de Sharpe y Métricas de Performance\nContenido: Evaluación del desempeño ajustado por riesgo.\n\nAprendizaje: Uso del Ratio de Sharpe, Jensen's Alpha y Sortino para diferenciar a un inversor que \"tuvo suerte\" de uno que generó retornos sólidos mediante una gestión eficiente del riesgo.",
+              "videoUrl": "https://youtu.be/kBNi3Gc9e88",
+              "duration": 9355,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkbcxkoe0001r99rc5z43ael",
+              "createdAt": "2026-01-12T16:13:50.256Z",
+              "updatedAt": "2026-01-17T15:14:42.977Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmkigoac4000akb3nnhyypiic",
+      "title": "Domina el Stop Loss en 15 minutos",
+      "description": "El Stop Loss es, sin ninguna duda, la herramienta más importante para la supervivencia de un inversor. En este micro-curso, Francisco Castro te enseña que la diferencia entre un operador profesional y un aficionado no es cuánto ganan, sino cómo limitan sus pérdidas. Aprendé a dominar el arte de la salida para que una mala decisión no arruine tu futuro financiero.\n\nBlindá tu Capital: La Disciplina del Stop Loss\n\nTu aprendizaje comienza con la Matemática del Drawdown, una lección de humildad financiera. Entenderás por qué una caída del 50% en tu cartera no se recupera con una subida del 50%, sino que requiere un 100% de retorno solo para volver al punto de equilibrio. Esta realidad matemática te demostrará que el \"esperar a que recupere\" es el error más caro que podés cometer y por qué cortar una pérdida pequeña es la mejor inversión de tu vida.\n\nEn el módulo de Estrategias de Salida, aprenderás a diferenciar entre el Stop Fijo y el Trailing Stop. Descubrirás cómo configurar un Stop Fijo para proteger tu capital inicial y cómo utilizar el Trailing Stop (Stop dinámico) para acompañar una tendencia alcista, permitiendo que tus ganancias corran mientras el sistema asegura beneficios automáticamente si el precio se da vuelta.\n\nFinalmente, el curso se enfoca en la Ejecución sin Emociones. Aprenderás la técnica para configurar estas órdenes directamente en tu bróker, permitiendo que el mercado ejecute tu plan por vos. Al automatizar tu disciplina, eliminarás el estrés de la toma de decisiones bajo presión y aprenderás que, en el trading, tu punto de salida es mucho más determinante para tu éxito que tu punto de entrada.\n\n¿Estás listo para dejar de sufrir por las caídas y empezar a operar con la tranquilidad de un profesional? Inscribite hoy y aprendé a proteger tu dinero mientras dormís.",
+      "shortDescription": null,
+      "price": "30000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJBsavKjQdI1jFQPvtCE4fx0kAGe9yXVOloaUT",
+      "category": "General",
+      "level": "Principiante",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-17T15:27:34.995Z",
+      "updatedAt": "2026-01-18T22:21:56.787Z",
+      "modules": [
+        {
+          "id": "cmkigoeei000ckb3nfzuk2pzf",
+          "title": "Stop Loss",
+          "position": 1,
+          "courseId": "cmkigoac4000akb3nnhyypiic",
+          "createdAt": "2026-01-17T15:27:40.266Z",
+          "updatedAt": "2026-01-17T15:27:40.266Z",
+          "lessons": [
+            {
+              "id": "cmkigomzx000ekb3nebuppwnf",
+              "title": "Stop Loss",
+              "description": "",
+              "videoUrl": "https://www.youtube.com/watch?v=CuAnNEIn-20",
+              "duration": 960,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkigoeei000ckb3nfzuk2pzf",
+              "createdAt": "2026-01-17T15:27:51.405Z",
+              "updatedAt": "2026-01-17T15:27:51.405Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmkigm36w0005kb3n1hkgjuin",
+      "title": "Dominando el Riesgo: De la Volatilidad a la Estabilidad del Portafolio",
+      "description": "El riesgo en las finanzas no es un enemigo al que temer, sino una variable que se debe medir para poder ganar. Este micro-curso de Riesgo y Volatilidad está diseñado para que dejes de ver los movimientos del mercado como una amenaza y empieces a verlos como una oportunidad estratégica de gestión.\n\nDominando el Riesgo: De la Volatilidad a la Estabilidad del Portafolio\n\nTu aprendizaje comienza con la Anatomía del Riesgo, donde aprenderás a separar el ruido del mercado de la realidad financiera. Descubrirás la diferencia práctica entre el riesgo diversificable (idiosincrático), que afecta a una sola empresa, y el riesgo no diversificable (sistémico), que afecta a todo el mercado. Entenderás que el objetivo no es eliminar el riesgo por completo, sino eliminar aquel que no te está pagando por asumirlo.\n\nEn el módulo sobre El Poder de la Correlación, exploraremos la verdadera magia de la construcción de carteras. Aprenderás cómo combinar activos que no se mueven en la misma dirección para lograr que el riesgo total de tu portafolio sea menor que la suma de sus partes. Es la herramienta definitiva para construir carteras resilientes que puedan navegar cualquier tormenta financiera sin sacrificar el retorno.\n\nFinalmente, dominarás la Interpretación de Beta ($\\beta$), el indicador que te dirá si tu cartera está amplificando o amortiguando los movimientos del mercado. Aprenderás a usar este coeficiente para ajustar tu exposición: ¿querés una cartera agresiva que supere al mercado en las subas o una defensiva que resista en las caídas? Al finalizar, sabrás cómo calibrar tu portafolio según tu propio horizonte y tolerancia.\n\n¿Estás listo para dejar de reaccionar al mercado y empezar a modelar la incertidumbre a tu favor? Inscribite hoy y transformá la volatilidad en tu mejor aliada.",
+      "shortDescription": null,
+      "price": "50000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJXvMx9825yiF9TRK1vZ2kWNDj4oqPpVdnLOX7",
+      "category": "General",
+      "level": "Todos los niveles",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-17T15:25:52.377Z",
+      "updatedAt": "2026-01-18T21:55:54.230Z",
+      "modules": [
+        {
+          "id": "cmkigm8vj0007kb3nt5wlfefe",
+          "title": "Volatilidad y Riesgo",
+          "position": 1,
+          "courseId": "cmkigm36w0005kb3n1hkgjuin",
+          "createdAt": "2026-01-17T15:25:59.792Z",
+          "updatedAt": "2026-01-17T15:25:59.792Z",
+          "lessons": [
+            {
+              "id": "cmkigmkxj0009kb3nq5mwl0pa",
+              "title": "Volatilidad y Riesgo",
+              "description": "",
+              "videoUrl": "https://www.youtube.com/watch?v=VQ7jskPue8s",
+              "duration": 965,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkigm8vj0007kb3nt5wlfefe",
+              "createdAt": "2026-01-17T15:26:15.415Z",
+              "updatedAt": "2026-01-17T15:26:15.415Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmk76vago00052i3oi9ajtj81",
+      "title": "Análisis Técnico",
+      "description": "Este programa de formación profesional ha sido diseñado para transformar tu manera de operar, convirtiéndote en un inversor capaz de decidir con la precisión de un experto. A lo largo del curso, recorrerás un camino estratégico que te permitirá dominar el mercado de principio a fin:\n\nEl Camino hacia la Maestría en el Mercado\n\nTu evolución comienza con el dominio de los Principios del Éxito, donde entenderás que el mercado descuenta todos los factores externos y que la historia se repite constantemente. Esta base te permitirá usar patrones pasados para eliminar la incertidumbre y blindar tu capital desde el primer día.\n\nPronto aprenderás a leer el Mapa del Dinero, identificando soportes y resistencias para visualizar dónde compran y venden los grandes jugadores. Con el uso profesional del volumen y la gestión estratégica de órdenes Stop Loss y Take Profit, dejarás de perseguir precios para empezar a proteger cada una de tus ganancias.\n\nAvanzarás hacia el lenguaje visual de las Velas Japonesas y Tendencias, aprendiendo a medir la aceleración del mercado para anticipar giros antes que la multitud. Potenciarás esta habilidad con la construcción de Canales de Trading, utilizando técnicas de desdoblamiento para proyectar objetivos de precio con una claridad asombrosa.\n\nEl curso te revelará la perfección matemática de los Patrones de Fibonacci, enseñándote a localizar niveles críticos para retomar tendencias en el momento exacto. Al sumar el estudio de las Figuras Técnicas, como el Hombro-Cabeza-Hombro y Triángulos, aprenderás a validar rupturas reales y evitar las trampas que arruinan a los principiantes.\n\nPara una precisión científica, integrarás la Radiografía del Precio con indicadores como RSI y MACD, detectando divergencias antes de que ocurran los cambios de tendencia. Además, adoptarás el prestigioso Método Weinstein, aprendiendo la disciplina necesaria para operar solo en fases de avance y evitar los peligrosos mercados laterales.\n\nFinalmente, dominarás la Inversión Institucional con Wyckoff, descifrando el rastro de las \"manos fuertes\" a través de maniobras como el Spring y el Salto del Arroyo. Al terminar, no solo sabrás leer gráficos; habrás desarrollado la mentalidad profesional necesaria para operar en sintonía con los dueños del mercado.\n\n¿Estás listo para dejar de adivinar y tomar el control total de tu futuro financiero? Inscribite ahora y empezá a operar como un profesional.",
+      "shortDescription": null,
+      "price": "65000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJ0ShQlu6FNsGmMLhvTWY69CqAzRbgny7xX1iV",
+      "category": "General",
+      "level": "Todos los niveles",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-09T18:07:37.656Z",
+      "updatedAt": "2026-01-18T22:20:58.168Z",
+      "modules": [
+        {
+          "id": "cmk76viyb00072i3ovpp6448z",
+          "title": "Principios Basicos del Analisis Tecnico",
+          "position": 1,
+          "courseId": "cmk76vago00052i3oi9ajtj81",
+          "createdAt": "2026-01-09T18:07:48.660Z",
+          "updatedAt": "2026-01-09T18:07:48.660Z",
+          "lessons": [
+            {
+              "id": "cmk76vy6o00092i3on4ugfdkv",
+              "title": "Principios Basicos",
+              "description": "Contenido: Introducción a los tres pilares del análisis técnico: el mercado lo descuenta todo, los precios se mueven por tendencias y la historia se repite.\n\nAprendizaje: Cómo utilizar gráficos para reducir el riesgo y la incertidumbre en las inversiones.",
+              "videoUrl": "/uploads/1767982082037-Clase-1-(1).mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk76viyb00072i3ovpp6448z",
+              "createdAt": "2026-01-09T18:08:08.401Z",
+              "updatedAt": "2026-01-17T15:09:51.533Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk76wb4t000b2i3ou88ycph7",
+          "title": "Soportes y Resistencias",
+          "position": 2,
+          "courseId": "cmk76vago00052i3oi9ajtj81",
+          "createdAt": "2026-01-09T18:08:25.182Z",
+          "updatedAt": "2026-01-09T18:08:25.182Z",
+          "lessons": [
+            {
+              "id": "cmk8934nu0001pn2ndk38jn8v",
+              "title": "Mas Soportes/Resistencias",
+              "description": "",
+              "videoUrl": "/uploads/1768046243091-2026-01-10-08-09-59.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 2,
+              "published": true,
+              "moduleId": "cmk76wb4t000b2i3ou88ycph7",
+              "createdAt": "2026-01-10T11:57:28.795Z",
+              "updatedAt": "2026-01-10T11:57:28.795Z"
+            },
+            {
+              "id": "cmk76x1ky000d2i3o08hxu0l3",
+              "title": "Soportes/Resistencias",
+              "description": "Contenido: Identificación de mínimos (soportes) donde la demanda supera a la oferta y máximos (resistencias) donde la presión vendedora detiene la suba.\n\nAprendizaje: Uso del volumen para confirmar la fortaleza de una zona y colocación estratégica de órdenes Stop Loss y Take Profit.",
+              "videoUrl": "/uploads/1767982127323-Clase-2-(1).mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk76wb4t000b2i3ou88ycph7",
+              "createdAt": "2026-01-09T18:08:59.459Z",
+              "updatedAt": "2026-01-17T15:08:50.846Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk76xo67000f2i3omobzw9zo",
+          "title": "Tendencias y Lineas",
+          "position": 3,
+          "courseId": "cmk76vago00052i3oi9ajtj81",
+          "createdAt": "2026-01-09T18:09:28.735Z",
+          "updatedAt": "2026-01-09T18:09:28.735Z",
+          "lessons": [
+            {
+              "id": "cmk894tfa0003pn2n22czv4f3",
+              "title": "Mas Tendencias y Lineas",
+              "description": "",
+              "videoUrl": "/uploads/1768046323997-2026-01-10-08-15-49.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 2,
+              "published": true,
+              "moduleId": "cmk76xo67000f2i3omobzw9zo",
+              "createdAt": "2026-01-10T11:58:47.542Z",
+              "updatedAt": "2026-01-10T11:58:47.542Z"
+            },
+            {
+              "id": "cmk76xwtg000h2i3o99rlqblh",
+              "title": "Tendencias",
+              "description": "Contenido: Tipos de gráficos (velas japonesas, barras y líneas) e interpretación de precios de apertura, cierre, máximos y mínimos.\n\nAprendizaje: Trazado correcto de líneas de tendencia y uso de líneas de velocidad para identificar cambios en la aceleración del mercado.",
+              "videoUrl": "/uploads/1767982178723-Clase-3.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk76xo67000f2i3omobzw9zo",
+              "createdAt": "2026-01-09T18:09:39.940Z",
+              "updatedAt": "2026-01-17T15:08:59.394Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk76y19w000j2i3oexvo6mkx",
+          "title": "Canales",
+          "position": 4,
+          "courseId": "cmk76vago00052i3oi9ajtj81",
+          "createdAt": "2026-01-09T18:09:45.717Z",
+          "updatedAt": "2026-01-09T18:09:45.717Z",
+          "lessons": [
+            {
+              "id": "cmk8966ri0005pn2ne2z5x9ei",
+              "title": "Mas Canales",
+              "description": "",
+              "videoUrl": "/uploads/1768046388901-2026-01-10-08-24-07.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 2,
+              "published": true,
+              "moduleId": "cmk76y19w000j2i3oexvo6mkx",
+              "createdAt": "2026-01-10T11:59:51.486Z",
+              "updatedAt": "2026-01-10T11:59:51.486Z"
+            },
+            {
+              "id": "cmk76yw4x000l2i3o5aodta3c",
+              "title": "Canal de Trading",
+              "description": "Contenido: Construcción de bandas paralelas a partir de líneas de tendencia alcistas y bajistas.\n\nAprendizaje: Identificación de techos y pisos dinámicos y proyección de objetivos mediante el desdoblamiento de canales.",
+              "videoUrl": "/uploads/1767982222730-Clase-4.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk76y19w000j2i3oexvo6mkx",
+              "createdAt": "2026-01-09T18:10:25.713Z",
+              "updatedAt": "2026-01-17T15:09:07.245Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk76zcpv000n2i3oy2j54ygi",
+          "title": "Fibonacci",
+          "position": 5,
+          "courseId": "cmk76vago00052i3oi9ajtj81",
+          "createdAt": "2026-01-09T18:10:47.204Z",
+          "updatedAt": "2026-01-09T18:10:47.204Z",
+          "lessons": [
+            {
+              "id": "cmk8992p00001on6fc9855k6p",
+              "title": "Mas Fibonacci",
+              "description": "",
+              "videoUrl": "/uploads/1768046523364-2026-01-10-08-28-15.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 2,
+              "published": true,
+              "moduleId": "cmk76zcpv000n2i3oy2j54ygi",
+              "createdAt": "2026-01-10T12:02:06.181Z",
+              "updatedAt": "2026-01-10T12:02:06.181Z"
+            },
+            {
+              "id": "cmk76zxe7000p2i3ou820wnik",
+              "title": "Retrocesos de Fibonacci",
+              "description": "Contenido: Estudio de retrocesos y extensiones basados en la sucesión de Fibonacci.\n\nAprendizaje: Localización de niveles críticos (38.2%, 50%, 61.8%) para anticipar el fin de una corrección y retomar la tendencia principal.",
+              "videoUrl": "/uploads/1767982270622-clase-5.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk76zcpv000n2i3oy2j54ygi",
+              "createdAt": "2026-01-09T18:11:14.000Z",
+              "updatedAt": "2026-01-17T15:09:13.858Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk7706hb000r2i3o830iu4ei",
+          "title": "Figuras Tecnicas",
+          "position": 6,
+          "courseId": "cmk76vago00052i3oi9ajtj81",
+          "createdAt": "2026-01-09T18:11:25.775Z",
+          "updatedAt": "2026-01-09T18:11:25.775Z",
+          "lessons": [
+            {
+              "id": "cmk89agsx0003on6fx8f99su6",
+              "title": "Mas Figuras",
+              "description": "",
+              "videoUrl": "/uploads/1768046589371-2026-01-10-08-34-59.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 2,
+              "published": true,
+              "moduleId": "cmk7706hb000r2i3o830iu4ei",
+              "createdAt": "2026-01-10T12:03:11.122Z",
+              "updatedAt": "2026-01-10T12:03:11.122Z"
+            },
+            {
+              "id": "cmk770tql000t2i3o45bwpn6z",
+              "title": "Figuras Tecnicas",
+              "description": "Contenido: Formaciones de cambio de tendencia (Hombro-Cabeza-Hombro) y de continuación (Triángulos).\n\nAprendizaje: Validación de rupturas mediante el análisis de pullbacks y throwbacks para evitar entradas falsas.",
+              "videoUrl": "/uploads/1767982314430-Clase-6-(1).mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk7706hb000r2i3o830iu4ei",
+              "createdAt": "2026-01-09T18:11:55.917Z",
+              "updatedAt": "2026-01-17T15:09:22.748Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk771ajt000v2i3ovqm7835d",
+          "title": "Indicadores Tecnicos",
+          "position": 7,
+          "courseId": "cmk76vago00052i3oi9ajtj81",
+          "createdAt": "2026-01-09T18:12:17.706Z",
+          "updatedAt": "2026-01-09T18:12:17.706Z",
+          "lessons": [
+            {
+              "id": "cmk771pfa000x2i3o72zx1sv8",
+              "title": "Indicadores Tecnicos",
+              "description": "Contenido: Medias móviles simples y exponenciales, y osciladores como RSI, MACD y Momentum.\n\nAprendizaje: Uso de indicadores para confirmar lo que dice el precio y detección de divergencias para anticipar giros del mercado.",
+              "videoUrl": "/uploads/1767982354622-Clase-7.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk771ajt000v2i3ovqm7835d",
+              "createdAt": "2026-01-09T18:12:36.983Z",
+              "updatedAt": "2026-01-17T15:09:28.756Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk772x2b000z2i3onl6yus2l",
+          "title": "Stan Weinstein",
+          "position": 8,
+          "courseId": "cmk76vago00052i3oi9ajtj81",
+          "createdAt": "2026-01-09T18:13:33.540Z",
+          "updatedAt": "2026-01-09T18:13:33.540Z",
+          "lessons": [
+            {
+              "id": "cmk7737s000112i3o7srw6tqb",
+              "title": "Etapas del modelo Weinstein",
+              "description": "Contenido: Las cuatro etapas del mercado: Acumulación, Avance, Distribución y Descenso.\n\nAprendizaje: Aplicación de la media móvil de 30 semanas para operar únicamente en fases de tendencia clara y evitar mercados laterales.",
+              "videoUrl": "/uploads/1767982425234-Clase-8.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk772x2b000z2i3onl6yus2l",
+              "createdAt": "2026-01-09T18:13:47.424Z",
+              "updatedAt": "2026-01-17T15:09:36.685Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk7743tr00132i3oly1t2n0a",
+          "title": "Integrando Conocimiento",
+          "position": 9,
+          "courseId": "cmk76vago00052i3oi9ajtj81",
+          "createdAt": "2026-01-09T18:14:28.960Z",
+          "updatedAt": "2026-01-09T18:14:28.960Z",
+          "lessons": [
+            {
+              "id": "cmk774j8000152i3oro5ewx3q",
+              "title": "Integrando Conocimiento",
+              "description": "Contenido: Las leyes de oferta, demanda, causa y efecto. Procesos de acumulación de las \"manos fuertes\".\n\nAprendizaje: Identificación de maniobras profesionales como el Spring y el Salto del Arroyo para operar en sintonía con el dinero institucional.",
+              "videoUrl": "/uploads/1767982487233-Clase-9.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk7743tr00132i3oly1t2n0a",
+              "createdAt": "2026-01-09T18:14:48.912Z",
+              "updatedAt": "2026-01-17T15:09:46.163Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmk77d6jw00162i3o2xduugqj",
+      "title": "Renta Fija",
+      "description": "Tu viaje hacia la maestría financiera continúa con este programa especializado en Renta Fija, donde aprenderás a dominar los instrumentos más utilizados para generar ingresos previsibles y diversificar carteras con rigor profesional. Este curso te llevará desde los cimientos hasta las estrategias avanzadas de arbitraje:\n\nEstrategias en Renta Fija: El Camino del Inversor Inteligente\n\nTodo comienza con los Conceptos Fundamentales, donde entenderás al bono no solo como un activo, sino como una obligación financiera con reglas claras detalladas en su prospecto de emisión. Aprenderás a identificar componentes clave como el emisor y los plazos, pero sobre todo, dominarás la gestión de riesgos (tasa, liquidez y moneda) y realizarás tus primeros cálculos de intereses corridos para saber exactamente qué estás comprando.\n\nEn la etapa de Clasificación y Valuación, descubrirás la mecánica que mueve los precios: la relación inversa entre el precio y la tasa de interés. Aprenderás a diferenciar técnicamente entre bonos cupón cero y Bullet, y dominarás la distinción crítica entre Precio Clean y Precio Dirty. Además, entenderás el rol vital del Rating Crediticio para evaluar la seguridad de tu capital.\n\nTu formación se vuelve práctica al explorar los Mercados y Flujos de Fondos, comprendiendo la diferencia entre captar fondos en el Mercado Primario y la negociación diaria en el Secundario. El punto culminante de esta fase es la confección técnica de un Cash Flow, herramienta que te permitirá proyectar con exactitud cada cobro de capital e interés a lo largo de la vida del bono.\n\nElevarás tu nivel con las Medidas de Rendimiento y Riesgo, dominando conceptos avanzados como la TIR, el Valor Técnico y la Paridad. Aprenderás a realizar análisis de sensibilidad mediante la Duration y la Convexity, y a interpretar curvas de rendimiento para detectar oportunidades de arbitraje, identificando cuándo un bono está realmente barato o caro respecto al mercado.\n\nFinalmente, cerraremos el círculo con el Análisis Técnico Aplicado a Bonos, integrando el estudio gráfico dentro del mundo de la renta fija. Aprenderás a complementar el riguroso análisis matemático con la acción del precio, utilizando herramientas técnicas para determinar el momento exacto de entrada o salida, maximizando así el potencial de apreciación de tus títulos.\n\n¿Estás listo para dominar el mundo de los bonos y asegurar tus rendimientos? Inscribite hoy y empezá a invertir con la seguridad que solo el conocimiento profundo puede darte.",
+      "shortDescription": null,
+      "price": "65000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJlp3xYlbKazhQ2MmLuXJ0foSk4NnPYqvCTyFr",
+      "category": "General",
+      "level": "Principiante",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-09T18:21:32.396Z",
+      "updatedAt": "2026-01-18T22:20:22.976Z",
+      "modules": [
+        {
+          "id": "cmk77elpr00182i3o6esi3nof",
+          "title": "Flujo de Fondos",
+          "position": 1,
+          "courseId": "cmk77d6jw00162i3o2xduugqj",
+          "createdAt": "2026-01-09T18:22:38.704Z",
+          "updatedAt": "2026-01-09T18:22:38.704Z",
+          "lessons": [
+            {
+              "id": "cmk77eswv001a2i3oi0v7hcpz",
+              "title": "Flujo de Fondos",
+              "description": "Contenido: Definición de bono como obligación financiera, condiciones de emisión (prospecto) y componentes clave (emisor, moneda, plazos).\n\nAprendizaje: Identificación de los riesgos asociados (riesgo de tasa, de liquidez, de moneda y de amortización anticipada) y cálculo inicial de intereses corridos.",
+              "videoUrl": "/uploads/1767982967032-Flujo-de-fondos.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk77elpr00182i3o6esi3nof",
+              "createdAt": "2026-01-09T18:22:48.031Z",
+              "updatedAt": "2026-01-17T15:11:15.947Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk77eyxy001c2i3o7rsaaq5l",
+          "title": "Duration y Duration Modificada",
+          "position": 2,
+          "courseId": "cmk77d6jw00162i3o2xduugqj",
+          "createdAt": "2026-01-09T18:22:55.846Z",
+          "updatedAt": "2026-01-09T18:22:55.846Z",
+          "lessons": [
+            {
+              "id": "cmk77fi27001e2i3okh9rcuzb",
+              "title": "Duration",
+              "description": "Contenido: Diferencia entre bonos cupón cero y bonos con cupón periódico (Bullet). Relación inversa entre el precio y la tasa de interés.\n\nAprendizaje: Distinción técnica entre Precio Clean (sin intereses) y Precio Dirty (con intereses), y la importancia del Rating Crediticio (calificaciones de riesgo).",
+              "videoUrl": "/uploads/1767982985146-Duration-y-Duration-Modificada.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk77eyxy001c2i3o7rsaaq5l",
+              "createdAt": "2026-01-09T18:23:20.624Z",
+              "updatedAt": "2026-01-17T15:11:21.798Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk77fmmy001g2i3o0lmfqp8l",
+          "title": "TIR",
+          "position": 3,
+          "courseId": "cmk77d6jw00162i3o2xduugqj",
+          "createdAt": "2026-01-09T18:23:26.554Z",
+          "updatedAt": "2026-01-09T18:23:26.554Z",
+          "lessons": [
+            {
+              "id": "cmk77g0ru001i2i3oyefoimyx",
+              "title": "Analizando Bonos",
+              "description": "Contenido: Funcionamiento del Mercado Primario (emisión) y Mercado Secundario (negociación diaria). Proceso de colocación de deuda.\n\nAprendizaje: Confección técnica de un flujo de fondos (Cash Flow) para proyectar los cobros de capital e interés a lo largo de la vida del bono.",
+              "videoUrl": "/uploads/1767983023327-Analizando-bono.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk77fmmy001g2i3o0lmfqp8l",
+              "createdAt": "2026-01-09T18:23:44.874Z",
+              "updatedAt": "2026-01-17T15:11:27.342Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk77g6aq001k2i3ok2u5oxj6",
+          "title": "Analisis Tecnico sobre Bonos",
+          "position": 4,
+          "courseId": "cmk77d6jw00162i3o2xduugqj",
+          "createdAt": "2026-01-09T18:23:52.034Z",
+          "updatedAt": "2026-01-09T18:23:52.034Z",
+          "lessons": [
+            {
+              "id": "cmk77gi1n001m2i3oe5et9n1k",
+              "title": "AT sobre Bonos",
+              "description": "Contenido: Integración del análisis gráfico dentro del mercado de renta fija.\n\nAprendizaje: Cómo utilizar las herramientas del análisis técnico para determinar el momento exacto de ingreso o salida de un bono, complementando el análisis matemático con la acción del precio.",
+              "videoUrl": "/uploads/1767983045025-Analisis-Tecnico-en-bonos.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk77g6aq001k2i3ok2u5oxj6",
+              "createdAt": "2026-01-09T18:24:07.259Z",
+              "updatedAt": "2026-01-17T15:11:40.707Z"
+            }
+          ]
+        },
+        {
+          "id": "cmk89bdwt0005on6fhv56i128",
+          "title": "Integracion de conocimientos",
+          "position": 5,
+          "courseId": "cmk77d6jw00162i3o2xduugqj",
+          "createdAt": "2026-01-10T12:03:54.030Z",
+          "updatedAt": "2026-01-10T12:03:54.030Z",
+          "lessons": [
+            {
+              "id": "cmk89c1hp0007on6fufltsihr",
+              "title": "Finalizando analisis de bonos",
+              "description": "Contenido: Conceptos avanzados como Valor Técnico, Paridad, TIR (Tasa Interna de Retorno) y Current Yield.\n\nAprendizaje: Análisis de sensibilidad mediante la Duration y Convexity, e interpretación de las curvas de rendimiento para detectar oportunidades de arbitraje (bonos baratos vs. caros).",
+              "videoUrl": "/uploads/1768046660863-2026-01-10-08-48-43.mp4",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmk89bdwt0005on6fhv56i128",
+              "createdAt": "2026-01-10T12:04:24.590Z",
+              "updatedAt": "2026-01-17T15:11:48.669Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmke3r7q600025b9gasf4r0jr",
+      "title": "Futuros Financieros",
+      "description": "Dominar los Futuros Financieros es dar el salto hacia la gestión profesional de carteras, permitiéndote operar con un nivel de eficiencia y control de riesgo superior. Este programa te llevará desde la comprensión técnica de los derivados hasta la ejecución de estrategias de cobertura y especulación en mercados institucionales:\n\nFuturos Financieros: Potencia y Protección en Mercados Derivados\n\nTu formación comienza con los Aspectos Generales de los Derivados, donde entenderás por qué los futuros son la herramienta predilecta para la gestión de riesgos globales. Identificarás a los Participantes del mercado, desde los hedgers que buscan protección hasta los especuladores que aportan liquidez, comprendiendo el rol vital de la Cámara Compensadora como garante de cada operación.\n\nEn el módulo de Estructura y Contratos, profundizarás en el Reglamento del Contrato, aprendiendo a leer las especificaciones técnicas que definen cada activo. Dominarás el Sistema de Garantías y Márgenes, entendiendo cómo funciona el apalancamiento financiero para maximizar el uso de tu capital sin descuidar la seguridad de tu cuenta comitente.\n\nLa parte operativa se centra en las Estrategias de Cobertura, donde aprenderás a diseñar tanto la Cobertura Compradora (para fijar precios de insumos futuros) como la Cobertura Vendedora (para blindar el valor de tu producción o cartera contra caídas de precio). Estas herramientas te permitirán neutralizar la volatilidad y dar previsibilidad total a tu flujo de fondos.\n\nFinalmente, te convertirás en un estratega de mercado mediante la Especulación Profesional. Aprenderás la mecánica de las posiciones LONG (larga) para beneficiarte de mercados alcistas y SHORT (corta) para obtener rentabilidad incluso cuando los precios caen. Al dominar el sistema de liquidación diaria de pérdidas y ganancias, estarás listo para operar en los mercados de futuros más importantes con una visión analítica y ganadora.\n\n¿Estás listo para operar en las ligas mayores del mercado de capitales? Inscribite hoy y descubrí el poder de los futuros para potenciar tus inversiones.",
+      "shortDescription": null,
+      "price": "60000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJfIjweSpSPcNRAgFK0TjU83DhMGyO47EHq9z2",
+      "category": "General",
+      "level": "Intermedio",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-14T14:14:51.870Z",
+      "updatedAt": "2026-01-18T22:21:31.828Z",
+      "modules": [
+        {
+          "id": "cmkhi3hno000hfnm0qhpajyxa",
+          "title": "Aspectos Generales de los Derivados Financieros",
+          "position": 1,
+          "courseId": "cmke3r7q600025b9gasf4r0jr",
+          "createdAt": "2026-01-16T23:19:37.764Z",
+          "updatedAt": "2026-01-16T23:19:37.764Z",
+          "lessons": [
+            {
+              "id": "cmkhi40b7000jfnm0stexn79f",
+              "title": "Aspectos Generales",
+              "description": "",
+              "videoUrl": "https://utfs.io/f/30KHQePr0sHJcGmiKDsrfm16IAuSMz3TobWxyHqE8YgcCLNv",
+              "duration": 0,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkhi3hno000hfnm0qhpajyxa",
+              "createdAt": "2026-01-16T23:20:01.940Z",
+              "updatedAt": "2026-01-16T23:20:01.940Z"
+            }
+          ]
+        },
+        {
+          "id": "cmkhi5hoj000nfnm03vxb19l9",
+          "title": "Participantes y Contratos",
+          "position": 2,
+          "courseId": "cmke3r7q600025b9gasf4r0jr",
+          "createdAt": "2026-01-16T23:21:11.107Z",
+          "updatedAt": "2026-01-16T23:21:11.107Z",
+          "lessons": [
+            {
+              "id": "cmkhi69o8000pfnm0c76jttjk",
+              "title": "Participantes y Contratos",
+              "description": "",
+              "videoUrl": "https://utfs.io/f/30KHQePr0sHJhrGe2tE1oBH2XCc8yG4xOD6mQksRVeulPw7I",
+              "duration": 970,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkhi5hoj000nfnm03vxb19l9",
+              "createdAt": "2026-01-16T23:21:47.384Z",
+              "updatedAt": "2026-01-16T23:21:47.384Z"
+            }
+          ]
+        },
+        {
+          "id": "cmkhi6kol000rfnm0lp0h5dhb",
+          "title": "Garantías y Márgenes",
+          "position": 3,
+          "courseId": "cmke3r7q600025b9gasf4r0jr",
+          "createdAt": "2026-01-16T23:22:01.654Z",
+          "updatedAt": "2026-01-16T23:22:01.654Z",
+          "lessons": [
+            {
+              "id": "cmkhi78m7000tfnm0adsz9x1n",
+              "title": "Garantías y Márgenes",
+              "description": "",
+              "videoUrl": "https://utfs.io/f/30KHQePr0sHJlwTISHbKazhQ2MmLuXJ0foSk4NnPYqvCTyFr",
+              "duration": 727,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkhi6kol000rfnm0lp0h5dhb",
+              "createdAt": "2026-01-16T23:22:32.671Z",
+              "updatedAt": "2026-01-16T23:22:32.671Z"
+            }
+          ]
+        },
+        {
+          "id": "cmkhi7iqo000vfnm0l4g7ygzc",
+          "title": "Estrategias Parte 1",
+          "position": 4,
+          "courseId": "cmke3r7q600025b9gasf4r0jr",
+          "createdAt": "2026-01-16T23:22:45.792Z",
+          "updatedAt": "2026-01-16T23:22:45.792Z",
+          "lessons": [
+            {
+              "id": "cmkhi82ph000xfnm0jm2zy46g",
+              "title": "Estrategias Parte 1",
+              "description": "",
+              "videoUrl": "https://utfs.io/f/30KHQePr0sHJc39IuDsrfm16IAuSMz3TobWxyHqE8YgcCLNv",
+              "duration": 601,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkhi7iqo000vfnm0l4g7ygzc",
+              "createdAt": "2026-01-16T23:23:11.669Z",
+              "updatedAt": "2026-01-16T23:23:11.669Z"
+            }
+          ]
+        },
+        {
+          "id": "cmkhi8az0000zfnm0ajrg58x4",
+          "title": "Estrategia Parte 2",
+          "position": 5,
+          "courseId": "cmke3r7q600025b9gasf4r0jr",
+          "createdAt": "2026-01-16T23:23:22.381Z",
+          "updatedAt": "2026-01-16T23:23:22.381Z",
+          "lessons": [
+            {
+              "id": "cmkhiapsk0011fnm007569obh",
+              "title": "Estrategia Parte 2",
+              "description": "",
+              "videoUrl": "https://utfs.io/f/30KHQePr0sHJwi01qpxNym1AhTVuaEG5SPtsCcvW4iIkpQ0z",
+              "duration": 725,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkhi8az0000zfnm0ajrg58x4",
+              "createdAt": "2026-01-16T23:25:14.900Z",
+              "updatedAt": "2026-01-16T23:25:14.900Z"
+            }
+          ]
+        },
+        {
+          "id": "cmkhiax3a0013fnm0hby66v57",
+          "title": "Estrategia Parte 3",
+          "position": 6,
+          "courseId": "cmke3r7q600025b9gasf4r0jr",
+          "createdAt": "2026-01-16T23:25:24.359Z",
+          "updatedAt": "2026-01-16T23:25:24.359Z",
+          "lessons": [
+            {
+              "id": "cmkhict720015fnm00uluzgjk",
+              "title": "Estrategia Parte 3",
+              "description": "",
+              "videoUrl": "https://utfs.io/f/30KHQePr0sHJZs18Pvrzh9oUwRG7XH5rptOqbmNSd4FfYEQa",
+              "duration": 775,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkhiax3a0013fnm0hby66v57",
+              "createdAt": "2026-01-16T23:26:52.623Z",
+              "updatedAt": "2026-01-16T23:26:52.623Z"
+            }
+          ]
+        },
+        {
+          "id": "cmkhicyea0017fnm0bxb8up5a",
+          "title": "Estrategia Parte 4",
+          "position": 7,
+          "courseId": "cmke3r7q600025b9gasf4r0jr",
+          "createdAt": "2026-01-16T23:26:59.363Z",
+          "updatedAt": "2026-01-16T23:26:59.363Z",
+          "lessons": [
+            {
+              "id": "cmkhientj0019fnm0rwup7vcn",
+              "title": "Estrategia Parte 4",
+              "description": "",
+              "videoUrl": "https://utfs.io/f/30KHQePr0sHJ9vTpqFDI3rENQ4BSWKcMpRJ7DCGueXyUtbdv",
+              "duration": 586,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkhicyea0017fnm0bxb8up5a",
+              "createdAt": "2026-01-16T23:28:18.968Z",
+              "updatedAt": "2026-01-16T23:28:18.968Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmkigqmn4000fkb3nd3eyxd5m",
+      "title": "El Valor del Tiempo: TNA, TEA y el Verdadero Rendimiento (TIR)",
+      "description": "Entender la diferencia entre las tasas de interés es lo que separa a un ahorrista de un inversor profesional. En este micro-curso de 12 minutos, Francisco Castro te enseña a leer la letra chica del mercado para que nunca más compares \"peras con manzanas\" y sepas exactamente cuánto rinde tu dinero.\n\nDominio de Tasas: TNA, TEA y el Poder de la TIR\n\nTu aprendizaje comienza con el duelo TNA vs. TEA. Descubrirás por qué la Tasa Nominal Anual es simplemente una referencia informativa y cómo la Tasa Efectiva Anual es la que realmente impacta en tu bolsillo al considerar la capitalización de los intereses. Aprenderás que, a mayor frecuencia de capitalización, más se aleja la TEA de la TNA, y entenderás por qué este concepto es la base del interés compuesto.\n+1\n\nEn el módulo de La Lógica de la TIR, daremos un paso más allá de las tasas simples. Aprenderás a usar la Tasa Interna de Retorno como la herramienta definitiva para evaluar la rentabilidad real de un bono o proyecto. A diferencia de otras tasas, la TIR tiene en cuenta todo el flujo de fondos (Cash Flow), los momentos de cobro y la reinversión de los cupones, dándote un porcentaje de rendimiento anualizado preciso para comparar diferentes alternativas de inversión.\n\nFinalmente, dominarás la Conversión de Tasas. Te brindaremos las herramientas y fórmulas financieras para pasar de tasas mensuales a anuales (y viceversa) de forma correcta, evitando los errores matemáticos comunes de la suma simple. Al terminar, tendrás el criterio técnico para analizar cualquier préstamo, plazo fijo o bono, eligiendo siempre la opción que más beneficie a tu patrimonio.\n\n¿Estás listo para dejar de confundir números y empezar a medir tus ganancias con precisión? Inscribite hoy y dominá el lenguaje de las tasas como un experto.",
+      "shortDescription": null,
+      "price": "35000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJKWEEWT4NlSBxIotJj9pXbqrM4uEvkhmH1CTZ",
+      "category": "General",
+      "level": "Principiante",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-17T15:29:24.244Z",
+      "updatedAt": "2026-01-18T22:22:02.077Z",
+      "modules": [
+        {
+          "id": "cmkigqqfg000hkb3nyog3xeut",
+          "title": "Tasa de interes",
+          "position": 1,
+          "courseId": "cmkigqmn4000fkb3nd3eyxd5m",
+          "createdAt": "2026-01-17T15:29:29.164Z",
+          "updatedAt": "2026-01-17T15:29:29.164Z",
+          "lessons": [
+            {
+              "id": "cmkigqy75000jkb3n4329e23r",
+              "title": "Tasa de Interes",
+              "description": "",
+              "videoUrl": "https://www.youtube.com/watch?v=04SdJ2ksKcs",
+              "duration": 737,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkigqqfg000hkb3nyog3xeut",
+              "createdAt": "2026-01-17T15:29:39.234Z",
+              "updatedAt": "2026-01-17T15:29:39.234Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmkigidme0000kb3nyhnjeyt6",
+      "title": "Beneficio vs. Caja: La Guía de 22 Minutos para una Valuación Real",
+      "description": "Este Micro Curso de Análisis de Calidad de Ganancias está diseñado para aquellos inversores que quieren dejar de mirar la superficie y empezar a entender la verdadera salud financiera de un negocio. Aquí aprenderás por qué \"la caja es la realidad y el beneficio es una opinión\", convirtiéndote en un analista capaz de detectar trampas contables antes que el resto del mercado:\n\nBPA vs. FCF: El Arte de Encontrar Ganancias Reales\n\nTu formación comienza derribando el Mito del EPS (BPA). Descubrirás por qué el Beneficio Por Acción, aunque es el indicador más mirado en Wall Street, puede ser fácilmente manipulado mediante recompras de acciones o criterios contables subjetivos. Aprenderás las limitaciones técnicas de este indicador y por qué confiar ciegamente en él puede llevarte a pagar de más por empresas que no generan valor real.\n\nEn el módulo Cash Flow King, aprenderás la métrica sagrada de los grandes inversores: el Free Cash Flow (Flujo de Caja Libre). Te enseñaremos a calcularlo paso a paso, partiendo del flujo operativo y restando los gastos de capital (CAPEX). Aprenderás no solo a medirlo, sino a proyectarlo, entendiendo que el valor de cualquier inversión hoy es el valor presente de toda la caja que ese negocio pueda generar en el futuro.\n\nLa parte más reveladora del curso es la de Detectives Contables. Analizaremos casos reales de empresas que mostraban Estados de Resultados envidiables mientras sus flujos de caja gritaban una crisis de liquidez inminente. Aprenderás a identificar señales de alerta, como el crecimiento desmedido de cuentas por cobrar o el uso de deuda para cubrir operaciones, habilidades que te protegerán de las próximas burbujas financieras.\n\nFinalmente, el curso ofrece una Conclusión Integradora. No se trata de elegir un indicador sobre el otro, sino de saber cómo leer ambos en conjunto. Aprenderás a utilizar el ratio de conversión de beneficios en caja para construir una tesis de inversión sólida, asegurándote de que las empresas en las que invertís no solo declaren ganancias, sino que realmente las tengan depositadas en el banco.\n\n¿Estás listo para dejar de leer titulares y empezar a leer la realidad del dinero? Inscribite hoy y dominá la métrica que separa a los dueños del mercado de los aficionados.",
+      "shortDescription": null,
+      "price": "20000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJhjCe8nlE1oBH2XCc8yG4xOD6mQksRVeulPw7",
+      "category": "General",
+      "level": "Intermedio",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-17T15:22:59.318Z",
+      "updatedAt": "2026-01-18T22:21:50.198Z",
+      "modules": [
+        {
+          "id": "cmkigin0m0002kb3n9p6lbg71",
+          "title": "Micro Curso",
+          "position": 1,
+          "courseId": "cmkigidme0000kb3nyhnjeyt6",
+          "createdAt": "2026-01-17T15:23:11.495Z",
+          "updatedAt": "2026-01-17T15:23:11.495Z",
+          "lessons": [
+            {
+              "id": "cmkigiz1r0004kb3nurojqrmd",
+              "title": "BPA vs FCF",
+              "description": "",
+              "videoUrl": "https://www.youtube.com/watch?v=R6y5KKnmcC8",
+              "duration": 1189,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkigin0m0002kb3n9p6lbg71",
+              "createdAt": "2026-01-17T15:23:27.087Z",
+              "updatedAt": "2026-01-17T15:23:27.087Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmkb3u2nv0000yj6tef9f2xup",
+      "title": "Mentoria Análisis Fundamental",
+      "description": "El Análisis Fundamental es la disciplina que separa a los apostadores de los verdaderos inversores. En este programa, dejarás de mirar gráficos de corto plazo para enfocarte en lo que realmente importa: la capacidad de una empresa para generar riqueza. Aquí aprenderás a pensar y actuar como un socio capitalista, analizando negocios desde adentro hacia afuera.\n\nInversión de Valor: Convertite en un Dueño de Negocios\n\nTu formación comienza con la Lectura Crítica de Balances. Aprenderás a traducir los estados contables (Situación Patrimonial, Estado de Resultados y Flujo de Caja) en historias reales de dinero. Descubrirás cómo identificar la ganancia neta real, separándola de los ajustes contables, y aprenderás a detectar cuándo una empresa está \"maquillando\" sus números para parecer más atractiva de lo que realmente es.\n\nEn el módulo de Ventajas Competitivas (MOAT), aplicaremos la filosofía de Warren Buffett para identificar \"Fosos Económicos\". Aprenderás a reconocer qué hace que una empresa sea indestructible frente a sus competidores, analizando su poder de marca, sus bajos costos de producción o su efecto de red. Este análisis cualitativo es tu principal escudo contra las crisis y la obsolescencia.\n\nLa parte técnica culmina con la Valuación de Empresas. Aquí aprenderás a calcular el Fair Value o Valor Justo de un negocio. Mediante modelos de descuento de flujos de fondos y el análisis de ratios clave como el PER y el ROE, sabrás exactamente cuánto deberías pagar por una acción. Entenderás el concepto de Margen de Seguridad: la diferencia vital entre el precio de mercado y el valor intrínseco que minimiza tu riesgo de pérdida.\n\nFinalmente, este curso te dará la mentalidad necesaria para construir un Patrimonio a Prueba de Balas. Dejarás de seguir modas o burbujas para comprar empresas sólidas cuando el mercado las está \"regalando\". Aprenderás que la volatilidad es tu amiga si sabés cuánto vale lo que comprás, permitiéndote construir una cartera de inversión ganadora y de largo plazo.\n\n¿Estás listo para dejar de apostar y empezar a invertir con la seguridad de los dueños del mundo? Inscribite hoy y aprendé a valorar negocios como un profesional.",
+      "shortDescription": null,
+      "price": "100000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJh3LSVvE1oBH2XCc8yG4xOD6mQksRVeulPw7I",
+      "category": "General",
+      "level": "Todos los niveles",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-12T11:53:46.746Z",
+      "updatedAt": "2026-01-18T22:20:37.870Z",
+      "modules": [
+        {
+          "id": "cmkcnfsa800019qw7wcp0eppf",
+          "title": "Mentoria Analisis Fundamental",
+          "position": 1,
+          "courseId": "cmkb3u2nv0000yj6tef9f2xup",
+          "createdAt": "2026-01-13T13:50:18.608Z",
+          "updatedAt": "2026-01-13T13:50:18.608Z",
+          "lessons": [
+            {
+              "id": "cmkhif8b6001bfnm0k0eqsivi",
+              "title": "Mentoria",
+              "description": "1. Análisis de Estados Contables\nSe profundiza en la lectura técnica de los tres reportes financieros principales para detectar la salud real de una compañía:\n\nSituación Patrimonial (Balance Sheet): Análisis de activos, pasivos y patrimonio neto para evaluar la solvencia y el nivel de endeudamiento.\n\nEstado de Resultados (Income Statement): Evaluación de ingresos, costos y márgenes operativos. Se pone especial énfasis en identificar dónde los números pueden estar \"maquillados\" y cuál es la ganancia real (Earning Power).\n\nFlujo de Caja (Cash Flow): Seguimiento del movimiento real del dinero. Se estudia el Free Cash Flow para entender cuánta caja genera el negocio después de sus gastos de capital (CAPEX).\n\n2. Análisis Cualitativo: El MOAT (Foso Económico)\nInspirado en la filosofía de Warren Buffett, se estudia la ventaja competitiva sostenible que protege a una empresa de sus competidores. Se analizan factores como:\n\nPoder de marca y fidelidad del cliente.\n\nEfecto de red y ventajas de costos.\n\nCostos de cambio para el usuario (Switching Costs).\n\n3. Modelos de Valoración y Filosofía de Warren Buffett\nSe aplica el enfoque de \"Inversión en Valor\" para encontrar la diferencia entre Precio y Valor:\n\nModelo de Valoración: Estimación del Fair Value (Valor Justo) mediante el descuento de flujos de caja futuros o el modelo de capitalización de ganancias que utiliza Buffett.\n\nMargen de Seguridad: Determinación de cuánto descuento respecto al valor intrínseco se requiere para minimizar el riesgo de la inversión.\n\nRatios Clave: Dominio de indicadores fundamentales como el PER (Price to Earnings), ROE (Return on Equity) y EBITDA para comparar la eficiencia entre empresas del mismo sector.",
+              "videoUrl": "https://youtu.be/W0767UW2X7g",
+              "duration": 10664,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkcnfsa800019qw7wcp0eppf",
+              "createdAt": "2026-01-16T23:28:45.522Z",
+              "updatedAt": "2026-01-17T15:13:29.082Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cmkigsyen000kkb3n05vphttk",
+      "title": "Valuación de Bonos: TIR, Paridad y Escenarios de Salida",
+      "description": "Entender el precio de un bono es solo el comienzo; entender su valor es lo que te convierte en un inversor profesional. En este micro-curso de 18 minutos, Francisco Castro te enseña a mirar más allá de la cotización para que comprendas la arquitectura financiera que determina la rentabilidad real de tus títulos.\n\nValuación de Bonos: Análisis de Rendimiento y Oportunidades de Arbitraje\n\nTu formación comienza con La TIR como brújula. Aprenderás a interpretar la Tasa Interna de Retorno (Yield to Maturity) no solo como un número, sino como el rendimiento anualizado que recibirás si mantenés el bono hasta el vencimiento. Descubrirás la importancia de la reinversión de los cupones y por qué la TIR es la herramienta definitiva para comparar bonos con diferentes estructuras de pago, permitiéndote tomar decisiones basadas en datos y no en suposiciones.\n\nEn el módulo de Análisis de Paridad, profundizaremos en el concepto de Valor Técnico. Aprenderás a identificar cuándo un bono cotiza \"bajo la par\", \"sobre la par\" o \"a la par\", y cómo estas situaciones generan oportunidades de ganancias de capital adicionales al cobro de intereses. Entenderás que un bono bajo la par puede ser una oportunidad de compra extraordinaria si el mercado ha castigado el precio injustificadamente, permitiéndote capturar un rendimiento superior al cupón nominal.\n\nFinalmente, el curso te lleva a la vanguardia con la TIR Futura y el Exit Yield. Aprenderás a realizar proyecciones de retornos totales simulando diferentes escenarios de tasas de mercado al momento de la venta. Esta capacidad de simular la salida te permitirá anticipar cómo variará el precio de tu bono ante cambios en la economía, dándote una ventaja competitiva para entrar y salir del mercado en los momentos de mayor rentabilidad.\n\n¿Estás listo para dejar de adivinar y empezar a valuar bonos como un analista de Wall Street? Inscribite hoy y dominá las métricas que definen el éxito en la Renta Fija.",
+      "shortDescription": null,
+      "price": "45000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJcyFN9Zsrfm16IAuSMz3TobWxyHqE8YgcCLNv",
+      "category": "General",
+      "level": "Todos los niveles",
+      "learningOutcomes": null,
+      "published": true,
+      "createdAt": "2026-01-17T15:31:12.803Z",
+      "updatedAt": "2026-01-22T15:23:16.984Z",
+      "modules": [
+        {
+          "id": "cmkigt5ms000mkb3ndc6obffn",
+          "title": "Valuando Bonos",
+          "position": 1,
+          "courseId": "cmkigsyen000kkb3n05vphttk",
+          "createdAt": "2026-01-17T15:31:22.180Z",
+          "updatedAt": "2026-01-17T15:31:22.180Z",
+          "lessons": [
+            {
+              "id": "cmkigtdsf000okb3n3xismxys",
+              "title": "Bonos",
+              "description": "",
+              "videoUrl": "https://www.youtube.com/watch?v=UXE0UWYLnWM",
+              "duration": 1073,
+              "content": null,
+              "position": 1,
+              "published": true,
+              "moduleId": "cmkigt5ms000mkb3ndc6obffn",
+              "createdAt": "2026-01-17T15:31:32.751Z",
+              "updatedAt": "2026-01-17T15:31:32.751Z"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "bundles": [
+    {
+      "id": "cmkhix3va001efnm06bm8yqni",
+      "title": "Plan Portfolio Manager",
+      "description": "Todo el conocimiento de Aurora Academy en un solo lugar. Sin límites, sin secretos.\n\nEste paquete está diseñado para quien decidió tomarse las finanzas en serio. Es la hoja de ruta completa: desde entender qué es una tasa de interés hasta gestionar carteras de inversión de nivel profesional, combinando el análisis técnico más preciso con el análisis fundamental más profundo.\n\n¿Qué incluye este pack? Absolutamente TODO",
+      "price": "550000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJlDTrfatbKazhQ2MmLuXJ0foSk4NnPYqvCTyF",
+      "published": true,
+      "createdAt": "2026-01-16T23:42:39.574Z",
+      "updatedAt": "2026-01-18T22:25:43.812Z",
+      "items": [],
+      "courses": [
+        {
+          "id": "cmk76jxm700002i3ojyfpjbm5",
+          "title": "Mentoria en Price Action",
+          "description": "Dominar el Price Action (Acción del Precio) significa aprender a leer el mercado en su estado más puro, sin indicadores que retrasen tu visión. En este programa, dejarás de depender de herramientas externas para convertirte en un lector experto de la psicología de masas plasmada en el gráfico:\n\nPrice Action: El Arte de Leer el Mercado en Tiempo Real\n\nTu entrenamiento comienza con el dominio de las Velas Japonesas y la Oferta y Demanda. Aprenderás que cada vela es una batalla ganada o perdida entre compradores y vendedores. Entenderás la dinámica de la subasta del mercado, identificando las zonas donde el \"Smart Money\" deja su huella y donde la liquidez realmente se concentra.\n\nEn el módulo de Estructura y Reconocimientos, profundizaremos en la identificación de Soportes y Resistencias desde una perspectiva de flujo de órdenes. Aprenderás a distinguir los diferentes Tipos de Quiebres (reales vs. falsos) y cómo el mercado realiza sus testeos antes de iniciar un movimiento explosivo. Entenderás los tipos de reconocimientos de zona para no entrar nunca antes de tiempo.\n\nLa parte operativa se centra en la Gestión Profesional del Trade. Aprenderás a configurar tu operatoria mediante Take Profit y Stop Loss basados exclusivamente en la estructura del precio, buscando siempre ratios de riesgo-beneficio positivos. Sabrás exactamente dónde colocar tu salida para proteger tu capital y dónde retirarte con ganancias antes de que el mercado gire.\n\nFinalmente, este curso te dará la confianza para operar con un gráfico limpio. Al integrar el análisis del Volumen con la acción del precio, descubrirás cómo confirmar la intención detrás de cada movimiento. Es el paso definitivo para quienes buscan una metodología robusta, lógica y, sobre todo, altamente efectiva en cualquier marco temporal.\n\n¿Estás listo para ver el mercado con total claridad y sin ruidos? Inscribite hoy y dominá la técnica que separa a los aficionados de los profesionales.",
+          "shortDescription": null,
+          "price": "100000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJOwVP0i1HzIbv7eJq1KyWX24kCaPHmfh5sT9x",
+          "category": "General",
+          "level": "Intermedio",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-09T17:58:47.791Z",
+          "updatedAt": "2026-01-18T22:20:46.756Z"
+        },
+        {
+          "id": "cmkb3mgzw0000d3a47s50rk9t",
+          "title": "Mentoria Introducción al Mercado de Capitales",
+          "description": "Este curso de Introducción al Mercado de Capitales es el primer paso fundamental para cualquier persona que desee tomar las riendas de su futuro financiero. Aquí aprenderás que el mercado no es un lugar exclusivo para expertos, sino un ecosistema de oportunidades accesible para todos aquellos que se atrevan a pasar del ahorro a la inversión inteligente.\n\nPrimeros Pasos: El Despertar del Inversor\n\nTu camino comienza entendiendo el Funcionamiento del Mercado. Descubrirás el ecosistema financiero, comprendiendo los roles de la CNV como regulador y de BYMA como el lugar donde sucede la magia, además de aprender a elegir tu primer Bróker (ALyC). Entenderás por fin la diferencia vital entre ahorrar y \"poner el dinero a trabajar\" para canalizarlo hacia la producción real.\n\nEn el módulo de Perfil del Inversor y Riesgo, aprenderás que no existe una inversión perfecta, sino una inversión adecuada para vos. Definirás si sos un inversor conservador, moderado o agresivo, y entenderás la relación inquebrantable entre riesgo y retorno. Aprenderás a trazar tu horizonte de inversión y a usar la diversificación como tu principal escudo protector.\n\nLa parte técnica se divide en los dos grandes pilares de la bolsa. Primero, los Instrumentos de Renta Variable, donde aprenderás qué significa ser dueño de una empresa a través de acciones y cómo los Cedears te permiten invertir en los gigantes de Wall Street desde tu cuenta local. Entenderás cómo ganar dinero tanto por la suba de precios como por el cobro de dividendos. Luego, exploraremos la Renta Fija, donde aprenderás a ser acreedor del Estado o de empresas privadas mediante Bonos y ONs, asegurándote el cobro de intereses periódicos de manera previsible.\n\nPara quienes buscan simplicidad, descubriremos los Fondos Comunes de Inversión (FCI). Aprenderás a elegir el fondo adecuado según tu necesidad de liquidez, desde los Money Market hasta fondos de acciones, delegando la administración profesional de tu capital para que expertos trabajen por vos.\n\nFinalmente, el curso culmina con la Operativa Práctica, donde la teoría se convierte en acción. Aprenderás paso a paso cómo abrir tu cuenta comitente, cómo leer una pantalla de trading sin marearte y cómo cargar tus primeras órdenes a mercado o límite. Al terminar, estarás listo para realizar tu primera inversión con total seguridad, comprendiendo perfectamente las comisiones e impuestos involucrados.\n\n¿Estás listo para dejar de ver el mercado desde afuera y empezar a construir tu patrimonio? Inscribite hoy y transformá tus ahorros en inversiones reales.",
+          "shortDescription": null,
+          "price": "45000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJIhZhSoOQSHyutNkZVmn8WFwo14l6brCz0Yi3",
+          "category": "General",
+          "level": "Principiante",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-12T11:47:52.076Z",
+          "updatedAt": "2026-01-18T22:20:30.239Z"
+        },
+        {
+          "id": "cmkb3vwqf0001yj6t5lbqq7h8",
+          "title": "Mentoria Analisis Tecnico",
+          "description": "¿Te ha pasado que compras y el precio cae inmediatamente? Eso es falta de Análisis Técnico. El mercado deja huellas antes de moverse, y en este curso aprenderás a rastrearlas.\n\nNo necesitas ser un genio matemático, necesitas las herramientas correctas para:\n\nValidar Rupturas: Distingue entre un movimiento real y una \"trampa de toros\" (Bull Trap).\n\nMedias Móviles: Úsalas como soportes dinámicos para subirte a la tendencia sin riesgo.\n\nVolumen: El detector de mentiras. Aprende a ver si hay dinero real respaldando el movimiento.\n\nDeja de regalar tu dinero entrando tarde. Aprende a entrar con los profesionales. 🔥 Afina tu puntería y entra al curso ahora.",
+          "shortDescription": null,
+          "price": "150000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJ2MDPHyLowIuzXV8j2bLyc5oEkBGmfJpxKnRi",
+          "category": "General",
+          "level": "Todos los niveles",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-12T11:55:12.374Z",
+          "updatedAt": "2026-01-18T22:21:08.798Z"
+        },
+        {
+          "id": "cmkbfyovj0000iv7p7dwuyjbc",
+          "title": "Curso de Opciones Financieras",
+          "description": "Llevá tu perfil como inversor a la frontera del conocimiento bursátil con este programa de Opciones Financieras, el instrumento más versátil y potente del mercado. Este curso te permitirá dejar de ser un espectador para convertirte en un estratega capaz de ganar en cualquier escenario:\n\nMaestría en Opciones: Maximizá Ganancias y Blindá tu Cartera\n\nTu formación comienza con los Conceptos Básicos, donde dominarás el universo de los derivados financieros. Aprenderás a diferenciar con precisión entre opciones Call y Put, identificando los elementos clave como el activo subyacente y el precio de ejercicio. Al finalizar esta etapa, leerás la nomenclatura del mercado como un profesional, sabiendo exactamente qué oportunidad se esconde tras cada sigla.\n\nEn el módulo de Operatoria y Valuación, descubrirás la ciencia detrás del precio de las opciones. Aprenderás a distinguir entre opciones Americanas y Europeas, y dominarás los conceptos de valor intrínseco y extrínseco para saber cuándo una opción está ITM, ATM u OTM. Además, entenderás la paridad Put-Call para armar posiciones sintéticas y gestionarás garantías con la eficiencia de un operador institucional.\n\nPasarás a la acción con las Estrategias con Opciones I, donde aprenderás las herramientas fundamentales de cobertura y generación de renta. Desde el Lanzamiento Cubierto para \"hacer tasa\" hasta el Protective Put para asegurar tus acciones contra caídas, dominarás el cálculo de ganancias máximas y puntos de equilibrio (breakeven) con un análisis gráfico riguroso de tu perfil de riesgo.\n\nElevarás tu sofisticación con las Estrategias Avanzadas II, adentrándote en el armado de estructuras complejas como Spreads, Conos, Cunas y Mariposas. Estas herramientas te permitirán beneficiarte de la volatilidad extrema o de mercados laterales, optimizando el uso de tu capital para obtener retornos apalancados que otros instrumentos no pueden ofrecer.\n\nFinalmente, dominarás el Modelo Black & Scholes, la fórmula ganadora del Premio Nobel que revolucionó las finanzas. Aprenderás a aplicar este método matemático para determinar el valor teórico de una prima y, lo más importante, a proyectar variaciones de precio en base a tus objetivos de análisis técnico, dándote una ventaja competitiva estadística insuperable.\n\n¿Estás listo para operar con la herramienta definitiva de los profesionales? Inscribite hoy y descubrí cómo las opciones pueden transformar tu rentabilidad para siempre.",
+          "shortDescription": null,
+          "price": "55000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJbfET2p9QTe5Vo3qKwXOL8DRx6btI07kJPcAd",
+          "category": "General",
+          "level": "Avanzado",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-12T17:33:17.551Z",
+          "updatedAt": "2026-01-18T22:21:24.858Z"
+        },
+        {
+          "id": "cmkb45yfn0000l51swh07aw37",
+          "title": "Mentoria Gestion de Cartera",
+          "description": "Llevar la gestión de tus inversiones al siguiente nivel requiere dejar de elegir activos al azar y empezar a diseñar portafolios con rigor científico. Este programa de Gestión de Cartera te ofrece las herramientas cuantitativas y tecnológicas para administrar el riesgo y maximizar el retorno como un verdadero gestor de fondos profesional:\n\nGestión de Cartera: Ingeniería Financiera para Inversores Profesionales\n\nTu formación comienza con la Teoría Moderna de Portafolio de Markowitz, donde descubrirás el poder matemático de la diversificación. Aprenderás a construir la Frontera Eficiente, identificando la combinación exacta de activos que maximiza tu retorno para cada nivel de riesgo. Entenderás cómo las correlaciones entre activos permiten reducir el riesgo global de tu cartera, optimizando la relación media-varianza de manera estratégica.\n+2\n\nEn el módulo del Modelo CAPM, profundizaremos en la relación entre el riesgo sistemático del mercado y el retorno esperado. Aprenderás a calcular el Beta de tu cartera y a utilizar la Línea del Mercado de Valores (SML) para identificar con precisión qué activos están sobrevalorados o infravalorados, asegurándote de que cada inversión compense correctamente el riesgo asumido.\n\nPara blindar tu capital, dominaremos el VaR (Value at Risk), la métrica estándar de la industria para medir la pérdida máxima potencial. Aprenderás a gestionar el riesgo de caída (downside risk) con niveles de confianza del 95% o 99%, estableciendo límites operativos claros que te permitirán saber exactamente cuánto dinero está en riesgo en condiciones normales de mercado.\n\nLa sofisticación de tu análisis llegará con la Simulación de Monte Carlo. Mediante el modelado estocástico, proyectarás miles de escenarios posibles para tus inversiones, permitiéndote evaluar la probabilidad de éxito de tus estrategias a largo plazo más allá de los promedios lineales, comprendiendo la dispersión real de los resultados posibles.\n\nTodo este conocimiento se vuelve ejecutable a través de Modelos de Python para Finanzas. Aprenderás a utilizar librerías potentes como Pandas, NumPy y Scipy para automatizar la descarga de datos históricos y programar algoritmos de optimización. Podrás calcular matrices de covarianza y rebalancear tus carteras de forma objetiva, rápida y sin sesgos emocionales.\n\nFinalmente, aprenderás a medir tu éxito mediante el Ratio de Sharpe y Métricas de Performance. Utilizarás indicadores como el Alfa de Jensen y el ratio de Sortino para evaluar tu desempeño ajustado por riesgo. Al terminar, tendrás la capacidad de demostrar que tus retornos son el resultado de una gestión sólida y eficiente, diferenciándote de quienes simplemente confían en la suerte.\n\n¿Estás listo para aplicar la ciencia de datos a tus inversiones y gestionar tu patrimonio con precisión quirúrgica? Inscribite hoy y dominá la ingeniería de carteras.",
+          "shortDescription": null,
+          "price": "200000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJyxkqUhvHtDPGZe4oISCRsEdFaOi95z3yNX0j",
+          "category": "General",
+          "level": "Avanzado",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-12T12:03:01.138Z",
+          "updatedAt": "2026-01-18T22:21:16.574Z"
+        },
+        {
+          "id": "cmkigoac4000akb3nnhyypiic",
+          "title": "Domina el Stop Loss en 15 minutos",
+          "description": "El Stop Loss es, sin ninguna duda, la herramienta más importante para la supervivencia de un inversor. En este micro-curso, Francisco Castro te enseña que la diferencia entre un operador profesional y un aficionado no es cuánto ganan, sino cómo limitan sus pérdidas. Aprendé a dominar el arte de la salida para que una mala decisión no arruine tu futuro financiero.\n\nBlindá tu Capital: La Disciplina del Stop Loss\n\nTu aprendizaje comienza con la Matemática del Drawdown, una lección de humildad financiera. Entenderás por qué una caída del 50% en tu cartera no se recupera con una subida del 50%, sino que requiere un 100% de retorno solo para volver al punto de equilibrio. Esta realidad matemática te demostrará que el \"esperar a que recupere\" es el error más caro que podés cometer y por qué cortar una pérdida pequeña es la mejor inversión de tu vida.\n\nEn el módulo de Estrategias de Salida, aprenderás a diferenciar entre el Stop Fijo y el Trailing Stop. Descubrirás cómo configurar un Stop Fijo para proteger tu capital inicial y cómo utilizar el Trailing Stop (Stop dinámico) para acompañar una tendencia alcista, permitiendo que tus ganancias corran mientras el sistema asegura beneficios automáticamente si el precio se da vuelta.\n\nFinalmente, el curso se enfoca en la Ejecución sin Emociones. Aprenderás la técnica para configurar estas órdenes directamente en tu bróker, permitiendo que el mercado ejecute tu plan por vos. Al automatizar tu disciplina, eliminarás el estrés de la toma de decisiones bajo presión y aprenderás que, en el trading, tu punto de salida es mucho más determinante para tu éxito que tu punto de entrada.\n\n¿Estás listo para dejar de sufrir por las caídas y empezar a operar con la tranquilidad de un profesional? Inscribite hoy y aprendé a proteger tu dinero mientras dormís.",
+          "shortDescription": null,
+          "price": "30000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJBsavKjQdI1jFQPvtCE4fx0kAGe9yXVOloaUT",
+          "category": "General",
+          "level": "Principiante",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-17T15:27:34.995Z",
+          "updatedAt": "2026-01-18T22:21:56.787Z"
+        },
+        {
+          "id": "cmkigm36w0005kb3n1hkgjuin",
+          "title": "Dominando el Riesgo: De la Volatilidad a la Estabilidad del Portafolio",
+          "description": "El riesgo en las finanzas no es un enemigo al que temer, sino una variable que se debe medir para poder ganar. Este micro-curso de Riesgo y Volatilidad está diseñado para que dejes de ver los movimientos del mercado como una amenaza y empieces a verlos como una oportunidad estratégica de gestión.\n\nDominando el Riesgo: De la Volatilidad a la Estabilidad del Portafolio\n\nTu aprendizaje comienza con la Anatomía del Riesgo, donde aprenderás a separar el ruido del mercado de la realidad financiera. Descubrirás la diferencia práctica entre el riesgo diversificable (idiosincrático), que afecta a una sola empresa, y el riesgo no diversificable (sistémico), que afecta a todo el mercado. Entenderás que el objetivo no es eliminar el riesgo por completo, sino eliminar aquel que no te está pagando por asumirlo.\n\nEn el módulo sobre El Poder de la Correlación, exploraremos la verdadera magia de la construcción de carteras. Aprenderás cómo combinar activos que no se mueven en la misma dirección para lograr que el riesgo total de tu portafolio sea menor que la suma de sus partes. Es la herramienta definitiva para construir carteras resilientes que puedan navegar cualquier tormenta financiera sin sacrificar el retorno.\n\nFinalmente, dominarás la Interpretación de Beta ($\\beta$), el indicador que te dirá si tu cartera está amplificando o amortiguando los movimientos del mercado. Aprenderás a usar este coeficiente para ajustar tu exposición: ¿querés una cartera agresiva que supere al mercado en las subas o una defensiva que resista en las caídas? Al finalizar, sabrás cómo calibrar tu portafolio según tu propio horizonte y tolerancia.\n\n¿Estás listo para dejar de reaccionar al mercado y empezar a modelar la incertidumbre a tu favor? Inscribite hoy y transformá la volatilidad en tu mejor aliada.",
+          "shortDescription": null,
+          "price": "50000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJXvMx9825yiF9TRK1vZ2kWNDj4oqPpVdnLOX7",
+          "category": "General",
+          "level": "Todos los niveles",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-17T15:25:52.377Z",
+          "updatedAt": "2026-01-18T21:55:54.230Z"
+        },
+        {
+          "id": "cmk76vago00052i3oi9ajtj81",
+          "title": "Análisis Técnico",
+          "description": "Este programa de formación profesional ha sido diseñado para transformar tu manera de operar, convirtiéndote en un inversor capaz de decidir con la precisión de un experto. A lo largo del curso, recorrerás un camino estratégico que te permitirá dominar el mercado de principio a fin:\n\nEl Camino hacia la Maestría en el Mercado\n\nTu evolución comienza con el dominio de los Principios del Éxito, donde entenderás que el mercado descuenta todos los factores externos y que la historia se repite constantemente. Esta base te permitirá usar patrones pasados para eliminar la incertidumbre y blindar tu capital desde el primer día.\n\nPronto aprenderás a leer el Mapa del Dinero, identificando soportes y resistencias para visualizar dónde compran y venden los grandes jugadores. Con el uso profesional del volumen y la gestión estratégica de órdenes Stop Loss y Take Profit, dejarás de perseguir precios para empezar a proteger cada una de tus ganancias.\n\nAvanzarás hacia el lenguaje visual de las Velas Japonesas y Tendencias, aprendiendo a medir la aceleración del mercado para anticipar giros antes que la multitud. Potenciarás esta habilidad con la construcción de Canales de Trading, utilizando técnicas de desdoblamiento para proyectar objetivos de precio con una claridad asombrosa.\n\nEl curso te revelará la perfección matemática de los Patrones de Fibonacci, enseñándote a localizar niveles críticos para retomar tendencias en el momento exacto. Al sumar el estudio de las Figuras Técnicas, como el Hombro-Cabeza-Hombro y Triángulos, aprenderás a validar rupturas reales y evitar las trampas que arruinan a los principiantes.\n\nPara una precisión científica, integrarás la Radiografía del Precio con indicadores como RSI y MACD, detectando divergencias antes de que ocurran los cambios de tendencia. Además, adoptarás el prestigioso Método Weinstein, aprendiendo la disciplina necesaria para operar solo en fases de avance y evitar los peligrosos mercados laterales.\n\nFinalmente, dominarás la Inversión Institucional con Wyckoff, descifrando el rastro de las \"manos fuertes\" a través de maniobras como el Spring y el Salto del Arroyo. Al terminar, no solo sabrás leer gráficos; habrás desarrollado la mentalidad profesional necesaria para operar en sintonía con los dueños del mercado.\n\n¿Estás listo para dejar de adivinar y tomar el control total de tu futuro financiero? Inscribite ahora y empezá a operar como un profesional.",
+          "shortDescription": null,
+          "price": "65000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJ0ShQlu6FNsGmMLhvTWY69CqAzRbgny7xX1iV",
+          "category": "General",
+          "level": "Todos los niveles",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-09T18:07:37.656Z",
+          "updatedAt": "2026-01-18T22:20:58.168Z"
+        },
+        {
+          "id": "cmk77d6jw00162i3o2xduugqj",
+          "title": "Renta Fija",
+          "description": "Tu viaje hacia la maestría financiera continúa con este programa especializado en Renta Fija, donde aprenderás a dominar los instrumentos más utilizados para generar ingresos previsibles y diversificar carteras con rigor profesional. Este curso te llevará desde los cimientos hasta las estrategias avanzadas de arbitraje:\n\nEstrategias en Renta Fija: El Camino del Inversor Inteligente\n\nTodo comienza con los Conceptos Fundamentales, donde entenderás al bono no solo como un activo, sino como una obligación financiera con reglas claras detalladas en su prospecto de emisión. Aprenderás a identificar componentes clave como el emisor y los plazos, pero sobre todo, dominarás la gestión de riesgos (tasa, liquidez y moneda) y realizarás tus primeros cálculos de intereses corridos para saber exactamente qué estás comprando.\n\nEn la etapa de Clasificación y Valuación, descubrirás la mecánica que mueve los precios: la relación inversa entre el precio y la tasa de interés. Aprenderás a diferenciar técnicamente entre bonos cupón cero y Bullet, y dominarás la distinción crítica entre Precio Clean y Precio Dirty. Además, entenderás el rol vital del Rating Crediticio para evaluar la seguridad de tu capital.\n\nTu formación se vuelve práctica al explorar los Mercados y Flujos de Fondos, comprendiendo la diferencia entre captar fondos en el Mercado Primario y la negociación diaria en el Secundario. El punto culminante de esta fase es la confección técnica de un Cash Flow, herramienta que te permitirá proyectar con exactitud cada cobro de capital e interés a lo largo de la vida del bono.\n\nElevarás tu nivel con las Medidas de Rendimiento y Riesgo, dominando conceptos avanzados como la TIR, el Valor Técnico y la Paridad. Aprenderás a realizar análisis de sensibilidad mediante la Duration y la Convexity, y a interpretar curvas de rendimiento para detectar oportunidades de arbitraje, identificando cuándo un bono está realmente barato o caro respecto al mercado.\n\nFinalmente, cerraremos el círculo con el Análisis Técnico Aplicado a Bonos, integrando el estudio gráfico dentro del mundo de la renta fija. Aprenderás a complementar el riguroso análisis matemático con la acción del precio, utilizando herramientas técnicas para determinar el momento exacto de entrada o salida, maximizando así el potencial de apreciación de tus títulos.\n\n¿Estás listo para dominar el mundo de los bonos y asegurar tus rendimientos? Inscribite hoy y empezá a invertir con la seguridad que solo el conocimiento profundo puede darte.",
+          "shortDescription": null,
+          "price": "65000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJlp3xYlbKazhQ2MmLuXJ0foSk4NnPYqvCTyFr",
+          "category": "General",
+          "level": "Principiante",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-09T18:21:32.396Z",
+          "updatedAt": "2026-01-18T22:20:22.976Z"
+        },
+        {
+          "id": "cmke3r7q600025b9gasf4r0jr",
+          "title": "Futuros Financieros",
+          "description": "Dominar los Futuros Financieros es dar el salto hacia la gestión profesional de carteras, permitiéndote operar con un nivel de eficiencia y control de riesgo superior. Este programa te llevará desde la comprensión técnica de los derivados hasta la ejecución de estrategias de cobertura y especulación en mercados institucionales:\n\nFuturos Financieros: Potencia y Protección en Mercados Derivados\n\nTu formación comienza con los Aspectos Generales de los Derivados, donde entenderás por qué los futuros son la herramienta predilecta para la gestión de riesgos globales. Identificarás a los Participantes del mercado, desde los hedgers que buscan protección hasta los especuladores que aportan liquidez, comprendiendo el rol vital de la Cámara Compensadora como garante de cada operación.\n\nEn el módulo de Estructura y Contratos, profundizarás en el Reglamento del Contrato, aprendiendo a leer las especificaciones técnicas que definen cada activo. Dominarás el Sistema de Garantías y Márgenes, entendiendo cómo funciona el apalancamiento financiero para maximizar el uso de tu capital sin descuidar la seguridad de tu cuenta comitente.\n\nLa parte operativa se centra en las Estrategias de Cobertura, donde aprenderás a diseñar tanto la Cobertura Compradora (para fijar precios de insumos futuros) como la Cobertura Vendedora (para blindar el valor de tu producción o cartera contra caídas de precio). Estas herramientas te permitirán neutralizar la volatilidad y dar previsibilidad total a tu flujo de fondos.\n\nFinalmente, te convertirás en un estratega de mercado mediante la Especulación Profesional. Aprenderás la mecánica de las posiciones LONG (larga) para beneficiarte de mercados alcistas y SHORT (corta) para obtener rentabilidad incluso cuando los precios caen. Al dominar el sistema de liquidación diaria de pérdidas y ganancias, estarás listo para operar en los mercados de futuros más importantes con una visión analítica y ganadora.\n\n¿Estás listo para operar en las ligas mayores del mercado de capitales? Inscribite hoy y descubrí el poder de los futuros para potenciar tus inversiones.",
+          "shortDescription": null,
+          "price": "60000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJfIjweSpSPcNRAgFK0TjU83DhMGyO47EHq9z2",
+          "category": "General",
+          "level": "Intermedio",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-14T14:14:51.870Z",
+          "updatedAt": "2026-01-18T22:21:31.828Z"
+        },
+        {
+          "id": "cmkigqmn4000fkb3nd3eyxd5m",
+          "title": "El Valor del Tiempo: TNA, TEA y el Verdadero Rendimiento (TIR)",
+          "description": "Entender la diferencia entre las tasas de interés es lo que separa a un ahorrista de un inversor profesional. En este micro-curso de 12 minutos, Francisco Castro te enseña a leer la letra chica del mercado para que nunca más compares \"peras con manzanas\" y sepas exactamente cuánto rinde tu dinero.\n\nDominio de Tasas: TNA, TEA y el Poder de la TIR\n\nTu aprendizaje comienza con el duelo TNA vs. TEA. Descubrirás por qué la Tasa Nominal Anual es simplemente una referencia informativa y cómo la Tasa Efectiva Anual es la que realmente impacta en tu bolsillo al considerar la capitalización de los intereses. Aprenderás que, a mayor frecuencia de capitalización, más se aleja la TEA de la TNA, y entenderás por qué este concepto es la base del interés compuesto.\n+1\n\nEn el módulo de La Lógica de la TIR, daremos un paso más allá de las tasas simples. Aprenderás a usar la Tasa Interna de Retorno como la herramienta definitiva para evaluar la rentabilidad real de un bono o proyecto. A diferencia de otras tasas, la TIR tiene en cuenta todo el flujo de fondos (Cash Flow), los momentos de cobro y la reinversión de los cupones, dándote un porcentaje de rendimiento anualizado preciso para comparar diferentes alternativas de inversión.\n\nFinalmente, dominarás la Conversión de Tasas. Te brindaremos las herramientas y fórmulas financieras para pasar de tasas mensuales a anuales (y viceversa) de forma correcta, evitando los errores matemáticos comunes de la suma simple. Al terminar, tendrás el criterio técnico para analizar cualquier préstamo, plazo fijo o bono, eligiendo siempre la opción que más beneficie a tu patrimonio.\n\n¿Estás listo para dejar de confundir números y empezar a medir tus ganancias con precisión? Inscribite hoy y dominá el lenguaje de las tasas como un experto.",
+          "shortDescription": null,
+          "price": "35000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJKWEEWT4NlSBxIotJj9pXbqrM4uEvkhmH1CTZ",
+          "category": "General",
+          "level": "Principiante",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-17T15:29:24.244Z",
+          "updatedAt": "2026-01-18T22:22:02.077Z"
+        },
+        {
+          "id": "cmkigidme0000kb3nyhnjeyt6",
+          "title": "Beneficio vs. Caja: La Guía de 22 Minutos para una Valuación Real",
+          "description": "Este Micro Curso de Análisis de Calidad de Ganancias está diseñado para aquellos inversores que quieren dejar de mirar la superficie y empezar a entender la verdadera salud financiera de un negocio. Aquí aprenderás por qué \"la caja es la realidad y el beneficio es una opinión\", convirtiéndote en un analista capaz de detectar trampas contables antes que el resto del mercado:\n\nBPA vs. FCF: El Arte de Encontrar Ganancias Reales\n\nTu formación comienza derribando el Mito del EPS (BPA). Descubrirás por qué el Beneficio Por Acción, aunque es el indicador más mirado en Wall Street, puede ser fácilmente manipulado mediante recompras de acciones o criterios contables subjetivos. Aprenderás las limitaciones técnicas de este indicador y por qué confiar ciegamente en él puede llevarte a pagar de más por empresas que no generan valor real.\n\nEn el módulo Cash Flow King, aprenderás la métrica sagrada de los grandes inversores: el Free Cash Flow (Flujo de Caja Libre). Te enseñaremos a calcularlo paso a paso, partiendo del flujo operativo y restando los gastos de capital (CAPEX). Aprenderás no solo a medirlo, sino a proyectarlo, entendiendo que el valor de cualquier inversión hoy es el valor presente de toda la caja que ese negocio pueda generar en el futuro.\n\nLa parte más reveladora del curso es la de Detectives Contables. Analizaremos casos reales de empresas que mostraban Estados de Resultados envidiables mientras sus flujos de caja gritaban una crisis de liquidez inminente. Aprenderás a identificar señales de alerta, como el crecimiento desmedido de cuentas por cobrar o el uso de deuda para cubrir operaciones, habilidades que te protegerán de las próximas burbujas financieras.\n\nFinalmente, el curso ofrece una Conclusión Integradora. No se trata de elegir un indicador sobre el otro, sino de saber cómo leer ambos en conjunto. Aprenderás a utilizar el ratio de conversión de beneficios en caja para construir una tesis de inversión sólida, asegurándote de que las empresas en las que invertís no solo declaren ganancias, sino que realmente las tengan depositadas en el banco.\n\n¿Estás listo para dejar de leer titulares y empezar a leer la realidad del dinero? Inscribite hoy y dominá la métrica que separa a los dueños del mercado de los aficionados.",
+          "shortDescription": null,
+          "price": "20000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJhjCe8nlE1oBH2XCc8yG4xOD6mQksRVeulPw7",
+          "category": "General",
+          "level": "Intermedio",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-17T15:22:59.318Z",
+          "updatedAt": "2026-01-18T22:21:50.198Z"
+        },
+        {
+          "id": "cmkb3u2nv0000yj6tef9f2xup",
+          "title": "Mentoria Análisis Fundamental",
+          "description": "El Análisis Fundamental es la disciplina que separa a los apostadores de los verdaderos inversores. En este programa, dejarás de mirar gráficos de corto plazo para enfocarte en lo que realmente importa: la capacidad de una empresa para generar riqueza. Aquí aprenderás a pensar y actuar como un socio capitalista, analizando negocios desde adentro hacia afuera.\n\nInversión de Valor: Convertite en un Dueño de Negocios\n\nTu formación comienza con la Lectura Crítica de Balances. Aprenderás a traducir los estados contables (Situación Patrimonial, Estado de Resultados y Flujo de Caja) en historias reales de dinero. Descubrirás cómo identificar la ganancia neta real, separándola de los ajustes contables, y aprenderás a detectar cuándo una empresa está \"maquillando\" sus números para parecer más atractiva de lo que realmente es.\n\nEn el módulo de Ventajas Competitivas (MOAT), aplicaremos la filosofía de Warren Buffett para identificar \"Fosos Económicos\". Aprenderás a reconocer qué hace que una empresa sea indestructible frente a sus competidores, analizando su poder de marca, sus bajos costos de producción o su efecto de red. Este análisis cualitativo es tu principal escudo contra las crisis y la obsolescencia.\n\nLa parte técnica culmina con la Valuación de Empresas. Aquí aprenderás a calcular el Fair Value o Valor Justo de un negocio. Mediante modelos de descuento de flujos de fondos y el análisis de ratios clave como el PER y el ROE, sabrás exactamente cuánto deberías pagar por una acción. Entenderás el concepto de Margen de Seguridad: la diferencia vital entre el precio de mercado y el valor intrínseco que minimiza tu riesgo de pérdida.\n\nFinalmente, este curso te dará la mentalidad necesaria para construir un Patrimonio a Prueba de Balas. Dejarás de seguir modas o burbujas para comprar empresas sólidas cuando el mercado las está \"regalando\". Aprenderás que la volatilidad es tu amiga si sabés cuánto vale lo que comprás, permitiéndote construir una cartera de inversión ganadora y de largo plazo.\n\n¿Estás listo para dejar de apostar y empezar a invertir con la seguridad de los dueños del mundo? Inscribite hoy y aprendé a valorar negocios como un profesional.",
+          "shortDescription": null,
+          "price": "100000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJh3LSVvE1oBH2XCc8yG4xOD6mQksRVeulPw7I",
+          "category": "General",
+          "level": "Todos los niveles",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-12T11:53:46.746Z",
+          "updatedAt": "2026-01-18T22:20:37.870Z"
+        },
+        {
+          "id": "cmkigsyen000kkb3n05vphttk",
+          "title": "Valuación de Bonos: TIR, Paridad y Escenarios de Salida",
+          "description": "Entender el precio de un bono es solo el comienzo; entender su valor es lo que te convierte en un inversor profesional. En este micro-curso de 18 minutos, Francisco Castro te enseña a mirar más allá de la cotización para que comprendas la arquitectura financiera que determina la rentabilidad real de tus títulos.\n\nValuación de Bonos: Análisis de Rendimiento y Oportunidades de Arbitraje\n\nTu formación comienza con La TIR como brújula. Aprenderás a interpretar la Tasa Interna de Retorno (Yield to Maturity) no solo como un número, sino como el rendimiento anualizado que recibirás si mantenés el bono hasta el vencimiento. Descubrirás la importancia de la reinversión de los cupones y por qué la TIR es la herramienta definitiva para comparar bonos con diferentes estructuras de pago, permitiéndote tomar decisiones basadas en datos y no en suposiciones.\n\nEn el módulo de Análisis de Paridad, profundizaremos en el concepto de Valor Técnico. Aprenderás a identificar cuándo un bono cotiza \"bajo la par\", \"sobre la par\" o \"a la par\", y cómo estas situaciones generan oportunidades de ganancias de capital adicionales al cobro de intereses. Entenderás que un bono bajo la par puede ser una oportunidad de compra extraordinaria si el mercado ha castigado el precio injustificadamente, permitiéndote capturar un rendimiento superior al cupón nominal.\n\nFinalmente, el curso te lleva a la vanguardia con la TIR Futura y el Exit Yield. Aprenderás a realizar proyecciones de retornos totales simulando diferentes escenarios de tasas de mercado al momento de la venta. Esta capacidad de simular la salida te permitirá anticipar cómo variará el precio de tu bono ante cambios en la economía, dándote una ventaja competitiva para entrar y salir del mercado en los momentos de mayor rentabilidad.\n\n¿Estás listo para dejar de adivinar y empezar a valuar bonos como un analista de Wall Street? Inscribite hoy y dominá las métricas que definen el éxito en la Renta Fija.",
+          "shortDescription": null,
+          "price": "45000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJcyFN9Zsrfm16IAuSMz3TobWxyHqE8YgcCLNv",
+          "category": "General",
+          "level": "Todos los niveles",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-17T15:31:12.803Z",
+          "updatedAt": "2026-01-22T15:23:16.984Z"
+        }
+      ]
+    },
+    {
+      "id": "cmkhit2hg001cfnm04hv5d56b",
+      "title": "Plan Inversor Inicial",
+      "description": "¿Sentís que siempre llegás tarde a las oportunidades? Este pack está diseñado para quienes quieren dejar de ser espectadores y empezar a operar con seguridad. Te llevamos de la mano desde lo más básico hasta que entiendas exactamente cómo se gana dinero con bonos y tasas de interés.\n\nEste paquete agrupa la formación fundamental de Aurora Academy, combinando estrategia, teoría y herramientas técnicas:\n\n1. Mentoría: Introducción al Mercado de Capitales\nEs la base de todo. Aquí el alumno entiende cómo funciona el ecosistema financiero, quiénes son los actores, qué instrumentos existen y cómo dar los primeros pasos legales y operativos para empezar a invertir.\n\n2. Curso: Renta Fija\nEnfocado en la inversión más buscada por el ahorrista argentino. Se explica el funcionamiento de los bonos y las Obligaciones Negociables (ONs), ideal para quienes buscan previsibilidad y cobrar intereses (cupones) de forma regular.\n\n3. Micro Curso: Tasa de Interés (TNA, TEA y TIR)\nLa herramienta técnica para no ser engañado por los números.\n\nQué incluye: El valor del tiempo, cómo diferenciar la Tasa Nominal de la Efectiva y cómo calcular el Verdadero Rendimiento (TIR) de una inversión para comparar opciones de forma real.\n\n4. Micro Curso: Valuando Bonos\nEl paso práctico para saber si un bono está caro o barato.\n\nQué incluye: Análisis de TIR, Paridad y Escenarios de Salida. Fundamental para entender cuándo entrar y cuándo salir de una posición en renta fija.",
+      "price": "100000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJj1iWBq0Wn2PebXpC67aRdAG4YilHDNI1OxBS",
+      "published": true,
+      "createdAt": "2026-01-16T23:39:31.101Z",
+      "updatedAt": "2026-01-18T22:12:18.248Z",
+      "items": [],
+      "courses": [
+        {
+          "id": "cmkb3mgzw0000d3a47s50rk9t",
+          "title": "Mentoria Introducción al Mercado de Capitales",
+          "description": "Este curso de Introducción al Mercado de Capitales es el primer paso fundamental para cualquier persona que desee tomar las riendas de su futuro financiero. Aquí aprenderás que el mercado no es un lugar exclusivo para expertos, sino un ecosistema de oportunidades accesible para todos aquellos que se atrevan a pasar del ahorro a la inversión inteligente.\n\nPrimeros Pasos: El Despertar del Inversor\n\nTu camino comienza entendiendo el Funcionamiento del Mercado. Descubrirás el ecosistema financiero, comprendiendo los roles de la CNV como regulador y de BYMA como el lugar donde sucede la magia, además de aprender a elegir tu primer Bróker (ALyC). Entenderás por fin la diferencia vital entre ahorrar y \"poner el dinero a trabajar\" para canalizarlo hacia la producción real.\n\nEn el módulo de Perfil del Inversor y Riesgo, aprenderás que no existe una inversión perfecta, sino una inversión adecuada para vos. Definirás si sos un inversor conservador, moderado o agresivo, y entenderás la relación inquebrantable entre riesgo y retorno. Aprenderás a trazar tu horizonte de inversión y a usar la diversificación como tu principal escudo protector.\n\nLa parte técnica se divide en los dos grandes pilares de la bolsa. Primero, los Instrumentos de Renta Variable, donde aprenderás qué significa ser dueño de una empresa a través de acciones y cómo los Cedears te permiten invertir en los gigantes de Wall Street desde tu cuenta local. Entenderás cómo ganar dinero tanto por la suba de precios como por el cobro de dividendos. Luego, exploraremos la Renta Fija, donde aprenderás a ser acreedor del Estado o de empresas privadas mediante Bonos y ONs, asegurándote el cobro de intereses periódicos de manera previsible.\n\nPara quienes buscan simplicidad, descubriremos los Fondos Comunes de Inversión (FCI). Aprenderás a elegir el fondo adecuado según tu necesidad de liquidez, desde los Money Market hasta fondos de acciones, delegando la administración profesional de tu capital para que expertos trabajen por vos.\n\nFinalmente, el curso culmina con la Operativa Práctica, donde la teoría se convierte en acción. Aprenderás paso a paso cómo abrir tu cuenta comitente, cómo leer una pantalla de trading sin marearte y cómo cargar tus primeras órdenes a mercado o límite. Al terminar, estarás listo para realizar tu primera inversión con total seguridad, comprendiendo perfectamente las comisiones e impuestos involucrados.\n\n¿Estás listo para dejar de ver el mercado desde afuera y empezar a construir tu patrimonio? Inscribite hoy y transformá tus ahorros en inversiones reales.",
+          "shortDescription": null,
+          "price": "45000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJIhZhSoOQSHyutNkZVmn8WFwo14l6brCz0Yi3",
+          "category": "General",
+          "level": "Principiante",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-12T11:47:52.076Z",
+          "updatedAt": "2026-01-18T22:20:30.239Z"
+        },
+        {
+          "id": "cmk77d6jw00162i3o2xduugqj",
+          "title": "Renta Fija",
+          "description": "Tu viaje hacia la maestría financiera continúa con este programa especializado en Renta Fija, donde aprenderás a dominar los instrumentos más utilizados para generar ingresos previsibles y diversificar carteras con rigor profesional. Este curso te llevará desde los cimientos hasta las estrategias avanzadas de arbitraje:\n\nEstrategias en Renta Fija: El Camino del Inversor Inteligente\n\nTodo comienza con los Conceptos Fundamentales, donde entenderás al bono no solo como un activo, sino como una obligación financiera con reglas claras detalladas en su prospecto de emisión. Aprenderás a identificar componentes clave como el emisor y los plazos, pero sobre todo, dominarás la gestión de riesgos (tasa, liquidez y moneda) y realizarás tus primeros cálculos de intereses corridos para saber exactamente qué estás comprando.\n\nEn la etapa de Clasificación y Valuación, descubrirás la mecánica que mueve los precios: la relación inversa entre el precio y la tasa de interés. Aprenderás a diferenciar técnicamente entre bonos cupón cero y Bullet, y dominarás la distinción crítica entre Precio Clean y Precio Dirty. Además, entenderás el rol vital del Rating Crediticio para evaluar la seguridad de tu capital.\n\nTu formación se vuelve práctica al explorar los Mercados y Flujos de Fondos, comprendiendo la diferencia entre captar fondos en el Mercado Primario y la negociación diaria en el Secundario. El punto culminante de esta fase es la confección técnica de un Cash Flow, herramienta que te permitirá proyectar con exactitud cada cobro de capital e interés a lo largo de la vida del bono.\n\nElevarás tu nivel con las Medidas de Rendimiento y Riesgo, dominando conceptos avanzados como la TIR, el Valor Técnico y la Paridad. Aprenderás a realizar análisis de sensibilidad mediante la Duration y la Convexity, y a interpretar curvas de rendimiento para detectar oportunidades de arbitraje, identificando cuándo un bono está realmente barato o caro respecto al mercado.\n\nFinalmente, cerraremos el círculo con el Análisis Técnico Aplicado a Bonos, integrando el estudio gráfico dentro del mundo de la renta fija. Aprenderás a complementar el riguroso análisis matemático con la acción del precio, utilizando herramientas técnicas para determinar el momento exacto de entrada o salida, maximizando así el potencial de apreciación de tus títulos.\n\n¿Estás listo para dominar el mundo de los bonos y asegurar tus rendimientos? Inscribite hoy y empezá a invertir con la seguridad que solo el conocimiento profundo puede darte.",
+          "shortDescription": null,
+          "price": "65000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJlp3xYlbKazhQ2MmLuXJ0foSk4NnPYqvCTyFr",
+          "category": "General",
+          "level": "Principiante",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-09T18:21:32.396Z",
+          "updatedAt": "2026-01-18T22:20:22.976Z"
+        },
+        {
+          "id": "cmkigqmn4000fkb3nd3eyxd5m",
+          "title": "El Valor del Tiempo: TNA, TEA y el Verdadero Rendimiento (TIR)",
+          "description": "Entender la diferencia entre las tasas de interés es lo que separa a un ahorrista de un inversor profesional. En este micro-curso de 12 minutos, Francisco Castro te enseña a leer la letra chica del mercado para que nunca más compares \"peras con manzanas\" y sepas exactamente cuánto rinde tu dinero.\n\nDominio de Tasas: TNA, TEA y el Poder de la TIR\n\nTu aprendizaje comienza con el duelo TNA vs. TEA. Descubrirás por qué la Tasa Nominal Anual es simplemente una referencia informativa y cómo la Tasa Efectiva Anual es la que realmente impacta en tu bolsillo al considerar la capitalización de los intereses. Aprenderás que, a mayor frecuencia de capitalización, más se aleja la TEA de la TNA, y entenderás por qué este concepto es la base del interés compuesto.\n+1\n\nEn el módulo de La Lógica de la TIR, daremos un paso más allá de las tasas simples. Aprenderás a usar la Tasa Interna de Retorno como la herramienta definitiva para evaluar la rentabilidad real de un bono o proyecto. A diferencia de otras tasas, la TIR tiene en cuenta todo el flujo de fondos (Cash Flow), los momentos de cobro y la reinversión de los cupones, dándote un porcentaje de rendimiento anualizado preciso para comparar diferentes alternativas de inversión.\n\nFinalmente, dominarás la Conversión de Tasas. Te brindaremos las herramientas y fórmulas financieras para pasar de tasas mensuales a anuales (y viceversa) de forma correcta, evitando los errores matemáticos comunes de la suma simple. Al terminar, tendrás el criterio técnico para analizar cualquier préstamo, plazo fijo o bono, eligiendo siempre la opción que más beneficie a tu patrimonio.\n\n¿Estás listo para dejar de confundir números y empezar a medir tus ganancias con precisión? Inscribite hoy y dominá el lenguaje de las tasas como un experto.",
+          "shortDescription": null,
+          "price": "35000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJKWEEWT4NlSBxIotJj9pXbqrM4uEvkhmH1CTZ",
+          "category": "General",
+          "level": "Principiante",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-17T15:29:24.244Z",
+          "updatedAt": "2026-01-18T22:22:02.077Z"
+        },
+        {
+          "id": "cmkigsyen000kkb3n05vphttk",
+          "title": "Valuación de Bonos: TIR, Paridad y Escenarios de Salida",
+          "description": "Entender el precio de un bono es solo el comienzo; entender su valor es lo que te convierte en un inversor profesional. En este micro-curso de 18 minutos, Francisco Castro te enseña a mirar más allá de la cotización para que comprendas la arquitectura financiera que determina la rentabilidad real de tus títulos.\n\nValuación de Bonos: Análisis de Rendimiento y Oportunidades de Arbitraje\n\nTu formación comienza con La TIR como brújula. Aprenderás a interpretar la Tasa Interna de Retorno (Yield to Maturity) no solo como un número, sino como el rendimiento anualizado que recibirás si mantenés el bono hasta el vencimiento. Descubrirás la importancia de la reinversión de los cupones y por qué la TIR es la herramienta definitiva para comparar bonos con diferentes estructuras de pago, permitiéndote tomar decisiones basadas en datos y no en suposiciones.\n\nEn el módulo de Análisis de Paridad, profundizaremos en el concepto de Valor Técnico. Aprenderás a identificar cuándo un bono cotiza \"bajo la par\", \"sobre la par\" o \"a la par\", y cómo estas situaciones generan oportunidades de ganancias de capital adicionales al cobro de intereses. Entenderás que un bono bajo la par puede ser una oportunidad de compra extraordinaria si el mercado ha castigado el precio injustificadamente, permitiéndote capturar un rendimiento superior al cupón nominal.\n\nFinalmente, el curso te lleva a la vanguardia con la TIR Futura y el Exit Yield. Aprenderás a realizar proyecciones de retornos totales simulando diferentes escenarios de tasas de mercado al momento de la venta. Esta capacidad de simular la salida te permitirá anticipar cómo variará el precio de tu bono ante cambios en la economía, dándote una ventaja competitiva para entrar y salir del mercado en los momentos de mayor rentabilidad.\n\n¿Estás listo para dejar de adivinar y empezar a valuar bonos como un analista de Wall Street? Inscribite hoy y dominá las métricas que definen el éxito en la Renta Fija.",
+          "shortDescription": null,
+          "price": "45000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJcyFN9Zsrfm16IAuSMz3TobWxyHqE8YgcCLNv",
+          "category": "General",
+          "level": "Todos los niveles",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-17T15:31:12.803Z",
+          "updatedAt": "2026-01-22T15:23:16.984Z"
+        }
+      ]
+    },
+    {
+      "id": "cmkhiv3io001dfnm07j6uqaad",
+      "title": "Plan Trader de Elite",
+      "description": "Este es el paquete diseñado para quienes quieren dejar de ser \"seguidores de noticias\" y convertirse en lectores del mercado. El Pack Trader de Elite se enfoca en la acción del precio y en herramientas avanzadas para operar tanto al alza como a la baja.\n\nContenido del Pack: Trader de Elite\nHerramientas avanzadas para operar con precisión, gestionar el riesgo y dominar los derivados.\n\n1. Curso: Análisis Técnico\nLa base para cualquier operador activo. En este curso se aprende a interpretar gráficos, identificar tendencias, soportes, resistencias y el uso de indicadores técnicos para confirmar señales de entrada y salida.\n\n2. Mentoría: Price Action (Acción del Precio)\nEl siguiente nivel del trading. Aquí se enseña a leer el \"gráfico limpio\", entendiendo la psicología de los compradores y vendedores sin depender exclusivamente de indicadores. Es la metodología que usan los traders profesionales para detectar zonas de alta probabilidad.\n\n3. Curso: Futuros Financieros\nIntroducción a la \"maquinaria pesada\" del mercado. El alumno aprenderá cómo operar contratos de futuros, el concepto de apalancamiento, cómo cubrir carteras y cómo especular con activos como índices (S&P 500) o commodities.\n\n4. Curso: Opciones Financieras\nEstrategias sofisticadas para maximizar ganancias y proteger el capital. Se cubren los conceptos de Calls y Puts, lanzamiento cubierto y cómo utilizar las opciones para generar rentabilidad incluso en mercados laterales.\n\n5. Micro Curso: Stop Loss (Domínalo en 15 minutos)\nLa herramienta de supervivencia más importante. Un módulo intensivo y práctico para aprender a colocar niveles de salida técnicos, protegiendo el capital y evitando que una mala operación arruine la cuenta.",
+      "price": "220000",
+      "imageUrl": "https://utfs.io/f/30KHQePr0sHJ1b9BqLuHbmYekViyp50Fh6Q9IxfMoEDT2aUt",
+      "published": true,
+      "createdAt": "2026-01-16T23:41:05.808Z",
+      "updatedAt": "2026-01-18T22:24:39.195Z",
+      "items": [],
+      "courses": [
+        {
+          "id": "cmk76jxm700002i3ojyfpjbm5",
+          "title": "Mentoria en Price Action",
+          "description": "Dominar el Price Action (Acción del Precio) significa aprender a leer el mercado en su estado más puro, sin indicadores que retrasen tu visión. En este programa, dejarás de depender de herramientas externas para convertirte en un lector experto de la psicología de masas plasmada en el gráfico:\n\nPrice Action: El Arte de Leer el Mercado en Tiempo Real\n\nTu entrenamiento comienza con el dominio de las Velas Japonesas y la Oferta y Demanda. Aprenderás que cada vela es una batalla ganada o perdida entre compradores y vendedores. Entenderás la dinámica de la subasta del mercado, identificando las zonas donde el \"Smart Money\" deja su huella y donde la liquidez realmente se concentra.\n\nEn el módulo de Estructura y Reconocimientos, profundizaremos en la identificación de Soportes y Resistencias desde una perspectiva de flujo de órdenes. Aprenderás a distinguir los diferentes Tipos de Quiebres (reales vs. falsos) y cómo el mercado realiza sus testeos antes de iniciar un movimiento explosivo. Entenderás los tipos de reconocimientos de zona para no entrar nunca antes de tiempo.\n\nLa parte operativa se centra en la Gestión Profesional del Trade. Aprenderás a configurar tu operatoria mediante Take Profit y Stop Loss basados exclusivamente en la estructura del precio, buscando siempre ratios de riesgo-beneficio positivos. Sabrás exactamente dónde colocar tu salida para proteger tu capital y dónde retirarte con ganancias antes de que el mercado gire.\n\nFinalmente, este curso te dará la confianza para operar con un gráfico limpio. Al integrar el análisis del Volumen con la acción del precio, descubrirás cómo confirmar la intención detrás de cada movimiento. Es el paso definitivo para quienes buscan una metodología robusta, lógica y, sobre todo, altamente efectiva en cualquier marco temporal.\n\n¿Estás listo para ver el mercado con total claridad y sin ruidos? Inscribite hoy y dominá la técnica que separa a los aficionados de los profesionales.",
+          "shortDescription": null,
+          "price": "100000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJOwVP0i1HzIbv7eJq1KyWX24kCaPHmfh5sT9x",
+          "category": "General",
+          "level": "Intermedio",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-09T17:58:47.791Z",
+          "updatedAt": "2026-01-18T22:20:46.756Z"
+        },
+        {
+          "id": "cmkb3mgzw0000d3a47s50rk9t",
+          "title": "Mentoria Introducción al Mercado de Capitales",
+          "description": "Este curso de Introducción al Mercado de Capitales es el primer paso fundamental para cualquier persona que desee tomar las riendas de su futuro financiero. Aquí aprenderás que el mercado no es un lugar exclusivo para expertos, sino un ecosistema de oportunidades accesible para todos aquellos que se atrevan a pasar del ahorro a la inversión inteligente.\n\nPrimeros Pasos: El Despertar del Inversor\n\nTu camino comienza entendiendo el Funcionamiento del Mercado. Descubrirás el ecosistema financiero, comprendiendo los roles de la CNV como regulador y de BYMA como el lugar donde sucede la magia, además de aprender a elegir tu primer Bróker (ALyC). Entenderás por fin la diferencia vital entre ahorrar y \"poner el dinero a trabajar\" para canalizarlo hacia la producción real.\n\nEn el módulo de Perfil del Inversor y Riesgo, aprenderás que no existe una inversión perfecta, sino una inversión adecuada para vos. Definirás si sos un inversor conservador, moderado o agresivo, y entenderás la relación inquebrantable entre riesgo y retorno. Aprenderás a trazar tu horizonte de inversión y a usar la diversificación como tu principal escudo protector.\n\nLa parte técnica se divide en los dos grandes pilares de la bolsa. Primero, los Instrumentos de Renta Variable, donde aprenderás qué significa ser dueño de una empresa a través de acciones y cómo los Cedears te permiten invertir en los gigantes de Wall Street desde tu cuenta local. Entenderás cómo ganar dinero tanto por la suba de precios como por el cobro de dividendos. Luego, exploraremos la Renta Fija, donde aprenderás a ser acreedor del Estado o de empresas privadas mediante Bonos y ONs, asegurándote el cobro de intereses periódicos de manera previsible.\n\nPara quienes buscan simplicidad, descubriremos los Fondos Comunes de Inversión (FCI). Aprenderás a elegir el fondo adecuado según tu necesidad de liquidez, desde los Money Market hasta fondos de acciones, delegando la administración profesional de tu capital para que expertos trabajen por vos.\n\nFinalmente, el curso culmina con la Operativa Práctica, donde la teoría se convierte en acción. Aprenderás paso a paso cómo abrir tu cuenta comitente, cómo leer una pantalla de trading sin marearte y cómo cargar tus primeras órdenes a mercado o límite. Al terminar, estarás listo para realizar tu primera inversión con total seguridad, comprendiendo perfectamente las comisiones e impuestos involucrados.\n\n¿Estás listo para dejar de ver el mercado desde afuera y empezar a construir tu patrimonio? Inscribite hoy y transformá tus ahorros en inversiones reales.",
+          "shortDescription": null,
+          "price": "45000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJIhZhSoOQSHyutNkZVmn8WFwo14l6brCz0Yi3",
+          "category": "General",
+          "level": "Principiante",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-12T11:47:52.076Z",
+          "updatedAt": "2026-01-18T22:20:30.239Z"
+        },
+        {
+          "id": "cmkbfyovj0000iv7p7dwuyjbc",
+          "title": "Curso de Opciones Financieras",
+          "description": "Llevá tu perfil como inversor a la frontera del conocimiento bursátil con este programa de Opciones Financieras, el instrumento más versátil y potente del mercado. Este curso te permitirá dejar de ser un espectador para convertirte en un estratega capaz de ganar en cualquier escenario:\n\nMaestría en Opciones: Maximizá Ganancias y Blindá tu Cartera\n\nTu formación comienza con los Conceptos Básicos, donde dominarás el universo de los derivados financieros. Aprenderás a diferenciar con precisión entre opciones Call y Put, identificando los elementos clave como el activo subyacente y el precio de ejercicio. Al finalizar esta etapa, leerás la nomenclatura del mercado como un profesional, sabiendo exactamente qué oportunidad se esconde tras cada sigla.\n\nEn el módulo de Operatoria y Valuación, descubrirás la ciencia detrás del precio de las opciones. Aprenderás a distinguir entre opciones Americanas y Europeas, y dominarás los conceptos de valor intrínseco y extrínseco para saber cuándo una opción está ITM, ATM u OTM. Además, entenderás la paridad Put-Call para armar posiciones sintéticas y gestionarás garantías con la eficiencia de un operador institucional.\n\nPasarás a la acción con las Estrategias con Opciones I, donde aprenderás las herramientas fundamentales de cobertura y generación de renta. Desde el Lanzamiento Cubierto para \"hacer tasa\" hasta el Protective Put para asegurar tus acciones contra caídas, dominarás el cálculo de ganancias máximas y puntos de equilibrio (breakeven) con un análisis gráfico riguroso de tu perfil de riesgo.\n\nElevarás tu sofisticación con las Estrategias Avanzadas II, adentrándote en el armado de estructuras complejas como Spreads, Conos, Cunas y Mariposas. Estas herramientas te permitirán beneficiarte de la volatilidad extrema o de mercados laterales, optimizando el uso de tu capital para obtener retornos apalancados que otros instrumentos no pueden ofrecer.\n\nFinalmente, dominarás el Modelo Black & Scholes, la fórmula ganadora del Premio Nobel que revolucionó las finanzas. Aprenderás a aplicar este método matemático para determinar el valor teórico de una prima y, lo más importante, a proyectar variaciones de precio en base a tus objetivos de análisis técnico, dándote una ventaja competitiva estadística insuperable.\n\n¿Estás listo para operar con la herramienta definitiva de los profesionales? Inscribite hoy y descubrí cómo las opciones pueden transformar tu rentabilidad para siempre.",
+          "shortDescription": null,
+          "price": "55000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJbfET2p9QTe5Vo3qKwXOL8DRx6btI07kJPcAd",
+          "category": "General",
+          "level": "Avanzado",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-12T17:33:17.551Z",
+          "updatedAt": "2026-01-18T22:21:24.858Z"
+        },
+        {
+          "id": "cmkigoac4000akb3nnhyypiic",
+          "title": "Domina el Stop Loss en 15 minutos",
+          "description": "El Stop Loss es, sin ninguna duda, la herramienta más importante para la supervivencia de un inversor. En este micro-curso, Francisco Castro te enseña que la diferencia entre un operador profesional y un aficionado no es cuánto ganan, sino cómo limitan sus pérdidas. Aprendé a dominar el arte de la salida para que una mala decisión no arruine tu futuro financiero.\n\nBlindá tu Capital: La Disciplina del Stop Loss\n\nTu aprendizaje comienza con la Matemática del Drawdown, una lección de humildad financiera. Entenderás por qué una caída del 50% en tu cartera no se recupera con una subida del 50%, sino que requiere un 100% de retorno solo para volver al punto de equilibrio. Esta realidad matemática te demostrará que el \"esperar a que recupere\" es el error más caro que podés cometer y por qué cortar una pérdida pequeña es la mejor inversión de tu vida.\n\nEn el módulo de Estrategias de Salida, aprenderás a diferenciar entre el Stop Fijo y el Trailing Stop. Descubrirás cómo configurar un Stop Fijo para proteger tu capital inicial y cómo utilizar el Trailing Stop (Stop dinámico) para acompañar una tendencia alcista, permitiendo que tus ganancias corran mientras el sistema asegura beneficios automáticamente si el precio se da vuelta.\n\nFinalmente, el curso se enfoca en la Ejecución sin Emociones. Aprenderás la técnica para configurar estas órdenes directamente en tu bróker, permitiendo que el mercado ejecute tu plan por vos. Al automatizar tu disciplina, eliminarás el estrés de la toma de decisiones bajo presión y aprenderás que, en el trading, tu punto de salida es mucho más determinante para tu éxito que tu punto de entrada.\n\n¿Estás listo para dejar de sufrir por las caídas y empezar a operar con la tranquilidad de un profesional? Inscribite hoy y aprendé a proteger tu dinero mientras dormís.",
+          "shortDescription": null,
+          "price": "30000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJBsavKjQdI1jFQPvtCE4fx0kAGe9yXVOloaUT",
+          "category": "General",
+          "level": "Principiante",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-17T15:27:34.995Z",
+          "updatedAt": "2026-01-18T22:21:56.787Z"
+        },
+        {
+          "id": "cmk76vago00052i3oi9ajtj81",
+          "title": "Análisis Técnico",
+          "description": "Este programa de formación profesional ha sido diseñado para transformar tu manera de operar, convirtiéndote en un inversor capaz de decidir con la precisión de un experto. A lo largo del curso, recorrerás un camino estratégico que te permitirá dominar el mercado de principio a fin:\n\nEl Camino hacia la Maestría en el Mercado\n\nTu evolución comienza con el dominio de los Principios del Éxito, donde entenderás que el mercado descuenta todos los factores externos y que la historia se repite constantemente. Esta base te permitirá usar patrones pasados para eliminar la incertidumbre y blindar tu capital desde el primer día.\n\nPronto aprenderás a leer el Mapa del Dinero, identificando soportes y resistencias para visualizar dónde compran y venden los grandes jugadores. Con el uso profesional del volumen y la gestión estratégica de órdenes Stop Loss y Take Profit, dejarás de perseguir precios para empezar a proteger cada una de tus ganancias.\n\nAvanzarás hacia el lenguaje visual de las Velas Japonesas y Tendencias, aprendiendo a medir la aceleración del mercado para anticipar giros antes que la multitud. Potenciarás esta habilidad con la construcción de Canales de Trading, utilizando técnicas de desdoblamiento para proyectar objetivos de precio con una claridad asombrosa.\n\nEl curso te revelará la perfección matemática de los Patrones de Fibonacci, enseñándote a localizar niveles críticos para retomar tendencias en el momento exacto. Al sumar el estudio de las Figuras Técnicas, como el Hombro-Cabeza-Hombro y Triángulos, aprenderás a validar rupturas reales y evitar las trampas que arruinan a los principiantes.\n\nPara una precisión científica, integrarás la Radiografía del Precio con indicadores como RSI y MACD, detectando divergencias antes de que ocurran los cambios de tendencia. Además, adoptarás el prestigioso Método Weinstein, aprendiendo la disciplina necesaria para operar solo en fases de avance y evitar los peligrosos mercados laterales.\n\nFinalmente, dominarás la Inversión Institucional con Wyckoff, descifrando el rastro de las \"manos fuertes\" a través de maniobras como el Spring y el Salto del Arroyo. Al terminar, no solo sabrás leer gráficos; habrás desarrollado la mentalidad profesional necesaria para operar en sintonía con los dueños del mercado.\n\n¿Estás listo para dejar de adivinar y tomar el control total de tu futuro financiero? Inscribite ahora y empezá a operar como un profesional.",
+          "shortDescription": null,
+          "price": "65000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJ0ShQlu6FNsGmMLhvTWY69CqAzRbgny7xX1iV",
+          "category": "General",
+          "level": "Todos los niveles",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-09T18:07:37.656Z",
+          "updatedAt": "2026-01-18T22:20:58.168Z"
+        },
+        {
+          "id": "cmk77d6jw00162i3o2xduugqj",
+          "title": "Renta Fija",
+          "description": "Tu viaje hacia la maestría financiera continúa con este programa especializado en Renta Fija, donde aprenderás a dominar los instrumentos más utilizados para generar ingresos previsibles y diversificar carteras con rigor profesional. Este curso te llevará desde los cimientos hasta las estrategias avanzadas de arbitraje:\n\nEstrategias en Renta Fija: El Camino del Inversor Inteligente\n\nTodo comienza con los Conceptos Fundamentales, donde entenderás al bono no solo como un activo, sino como una obligación financiera con reglas claras detalladas en su prospecto de emisión. Aprenderás a identificar componentes clave como el emisor y los plazos, pero sobre todo, dominarás la gestión de riesgos (tasa, liquidez y moneda) y realizarás tus primeros cálculos de intereses corridos para saber exactamente qué estás comprando.\n\nEn la etapa de Clasificación y Valuación, descubrirás la mecánica que mueve los precios: la relación inversa entre el precio y la tasa de interés. Aprenderás a diferenciar técnicamente entre bonos cupón cero y Bullet, y dominarás la distinción crítica entre Precio Clean y Precio Dirty. Además, entenderás el rol vital del Rating Crediticio para evaluar la seguridad de tu capital.\n\nTu formación se vuelve práctica al explorar los Mercados y Flujos de Fondos, comprendiendo la diferencia entre captar fondos en el Mercado Primario y la negociación diaria en el Secundario. El punto culminante de esta fase es la confección técnica de un Cash Flow, herramienta que te permitirá proyectar con exactitud cada cobro de capital e interés a lo largo de la vida del bono.\n\nElevarás tu nivel con las Medidas de Rendimiento y Riesgo, dominando conceptos avanzados como la TIR, el Valor Técnico y la Paridad. Aprenderás a realizar análisis de sensibilidad mediante la Duration y la Convexity, y a interpretar curvas de rendimiento para detectar oportunidades de arbitraje, identificando cuándo un bono está realmente barato o caro respecto al mercado.\n\nFinalmente, cerraremos el círculo con el Análisis Técnico Aplicado a Bonos, integrando el estudio gráfico dentro del mundo de la renta fija. Aprenderás a complementar el riguroso análisis matemático con la acción del precio, utilizando herramientas técnicas para determinar el momento exacto de entrada o salida, maximizando así el potencial de apreciación de tus títulos.\n\n¿Estás listo para dominar el mundo de los bonos y asegurar tus rendimientos? Inscribite hoy y empezá a invertir con la seguridad que solo el conocimiento profundo puede darte.",
+          "shortDescription": null,
+          "price": "65000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJlp3xYlbKazhQ2MmLuXJ0foSk4NnPYqvCTyFr",
+          "category": "General",
+          "level": "Principiante",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-09T18:21:32.396Z",
+          "updatedAt": "2026-01-18T22:20:22.976Z"
+        },
+        {
+          "id": "cmke3r7q600025b9gasf4r0jr",
+          "title": "Futuros Financieros",
+          "description": "Dominar los Futuros Financieros es dar el salto hacia la gestión profesional de carteras, permitiéndote operar con un nivel de eficiencia y control de riesgo superior. Este programa te llevará desde la comprensión técnica de los derivados hasta la ejecución de estrategias de cobertura y especulación en mercados institucionales:\n\nFuturos Financieros: Potencia y Protección en Mercados Derivados\n\nTu formación comienza con los Aspectos Generales de los Derivados, donde entenderás por qué los futuros son la herramienta predilecta para la gestión de riesgos globales. Identificarás a los Participantes del mercado, desde los hedgers que buscan protección hasta los especuladores que aportan liquidez, comprendiendo el rol vital de la Cámara Compensadora como garante de cada operación.\n\nEn el módulo de Estructura y Contratos, profundizarás en el Reglamento del Contrato, aprendiendo a leer las especificaciones técnicas que definen cada activo. Dominarás el Sistema de Garantías y Márgenes, entendiendo cómo funciona el apalancamiento financiero para maximizar el uso de tu capital sin descuidar la seguridad de tu cuenta comitente.\n\nLa parte operativa se centra en las Estrategias de Cobertura, donde aprenderás a diseñar tanto la Cobertura Compradora (para fijar precios de insumos futuros) como la Cobertura Vendedora (para blindar el valor de tu producción o cartera contra caídas de precio). Estas herramientas te permitirán neutralizar la volatilidad y dar previsibilidad total a tu flujo de fondos.\n\nFinalmente, te convertirás en un estratega de mercado mediante la Especulación Profesional. Aprenderás la mecánica de las posiciones LONG (larga) para beneficiarte de mercados alcistas y SHORT (corta) para obtener rentabilidad incluso cuando los precios caen. Al dominar el sistema de liquidación diaria de pérdidas y ganancias, estarás listo para operar en los mercados de futuros más importantes con una visión analítica y ganadora.\n\n¿Estás listo para operar en las ligas mayores del mercado de capitales? Inscribite hoy y descubrí el poder de los futuros para potenciar tus inversiones.",
+          "shortDescription": null,
+          "price": "60000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJfIjweSpSPcNRAgFK0TjU83DhMGyO47EHq9z2",
+          "category": "General",
+          "level": "Intermedio",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-14T14:14:51.870Z",
+          "updatedAt": "2026-01-18T22:21:31.828Z"
+        },
+        {
+          "id": "cmkigqmn4000fkb3nd3eyxd5m",
+          "title": "El Valor del Tiempo: TNA, TEA y el Verdadero Rendimiento (TIR)",
+          "description": "Entender la diferencia entre las tasas de interés es lo que separa a un ahorrista de un inversor profesional. En este micro-curso de 12 minutos, Francisco Castro te enseña a leer la letra chica del mercado para que nunca más compares \"peras con manzanas\" y sepas exactamente cuánto rinde tu dinero.\n\nDominio de Tasas: TNA, TEA y el Poder de la TIR\n\nTu aprendizaje comienza con el duelo TNA vs. TEA. Descubrirás por qué la Tasa Nominal Anual es simplemente una referencia informativa y cómo la Tasa Efectiva Anual es la que realmente impacta en tu bolsillo al considerar la capitalización de los intereses. Aprenderás que, a mayor frecuencia de capitalización, más se aleja la TEA de la TNA, y entenderás por qué este concepto es la base del interés compuesto.\n+1\n\nEn el módulo de La Lógica de la TIR, daremos un paso más allá de las tasas simples. Aprenderás a usar la Tasa Interna de Retorno como la herramienta definitiva para evaluar la rentabilidad real de un bono o proyecto. A diferencia de otras tasas, la TIR tiene en cuenta todo el flujo de fondos (Cash Flow), los momentos de cobro y la reinversión de los cupones, dándote un porcentaje de rendimiento anualizado preciso para comparar diferentes alternativas de inversión.\n\nFinalmente, dominarás la Conversión de Tasas. Te brindaremos las herramientas y fórmulas financieras para pasar de tasas mensuales a anuales (y viceversa) de forma correcta, evitando los errores matemáticos comunes de la suma simple. Al terminar, tendrás el criterio técnico para analizar cualquier préstamo, plazo fijo o bono, eligiendo siempre la opción que más beneficie a tu patrimonio.\n\n¿Estás listo para dejar de confundir números y empezar a medir tus ganancias con precisión? Inscribite hoy y dominá el lenguaje de las tasas como un experto.",
+          "shortDescription": null,
+          "price": "35000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJKWEEWT4NlSBxIotJj9pXbqrM4uEvkhmH1CTZ",
+          "category": "General",
+          "level": "Principiante",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-17T15:29:24.244Z",
+          "updatedAt": "2026-01-18T22:22:02.077Z"
+        },
+        {
+          "id": "cmkigsyen000kkb3n05vphttk",
+          "title": "Valuación de Bonos: TIR, Paridad y Escenarios de Salida",
+          "description": "Entender el precio de un bono es solo el comienzo; entender su valor es lo que te convierte en un inversor profesional. En este micro-curso de 18 minutos, Francisco Castro te enseña a mirar más allá de la cotización para que comprendas la arquitectura financiera que determina la rentabilidad real de tus títulos.\n\nValuación de Bonos: Análisis de Rendimiento y Oportunidades de Arbitraje\n\nTu formación comienza con La TIR como brújula. Aprenderás a interpretar la Tasa Interna de Retorno (Yield to Maturity) no solo como un número, sino como el rendimiento anualizado que recibirás si mantenés el bono hasta el vencimiento. Descubrirás la importancia de la reinversión de los cupones y por qué la TIR es la herramienta definitiva para comparar bonos con diferentes estructuras de pago, permitiéndote tomar decisiones basadas en datos y no en suposiciones.\n\nEn el módulo de Análisis de Paridad, profundizaremos en el concepto de Valor Técnico. Aprenderás a identificar cuándo un bono cotiza \"bajo la par\", \"sobre la par\" o \"a la par\", y cómo estas situaciones generan oportunidades de ganancias de capital adicionales al cobro de intereses. Entenderás que un bono bajo la par puede ser una oportunidad de compra extraordinaria si el mercado ha castigado el precio injustificadamente, permitiéndote capturar un rendimiento superior al cupón nominal.\n\nFinalmente, el curso te lleva a la vanguardia con la TIR Futura y el Exit Yield. Aprenderás a realizar proyecciones de retornos totales simulando diferentes escenarios de tasas de mercado al momento de la venta. Esta capacidad de simular la salida te permitirá anticipar cómo variará el precio de tu bono ante cambios en la economía, dándote una ventaja competitiva para entrar y salir del mercado en los momentos de mayor rentabilidad.\n\n¿Estás listo para dejar de adivinar y empezar a valuar bonos como un analista de Wall Street? Inscribite hoy y dominá las métricas que definen el éxito en la Renta Fija.",
+          "shortDescription": null,
+          "price": "45000",
+          "imageUrl": "https://utfs.io/f/30KHQePr0sHJcyFN9Zsrfm16IAuSMz3TobWxyHqE8YgcCLNv",
+          "category": "General",
+          "level": "Todos los niveles",
+          "learningOutcomes": null,
+          "published": true,
+          "createdAt": "2026-01-17T15:31:12.803Z",
+          "updatedAt": "2026-01-22T15:23:16.984Z"
+        }
+      ]
+    }
+  ],
+  "purchases": [
+    {
+      "id": "cmkd13zmc0001eqh5ky95620b",
+      "userId": "cmkbl48mp0004cdxbsnhw7dj4",
+      "courseId": "cmk76jxm700002i3ojyfpjbm5",
+      "bundleId": null,
+      "couponId": null,
+      "amount": "100",
+      "status": "approved",
+      "paymentId": "141231604747",
+      "preferenceId": "",
+      "createdAt": "2026-01-13T20:13:02.868Z",
+      "updatedAt": "2026-01-13T20:13:02.868Z"
+    }
+  ],
+  "coupons": [
+    {
+      "id": "cmkpl08wz0000i56vyak1mnx4",
+      "code": "AURORA50",
+      "discount": "50",
+      "type": "PERCENTAGE",
+      "expiresAt": "2026-02-14T00:00:00.000Z",
+      "limit": null,
+      "used": 0,
+      "active": true,
+      "createdAt": "2026-01-22T15:03:14.723Z",
+      "updatedAt": "2026-01-22T15:19:47.458Z"
+    }
+  ]
+}
