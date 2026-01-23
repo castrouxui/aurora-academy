@@ -16,7 +16,7 @@ export function CTASection() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-auto md:auto-rows-[300px]">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6 auto-rows-auto md:auto-rows-[300px]">
                     {/* Main Feature - Large */}
                     <div className="md:col-span-2 row-span-1 rounded-3xl bg-[#5D5CDE] p-6 md:p-10 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300 border border-white/10 shadow-2xl shadow-primary/20 min-h-[250px] md:min-h-0">
                         <div className="relative z-10 h-full flex flex-col justify-between gap-6 md:gap-0">

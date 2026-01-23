@@ -11,7 +11,7 @@ export function StatsStrip() {
             <Container>
                 <div className="flex flex-col lg:flex-row justify-between items-center gap-12 relative z-10">
                     {/* LEft Side: Copy & CTA */}
-                    <div className="flex flex-col items-start space-y-8 max-w-2xl text-center lg:text-left">
+                    <div className="flex flex-col items-center lg:items-start space-y-8 max-w-2xl text-center lg:text-left">
                         <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm">
                             <span className="text-white text-sm font-medium">Comunidad Aurora</span>
                         </div>
