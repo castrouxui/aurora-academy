@@ -41,7 +41,7 @@ export default function DashboardLayout({
 
     // Navigation Config
     const adminNav = [
-        { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+        { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
         { name: "Ventas", href: "/admin/sales", icon: Receipt }, // Updated to /admin/sales to match verification
         { name: "Cursos", href: "/admin/courses", icon: BookOpen },
         { name: "Membresías", href: "/admin/bundles", icon: Package },

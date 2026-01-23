@@ -112,7 +112,7 @@ export async function POST() {
                 }
             }
 
-            if (userId && courseId) {
+            if (userId && (courseId || metadata.bundle_id)) {
                 const anyP = p as any;
                 await prisma.purchase.create({
                     data: {

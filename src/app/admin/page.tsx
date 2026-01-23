@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Users, BookOpen, TrendingUp, ArrowRight, ShoppingCart } from "lucide-react";
+import { DollarSign, Users, BookOpen, TrendingUp, ArrowRight, ShoppingCart, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -213,10 +213,10 @@ function RecoveryButton() {
                     setTimeout(() => window.location.reload(), 1500);
                 }
             } else {
-                setResult({ recovered: 0, message: "Error" });
+                setResult({ recovered: 0, message: `Error: ${data.error || "Fallo del servidor"}` });
             }
         } catch (error) {
-            setResult({ recovered: 0, message: "Error" });
+            setResult({ recovered: 0, message: "Error de conexión" });
         } finally {
             setLoading(false);
         }
@@ -233,14 +233,14 @@ function RecoveryButton() {
                 onClick={handleRecover}
                 disabled={loading}
                 variant="outline"
-                className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300"
+                className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white"
             >
                 {loading ? (
                     <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
                 ) : (
-                    <TrendingUp className="w-4 h-4 mr-2" />
+                    <RefreshCw className="w-4 h-4 mr-2" />
                 )}
-                Sincronizar Ventas
+                Actualizar datos
             </Button>
         </div>
     );
