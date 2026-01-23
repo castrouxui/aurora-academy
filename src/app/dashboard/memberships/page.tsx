@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,9 @@ import { toast } from "sonner";
 import Image from "next/image";
 
 export default function MyMembershipsPage() {
+    const searchParams = useSearchParams();
+    const isDemo = searchParams.get("mode") === "demo";
+
     // State for Subscription Management
     const [subscription, setSubscription] = useState<any>(null);
     const [loadingSub, setLoadingSub] = useState(true);
@@ -21,8 +25,23 @@ export default function MyMembershipsPage() {
     const [loadingCatalog, setLoadingCatalog] = useState(true);
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        if (isDemo) {
+            // MOCK DATA FOR DEMO
+            setSubscription({
+                active: true,
+                bundleTitle: "Membresía Premium (Demo)",
+                subscription: {
+                    id: "demo-sub",
+                    status: 'authorized',
+                    createdAt: new Date().toISOString()
+                }
+            });
+            setLoadingSub(false);
+            setLoadingCatalog(false);
+        } else {
+            fetchData();
+        }
+    }, [isDemo]);
 
     const fetchData = async () => {
         try {
