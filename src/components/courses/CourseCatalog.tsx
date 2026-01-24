@@ -49,6 +49,30 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             .flatMap((m: any) => m.lessons?.sort((a: any, b: any) => a.position - b.position) || [])
                             .find((l: any) => l.videoUrl);
 
+                        // Specific overrides for known courses with broken/legacy images
+                        const LOCAL_IMAGES_MAP: Record<string, string> = {
+                            "Trading": "/images/courses/trading_inicial_cover_1768005327407.png",
+                            "Price Action": "/images/courses/price_action_cover_1768005409635.png",
+                            "Bonos": "/images/courses/renta_fija_cover_1768005380686.png",
+                            "Tecnico": "/images/courses/analisis_tecnico_cover_1768005395407.png",
+                            "Avanzado": "/images/courses/trading_avanzado_cover_1768005355571.png",
+                            "Intermedio": "/images/courses/trading_intermedio_cover_1768005341591.png",
+                            // Add generic fallbacks/mappings if needed based on keywords
+                        };
+
+                        let finalImage = course.imageUrl || "/course-placeholder.jpg";
+
+                        // Check if we have a local replacement
+                        for (const [key, path] of Object.entries(LOCAL_IMAGES_MAP)) {
+                            if (course.title.includes(key) || (course.title.toLowerCase().includes(key.toLowerCase()))) {
+                                finalImage = path;
+                                break;
+                            }
+                        }
+
+                        // Fallback: If image is from utfs.io (UploadThing) and effectively broken (we can't know for sure here without testing, but we can prioritize local overrides)
+                        // The loop above already handles the priority.
+
                         return {
                             id: course.id,
                             title: course.title,
@@ -56,7 +80,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             rating: 5.0,
                             reviews: "(0)",
                             price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
-                            image: course.imageUrl || "/course-placeholder.jpg",
+                            image: finalImage,
                             tag: course.category || "General",
                             level: course.level || "Todos los niveles",
                             rawPrice: course.price,
