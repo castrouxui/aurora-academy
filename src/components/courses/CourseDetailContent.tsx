@@ -40,17 +40,8 @@ export function CourseDetailContent({
                                 rating={courseData.rating}
                                 totalRatings={courseData.totalRatings}
                                 instructor={courseData.instructor}
+                                image={courseData.videoThumbnail || courseData.imageUrl}
                             />
-
-                            {/* Mobile Course Image/Video */}
-                            <div className="lg:hidden w-full aspect-video relative rounded-xl overflow-hidden shadow-2xl border border-white/10 mt-6">
-                                <img
-                                    src={courseData.videoThumbnail}
-                                    alt={courseData.title}
-                                    className="w-full h-full object-cover"
-                                />
-                                {/* Play button overlay if it's a video could go here, for now just image */}
-                            </div>
                         </div>
 
                         {/* Divider */}
