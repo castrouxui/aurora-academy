@@ -64,7 +64,12 @@ export async function POST(req: NextRequest) {
 
         // Determine Base URL for callbacks
         const origin = req.headers.get('origin');
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (req.headers.get("origin") ?? "https://aurora-academy.onrender.com");
+        let baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (req.headers.get("origin") ?? "https://aurora-academy.onrender.com");
+
+        // Mercado Pago Subscription requires valid HTTPS URL, localhost is often rejected for back_url
+        if (baseUrl.includes("localhost")) {
+            baseUrl = "https://auroracademy.net"; // Fallback for dev to allow creation
+        }
 
         const preApproval = new PreApproval(client);
 

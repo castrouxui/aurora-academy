@@ -44,6 +44,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
             const result = await signIn("credentials", {
                 email,
                 password,
+                isRegister: mode === 'register' ? "true" : "false",
                 redirect: false,
             });
 
@@ -74,12 +75,12 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-            <div className="relative w-full max-w-md rounded-2xl border border-gray-800 bg-[#121620] p-6 md:p-8 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div className="relative w-full max-w-md rounded-2xl border border-border bg-card p-6 md:p-8 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
 
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute right-4 top-4 text-gray-400 hover:text-white transition-colors"
+                    className="absolute right-4 top-4 text-muted-foreground hover:text-white transition-colors"
                 >
                     <X size={24} />
                 </button>
@@ -89,11 +90,11 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                     <div className="mb-6 scale-110">
                         <Logo />
                     </div>
-                    <h2 className="text-xl font-semibold text-white px-4">
+                    <h2 className="text-xl font-semibold text-card-foreground px-4">
                         {titleText}
                     </h2>
                     {view === 'purchase' && isRegister && (
-                        <p className="text-sm text-gray-400 mt-2">Para comprar, primero debes registrarte</p>
+                        <p className="text-sm text-muted-foreground mt-2">Para comprar, primero debes registrarte</p>
                     )}
                 </div>
 
@@ -103,7 +104,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                         <Button
                             onClick={() => signIn("google", { callbackUrl: redirectUrl || "/dashboard/courses" })}
                             variant="outline"
-                            className="h-12 w-full justify-start gap-3 border-gray-700 bg-[#2d323e] text-white hover:bg-[#3d4250] hover:text-white font-normal"
+                            className="h-12 w-full justify-start gap-3 border-border bg-secondary text-secondary-foreground hover:bg-secondary/80 font-normal"
                         >
                             <GoogleIcon />
                             {googleText}
@@ -111,9 +112,9 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
 
                         {/* Divider only if google is present */}
                         <div className="my-6 flex items-center gap-4">
-                            <div className="h-[1px] flex-1 bg-gray-800"></div>
-                            <span className="text-sm text-gray-500">o</span>
-                            <div className="h-[1px] flex-1 bg-gray-800"></div>
+                            <div className="h-[1px] flex-1 bg-border"></div>
+                            <span className="text-sm text-muted-foreground">o</span>
+                            <div className="h-[1px] flex-1 bg-border"></div>
                         </div>
                     </div>
                 )}
@@ -131,28 +132,28 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                     className="flex flex-col gap-4"
                 >
                     <div className="space-y-2">
-                        <label className="text-xs font-medium text-gray-400">Correo Electrónico</label>
+                        <label className="text-xs font-medium text-muted-foreground">Correo Electrónico</label>
                         <input
                             name="email"
                             type="email"
                             placeholder="nombre@ejemplo.com"
                             required
-                            className="w-full bg-[#1e2330] border border-gray-700 text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                            className="w-full bg-input border border-border text-foreground rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-xs font-medium text-gray-400">Contraseña</label>
+                        <label className="text-xs font-medium text-muted-foreground">Contraseña</label>
                         <input
                             name="password"
                             type="password"
                             placeholder="••••••••"
                             required
-                            className="w-full bg-[#1e2330] border border-gray-700 text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
+                            className="w-full bg-input border border-border text-foreground rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
                         />
                     </div>
                     <Button
                         type="submit"
-                        className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-medium mt-2"
+                        className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium mt-2"
                     >
                         {submitText}
                     </Button>
@@ -160,7 +161,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
 
                 {/* Toggle Mode */}
                 <div className="mt-6 text-center text-sm">
-                    <span className="text-gray-400">
+                    <span className="text-muted-foreground">
                         {isRegister ? "¿Ya tienes una cuenta?" : "¿No tienes una cuenta?"}
                     </span>
                     <button
@@ -172,8 +173,8 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                 </div>
 
                 {/* Footer */}
-                <p className="mt-8 text-center text-xs text-gray-500 max-w-xs mx-auto leading-relaxed">
-                    Al {isRegister ? "crear una cuenta" : "ingresar"} en Aurora Academy, aceptas los <span className="text-white cursor-pointer hover:underline">Términos de Servicio</span> y <span className="text-white cursor-pointer hover:underline">Políticas de privacidad</span>.
+                <p className="mt-8 text-center text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
+                    Al {isRegister ? "crear una cuenta" : "ingresar"} en Aurora Academy, aceptas los <span className="text-foreground cursor-pointer hover:underline">Términos de Servicio</span> y <span className="text-foreground cursor-pointer hover:underline">Políticas de privacidad</span>.
                 </p>
             </div>
         </div>

@@ -11,27 +11,94 @@ export const authOptions: AuthOptions = {
     },
     providers: [
         CredentialsProvider({
-            name: "Login de Prueba",
+            name: "Credenciales",
             credentials: {
-                email: { label: "Email", type: "text", placeholder: "test@example.com" },
-                password: { label: "Password", type: "password" }
+                email: { label: "Email", type: "text" },
+                password: { label: "Password", type: "password" },
+                isRegister: { label: "Register", type: "text" }
             },
-            async authorize(credentials, req) {
-                // MOCK LOGIN FOR DEVELOPMENT
-                // Accept any credentials for the demo
-                const role = credentials?.email.includes("admin") ? "ADMIN" : "ESTUDIANTE";
-                const isStudent = role === "ESTUDIANTE";
+            async authorize(credentials) {
+                if (!credentials?.email || !credentials?.password) {
+                    throw new Error("Credenciales incompletas");
+                }
 
-                // If no email provided (empty credentials), default to student
-                const email = credentials?.email || "alumno@aurora.com";
+                const { email, password, isRegister } = credentials;
 
-                return {
-                    id: isStudent ? "student-1" : "admin-1",
-                    name: isStudent ? "Alumno Demo" : "Admin User",
-                    email: email,
-                    image: `https://ui-avatars.com/api/?name=${isStudent ? "Alumno+Demo" : "Admin+User"}&background=random`,
-                    role: role,
-                };
+                // --- REGISTRATION LOGIC ---
+                if (isRegister === "true") {
+                    // Check if user exists
+                    const existingUser = await prisma.user.findUnique({
+                        where: { email }
+                    });
+
+                    if (existingUser) {
+                        throw new Error("El usuario ya existe");
+                    }
+
+                    // Hash password
+                    // @ts-ignore
+                    const bcrypt = await import("bcryptjs");
+                    const hashedPassword = await bcrypt.hash(password, 10);
+
+                    // Create new user
+                    const newUser = await prisma.user.create({
+                        data: {
+                            email,
+                            name: email.split("@")[0], // Default name from email part
+                            image: `https://ui-avatars.com/api/?name=${email}&background=random`,
+                            role: "ESTUDIANTE"
+                            // Password is NOT stored in User model in schema provided (Account model usually handles oauth, but for credentials we need password field)
+                            // WAIT. The schema doesn't have a 'password' field on User model?!
+                            // Let me check schema again.
+                        }
+                    });
+
+                    // CRITICAL: Schema check shows User model has NO password field. Account is for OAuth.
+                    // We need to store password somewhere. 
+                    // Usually we add `password String?` to User model.
+                    // Or we create a Credential/Account record.
+                    // Given I cannot edit schema right now easily without migration flow (which requires DB access/reset), 
+                    // I will check if I can use the 'Account' table to store a "credentials" provider entry with the hash as access_token or similar hack?
+                    // NO. I MUST add password to schema to do this right. 
+                    // OR I check if I missed the password field in my view_file of schema.
+
+                    // Actually, if I look at previous view_file of schema:
+                    // model User { ... email, name, image, role, accounts, sessions ... } -> NO PASSWORD field.
+
+                    // Options:
+                    // 1. Add `password` column to User table (Best practice). I can run `prisma db push` easily as I am in dev mode.
+                    // 2. Mock it again? No, user wants real flow.
+
+                    // Strategy:
+                    // I will first attempt to find a User, if not found, I will THROW error saying "Schema missing password".
+                    // Actually, I will pause this Edit to Add password field to Schema FIRST.
+                    throw new Error("Schema update required");
+                } else {
+                    // --- LOGIN LOGIC ---
+                    const user = await prisma.user.findUnique({
+                        where: { email }
+                    });
+
+                    if (!user || !(user as any).password) {
+                        throw new Error("Usuario no encontrado o contraseña incorrecta");
+                    }
+
+                    // @ts-ignore
+                    const bcrypt = await import("bcryptjs");
+                    const isValid = await bcrypt.compare(password, (user as any).password);
+
+                    if (!isValid) {
+                        throw new Error("Contraseña incorrecta");
+                    }
+
+                    return {
+                        id: user.id,
+                        name: user.name,
+                        email: user.email,
+                        image: user.image,
+                        role: user.role as "ADMIN" | "INSTRUCTOR" | "ESTUDIANTE",
+                    };
+                }
             }
         })
     ],

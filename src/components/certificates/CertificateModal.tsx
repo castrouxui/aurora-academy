@@ -31,11 +31,11 @@ export function CertificateModal({ isOpen, onClose, courseName, studentName, dat
     const gray400 = "#9ca3af";
     const gray500 = "#6b7280";
 
-    const generateImageBlob = async (): Promise<Blob | null> => {
+    const generateImageBlob = async (scale = 2): Promise<Blob | null> => {
         if (!certificateRef.current) return null;
         try {
             const canvas = await html2canvas(certificateRef.current, {
-                scale: 2,
+                scale: scale,
                 backgroundColor: "#1a1f2e",
                 logging: false,
                 useCORS: true,
@@ -43,7 +43,12 @@ export function CertificateModal({ isOpen, onClose, courseName, studentName, dat
             });
             return new Promise((resolve) => canvas.toBlob(resolve, 'image/png'));
         } catch (error) {
-            console.error("Image generation failed:", error);
+            console.error(`Image generation failed at scale ${scale}:`, error);
+            // Fallback for low memory devices
+            if (scale > 1) {
+                console.log("Retrying with lower resolution...");
+                return generateImageBlob(1);
+            }
             return null;
         }
     };

@@ -6,6 +6,39 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { CourseDetailContent } from "@/components/courses/CourseDetailContent";
 import { getYouTubeId } from "@/lib/utils";
 
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const course = await prisma.course.findUnique({
+        where: { id },
+        select: { title: true, description: true, imageUrl: true }
+    });
+
+    if (!course) {
+        return {
+            title: "Curso no encontrado | Aurora Academy",
+            description: "El curso que buscas no está disponible."
+        };
+    }
+
+    return {
+        title: `${course.title} | Aurora Academy`,
+        description: course.description || "Aprende trading e inversiones con Aurora Academy.",
+        openGraph: {
+            title: `${course.title} | Aurora Academy`,
+            description: course.description || "Aprende trading e inversiones con Aurora Academy.",
+            images: [
+                {
+                    url: course.imageUrl || "/og-image.jpg",
+                    width: 1200,
+                    height: 630,
+                    alt: course.title,
+                }
+            ],
+            type: "website",
+        },
+    };
+}
+
 export default async function CourseDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     const session = await getServerSession(authOptions);

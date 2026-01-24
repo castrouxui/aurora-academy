@@ -7,7 +7,8 @@ import { CourseFAQ } from "@/components/courses/detail/CourseFAQ";
 import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
-import { CourseSidebar } from "@/components/courses/detail/CourseSidebar"; // Keep for safety if needed, but not used in new layout
+import { MobileCourseCTA } from "@/components/courses/detail/MobileCourseCTA";
+// import { CourseSidebar } from "@/components/courses/detail/CourseSidebar"; // Unused
 
 interface CourseDetailContentProps {
     courseData: any;
@@ -40,6 +41,16 @@ export function CourseDetailContent({
                                 totalRatings={courseData.totalRatings}
                                 instructor={courseData.instructor}
                             />
+
+                            {/* Mobile Course Image/Video */}
+                            <div className="lg:hidden w-full aspect-video relative rounded-xl overflow-hidden shadow-2xl border border-white/10 mt-6">
+                                <img
+                                    src={courseData.videoThumbnail}
+                                    alt={courseData.title}
+                                    className="w-full h-full object-cover"
+                                />
+                                {/* Play button overlay if it's a video could go here, for now just image */}
+                            </div>
                         </div>
 
                         {/* Divider */}
@@ -103,9 +114,16 @@ export function CourseDetailContent({
             </Container>
 
             {/* Testimonials */}
-            <div className="border-t border-white/5">
+            <div className="border-t border-white/5 pb-24 lg:pb-0"> {/* Add padding bottom for mobile cta */}
                 <TestimonialsSection />
             </div>
+
+            <MobileCourseCTA
+                title={courseData.title}
+                price={courseData.price}
+                courseId={courseData.id}
+                hasAccess={hasAccess}
+            />
         </div>
     );
 }

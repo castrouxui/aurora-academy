@@ -45,17 +45,26 @@
     --primary: #5D5CDE;
     --primary-foreground: #ffffff;
 
-    --secondary: #E0E7FF;
-    --secondary-foreground: #0B0F19;
+    --secondary: #1F2937;
+    --secondary-foreground: #ffffff;
 
-    --accent: #10b981;
+    --accent: #009EE3; /* Mercado Pago Blue or similar accent */
     --accent-foreground: #ffffff;
 
-    --muted: #1F2937;
+    --muted: #1e2433;
     --muted-foreground: #9CA3AF;
 
-    --card: #1F2937;
+    --background: #0B0F19; /* Premium Dark Background */
+    --foreground: #F3F4F6;
+
+    --card: #121620; /* Modal/Card Background */
     --card-foreground: #ffffff;
+
+    --popover: #121620;
+    --popover-foreground: #ffffff;
+    
+    --border: #1F2937;
+    --input: #1F2937;
   }
 }
 

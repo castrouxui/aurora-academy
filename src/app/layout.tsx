@@ -11,7 +11,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: {
-    default: "Aurora Academy - Aprende a Invertir y Trading Institucional",
+    default: "Aurora Academy - Aprendé a invertir desde cero",
     template: "%s | Aurora Academy",
   },
   description: "Plataforma educativa líder en trading institucional y análisis financiero. Cursos de forex, índices y criptomonedas.",

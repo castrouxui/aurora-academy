@@ -29,13 +29,13 @@ export function CourseHero({
         <div className="text-white">
             <div className="space-y-6 max-w-3xl">
                 {/* Breadcrumbs */}
-                <div className="flex items-center gap-2 text-[#5D5CDE] font-bold text-sm mb-6 bg-white/5 w-fit px-4 py-1 rounded-full">
+                <div className="flex items-center gap-2 text-[#5D5CDE] font-bold text-xs sm:text-sm mb-4 bg-white/5 w-fit px-3 py-1 rounded-full">
                     <Link href="/courses" className="hover:text-white transition-colors">Cursos</Link>
                     <span className="text-gray-600">/</span>
                     <span className="text-white truncate">{title}</span>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
                     {title}
                 </h1>
                 <p className="text-xl text-gray-300 leading-relaxed max-w-2xl">

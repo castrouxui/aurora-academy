@@ -1,27 +1,56 @@
 import { MetadataRoute } from 'next'
+import { prisma } from '@/lib/prisma'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://auroracademy.net'
 
-    return [
+    // Static Routes
+    const staticRoutes = [
         {
             url: baseUrl,
             lastModified: new Date(),
-            changeFrequency: 'weekly',
+            changeFrequency: 'weekly' as const,
             priority: 1,
+        },
+        {
+            url: `${baseUrl}/courses`,
+            lastModified: new Date(),
+            changeFrequency: 'daily' as const,
+            priority: 0.9,
         },
         {
             url: `${baseUrl}/login`,
             lastModified: new Date(),
-            changeFrequency: 'monthly',
+            changeFrequency: 'monthly' as const,
             priority: 0.8,
         },
-        {
-            url: `${baseUrl}/dashboard`,
-            lastModified: new Date(),
-            changeFrequency: 'always',
-            priority: 0.5,
-        },
-        // Add dynamic course routes here later if needed
     ]
+
+    // Dynamic Course Routes
+    const courses = await prisma.course.findMany({
+        where: { published: true },
+        select: { id: true, updatedAt: true }
+    });
+
+    const courseRoutes = courses.map((course) => ({
+        url: `${baseUrl}/courses/${course.id}`,
+        lastModified: course.updatedAt,
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+    }));
+
+    // Dynamic Bundle Routes
+    const bundles = await prisma.bundle.findMany({
+        where: { published: true },
+        select: { id: true, updatedAt: true }
+    });
+
+    const bundleRoutes = bundles.map((bundle) => ({
+        url: `${baseUrl}/bundles/${bundle.id}`,
+        lastModified: bundle.updatedAt,
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+    }));
+
+    return [...staticRoutes, ...courseRoutes, ...bundleRoutes]
 }

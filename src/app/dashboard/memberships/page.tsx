@@ -133,10 +133,10 @@ export default function MyMembershipsPage() {
 
     if (loadingSub) {
         return (
-            <div className="min-h-screen pt-4 pb-12 bg-[#0B0F19]">
+            <div className="min-h-screen pt-4 pb-12 bg-background">
                 <Container>
-                    <Skeleton className="h-8 w-48 bg-gray-800 mb-8" />
-                    <Skeleton className="h-64 w-full bg-gray-800 rounded-xl" />
+                    <Skeleton className="h-8 w-48 bg-muted mb-8" />
+                    <Skeleton className="h-64 w-full bg-muted rounded-xl" />
                 </Container>
             </div>
         );
@@ -145,29 +145,29 @@ export default function MyMembershipsPage() {
     // VIEW 1: ACTIVE SUBSCRIPTION (Management)
     if (subscription) {
         return (
-            <div className="min-h-screen bg-[#0B0F19] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#1a1b3a] to-[#0B0F19]">
+            <div className="min-h-screen bg-background bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 to-background">
                 <Container className="py-12 md:py-20">
                     <div className="max-w-4xl mx-auto space-y-12">
                         {/* HEADER (Aligned with content) */}
                         <div className="space-y-2 text-center md:text-left">
-                            <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Mi Membresía</h1>
-                            <p className="text-gray-400 text-lg">Gestioná tu suscripción y métodos de pago.</p>
+                            <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">Mi Membresía</h1>
+                            <p className="text-muted-foreground text-lg">Gestioná tu suscripción y métodos de pago.</p>
                         </div>
 
                         <div className="space-y-16">
                             {/* ACTIVE PLAN CARD */}
                             {subscription.subscription.status === 'authorized' || subscription.subscription.status === 'pending' ? (
-                                <Card className="bg-gradient-to-br from-[#1F2937] to-[#111827] border-[#5D5CDE]/30 shadow-lg shadow-[#5D5CDE]/10">
+                                <Card className="bg-gradient-to-br from-card to-muted border-primary/30 shadow-lg shadow-primary/10">
                                     <CardHeader>
                                         <div className="flex justify-between items-start">
                                             <div>
-                                                <CardTitle className="text-2xl text-white flex items-center gap-2">
+                                                <CardTitle className="text-2xl text-card-foreground flex items-center gap-2">
                                                     {subscription.bundleTitle}
                                                     <span className="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1">
                                                         <CheckCircle size={12} /> Activa
                                                     </span>
                                                 </CardTitle>
-                                                <CardDescription className="text-gray-400 mt-1">
+                                                <CardDescription className="text-muted-foreground mt-1">
                                                     Plan Mensual - Renovación automática
                                                 </CardDescription>
                                             </div>
@@ -176,29 +176,64 @@ export default function MyMembershipsPage() {
                                     <CardContent className="space-y-6">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="bg-black/20 p-4 rounded-lg border border-white/5">
-                                                <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Estado</p>
-                                                <p className="font-medium text-white">Al día</p>
+                                                <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Estado</p>
+                                                <p className="font-medium text-foreground flex items-center gap-2">
+                                                    Al día
+                                                    <CheckCircle size={14} className="text-emerald-500" />
+                                                </p>
                                             </div>
                                             <div className="bg-black/20 p-4 rounded-lg border border-white/5">
-                                                <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Próximo Cobro</p>
-                                                <p className="font-medium text-white">Gestionado por Mercado Pago</p>
+                                                <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Próximo Cobro</p>
+                                                {(() => {
+                                                    // Calculate next date based on createdAt (Monthly)
+                                                    const createdAt = new Date(subscription.subscription.createdAt);
+                                                    const today = new Date();
+
+                                                    // Logic: Find next monthly anniversary
+                                                    let nextDate = new Date(createdAt);
+                                                    while (nextDate < today) {
+                                                        nextDate.setMonth(nextDate.getMonth() + 1);
+                                                    }
+
+                                                    const diffTime = Math.abs(nextDate.getTime() - today.getTime());
+                                                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                                                    const isSoon = diffDays <= 3;
+
+                                                    return (
+                                                        <div className="flex flex-col">
+                                                            <p className={`font-medium ${isSoon ? 'text-amber-400' : 'text-foreground'}`}>
+                                                                {nextDate.toLocaleDateString('es-AR', { day: 'numeric', month: 'long' })}
+                                                            </p>
+                                                            {isSoon && (
+                                                                <span className="text-[10px] text-amber-500/80 font-medium">
+                                                                    ¡Se renueva en {diffDays} días!
+                                                                </span>
+                                                            )}
+                                                            {!isSoon && (
+                                                                <span className="text-[10px] text-muted-foreground">
+                                                                    Automático vía Mercado Pago
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })()}
                                             </div>
                                         </div>
 
                                         <div className="border-t border-white/5 pt-6">
-                                            <h3 className="text-lg font-semibold text-white mb-4">Acciones</h3>
+                                            <h3 className="text-lg font-semibold text-foreground mb-4">Acciones</h3>
                                             <div className="flex flex-col sm:flex-row gap-4">
                                                 <Button
                                                     variant="destructive"
                                                     onClick={handleCancel}
                                                     disabled={actionLoading}
-                                                    className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+                                                    className="bg-destructive/10 text-destructive hover:bg-destructive/20 border border-destructive/20"
                                                 >
                                                     {actionLoading ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : <XCircle className="mr-2 h-4 w-4" />}
                                                     Cancelar Suscripción
                                                 </Button>
                                             </div>
-                                            <p className="text-xs text-gray-500 mt-4 flex items-center gap-2">
+                                            <p className="text-xs text-muted-foreground mt-4 flex items-center gap-2">
                                                 <AlertTriangle size={12} />
                                                 Si cancelás, mantendrás el acceso hasta el final del ciclo de facturación actual.
                                             </p>
@@ -206,9 +241,9 @@ export default function MyMembershipsPage() {
                                     </CardContent>
                                 </Card>
                             ) : (
-                                <Card className="bg-[#1F2937] border-gray-700 opacity-75">
+                                <Card className="bg-muted border-border opacity-75">
                                     <CardHeader>
-                                        <CardTitle className="text-white flex items-center gap-2">
+                                        <CardTitle className="text-foreground flex items-center gap-2">
                                             {subscription.bundleTitle}
                                             <span className="text-xs bg-red-500/10 text-red-400 px-2 py-1 rounded-full border border-red-500/20">
                                                 Cancelada / Pausada
@@ -216,7 +251,7 @@ export default function MyMembershipsPage() {
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent>
-                                        <p className="text-gray-400 mb-4">Esta suscripción ya no se renueva automáticamente.</p>
+                                        <p className="text-muted-foreground mb-4">Esta suscripción ya no se renueva automáticamente.</p>
                                         <Button variant="outline" onClick={() => window.location.href = '/checkout'}>
                                             Volver a Suscribirse
                                         </Button>
@@ -227,38 +262,49 @@ export default function MyMembershipsPage() {
                             {/* UPGRADE / DOWNGRADE SECTION */}
                             <div className="pt-8 border-t border-white/5">
                                 <div className="mb-8">
-                                    <h2 className="text-2xl font-bold text-white mb-2">Otros Planes Disponibles</h2>
-                                    <p className="text-gray-400">Mejorá tu plan o cambiá a uno que se adapte mejor a tus necesidades.</p>
+                                    <h2 className="text-2xl font-bold text-foreground mb-2">Otros Planes Disponibles</h2>
+                                    <p className="text-muted-foreground">Mejorá tu plan o cambiá a uno que se adapte mejor a tus necesidades.</p>
                                 </div>
 
                                 {loadingCatalog ? (
                                     <div className="grid md:grid-cols-2 gap-6">
-                                        <Skeleton className="h-64 w-full bg-gray-800 rounded-xl" />
-                                        <Skeleton className="h-64 w-full bg-gray-800 rounded-xl" />
+                                        <Skeleton className="h-64 w-full bg-muted rounded-xl" />
+                                        <Skeleton className="h-64 w-full bg-muted rounded-xl" />
                                     </div>
                                 ) : (
                                     <div className="grid md:grid-cols-2 gap-8">
                                         {bundles
                                             .filter(b => b.title !== subscription.bundleTitle)
                                             .map((bundle) => {
-                                                const isUpgrade = bundle.price > (subscription.price || 0);
+                                                const currentPrice = Number(subscription.price || 0);
+                                                const bundlePrice = Number(bundle.price);
+                                                // If prices are equal, order by title or ID? 
+                                                // Assuming Upgrade if bundlePrice > currentPrice
+                                                // If bundlePrice < currentPrice, it's a Downgrade
+                                                const isUpgrade = bundlePrice >= currentPrice;
 
                                                 return (
-                                                    <Card key={bundle.id} className="bg-[#111827]/80 border-gray-800 flex flex-col hover:border-[#5D5CDE]/50 transition-all duration-300 hover:shadow-2xl hover:shadow-[#5D5CDE]/10 group relative overflow-hidden">
+                                                    <Card key={bundle.id} className="bg-card/80 border-border flex flex-col hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 group relative overflow-hidden">
                                                         {/* Label */}
-                                                        <div className={`absolute top-0 right-0 px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-bl-lg ${isUpgrade ? "bg-emerald-500/20 text-emerald-400" : "bg-gray-700/50 text-gray-400"
-                                                            }`}>
-                                                            {isUpgrade ? "Mejorar Plan" : "Plan Menor"}
-                                                        </div>
+                                                        {isUpgrade && (
+                                                            <div className="absolute top-0 right-0 px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-bl-lg bg-emerald-500/20 text-emerald-400">
+                                                                Mejorar Plan
+                                                            </div>
+                                                        )}
+                                                        {!isUpgrade && (
+                                                            <div className="absolute top-0 right-0 px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-bl-lg bg-gray-700/50 text-gray-400">
+                                                                Plan Alternativo
+                                                            </div>
+                                                        )}
 
                                                         <CardHeader>
-                                                            <CardTitle className="text-xl text-white group-hover:text-[#bebeff] transition-colors">{bundle.title}</CardTitle>
-                                                            <CardDescription className="text-gray-400 line-clamp-2">{bundle.description}</CardDescription>
+                                                            <CardTitle className="text-xl text-foreground group-hover:text-primary transition-colors">{bundle.title}</CardTitle>
+                                                            <CardDescription className="text-muted-foreground line-clamp-2">{bundle.description}</CardDescription>
                                                         </CardHeader>
                                                         <CardContent className="flex-1 mt-2">
                                                             <div className="mb-6">
-                                                                <span className="text-3xl font-bold text-white">${Number(bundle.price).toLocaleString('es-AR')}</span>
-                                                                <span className="text-gray-500 text-sm">/mes</span>
+                                                                <span className="text-3xl font-bold text-foreground">${Number(bundle.price).toLocaleString('es-AR')}</span>
+                                                                <span className="text-muted-foreground text-sm">/mes</span>
                                                                 {isUpgrade && (
                                                                     <p className="text-xs text-emerald-400 mt-1">
                                                                         + Acceso a más contenido
@@ -266,7 +312,7 @@ export default function MyMembershipsPage() {
                                                                 )}
                                                             </div>
                                                             <div className="space-y-2">
-                                                                <p className="text-sm text-gray-400 flex items-center gap-2">
+                                                                <p className="text-sm text-muted-foreground flex items-center gap-2">
                                                                     <Check size={14} className="text-emerald-500" />
                                                                     Acceso a {bundle.courses?.length || 'todos los'} cursos
                                                                 </p>
@@ -276,8 +322,8 @@ export default function MyMembershipsPage() {
                                                             <Button
                                                                 variant={isUpgrade ? "default" : "outline"}
                                                                 className={`w-full transition-all ${isUpgrade
-                                                                    ? "bg-[#5D5CDE] hover:bg-[#4b4ac6] text-white"
-                                                                    : "border-gray-700 text-gray-300 hover:text-white hover:bg-white/5"
+                                                                    ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+                                                                    : "border-border text-muted-foreground hover:text-foreground hover:bg-white/5"
                                                                     }`}
                                                                 onClick={() => window.location.href = `/checkout?bundleId=${bundle.id}`}
                                                             >
@@ -289,7 +335,7 @@ export default function MyMembershipsPage() {
                                             })}
                                         {bundles.filter(b => b.title !== subscription.bundleTitle).length === 0 && (
                                             <div className="col-span-full text-center py-8 bg-white/5 rounded-xl border border-white/5 border-dashed">
-                                                <p className="text-gray-400">No hay otros planes disponibles por el momento.</p>
+                                                <p className="text-muted-foreground">No hay otros planes disponibles por el momento.</p>
                                             </div>
                                         )}
                                     </div>
@@ -304,11 +350,11 @@ export default function MyMembershipsPage() {
 
     // VIEW 2: CATALOG (No Subscription)
     return (
-        <div className="min-h-screen pt-4 pb-12 bg-[#0B0F19]">
+        <div className="min-h-screen pt-4 pb-12 bg-background">
             <Container>
                 <div className="mb-10 text-center">
-                    <h1 className="text-4xl font-bold text-white mb-4">Elegí tu Plan</h1>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
+                    <h1 className="text-4xl font-bold text-foreground mb-4">Elegí tu Plan</h1>
+                    <p className="text-muted-foreground max-w-2xl mx-auto">
                         Accedé a contenido exclusivo y llevá tu aprendizaje al siguiente nivel con nuestras membresías premium.
                     </p>
                 </div>
@@ -316,38 +362,38 @@ export default function MyMembershipsPage() {
                 {loadingCatalog ? (
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {[1, 2, 3].map((i) => (
-                            <Skeleton key={i} className="h-96 w-full bg-gray-800 rounded-xl" />
+                            <Skeleton key={i} className="h-96 w-full bg-muted rounded-xl" />
                         ))}
                     </div>
                 ) : bundles.length === 0 ? (
-                    <div className="text-center py-20 bg-[#111827] rounded-xl border border-gray-800">
-                        <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-white mb-2">No hay membresías disponibles</h3>
-                        <p className="text-gray-400">Vuelve pronto para ver nuevos planes.</p>
+                    <div className="text-center py-20 bg-card rounded-xl border border-border">
+                        <Package className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                        <h3 className="text-xl font-semibold text-foreground mb-2">No hay membresías disponibles</h3>
+                        <p className="text-muted-foreground">Vuelve pronto para ver nuevos planes.</p>
                     </div>
                 ) : (
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {bundles.map((bundle) => (
-                            <Card key={bundle.id} className="bg-[#111827] border-gray-800 flex flex-col hover:border-[#5D5CDE]/50 transition-colors">
+                            <Card key={bundle.id} className="bg-card border-border flex flex-col hover:border-primary/50 transition-colors">
                                 <CardHeader>
-                                    <CardTitle className="text-2xl text-white">{bundle.title}</CardTitle>
-                                    <CardDescription className="text-gray-400 line-clamp-2">{bundle.description}</CardDescription>
+                                    <CardTitle className="text-2xl text-foreground">{bundle.title}</CardTitle>
+                                    <CardDescription className="text-muted-foreground line-clamp-2">{bundle.description}</CardDescription>
                                 </CardHeader>
                                 <CardContent className="flex-1">
                                     <div className="mb-6">
-                                        <span className="text-4xl font-bold text-white">${Number(bundle.price).toLocaleString('es-AR')}</span>
-                                        <span className="text-gray-500">/mes</span>
+                                        <span className="text-4xl font-bold text-foreground">${Number(bundle.price).toLocaleString('es-AR')}</span>
+                                        <span className="text-muted-foreground">/mes</span>
                                     </div>
                                     <ul className="space-y-3">
-                                        <li className="flex items-center text-gray-300 text-sm">
+                                        <li className="flex items-center text-muted-foreground text-sm">
                                             <Check className="h-4 w-4 text-emerald-400 mr-2" />
                                             Acceso a {bundle.courses?.length || 0} cursos
                                         </li>
-                                        <li className="flex items-center text-gray-300 text-sm">
+                                        <li className="flex items-center text-muted-foreground text-sm">
                                             <Check className="h-4 w-4 text-emerald-400 mr-2" />
                                             Certificados incluidos
                                         </li>
-                                        <li className="flex items-center text-gray-300 text-sm">
+                                        <li className="flex items-center text-muted-foreground text-sm">
                                             <Check className="h-4 w-4 text-emerald-400 mr-2" />
                                             Soporte prioritario
                                         </li>
@@ -355,7 +401,7 @@ export default function MyMembershipsPage() {
                                 </CardContent>
                                 <CardFooter>
                                     <Button
-                                        className="w-full bg-[#5D5CDE] hover:bg-[#4b4ac6]"
+                                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                                         onClick={() => window.location.href = `/checkout?bundleId=${bundle.id}`}
                                     >
                                         Suscribirme Ahora

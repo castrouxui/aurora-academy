@@ -57,7 +57,7 @@ export async function GET() {
         const subscriptions = await prisma.subscription.findMany({
             where: {
                 userId: session.user.id,
-                status: 'authorized' // ONLY ACTIVE SUBSCRIPTIONS
+                status: { in: ['authorized', 'pending'] } // Allow pending to show immediate access if webhook delays
             },
             include: {
                 bundle: {

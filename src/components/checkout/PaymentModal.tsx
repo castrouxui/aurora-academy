@@ -145,36 +145,36 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-[#121620] w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden border border-gray-800 flex flex-col md:flex-row relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-card w-full h-[100dvh] md:h-auto md:max-h-[90vh] md:max-w-3xl rounded-none md:rounded-3xl shadow-2xl overflow-hidden border-0 md:border border-border flex flex-col md:flex-row relative">
 
                 {/* Close Button (Absolute) */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 z-20 text-gray-400 hover:text-white bg-black/20 hover:bg-black/40 p-2 rounded-full transition-all"
+                    className="absolute top-4 right-4 z-20 text-muted-foreground hover:text-white bg-black/20 hover:bg-black/40 p-2 rounded-full transition-all"
                 >
                     <X size={20} />
                 </button>
 
                 {/* LEFT COLUMN: Order Summary (Darker/Card style) */}
-                <div className="w-full md:w-5/12 bg-[#0d1017] p-8 flex flex-col border-r border-gray-800 relative overflow-hidden">
+                <div className="w-full md:w-5/12 bg-muted/30 p-8 flex flex-col border-r border-border relative overflow-hidden">
 
                     {/* Background blob for visual interest */}
                     <div className="absolute top-0 left-0 w-full h-32 bg-primary/5 blur-3xl pointer-events-none"></div>
 
                     <div className="relative z-10 flex-1">
-                        <h3 className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
+                        <h3 className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
                             Tu Resumen
                         </h3>
 
                         <div className="mb-8">
-                            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight">
+                            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2 leading-tight">
                                 {courseTitle}
                             </h2>
                             <div className="flex flex-col mt-4">
                                 {appliedCoupon ? (
                                     <>
-                                        <div className="flex items-center gap-2 text-gray-500 line-through text-sm">
+                                        <div className="flex items-center gap-2 text-muted-foreground line-through text-sm">
                                             <span>{coursePrice}</span>
                                             <span>ARS</span>
                                         </div>
@@ -201,8 +201,8 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                     </>
                                 ) : (
                                     <div className="flex items-end gap-2">
-                                        <span className="text-4xl font-bold text-white tracking-tight">{coursePrice}</span>
-                                        <span className="text-gray-500 font-medium mb-1.5">ARS</span>
+                                        <span className="text-4xl font-bold text-foreground tracking-tight">{coursePrice}</span>
+                                        <span className="text-muted-foreground font-medium mb-1.5">ARS</span>
                                     </div>
                                 )}
                             </div>
@@ -232,7 +232,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
 
                         {/* Coupon Input */}
                         <div className="mb-8">
-                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">
+                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
                                 Código de Descuento
                             </label>
                             <div className="flex gap-2">
@@ -242,7 +242,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                     onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                                     placeholder="CÓDIGO"
                                     disabled={!!appliedCoupon}
-                                    className="bg-[#121620] border border-gray-700 text-white text-sm rounded-lg px-3 py-2 w-full focus:border-[#5D5CDE] outline-none disabled:opacity-50"
+                                    className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none disabled:opacity-50"
                                 />
                                 {appliedCoupon ? (
                                     <button
@@ -259,7 +259,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                     <button
                                         onClick={handleApplyCoupon}
                                         disabled={!couponCode || isValidatingCoupon}
-                                        className="bg-[#5D5CDE] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#4b4ac0] disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {isValidatingCoupon ? <Loader2 size={16} className="animate-spin" /> : "Aplicar"}
                                     </button>
@@ -275,8 +275,8 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                     </div>
 
                     {/* Trust Footer in Left Col */}
-                    <div className="relative z-10 mt-auto pt-6 border-t border-gray-800/50">
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="relative z-10 mt-auto pt-6 border-t border-border/50">
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             <span>🛡️</span>
                             <span>Compra protegida por Mercado Pago</span>
                         </div>
@@ -284,10 +284,10 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 </div>
 
                 {/* RIGHT COLUMN: Payment Actions */}
-                <div className="w-full md:w-7/12 bg-[#121620] relative flex flex-col">
+                <div className="w-full md:w-7/12 bg-card relative flex flex-col">
 
                     <div className="p-8 flex-1 overflow-y-auto max-h-[80vh] md:max-h-full">
-                        <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                        <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
                             Finalizar Compra
                         </h3>
 
@@ -303,18 +303,18 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                 <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mb-6 animate-bounce">
                                     <CheckCircle2 size={48} className="text-green-500" />
                                 </div>
-                                <h3 className="text-2xl font-bold text-white mb-2">¡Pago Confirmado!</h3>
-                                <p className="text-gray-400 text-center max-w-xs mb-8">
+                                <h3 className="text-2xl font-bold text-foreground mb-2">¡Pago Confirmado!</h3>
+                                <p className="text-muted-foreground text-center max-w-xs mb-8">
                                     Gracias por tu compra. Te estamos redirigiendo a tu curso...
                                 </p>
-                                <div className="w-full max-w-[200px] h-1 bg-gray-800 rounded-full overflow-hidden">
+                                <div className="w-full max-w-[200px] h-1 bg-border rounded-full overflow-hidden">
                                     <div className="h-full bg-green-500 animate-[progress_3s_ease-in-out_forwards]"></div>
                                 </div>
                             </div>
                         ) : isLoading ? (
                             <div className="flex flex-col items-center justify-center py-20">
                                 <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary mb-4"></div>
-                                <p className="text-gray-400 animate-pulse text-sm">Conectando con Mercado Pago...</p>
+                                <p className="text-muted-foreground animate-pulse text-sm">Conectando con Mercado Pago...</p>
                             </div>
                         ) : preferenceId ? (
                             <div className="space-y-6">
@@ -323,17 +323,17 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                 <div>
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-bold border border-primary/30">1</div>
-                                        <h4 className="text-sm font-medium text-white">Ir a pagar</h4>
+                                        <h4 className="text-sm font-medium text-foreground">Ir a pagar</h4>
                                     </div>
 
                                     <a
                                         href={preferenceId ? initPoint! : "#"}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className={`group relative w-full bg-[#009EE3] hover:bg-[#008ED6] text-white font-bold py-4 px-6 rounded-xl transition-all shadow-lg shadow-blue-900/20 hover:shadow-blue-900/40 flex items-center justify-between overflow-hidden ${!preferenceId ? 'pointer-events-none opacity-50' : ''}`}
+                                        className={`group relative w-full bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold py-4 px-6 rounded-xl transition-all shadow-lg shadow-indigo-900/20 hover:shadow-indigo-900/40 flex items-center justify-between overflow-hidden ${!preferenceId ? 'pointer-events-none opacity-50' : ''}`}
                                     >
                                         <div className="flex items-center gap-3 z-10">
-                                            <div className="bg-black/10 p-2 rounded-lg">
+                                            <div className="bg-white/10 p-2 rounded-lg">
                                                 <img
                                                     src="/mercadopago.png"
                                                     alt="Mercado Pago"
@@ -345,24 +345,24 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                         <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform z-10" />
 
                                         {/* Shine effect */}
-                                        <div className="absolute top-0 -left-full w-1/2 h-full bg-linear-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-[shimmer_2.5s_infinite]"></div>
+                                        <div className="absolute top-0 -left-full w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-[shimmer_2.5s_infinite]"></div>
                                     </a>
                                 </div>
 
                                 {/* Step 2 QR */}
                                 <div className="hidden md:block">
                                     <div className="flex items-center gap-3 mb-3 mt-8">
-                                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-800 text-gray-400 text-xs font-bold border border-gray-700">2</div>
+                                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-muted text-muted-foreground text-xs font-bold border border-border">2</div>
                                         <h4 className="text-sm font-medium text-gray-300">O escanea el código QR</h4>
                                     </div>
 
-                                    <div className="bg-[#1a1f2e] rounded-xl p-4 border border-gray-800 flex items-start gap-6">
+                                    <div className="bg-muted/50 rounded-xl p-4 border border-border flex items-start gap-6">
                                         <div className="bg-white p-2 rounded-lg shrink-0">
                                             <QRCode value={initPoint || ""} size={100} level="M" />
                                         </div>
                                         <div className="py-1">
                                             <p className="text-sm text-gray-300 mb-2 font-medium">Desde tu celular</p>
-                                            <p className="text-xs text-gray-500 leading-relaxed max-w-[200px]">
+                                            <p className="text-xs text-muted-foreground leading-relaxed max-w-[200px]">
                                                 Abre la App de Mercado Pago y escanea este código para pagar al instante.
                                             </p>
                                             <div className="mt-3 flex items-center gap-2">
@@ -380,13 +380,13 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                     </div>
 
                     {/* Right Column Footer (Requested Image info) */}
-                    <div className="bg-[#0b0e14] py-4 px-8 border-t border-gray-800 flex items-center justify-between">
+                    <div className="bg-muted/50 py-4 px-8 border-t border-border flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <span className="text-lg">🇦🇷</span>
-                            <span className="text-xs text-gray-500 font-medium">Precios en pesos argentinos.</span>
+                            <span className="text-xs text-muted-foreground font-medium">Precios en pesos argentinos.</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-600">Pagá con</span>
+                            <span className="text-xs text-muted-foreground">Pagá con</span>
                             <img
                                 src="/mercadopago.png"
                                 alt="Mercado Pago"
