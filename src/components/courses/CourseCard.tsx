@@ -69,7 +69,25 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
                         </div>
                     )}
 
-                    <div className="flex items-center gap-2 mb-4">
+                    {/* IMAGE CONTAINER */}
+                    <div className="relative aspect-video w-full mb-4 rounded-2xl overflow-hidden bg-black/50 shadow-inner group-hover:shadow-[#5D5CDE]/20 transition-all duration-500">
+                        <Image
+                            src={finalImageToRender || "/course-placeholder.jpg"}
+                            alt={course.title}
+                            fill
+                            className={cn(
+                                "object-cover transition-transform duration-700 ease-out group-hover:scale-110",
+                                !isCustomImage && "opacity-80"
+                            )}
+                            onError={() => setHasError(true)}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+
+                        {/* OVERLAY GRADIENT */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
+                    </div>
+
+                    <div className="flex items-center gap-2 mb-2">
                         <div className="bg-[#5D5CDE]/10 text-[#5D5CDE] text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide border border-[#5D5CDE]/20">
                             {course.tag}
                         </div>

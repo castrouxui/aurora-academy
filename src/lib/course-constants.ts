@@ -14,7 +14,17 @@ export const COURSE_IMAGES: Record<string, string> = {
 
 export function getCourseImage(course: { title: string, imageUrl?: string | null }) {
     if (course.imageUrl && course.imageUrl.trim() !== "") {
-        return course.imageUrl;
+        // If it starts with http (external) or / (absolute path), return as is
+        if (course.imageUrl.startsWith("http") || course.imageUrl.startsWith("/")) {
+            return course.imageUrl;
+        }
+        // Otherwise, assume it's a filename in /images/courses/
+        return `/images/courses/${course.imageUrl}`;
     }
+
+    // Fallback: Check hardcoded map (deprecated but safe to keep) or return placeholder
+    const exactMatch = Object.entries(COURSE_IMAGES).find(([key]) => course.title.includes(key));
+    if (exactMatch) return exactMatch[1];
+
     return "/course-placeholder.jpg";
 }
