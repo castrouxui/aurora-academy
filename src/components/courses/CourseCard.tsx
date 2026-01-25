@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star, Video } from 'lucide-react';
+import { Star, Video, CheckCircle } from 'lucide-react';
 import { cn, getYouTubeId } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 
@@ -19,7 +19,7 @@ interface CourseProps {
     type?: 'course' | 'bundle';
 }
 
-export function CourseCard({ course }: { course: CourseProps }) {
+export function CourseCard({ course, isOwned = false }: { course: CourseProps, isOwned?: boolean }) {
     const href = course.type === 'bundle' ? `/bundles/${course.id}` : (course.basePath ? `${course.basePath}/${course.id}` : `/courses/${course.id}`);
 
     // Determine Logic for Image
@@ -39,9 +39,23 @@ export function CourseCard({ course }: { course: CourseProps }) {
     }
 
     return (
-        <Link href={href} className="block h-full group">
-            <div className="group h-full flex flex-col bg-white/5 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-white/10 hover:border-white/20 backdrop-blur-sm">
+        <Link href={href} className={cn("block h-full group", isOwned && "pointer-events-none")}>
+            <div className={cn(
+                "group h-full flex flex-col bg-white/5 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/10 backdrop-blur-sm",
+                !isOwned && "hover:-translate-y-2 hover:border-white/20",
+                isOwned && "opacity-80 grayscale-[0.5]"
+            )}>
                 <div className="relative h-48 w-full overflow-hidden shrink-0">
+                    {/* OWNED BADGE */}
+                    {isOwned && (
+                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                            <span className="bg-emerald-500 text-white px-4 py-2 rounded-lg font-black text-sm uppercase tracking-wider shadow-xl border border-emerald-400/50 flex items-center gap-2">
+                                <CheckCircle size={16} />
+                                Ya lo tenés
+                            </span>
+                        </div>
+                    )}
+
                     {/* Image Display Logic */}
                     {displayImage && displayImage !== "/course-placeholder.jpg" ? (
                         <Image
@@ -83,8 +97,11 @@ export function CourseCard({ course }: { course: CourseProps }) {
                             <span className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-1">Inversión</span>
                             <span className="text-white font-black text-xl">{course.price}</span>
                         </div>
-                        <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white group-hover:bg-[#5D5CDE] group-hover:scale-110 transition-all shadow-lg">
-                            <Video size={18} />
+                        <div className={cn(
+                            "h-10 w-10 rounded-full flex items-center justify-center text-white transition-all shadow-lg",
+                            isOwned ? "bg-emerald-500/20 text-emerald-500" : "bg-white/10 group-hover:bg-[#5D5CDE] group-hover:scale-110"
+                        )}>
+                            {isOwned ? <CheckCircle size={18} /> : <Video size={18} />}
                         </div>
                     </div>
                 </div>

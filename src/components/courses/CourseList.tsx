@@ -8,15 +8,27 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export function CourseList() {
+    const [ownedCourseIds, setOwnedCourseIds] = useState<string[]>([]);
     const [courses, setCourses] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        async function fetchCourses() {
+        async function fetchData() {
             try {
-                const res = await fetch("/api/courses?published=true");
-                if (res.ok) {
-                    const data = await res.json();
+                // 1. Fetch Public Courses
+                const coursesRes = await fetch("/api/courses?published=true");
+
+                // 2. Fetch User's Owned Courses (if logged in)
+                const myCoursesRes = await fetch("/api/my-courses");
+                let myIds: string[] = [];
+                if (myCoursesRes.ok) {
+                    const myData = await myCoursesRes.json();
+                    myIds = myData.map((c: any) => c.id);
+                    setOwnedCourseIds(myIds);
+                }
+
+                if (coursesRes.ok) {
+                    const data = await coursesRes.json();
                     // Transform API data to UI format and take top 4
                     const formattedCourses = data.slice(0, 4).map((course: any) => {
                         const sortedModules = course.modules?.sort((a: any, b: any) => a.position - b.position) || [];
@@ -40,12 +52,12 @@ export function CourseList() {
                     setCourses(formattedCourses);
                 }
             } catch (error) {
-                console.error("Failed to fetch courses", error);
+                console.error("Failed to fetch data", error);
             } finally {
                 setIsLoading(false);
             }
         }
-        fetchCourses();
+        fetchData();
     }, []);
 
     if (isLoading) {
@@ -79,7 +91,7 @@ export function CourseList() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {courses.map((course, i) => (
-                        <CourseCard key={i} course={course} />
+                        <CourseCard key={i} course={course} isOwned={ownedCourseIds.includes(course.id)} />
                     ))}
                 </div>
 
