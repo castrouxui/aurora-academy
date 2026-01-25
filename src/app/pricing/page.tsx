@@ -66,11 +66,11 @@ export default function PricingPage() {
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
                 <Container className="relative z-10 text-center">
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                        Formación Profesional
+                        Evolucioná tu capital con el respaldo de expertos
                     </h1>
                     <p className="text-lg leading-8 text-gray-300 max-w-2xl mx-auto">
+                        Tu hoja de ruta y acompañamiento diario en los mercados.
                         Desde tus primeros pasos hasta operar como un profesional.
-                        Elige tu nivel o lleva el paquete completo.
                     </p>
                 </Container>
             </section>
@@ -159,10 +159,10 @@ export default function PricingPage() {
                                                 specialFeature={specialFeature}
                                                 description={
                                                     <div className="flex flex-col gap-2 min-h-[40px] justify-center items-center">
-                                                        {/* Savings Highlight */}
+                                                        {/* Savings Highlight renamed to Launch Offer */}
                                                         {savings > 0 && (
                                                             <div className="text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 text-xs uppercase tracking-wide shadow-[0_0_10px_rgba(52,211,153,0.1)] w-fit">
-                                                                ¡Ahorras ${savings.toLocaleString('es-AR')}!
+                                                                Oferta lanzamiento
                                                             </div>
                                                         )}
                                                     </div>
