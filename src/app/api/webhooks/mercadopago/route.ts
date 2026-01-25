@@ -99,7 +99,18 @@ export async function POST(request: Request) {
                          <p>¡Esperamos verte pronto!</p>`
                     );
                 } else if (subscriptionData.status === 'authorized') {
-                    // 1. AUTO-CANCEL OLD SUBSCRIPTIONS (Upgrade/Downgrade Logic)
+                    // 1. WELCOME EMAIL
+                    await sendEmail(
+                        updated.user.email,
+                        `¡Bienvenido al Plan ${updated.bundle.title}! - Aurora Academy`,
+                        `<h1>¡Suscripción Activada!</h1>
+                         <p>Hola ${updated.user.name || ''},</p>
+                         <p>Tu suscripción <strong>${updated.bundle.title}</strong> está activa.</p>
+                         <p>Ahora tenés acceso ilimitado a todos los cursos y beneficios de tu plan.</p>
+                         <p>Accedé ahora: <a href="https://auroracademy.net/dashboard">Ir a mi Panel</a></p>`
+                    );
+
+                    // 2. AUTO-CANCEL OLD SUBSCRIPTIONS (Upgrade/Downgrade Logic)
                     // Find all OTHER active/authorized subscriptions for this user
                     const previousSubs = await prisma.subscription.findMany({
                         where: {
