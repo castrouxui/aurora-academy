@@ -7,7 +7,7 @@ interface PricingCardProps {
     price: string;
     periodicity: string;
     description: React.ReactNode;
-    features: string[];
+    features: (string | React.ReactNode)[];
     isRecommended?: boolean;
     tag?: string;
     buttonText?: string;
@@ -68,7 +68,9 @@ export function PricingCard({
                 {features.map((feature, index) => (
                     <li key={index} className="flex items-start gap-2.5">
                         <PricingCheckmark />
-                        <span className="text-xs text-gray-300 leading-relaxed">{feature}</span>
+                        <span className="text-xs text-gray-300 leading-relaxed w-full">
+                            {feature}
+                        </span>
                     </li>
                 ))}
             </ul>

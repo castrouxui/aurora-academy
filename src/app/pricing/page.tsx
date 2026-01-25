@@ -79,104 +79,101 @@ export default function PricingPage() {
             <section className="relative z-10 pb-16">
                 <Container>
                     {/* Dynamic Bundle Grid */}
-                    {
-                        loading ? (
-                            <div className="flex justify-center py-20">
-                                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12">
-                                {bundles
-                                    .sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
-                                    .map((bundle, index, allBundles) => {
-                                        // Calculate savings
-                                        const totalValue = bundle.courses.reduce((sum: number, course: any) => sum + parseFloat(course.price), 0);
-                                        const bundlePrice = parseFloat(bundle.price);
-                                        const savings = totalValue - bundlePrice;
+                    <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12">
+                        {[
+                            {
+                                // 1. Inversor Inicial
+                                title: "Inversor Inicial",
+                                price: "$54.900",
+                                description: "El escalón de entrada para dominar los conceptos base.",
+                                features: [
+                                    "Acceso a +4 Cursos Fundamentales",
+                                    "Introducción al Mercado de Capitales",
+                                    "Renta Fija",
+                                    "Valuación de Bonos: TIR, Paridad",
+                                    "Valor Tiempo del Dinero: TNA, TEA",
+                                    "Soporte: Acceso plataforma aprendizaje"
+                                ],
+                                tag: null,
+                                isRecommended: false
+                            },
+                            {
+                                // 2. Trader de Elite
+                                title: "Trader de Elite",
+                                price: "$89.900",
+                                description: "Para quienes operan activamente y buscan actualización constante.",
+                                features: [
+                                    "Todo lo del Plan Inversor Inicial",
+                                    "Acceso a +9 Cursos Especializados",
+                                    <span className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                                        <span>🔥</span> Contenido Recurrente (15 días)
+                                    </span>,
+                                    "Curso de Opciones Financieras",
+                                    "Domina el Stop Loss en 15 minutos",
+                                    "Análisis Técnico & Price Action",
+                                    "Futuros Financieros",
+                                    "Comunidad: Canal Telegram Aurora"
+                                ],
+                                tag: "EL MÁS BUSCADO",
+                                isRecommended: true
+                            },
+                            {
+                                // 3. Portfolio Manager
+                                title: "Portfolio Manager",
+                                price: "$149.900",
+                                description: "La experiencia completa con mentoría directa y networking profesional.",
+                                features: [
+                                    "Todo lo del Plan Trader de Elite",
+                                    "Acceso a +15 Cursos Avanzados",
+                                    <span className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                                        <span>🔥</span> Contenido Recurrente (15 días)
+                                    </span>,
+                                    "Análisis Fundamental & Cartera",
+                                    "Dominando el Riesgo: Volatilidad",
+                                    "Valuación Real: Beneficio vs. Caja",
+                                    "Exclusividad: Comunidad VIP",
+                                    <strong className="text-[#5D5CDE]">Mentoría 1 a 1: Mensual con Fran</strong>
+                                ],
+                                tag: null,
+                                isRecommended: false,
+                                // Special highlight for High Ticket
+                                specialFeature: {
+                                    title: "High Ticket Experience",
+                                    description: "Networking premium y acceso directo a mesa de dinero."
+                                }
+                            }
+                        ].map((plan, index) => {
+                            // Map to existing bundles for ID if available
+                            const bundle = bundles.sort((a, b) => parseFloat(a.price) - parseFloat(b.price))[index];
+                            const bundleId = bundle?.id;
 
-                                        // Extract tag from title
-                                        let displayTitle = bundle.title;
-                                        let tag = undefined;
-                                        const match = bundle.title.match(/\((.*?)\)/);
-                                        if (match) {
-                                            tag = match[1];
-                                            displayTitle = bundle.title.replace(/\(.*?\)/, '').trim();
-                                        }
-
-                                        // Identify Plan Level
-                                        const lowerTitle = displayTitle.toLowerCase();
-                                        const isMaster = lowerTitle.includes("master") || lowerTitle.includes("mentoria") || lowerTitle.includes("completo");
-                                        const isPro = !isMaster && index === 1; // Middle plan is usually Pro/Recommended if not Master
-
-                                        const isRecommended = isPro;
-                                        if (isPro) tag = "EL MÁS ELEGIDO";
-
-                                        // --- Feature Deduplication Logic ---
-                                        let features: string[] = [];
-
-                                        // Get current raw features
-                                        const currentFeatures = [
-                                            ...bundle.courses.map((c: any) => c.title),
-                                            ...bundle.items.map((i: any) => i.name)
-                                        ];
-
-                                        if (index > 0) {
-                                            // Check against previous plan
-                                            const previousBundle = allBundles[index - 1];
-                                            let previousTitle = previousBundle.title.replace(/\(.*?\)/, '').trim();
-
-                                            // Simple heuristic: If it's a higher tier, assume it includes the previous one
-                                            // In a perfect world we'd check ID intersection, but for visual clarity this is safer:
-                                            features = [
-                                                `Todo lo del plan ${previousTitle} y:`,
-                                                // Filter out features that might be in the previous plan (by name exact match)
-                                                // If names differ slightly, they will show up.
-                                                ...currentFeatures.filter(f =>
-                                                    !previousBundle.courses.some((pc: any) => pc.title === f) &&
-                                                    !previousBundle.items.some((pi: any) => pi.name === f)
-                                                )
-                                            ];
+                            return (
+                                <PricingCard
+                                    key={index}
+                                    title={plan.title}
+                                    price={plan.price}
+                                    periodicity="mes"
+                                    tag={plan.tag || undefined}
+                                    isRecommended={plan.isRecommended}
+                                    specialFeature={plan.specialFeature}
+                                    description={
+                                        <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center">
+                                            {plan.description}
+                                        </p>
+                                    }
+                                    features={plan.features}
+                                    buttonText="Suscribirme"
+                                    onAction={() => {
+                                        if (bundleId) {
+                                            handlePurchase(plan.title, plan.price.replace(".", "").replace("$", "").trim(), undefined, bundleId);
                                         } else {
-                                            features = currentFeatures;
+                                            console.warn("No matching bundle found for plan index", index);
                                         }
-
-                                        // Special Master Feature
-                                        let specialFeature = undefined;
-                                        if (isMaster) {
-                                            specialFeature = {
-                                                title: "Reunión 1 a 1 Exclusiva",
-                                                description: "Agenda una reunión mensual privada con Fran Castro para mentoría personalizada."
-                                            };
-                                        }
-
-                                        return (
-                                            <PricingCard
-                                                key={bundle.id}
-                                                title={displayTitle}
-                                                price={`$${bundlePrice.toLocaleString('es-AR')}`}
-                                                periodicity="mes"
-                                                tag={tag}
-                                                specialFeature={specialFeature}
-                                                description={
-                                                    <div className="flex flex-col gap-2 min-h-[40px] justify-center items-center">
-                                                        {/* Savings Highlight renamed to Launch Offer */}
-                                                        {savings > 0 && (
-                                                            <div className="text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20 text-xs uppercase tracking-wide shadow-[0_0_10px_rgba(52,211,153,0.1)] w-fit">
-                                                                Oferta lanzamiento
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                }
-                                                features={features}
-                                                isRecommended={isRecommended}
-                                                buttonText="Obtener Oferta"
-                                                onAction={() => handlePurchase(bundle.title, bundle.price.toString(), undefined, bundle.id)}
-                                            />
-                                        );
-                                    })}
-                            </div>
-                        )
-                    }
+                                    }}
+                                />
+                            );
+                        })}
+                    </div>
 
                     {/* Pricing Footer Info */}
                     <div className="mx-auto max-w-4xl mt-6 flex items-center justify-center gap-8 px-4 text-sm text-gray-400">
