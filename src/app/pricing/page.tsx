@@ -106,7 +106,7 @@ export default function PricingPage() {
                                     "Todo lo del Plan Inversor Inicial",
                                     "Acceso a +9 Cursos Especializados",
                                     <span className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
-                                        <span>🔥</span> Contenido Recurrente (15 días)
+                                        <span>🔥</span> Curso nuevo cada 15 días
                                     </span>,
                                     "Curso de Opciones Financieras",
                                     "Domina el Stop Loss en 15 minutos",
@@ -126,7 +126,7 @@ export default function PricingPage() {
                                     "Todo lo del Plan Trader de Elite",
                                     "Acceso a +15 Cursos Avanzados",
                                     <span className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
-                                        <span>🔥</span> Contenido Recurrente (15 días)
+                                        <span>🔥</span> Curso nuevo cada 15 días
                                     </span>,
                                     "Análisis Fundamental & Cartera",
                                     "Dominando el Riesgo: Volatilidad",
