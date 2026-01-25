@@ -162,12 +162,10 @@ export default function PricingPage() {
                                         </p>
                                     }
                                     features={plan.features}
-                                    buttonText="Suscribirme"
+                                    buttonText={bundleId ? "Suscribirme" : "No disponible"}
                                     onAction={() => {
                                         if (bundleId) {
                                             handlePurchase(plan.title, plan.price.replace(".", "").replace("$", "").trim(), undefined, bundleId);
-                                        } else {
-                                            console.warn("No matching bundle found for plan index", index);
                                         }
                                     }}
                                 />
