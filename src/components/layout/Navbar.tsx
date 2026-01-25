@@ -69,82 +69,10 @@ export function Navbar() {
           {/* Desktop Navigation - Centered Mega Menu */}
           <div className="hidden md:flex items-center gap-2">
 
-            {/* 1. Estudiantes - MEGA MENU */}
-            <div
-              className="relative"
-              onMouseEnter={handleStudentsEnter}
-              onMouseLeave={handleStudentsLeave}
-            >
-              <button
-                className={`text-sm font-medium transition-all px-4 py-2 rounded-full flex items-center gap-1 cursor-default ${isStudentsMenuOpen ? "text-white bg-white/5" : "text-gray-300 hover:text-white hover:bg-white/5"}`}
-              >
-                Estudiantes
-                <ChevronDown size={14} className={`transition-transform duration-200 ${isStudentsMenuOpen ? "rotate-180" : ""}`} />
-              </button>
-
-              {/* Dropdown Content */}
-              {isStudentsMenuOpen && (
-                <div className="absolute top-full left-0 w-[650px] -translate-x-[50px] pt-4">
-                  <div className="bg-[#0B0F19]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden grid grid-cols-[1.5fr_1fr] animate-in fade-in zoom-in-95 duration-200">
-
-                    {/* Left Column: Categorías (Primary) */}
-                    <div className="p-6 space-y-6 relative">
-                      {/* Subtle Gradient Glow */}
-                      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#5D5CDE]/5 via-transparent to-transparent pointer-events-none" />
-
-                      <div className="flex items-center justify-between relative z-10">
-                        <h4 className="text-white font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 text-gray-400">
-                          <GraduationCap size={14} className="text-[#5D5CDE]" />
-                          Categorías
-                        </h4>
-                        <span className="text-[10px] bg-[#5D5CDE]/10 text-[#5D5CDE] px-2 py-0.5 rounded-full border border-[#5D5CDE]/20 font-bold tracking-wide">2026 UPDATE</span>
-                      </div>
-
-                      <div className="space-y-2 relative z-10">
-                        <Link href="/courses?category=Trading" className="group flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-300">
-                          <div className="p-2.5 rounded-xl bg-[#5D5CDE]/10 text-[#5D5CDE] group-hover:bg-[#5D5CDE] group-hover:text-white transition-all shadow-[0_0_15px_rgba(93,92,222,0.1)] group-hover:shadow-[0_0_25px_rgba(93,92,222,0.4)]">
-                            <TrendingUp size={20} />
-                          </div>
-                          <div>
-                            <p className="text-white font-bold text-base group-hover:text-[#5D5CDE] transition-colors">Trading Profesional</p>
-                            <p className="text-gray-400 text-xs mt-1 leading-relaxed">Domina el análisis técnico, fundamental y la psicología del mercado.</p>
-                          </div>
-                        </Link>
-
-                        <Link href="/courses?category=Criptomonedas" className="group flex items-start gap-4 p-4 rounded-2xl hover:bg-white/5 border border-transparent hover:border-white/5 transition-all duration-300">
-                          <div className="p-2.5 rounded-xl bg-orange-500/10 text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-all shadow-[0_0_15px_rgba(249,115,22,0.1)] group-hover:shadow-[0_0_25px_rgba(249,115,22,0.4)]">
-                            <PlayCircle size={20} />
-                          </div>
-                          <div>
-                            <p className="text-white font-bold text-base group-hover:text-orange-500 transition-colors">Criptomonedas</p>
-                            <p className="text-gray-400 text-xs mt-1 leading-relaxed">Bitcoin, DeFi, Smart Contracts y el futuro de las finanzas.</p>
-                          </div>
-                        </Link>
-                      </div>
-                    </div>
-
-                    {/* Right Column: Recursos (Secondary) */}
-                    <div className="bg-white/[0.02] border-l border-white/5 p-6 flex flex-col relative justify-center">
-                      <div className="mb-4 flex items-center justify-between">
-                        <h4 className="text-white font-bold text-xs uppercase tracking-[0.2em] flex items-center gap-2 text-gray-400">
-                          <FileText size={14} className="text-blue-400" />
-                          Recursos
-                        </h4>
-                      </div>
-
-                      <div className="pt-2 border-t border-white/5">
-                        <div className="bg-gradient-to-r from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 rounded-xl p-4">
-                          <p className="text-emerald-400 text-xs font-bold mb-1">¡Nuevo Blog!</p>
-                          <p className="text-gray-400 text-[10px] mb-2">Noticias y análisis semanales.</p>
-                          <span className="text-[10px] uppercase font-bold bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded">Próximamente</span>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              )}
-            </div>
+            {/* 1. Cursos (Formerly Estudiantes) */}
+            <Link href="/courses?category=all" className={getLinkClass("/courses")}>
+              Cursos
+            </Link>
 
             {/* 2. Empresas - PROXIMAMENTE */}
             <div className="relative group cursor-default">
@@ -288,84 +216,83 @@ export function Navbar() {
 
               {/* Main Navigation Links */}
               <div className="flex flex-col space-y-1 mb-8">
-                <div className="pb-4 mb-4 border-b border-white/5">
-                  <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Estudiantes</p>
-                  <Link
-                    href="/courses"
-                    className={getMobileLinkClass("/courses")}
-                    onClick={toggleMenu}
-                  >
-                    <BookOpen className="mr-4 text-[#5D5CDE]" size={24} />
-                    <span className="text-xl font-bold text-white">Explorar Carreras</span>
-                  </Link>
-                  <Link
-                    href="/pricing"
-                    className={getMobileLinkClass("/pricing")}
-                    onClick={toggleMenu}
-                  >
-                    <TrendingUp className="mr-4 text-gray-500" size={24} />
-                    <span className="text-xl font-bold text-gray-300">Membresías</span>
-                  </Link>
-                </div>
-
-                <div className="pb-4 mb-4 border-b border-white/5 opacity-60">
-                  <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Empresas</p>
-                  <div className="flex items-center gap-3 px-4 py-2">
-                    <Building2 className="text-gray-600" size={24} />
-                    <span className="text-lg font-bold text-gray-500">Corporativo</span>
-                    <span className="text-[10px] border border-gray-600 text-gray-500 px-2 py-0.5 rounded-full ml-auto">SOON</span>
-                  </div>
-                </div>
-
+                {/* Cursos (Replica of Desktop "Cursos") */}
                 <Link
-                  href="/about"
-                  className={getMobileLinkClass("/about")}
+                  href="/courses?category=all"
+                  className={getMobileLinkClass("/courses")}
                   onClick={toggleMenu}
                 >
-                  <User className="mr-4 text-gray-500" size={24} />
-                  <span className="text-xl font-bold">Nosotros</span>
+                  <BookOpen className="mr-4 text-[#5D5CDE]" size={24} />
+                  <span className="text-xl font-bold text-white">Cursos</span>
+                </Link>
+                <Link
+                  href="/pricing"
+                  className={getMobileLinkClass("/pricing")}
+                  onClick={toggleMenu}
+                >
+                  <TrendingUp className="mr-4 text-gray-500" size={24} />
+                  <span className="text-xl font-bold text-gray-300">Membresías</span>
                 </Link>
               </div>
 
-              {/* User Session / Auth */}
-              <div className="mt-auto">
-                {session ? (
-                  <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                    <div className="flex items-center gap-4 mb-4">
-                      <Image src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`} alt="" width={48} height={48} className="rounded-full border border-gray-700" />
-                      <div>
-                        <p className="text-white font-bold text-lg">{session.user?.name}</p>
-                        <p className="text-sm text-gray-400">{session.user?.email}</p>
-                      </div>
-                    </div>
-                    <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"} className="w-full flex items-center justify-center gap-2 bg-[#5D5CDE] text-white py-3 rounded-xl font-bold mb-3 hover:bg-[#4B4AC0]" onClick={toggleMenu}>
-                      <LayoutDashboard size={20} />
-                      Ir al Dashboard
-                    </Link>
-                    <button onClick={() => signOut()} className="w-full flex items-center justify-center gap-2 py-3 text-red-400 hover:bg-white/5 rounded-xl font-medium transition-colors">
-                      <LogOut size={20} />
-                      Cerrar sesión
-                    </button>
-                  </div>
-                ) : (
-                  <Button
-                    className="w-full h-14 text-lg font-bold bg-[#5D5CDE] text-white rounded-2xl shadow-lg shiny-hover"
-                    onClick={() => {
-                      toggleMenu();
-                      openLoginModal();
-                    }}
-                  >
-                    Acceder a la Academia
-                  </Button>
-                )}
+              <div className="pb-4 mb-4 border-b border-white/5 opacity-60">
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Empresas</p>
+                <div className="flex items-center gap-3 px-4 py-2">
+                  <Building2 className="text-gray-600" size={24} />
+                  <span className="text-lg font-bold text-gray-500">Corporativo</span>
+                  <span className="text-[10px] border border-gray-600 text-gray-500 px-2 py-0.5 rounded-full ml-auto">SOON</span>
+                </div>
               </div>
+
+              <Link
+                href="/about"
+                className={getMobileLinkClass("/about")}
+                onClick={toggleMenu}
+              >
+                <User className="mr-4 text-gray-500" size={24} />
+                <span className="text-xl font-bold">Nosotros</span>
+              </Link>
+            </div>
+
+            {/* User Session / Auth */}
+            <div className="mt-auto">
+              {session ? (
+                <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
+                  <div className="flex items-center gap-4 mb-4">
+                    <Image src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`} alt="" width={48} height={48} className="rounded-full border border-gray-700" />
+                    <div>
+                      <p className="text-white font-bold text-lg">{session.user?.name}</p>
+                      <p className="text-sm text-gray-400">{session.user?.email}</p>
+                    </div>
+                  </div>
+                  <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"} className="w-full flex items-center justify-center gap-2 bg-[#5D5CDE] text-white py-3 rounded-xl font-bold mb-3 hover:bg-[#4B4AC0]" onClick={toggleMenu}>
+                    <LayoutDashboard size={20} />
+                    Ir al Dashboard
+                  </Link>
+                  <button onClick={() => signOut()} className="w-full flex items-center justify-center gap-2 py-3 text-red-400 hover:bg-white/5 rounded-xl font-medium transition-colors">
+                    <LogOut size={20} />
+                    Cerrar sesión
+                  </button>
+                </div>
+              ) : (
+                <Button
+                  className="w-full h-14 text-lg font-bold bg-[#5D5CDE] text-white rounded-2xl shadow-lg shiny-hover"
+                  onClick={() => {
+                    toggleMenu();
+                    openLoginModal();
+                  }}
+                >
+                  Acceder a la Academia
+                </Button>
+              )}
             </div>
           </div>
-        )
-      }
+        </div >
+      )
+}
 
-      {/* Login Modal */}
-      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
+{/* Login Modal */ }
+<LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
     </>
   );
 }
