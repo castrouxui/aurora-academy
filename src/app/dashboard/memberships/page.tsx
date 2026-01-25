@@ -299,7 +299,7 @@ export default function MyMembershipsPage() {
                                             <Button
                                                 variant="outline"
                                                 className="w-full sm:w-auto border-red-500/20 hover:bg-red-500/10 text-red-400 hover:text-red-300"
-                                                onClick={() => window.location.href = '/checkout'}
+                                                onClick={() => window.location.href = `/checkout?bundleId=${subscription.subscription.bundleId}`}
                                             >
                                                 Reactiva tu suscripción
                                             </Button>
