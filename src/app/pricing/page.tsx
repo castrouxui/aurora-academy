@@ -91,8 +91,7 @@ export default function PricingPage() {
                                     "Introducción al Mercado de Capitales",
                                     "Renta Fija",
                                     "Valuación de Bonos: TIR, Paridad",
-                                    "Valor Tiempo del Dinero: TNA, TEA",
-                                    "Soporte: Acceso plataforma aprendizaje"
+                                    "Valor Tiempo del Dinero: TNA, TEA"
                                 ],
                                 tag: null,
                                 isRecommended: false
@@ -131,15 +130,15 @@ export default function PricingPage() {
                                     "Análisis Fundamental & Cartera",
                                     "Dominando el Riesgo: Volatilidad",
                                     "Valuación Real: Beneficio vs. Caja",
-                                    "Exclusividad: Comunidad VIP",
-                                    <strong className="text-[#5D5CDE]">Mentoría 1 a 1: Mensual con Fran</strong>
+                                    "Acceso al Canal de Aurora Academy",
+                                    "Acceso a Comunidad de Inversores"
                                 ],
                                 tag: null,
                                 isRecommended: false,
                                 // Special highlight for High Ticket
                                 specialFeature: {
-                                    title: "High Ticket Experience",
-                                    description: "Networking premium y acceso directo a mesa de dinero."
+                                    title: "Mentoría 1 a 1 con Fran Castro",
+                                    description: "Reunión mensual privada para seguimiento de cartera."
                                 }
                             }
                         ].map((plan, index) => {
