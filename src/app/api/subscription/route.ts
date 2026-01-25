@@ -14,7 +14,7 @@ export async function GET() {
         const subscription = await prisma.subscription.findFirst({
             where: {
                 userId: session.user.id,
-                status: { in: ['authorized', 'pending', 'paused'] }
+                status: { in: ['authorized', 'pending', 'paused', 'cancelled'] }
             },
             include: { bundle: true },
             orderBy: { createdAt: 'desc' }

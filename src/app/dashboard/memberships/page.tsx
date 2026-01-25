@@ -256,20 +256,54 @@ export default function MyMembershipsPage() {
                                     </CardContent>
                                 </Card>
                             ) : (
-                                <Card className="bg-muted border-border opacity-75">
+                                <Card className="bg-gradient-to-br from-red-500/5 to-muted border-red-500/20 shadow-lg">
                                     <CardHeader>
-                                        <CardTitle className="text-foreground flex items-center gap-2">
+                                        <CardTitle className="text-2xl text-card-foreground flex items-center gap-2">
                                             {subscription.bundleTitle}
-                                            <span className="text-xs bg-red-500/10 text-red-400 px-2 py-1 rounded-full border border-red-500/20">
-                                                Cancelada / Pausada
+                                            <span className="text-xs bg-red-500/10 text-red-400 px-2 py-1 rounded-full border border-red-500/20 flex items-center gap-1">
+                                                <XCircle size={12} /> Cancelada
                                             </span>
                                         </CardTitle>
+                                        <CardDescription className="text-muted-foreground mt-1">
+                                            Esta suscripción no se renovará automáticamente.
+                                        </CardDescription>
                                     </CardHeader>
-                                    <CardContent>
-                                        <p className="text-muted-foreground mb-4">Esta suscripción ya no se renueva automáticamente.</p>
-                                        <Button variant="outline" onClick={() => window.location.href = '/checkout'}>
-                                            Volver a Suscribirse
-                                        </Button>
+                                    <CardContent className="space-y-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className="bg-black/20 p-4 rounded-lg border border-white/5">
+                                                <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Estado</p>
+                                                <p className="font-medium text-red-400 flex items-center gap-2">
+                                                    Cancelada
+                                                    <XCircle size={14} />
+                                                </p>
+                                            </div>
+                                            <div className="bg-black/20 p-4 rounded-lg border border-white/5">
+                                                <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Acceso Disponible Hasta</p>
+                                                {(() => {
+                                                    // Calculate expiration date (same logic as renewal)
+                                                    const createdAt = new Date(subscription.subscription.createdAt);
+                                                    const today = new Date();
+                                                    let nextDate = new Date(createdAt);
+                                                    while (nextDate < today) {
+                                                        nextDate.setMonth(nextDate.getMonth() + 1);
+                                                    }
+                                                    return (
+                                                        <p className="font-medium text-foreground">
+                                                            {nextDate.toLocaleDateString('es-AR', { day: 'numeric', month: 'long' })}
+                                                        </p>
+                                                    );
+                                                })()}
+                                            </div>
+                                        </div>
+                                        <div className="pt-2">
+                                            <Button
+                                                variant="outline"
+                                                className="w-full sm:w-auto border-red-500/20 hover:bg-red-500/10 text-red-400 hover:text-red-300"
+                                                onClick={() => window.location.href = '/checkout'}
+                                            >
+                                                Reactiva tu suscripción
+                                            </Button>
+                                        </div>
                                     </CardContent>
                                 </Card>
                             )}
