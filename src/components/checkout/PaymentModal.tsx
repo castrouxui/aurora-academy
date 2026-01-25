@@ -144,14 +144,20 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
 
     if (!isOpen) return null;
 
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-card w-full h-[100dvh] md:h-auto md:max-h-[90vh] md:max-w-3xl rounded-none md:rounded-3xl shadow-2xl overflow-hidden border-0 md:border border-border flex flex-col md:flex-row relative">
+    if (!isOpen) return null;
 
-                {/* Close Button (Absolute) */}
+    return (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-0 md:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+            {/* 
+                Mobile: h-[100dvh] but scrollable content if it overflows.
+                Desktop: Max height with internal scrolling.
+            */}
+            <div className="bg-card w-full h-[100dvh] md:h-auto md:max-h-[90vh] md:max-w-3xl rounded-none md:rounded-3xl shadow-2xl overflow-y-auto md:overflow-visible border-0 md:border border-border flex flex-col md:flex-row relative">
+
+                {/* Close Button (Absolute) - Fixed position on mobile to be always visible */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 z-20 text-muted-foreground hover:text-white bg-black/20 hover:bg-black/40 p-2 rounded-full transition-all"
+                    className="fixed md:absolute top-4 right-4 z-50 text-muted-foreground hover:text-white bg-black/20 hover:bg-black/40 p-2 rounded-full transition-all backdrop-blur-md"
                 >
                     <X size={20} />
                 </button>
@@ -286,7 +292,8 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 {/* RIGHT COLUMN: Payment Actions */}
                 <div className="w-full md:w-7/12 bg-card relative flex flex-col">
 
-                    <div className="p-8 flex-1 overflow-y-auto max-h-[80vh] md:max-h-full">
+                    {/* Mobile: Padded, Desktop: Internal Scroll */}
+                    <div className="p-6 md:p-8 flex-1 md:overflow-y-auto md:max-h-[calc(90vh-80px)]">
                         <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
                             Finalizar Compra
                         </h3>
