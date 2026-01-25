@@ -163,24 +163,24 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 </button>
 
                 {/* LEFT COLUMN: Order Summary (Darker/Card style) */}
-                <div className="w-full md:w-5/12 bg-muted/30 p-8 flex flex-col border-r border-border relative overflow-hidden">
+                <div className="w-full md:w-5/12 bg-muted/30 p-6 md:p-8 flex flex-col border-r border-border relative overflow-hidden shrink-0">
 
                     {/* Background blob for visual interest */}
                     <div className="absolute top-0 left-0 w-full h-32 bg-primary/5 blur-3xl pointer-events-none"></div>
 
                     <div className="relative z-10 flex-1">
-                        <h3 className="text-muted-foreground text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
+                        <h3 className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4 md:mb-6 flex items-center gap-2">
                             Tu Resumen
                         </h3>
 
-                        <div className="mb-8">
-                            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2 leading-tight">
+                        <div className="mb-6 md:mb-8">
+                            <h2 className="text-xl md:text-3xl font-bold text-foreground mb-2 leading-tight pr-8">
                                 {courseTitle}
                             </h2>
-                            <div className="flex flex-col mt-4">
+                            <div className="flex flex-col mt-3 md:mt-4">
                                 {appliedCoupon ? (
                                     <>
-                                        <div className="flex items-center gap-2 text-muted-foreground line-through text-sm">
+                                        <div className="flex items-center gap-2 text-muted-foreground line-through text-xs md:text-sm">
                                             <span>{coursePrice}</span>
                                             <span>ARS</span>
                                         </div>
@@ -196,10 +196,10 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                                 }
                                                 return (
                                                     <>
-                                                        <span className="text-4xl font-bold tracking-tight">
+                                                        <span className="text-3xl md:text-4xl font-bold tracking-tight">
                                                             ${Math.max(0, final).toLocaleString('es-AR')}
                                                         </span>
-                                                        <span className="text-green-500/80 font-medium mb-1.5">ARS</span>
+                                                        <span className="text-green-500/80 font-medium mb-1.5 text-sm md:text-base">ARS</span>
                                                     </>
                                                 );
                                             })()}
@@ -207,38 +207,38 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                     </>
                                 ) : (
                                     <div className="flex items-end gap-2">
-                                        <span className="text-4xl font-bold text-foreground tracking-tight">{coursePrice}</span>
-                                        <span className="text-muted-foreground font-medium mb-1.5">ARS</span>
+                                        <span className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">{coursePrice}</span>
+                                        <span className="text-muted-foreground font-medium mb-1.5 text-sm md:text-base">ARS</span>
                                     </div>
                                 )}
                             </div>
                         </div>
 
                         {/* Features List */}
-                        <div className="space-y-4 mb-8">
+                        <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
                             <div className="flex items-start gap-3 text-gray-300">
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
                                     <Zap size={14} className="text-green-400" />
                                 </div>
-                                <span className="text-sm">Acceso inmediato y vitalicio al contenido.</span>
+                                <span className="text-xs md:text-sm">Acceso inmediato y vitalicio al contenido.</span>
                             </div>
                             <div className="flex items-start gap-3 text-gray-300">
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
                                     <ShieldCheck size={14} className="text-green-400" />
                                 </div>
-                                <span className="text-sm">Garantía de satisfacción de 7 días.</span>
+                                <span className="text-xs md:text-sm">Garantía de satisfacción de 7 días.</span>
                             </div>
                             <div className="flex items-start gap-3 text-gray-300">
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
                                     <Lock size={14} className="text-green-400" />
                                 </div>
-                                <span className="text-sm">Pago encriptado y 100% seguro.</span>
+                                <span className="text-xs md:text-sm">Pago encriptado y 100% seguro.</span>
                             </div>
                         </div>
 
                         {/* Coupon Input */}
-                        <div className="mb-8">
-                            <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
+                        <div className="mb-6 md:mb-8">
+                            <label className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
                                 Código de Descuento
                             </label>
                             <div className="flex gap-2">
@@ -248,7 +248,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                     onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                                     placeholder="CÓDIGO"
                                     disabled={!!appliedCoupon}
-                                    className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none disabled:opacity-50"
+                                    className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none disabled:opacity-50 h-10"
                                 />
                                 {appliedCoupon ? (
                                     <button
