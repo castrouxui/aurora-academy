@@ -13,6 +13,12 @@ export const COURSE_IMAGES: Record<string, string> = {
 };
 
 export function getCourseImage(course: { title: string, imageUrl?: string | null }) {
+    // 1. Priority: Check if we have a verified local cover for this course title
+    // This allows us to override broken/old production URLs with our fresh local files
+    const exactMatch = Object.entries(COURSE_IMAGES).find(([key]) => course.title.includes(key));
+    if (exactMatch) return exactMatch[1];
+
+    // 2. Secondary: Use DB provided URL if available
     if (course.imageUrl && course.imageUrl.trim() !== "") {
         // If it starts with http (external) or / (absolute path), return as is
         if (course.imageUrl.startsWith("http") || course.imageUrl.startsWith("/")) {
@@ -21,10 +27,6 @@ export function getCourseImage(course: { title: string, imageUrl?: string | null
         // Otherwise, assume it's a filename in /images/courses/
         return `/images/courses/${course.imageUrl}`;
     }
-
-    // Fallback: Check hardcoded map (deprecated but safe to keep) or return placeholder
-    const exactMatch = Object.entries(COURSE_IMAGES).find(([key]) => course.title.includes(key));
-    if (exactMatch) return exactMatch[1];
 
     return "/course-placeholder.jpg";
 }
