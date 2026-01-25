@@ -8,8 +8,8 @@ export const COURSE_IMAGES: Record<string, string> = {
     "Intermedio": "/images/courses/trading_intermedio_cover_1768005341591.png",
 
     // Fallbacks (Map known text to specific files if found, otherwise keep empty to trigger fallback)
-    "Futuros": "/images/courses/futuros_cover_gen.png",
-    "Opciones": "/images/courses/opciones_cover_gen.png",
+    // "Futuros": "/images/courses/futuros_cover_gen.png",
+    // "Opciones": "/images/courses/opciones_cover_gen.png",
 };
 
 export function getCourseImage(course: { title: string, imageUrl?: string | null }) {
