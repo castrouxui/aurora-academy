@@ -69,12 +69,17 @@ export function Navbar() {
           {/* Desktop Navigation - Centered Mega Menu */}
           <div className="hidden md:flex items-center gap-2">
 
-            {/* 1. Cursos (Formerly Estudiantes) */}
+            {/* 1. Membresías (Moved to first position) */}
+            <Link href="/pricing" className={getLinkClass("/pricing")}>
+              Membresías
+            </Link>
+
+            {/* 2. Cursos */}
             <Link href="/courses?category=all" className={getLinkClass("/courses")}>
               Cursos
             </Link>
 
-            {/* 2. Empresas - PROXIMAMENTE */}
+            {/* 3. Empresas - PROXIMAMENTE */}
             <div className="relative group cursor-default">
               <button className="text-sm font-medium text-gray-500 flex items-center gap-2 px-4 py-2 cursor-default hover:text-gray-400 transition-colors">
                 Empresas
@@ -82,14 +87,9 @@ export function Navbar() {
               </button>
             </div>
 
-            {/* 3. Nosotros */}
+            {/* 4. Nosotros */}
             <Link href="/about" className={getLinkClass("/about")}>
               Nosotros
-            </Link>
-
-            {/* 4. Membresías */}
-            <Link href="/pricing" className={getLinkClass("/pricing")}>
-              Membresías
             </Link>
           </div>
 
@@ -216,6 +216,15 @@ export function Navbar() {
 
               {/* Main Navigation Links */}
               <div className="flex flex-col space-y-1 mb-8">
+                <Link
+                  href="/pricing"
+                  className={getMobileLinkClass("/pricing")}
+                  onClick={toggleMenu}
+                >
+                  <TrendingUp className="mr-4 text-gray-500" size={24} />
+                  <span className="text-xl font-bold text-gray-300">Membresías</span>
+                </Link>
+
                 {/* Cursos (Replica of Desktop "Cursos") */}
                 <Link
                   href="/courses?category=all"
@@ -224,14 +233,6 @@ export function Navbar() {
                 >
                   <BookOpen className="mr-4 text-[#5D5CDE]" size={24} />
                   <span className="text-xl font-bold text-white">Cursos</span>
-                </Link>
-                <Link
-                  href="/pricing"
-                  className={getMobileLinkClass("/pricing")}
-                  onClick={toggleMenu}
-                >
-                  <TrendingUp className="mr-4 text-gray-500" size={24} />
-                  <span className="text-xl font-bold text-gray-300">Membresías</span>
                 </Link>
               </div>
 
