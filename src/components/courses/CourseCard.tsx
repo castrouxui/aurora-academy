@@ -85,6 +85,15 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
 
                         {/* OVERLAY GRADIENT */}
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
+
+                        {/* DEBUG: Show Path on Error */}
+                        {hasError && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-red-900/80 p-2 text-center z-10">
+                                <span className="text-[10px] text-white break-all font-mono">
+                                    FAILED: {finalImageToRender}
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex items-center gap-2 mb-2">
