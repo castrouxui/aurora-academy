@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { CourseDetailContent } from "@/components/courses/CourseDetailContent";
 import { getYouTubeId } from "@/lib/utils";
+import { getCourseImage } from "@/lib/course-constants";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -114,25 +115,13 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
 
     // Calculate display image (Priority: Local Map override > Uploaded > YouTube (HQ) > Placeholder)
     const youtubeId = previewVideoUrl ? getYouTubeId(previewVideoUrl) : null;
-    let displayImage = course.imageUrl || (youtubeId
-        ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-        : "/course-placeholder.jpg");
 
-    // Specific overrides for known courses with broken/legacy images (Hotfix for Production)
-    const LOCAL_IMAGES_MAP: Record<string, string> = {
-        "Trading": "/images/courses/trading_inicial_cover_1768005327407.png",
-        "Price Action": "/images/courses/price_action_cover_1768005409635.png",
-        "Bonos": "/images/courses/renta_fija_cover_1768005380686.png",
-        "Tecnico": "/images/courses/analisis_tecnico_cover_1768005395407.png",
-        "Avanzado": "/images/courses/trading_avanzado_cover_1768005355571.png",
-        "Intermedio": "/images/courses/trading_intermedio_cover_1768005341591.png",
-    };
+    // Use shared utility for consistency
+    let displayImage = getCourseImage(course);
 
-    for (const [key, path] of Object.entries(LOCAL_IMAGES_MAP)) {
-        if (course.title.includes(key) || (course.title.toLowerCase().includes(key.toLowerCase()))) {
-            displayImage = path;
-            break;
-        }
+    // Initial fallback if utility returns placeholder but we have video
+    if (displayImage === "/course-placeholder.jpg" && youtubeId) {
+        displayImage = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
     }
 
     // Prepare data for components

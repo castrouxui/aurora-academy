@@ -1,6 +1,7 @@
 "use client";
 
 import { CourseCard } from "@/components/courses/CourseCard";
+import { getCourseImage } from "@/lib/course-constants";
 import { FilterModal, type FilterState } from "@/components/courses/FilterModal";
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { Container } from "@/components/layout/Container";
@@ -49,29 +50,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             .flatMap((m: any) => m.lessons?.sort((a: any, b: any) => a.position - b.position) || [])
                             .find((l: any) => l.videoUrl);
 
-                        // Specific overrides for known courses with broken/legacy images
-                        const LOCAL_IMAGES_MAP: Record<string, string> = {
-                            "Trading": "/images/courses/trading_inicial_cover_1768005327407.png",
-                            "Price Action": "/images/courses/price_action_cover_1768005409635.png",
-                            "Bonos": "/images/courses/renta_fija_cover_1768005380686.png",
-                            "Tecnico": "/images/courses/analisis_tecnico_cover_1768005395407.png",
-                            "Avanzado": "/images/courses/trading_avanzado_cover_1768005355571.png",
-                            "Intermedio": "/images/courses/trading_intermedio_cover_1768005341591.png",
-                            // Add generic fallbacks/mappings if needed based on keywords
-                        };
-
-                        let finalImage = course.imageUrl || "/course-placeholder.jpg";
-
-                        // Check if we have a local replacement
-                        for (const [key, path] of Object.entries(LOCAL_IMAGES_MAP)) {
-                            if (course.title.includes(key) || (course.title.toLowerCase().includes(key.toLowerCase()))) {
-                                finalImage = path;
-                                break;
-                            }
-                        }
-
-                        // Fallback: If image is from utfs.io (UploadThing) and effectively broken (we can't know for sure here without testing, but we can prioritize local overrides)
-                        // The loop above already handles the priority.
+                        const finalImage = getCourseImage(course);
 
                         return {
                             id: course.id,
