@@ -88,12 +88,12 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
                     </div>
 
                     <div className="flex items-center gap-2 mb-2">
-                        <div className="bg-[#5D5CDE]/10 text-[#5D5CDE] text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide border border-[#5D5CDE]/20">
+                        <div className="bg-[#5D5CDE]/10 text-[#5D5CDE] text-sm font-bold px-2 py-1 rounded uppercase tracking-wide border border-[#5D5CDE]/20">
                             {course.tag}
                         </div>
                         <div className="flex items-center gap-1 text-yellow-400 ml-auto mr-0">
-                            <Star size={12} fill="currentColor" className="stroke-none" />
-                            <span className="text-gray-400 text-xs font-medium ml-1">({course.reviews})</span>
+                            <Star size={14} fill="currentColor" className="stroke-none" />
+                            <span className="text-gray-400 text-sm font-medium ml-1">({course.reviews})</span>
                         </div>
                     </div>
 
@@ -105,7 +105,7 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
 
                     <div className="flex items-center justify-between mt-auto">
                         <div className="flex flex-col">
-                            <span className="text-xs text-gray-400 font-medium uppercase tracking-wider mb-1">Inversión</span>
+                            <span className="text-sm text-gray-400 font-medium uppercase tracking-wider mb-1">Inversión</span>
                             <span className="text-white font-black text-xl">{course.price}</span>
                         </div>
                         <div className={cn(

@@ -169,7 +169,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                     <div className="absolute top-0 left-0 w-full h-32 bg-primary/5 blur-3xl pointer-events-none"></div>
 
                     <div className="relative z-10 flex-1">
-                        <h3 className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4 md:mb-6 flex items-center gap-2">
+                        <h3 className="text-muted-foreground text-sm font-bold uppercase tracking-widest mb-4 md:mb-6 flex items-center gap-2">
                             Tu Resumen
                         </h3>
 
@@ -180,7 +180,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             <div className="flex flex-col mt-3 md:mt-4">
                                 {appliedCoupon ? (
                                     <>
-                                        <div className="flex items-center gap-2 text-muted-foreground line-through text-xs md:text-sm">
+                                        <div className="flex items-center gap-2 text-muted-foreground line-through text-sm">
                                             <span>{coursePrice}</span>
                                             <span>ARS</span>
                                         </div>
@@ -218,27 +218,27 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                         <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
                             <div className="flex items-start gap-3 text-gray-300">
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
-                                    <Zap size={14} className="text-green-400" />
+                                    <Zap size={16} className="text-green-400" />
                                 </div>
-                                <span className="text-xs md:text-sm">Acceso inmediato y vitalicio al contenido.</span>
+                                <span className="text-sm">Acceso inmediato y vitalicio al contenido.</span>
                             </div>
                             <div className="flex items-start gap-3 text-gray-300">
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
-                                    <ShieldCheck size={14} className="text-green-400" />
+                                    <ShieldCheck size={16} className="text-green-400" />
                                 </div>
-                                <span className="text-xs md:text-sm">Garantía de satisfacción de 7 días.</span>
+                                <span className="text-sm">Garantía de satisfacción de 7 días.</span>
                             </div>
                             <div className="flex items-start gap-3 text-gray-300">
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
-                                    <Lock size={14} className="text-green-400" />
+                                    <Lock size={16} className="text-green-400" />
                                 </div>
-                                <span className="text-xs md:text-sm">Pago encriptado y 100% seguro.</span>
+                                <span className="text-sm">Pago encriptado y 100% seguro.</span>
                             </div>
                         </div>
 
                         {/* Coupon Input */}
                         <div className="mb-6 md:mb-8">
-                            <label className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
+                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
                                 Código de Descuento
                             </label>
                             <div className="flex gap-2">
@@ -271,10 +271,10 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                     </button>
                                 )}
                             </div>
-                            {couponError && <p className="text-red-400 text-xs mt-2">{couponError}</p>}
+                            {couponError && <p className="text-red-400 text-sm mt-2">{couponError}</p>}
                             {appliedCoupon && (
-                                <p className="text-green-400 text-xs mt-2 flex items-center gap-1">
-                                    <CheckCircle2 size={12} /> Cupón {appliedCoupon.code} aplicado (-{appliedCoupon.type === 'PERCENTAGE' ? `${appliedCoupon.discount}%` : `$${appliedCoupon.discount}`})
+                                <p className="text-green-400 text-sm mt-2 flex items-center gap-1">
+                                    <CheckCircle2 size={14} /> Cupón {appliedCoupon.code} aplicado (-{appliedCoupon.type === 'PERCENTAGE' ? `${appliedCoupon.discount}%` : `$${appliedCoupon.discount}`})
                                 </p>
                             )}
                         </div>
@@ -282,7 +282,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
 
                     {/* Trust Footer in Left Col */}
                     <div className="relative z-10 mt-auto pt-6 border-t border-border/50">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <span>🛡️</span>
                             <span>Compra protegida por Mercado Pago</span>
                         </div>

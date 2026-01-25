@@ -117,7 +117,7 @@ export function Footer() {
                         <div className="space-y-4">
                             <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Ayuda</h4>
                             <ul className="space-y-3 text-sm">
-                                <li><Link href="mailto:soporte@auroraacademy.com" className="hover:text-white transition-colors">Contacto</Link></li>
+                                <li><Link href="mailto:contacto@auroracademy.net" className="hover:text-white transition-colors">Contacto</Link></li>
                             </ul>
                         </div>
 

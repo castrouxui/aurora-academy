@@ -69,7 +69,7 @@ export function Navbar() {
           {/* Desktop Navigation - Centered Mega Menu */}
           <div className="hidden md:flex items-center gap-2">
 
-            {/* 1. Membresías (Moved to first position) */}
+            {/* 1. Membresías */}
             <Link href="/pricing" className={getLinkClass("/pricing")}>
               Membresías
             </Link>
@@ -83,7 +83,7 @@ export function Navbar() {
             <div className="relative group cursor-default">
               <button className="text-sm font-medium text-gray-500 flex items-center gap-2 px-4 py-2 cursor-default hover:text-gray-400 transition-colors">
                 Empresas
-                <span className="text-[10px] uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">Próximamente</span>
+                <span className="text-sm uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">Próximamente</span>
               </button>
             </div>
 
@@ -106,13 +106,13 @@ export function Navbar() {
               className="hidden lg:flex relative w-[250px]"
             >
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <Search size={14} />
+                <Search size={16} />
               </div>
               <input
                 name="search"
                 type="text"
                 placeholder="Buscar..."
-                className="w-full bg-[#1e2330] border border-gray-700 text-gray-200 text-xs rounded-full py-2 pl-9 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                className="w-full bg-[#1e2330] border border-gray-700 text-gray-200 text-sm rounded-full py-2 pl-9 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               />
             </form>
 
@@ -123,14 +123,14 @@ export function Navbar() {
                 <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-3 focus:outline-none hover:bg-white/5 p-1 pr-3 rounded-full transition-colors border border-transparent hover:border-white/5">
                   <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700" />
                   <span className="text-sm font-medium text-gray-300 hidden lg:block max-w-[100px] truncate">{session.user.name?.split(' ')[0] || 'User'}</span>
-                  <ChevronDown size={14} className="text-gray-500 hidden lg:block" />
+                  <ChevronDown size={16} className="text-gray-500 hidden lg:block" />
                 </button>
 
                 {isUserMenuOpen && (
                   <div className="absolute right-0 mt-3 w-56 bg-[#1F2937] border border-gray-700 rounded-xl shadow-2xl overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
                     <div className="px-4 py-3 border-b border-gray-700 bg-white/5">
                       <p className="text-sm text-white font-bold truncate">{session.user.name}</p>
-                      <p className="text-xs text-gray-400 truncate">{session.user.email}</p>
+                      <p className="text-sm text-gray-400 truncate">{session.user.email}</p>
                     </div>
                     {session.user.role === 'ADMIN' && (
                       <Link href="/admin" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
@@ -159,9 +159,8 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Mobile Hamburger Button (Right aligned on mobile) */}
+          {/* Mobile Hamburger Button */}
           <div className="flex items-center md:hidden ml-auto gap-4">
-            {/* Small Search Icon for Mobile Header maybe? No, keep it clean. */}
             {session && (
               <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"}>
                 <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700" />
@@ -179,12 +178,12 @@ export function Navbar() {
 
       </nav >
 
-      {/* Mobile Menu Overlay - Portal/Fixed Layer */}
+      {/* Mobile Menu Overlay */}
       {
         isOpen && (
           <div className="fixed inset-0 z-[9999] bg-[#0B0F19] md:hidden animate-in fade-in slide-in-from-top-[2%] duration-300 flex flex-col">
 
-            {/* Mobile Header (Replicating exact Desktop layout for smooth transition) */}
+            {/* Mobile Header */}
             <div className="w-full border-b border-white/5 bg-[#0B0F19]">
               <div className="flex h-16 items-center justify-between px-6 max-w-7xl mx-auto">
                 <div className="flex-shrink-0">
@@ -202,7 +201,7 @@ export function Navbar() {
             </div>
 
             <div className="flex flex-col flex-1 px-6 py-8 overflow-y-auto">
-              {/* Mobile Search - Prominent */}
+              {/* Mobile Search */}
               <div className="relative w-full mb-8">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
                   <Search size={20} />
@@ -215,44 +214,44 @@ export function Navbar() {
               </div>
 
               {/* Main Navigation Links */}
-              <div className="flex flex-col space-y-1 mb-8">
+              <div className="flex flex-col space-y-2 mb-8">
                 <Link
                   href="/pricing"
                   className={getMobileLinkClass("/pricing")}
                   onClick={toggleMenu}
                 >
-                  <TrendingUp className="mr-4 text-gray-500" size={24} />
-                  <span className="text-xl font-bold text-gray-300">Membresías</span>
+                  <TrendingUp className="mr-4 text-gray-500" size={20} />
+                  <span className="text-lg font-bold text-gray-300">Membresías</span>
                 </Link>
 
-                {/* Cursos (Replica of Desktop "Cursos") */}
+                {/* Cursos */}
                 <Link
                   href="/courses?category=all"
                   className={getMobileLinkClass("/courses")}
                   onClick={toggleMenu}
                 >
-                  <BookOpen className="mr-4 text-[#5D5CDE]" size={24} />
-                  <span className="text-xl font-bold text-white">Cursos</span>
+                  <BookOpen className="mr-4 text-[#5D5CDE]" size={20} />
+                  <span className="text-lg font-bold text-white">Cursos</span>
+                </Link>
+
+                {/* Empresas - Próximamente */}
+                <div className="flex items-center w-full px-4 py-3 text-base font-medium text-gray-500 opacity-60">
+                  <Building2 className="mr-4" size={20} />
+                  <span className="text-lg font-bold">Empresas</span>
+                  <span className="ml-auto text-sm uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">
+                    Próximamente
+                  </span>
+                </div>
+
+                <Link
+                  href="/about"
+                  className={getMobileLinkClass("/about")}
+                  onClick={toggleMenu}
+                >
+                  <User className="mr-4 text-gray-500" size={20} />
+                  <span className="text-lg font-bold">Nosotros</span>
                 </Link>
               </div>
-
-              <div className="pb-4 mb-4 border-b border-white/5 opacity-60">
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Empresas</p>
-                <div className="flex items-center gap-3 px-4 py-2">
-                  <Building2 className="text-gray-600" size={24} />
-                  <span className="text-lg font-bold text-gray-500">Corporativo</span>
-                  <span className="text-[10px] border border-gray-600 text-gray-500 px-2 py-0.5 rounded-full ml-auto">SOON</span>
-                </div>
-              </div>
-
-              <Link
-                href="/about"
-                className={getMobileLinkClass("/about")}
-                onClick={toggleMenu}
-              >
-                <User className="mr-4 text-gray-500" size={24} />
-                <span className="text-xl font-bold">Nosotros</span>
-              </Link>
             </div>
 
             {/* User Session / Auth */}
