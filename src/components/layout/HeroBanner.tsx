@@ -19,11 +19,10 @@ export function HeroBanner() {
                 <div className="flex flex-col items-center space-y-6 md:space-y-8 text-center px-4 md:px-0">
                     <div className="space-y-4 md:space-y-6 max-w-[900px]">
                         <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl/none font-black tracking-tighter text-white drop-shadow-lg mb-4 md:mb-6">
-                            Aprendé a invertir desde cero
+                            Todo el conocimiento de los mercados, en un solo lugar.
                         </h1>
-                        <p className="mx-auto max-w-[700px] text-gray-200 text-base sm:text-lg md:text-xl drop-shadow-md font-medium leading-relaxed mb-6 md:mb-8">
-                            Cursos y formaciones diseñadas por <strong className="text-white">traders con experiencia real en mercados</strong>.
-                            Formación clara, práctica y enfocada en <strong className="text-white">decisiones reales</strong>.
+                        <p className="mx-auto max-w-[800px] text-gray-200 text-base sm:text-lg md:text-xl drop-shadow-md font-medium leading-relaxed mb-6 md:mb-8">
+                            Unite a la comunidad de Aurora Academy y accedé de forma rápida a todos nuestros cursos, análisis en vivo y estrategias de traders profesionales. De cero a experto, con acompañamiento diario.
                         </p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
@@ -31,12 +30,12 @@ export function HeroBanner() {
                             <Button
                                 className="h-12 sm:h-14 px-8 sm:px-10 text-lg sm:text-xl w-full sm:w-auto bg-[#5D5CDE] text-white hover:bg-[#4B4AC0] border-transparent font-bold rounded-full shadow-lg shiny-hover transition-transform hover:scale-105"
                             >
-                                Membresías
+                                Suscribirme
                             </Button>
                         </Link>
                         <Link href="#courses" className="w-full sm:w-auto">
                             <Button variant="outline" className="h-12 sm:h-14 px-8 sm:px-10 text-lg sm:text-xl w-full sm:w-auto text-white border-white/20 bg-white/5 hover:bg-white hover:text-black font-bold rounded-full backdrop-blur-sm transition-transform hover:scale-105">
-                                Explorar
+                                Ver catálogo de cursos
                             </Button>
                         </Link>
                     </div>
