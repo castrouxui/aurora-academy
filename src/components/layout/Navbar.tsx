@@ -287,14 +287,11 @@ export function Navbar() {
               )}
             </div>
           </div>
-        </div >
-      )
-}
+        )
+      }
 
-{/* Login Modal */ }
-<LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
+      {/* Login Modal */}
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
     </>
   );
 }
-
-
