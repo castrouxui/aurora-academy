@@ -10,6 +10,16 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Package, CheckCircle, CreditCard, AlertTriangle, Loader2, XCircle, Check } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function MyMembershipsPage() {
     const searchParams = useSearchParams();
@@ -93,9 +103,14 @@ export default function MyMembershipsPage() {
         }
     };
 
-    const handleCancel = async () => {
-        if (!confirm("¿Estás seguro de que querés cancelar tu suscripción? Perderás el acceso al finalizar el período actual.")) return;
+    const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 
+    const handleCancelClick = () => {
+        setIsCancelDialogOpen(true);
+    };
+
+    const confirmCancel = async () => {
+        setIsCancelDialogOpen(false);
         setActionLoading(true);
         try {
             const res = await fetch("/api/subscription", {
@@ -225,7 +240,7 @@ export default function MyMembershipsPage() {
                                             <div className="flex flex-col sm:flex-row gap-4">
                                                 <Button
                                                     variant="destructive"
-                                                    onClick={handleCancel}
+                                                    onClick={handleCancelClick}
                                                     disabled={actionLoading}
                                                     className="bg-destructive/10 text-destructive hover:bg-destructive/20 border border-destructive/20"
                                                 >
@@ -344,6 +359,32 @@ export default function MyMembershipsPage() {
                         </div>
                     </div>
                 </Container>
+                <AlertDialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+                    <AlertDialogContent className="bg-[#1e2330] border-white/10 text-white sm:max-w-[425px]">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle className="text-xl font-bold flex items-center gap-2 text-white">
+                                <AlertTriangle className="text-amber-500" size={20} />
+                                ¿Cancelar suscripción?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription className="text-gray-400 text-base mt-2">
+                                Estás a punto de cancelar tu suscripción. Perderás el acceso a todos los cursos y beneficios al finalizar el período actual.
+                                <br /><br />
+                                <span className="font-semibold text-white/90">¿Estás seguro de que querés continuar?</span>
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="mt-6 gap-3 sm:gap-0">
+                            <AlertDialogCancel className="bg-transparent border-white/10 text-white hover:bg-white/5 hover:text-white rounded-lg">
+                                Mantener mi plan
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                                onClick={confirmCancel}
+                                className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20 rounded-lg font-bold"
+                            >
+                                Sí, cancelar suscripción
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         );
     }
