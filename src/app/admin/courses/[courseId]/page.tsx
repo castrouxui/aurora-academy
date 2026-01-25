@@ -232,6 +232,25 @@ export default function CourseEditorPage() {
         }
     };
 
+    const handleDeleteModule = async (moduleId: string) => {
+        if (!confirm("¿Estás seguro de eliminar este módulo? Se eliminaran todas las clases que contiene.")) return;
+
+        try {
+            const res = await fetch(`/api/courses/${courseId}/modules/${moduleId}`, {
+                method: "DELETE"
+            });
+            if (res.ok) {
+                toast.success("Módulo eliminado");
+                fetchCourse();
+            } else {
+                toast.error("Error al eliminar el módulo");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error al eliminar el módulo");
+        }
+    };
+
     // UploadThing Hooks
     // UploadThing Hooks
     // We need 'file' in scope for calculation, but it's not available here. 
@@ -1180,14 +1199,32 @@ export default function CourseEditorPage() {
                                             </span>
                                             <CardTitle className="text-base text-white">{module.title}</CardTitle>
                                         </div>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="text-gray-400 hover:text-white h-8"
-                                            onClick={() => openAddLesson(module.id)}
-                                        >
-                                            <Plus size={14} className="mr-1" /> Clase
-                                        </Button>
+                                        <div className="flex items-center gap-2">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="text-gray-400 hover:text-white h-8"
+                                                onClick={() => openAddLesson(module.id)}
+                                            >
+                                                <Plus size={14} className="mr-1" /> Clase
+                                            </Button>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-400 hover:text-white">
+                                                        <MoreVertical size={16} />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end" className="bg-[#1F2937] border-gray-700 text-white">
+                                                    <DropdownMenuItem
+                                                        className="text-red-400 hover:text-red-300 hover:bg-red-400/10 cursor-pointer"
+                                                        onClick={() => handleDeleteModule(module.id)}
+                                                    >
+                                                        <Trash2 size={14} className="mr-2" />
+                                                        Eliminar Módulo
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
                                     </CardHeader>
                                     <CardContent className="p-0">
                                         {module.lessons && module.lessons.length > 0 ? (

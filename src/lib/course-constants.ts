@@ -13,15 +13,8 @@ export const COURSE_IMAGES: Record<string, string> = {
 };
 
 export function getCourseImage(course: { title: string, imageUrl?: string | null }) {
-    let finalImage = course.imageUrl || "/course-placeholder.jpg";
-
-    // Override with local map if title matches
-    for (const [key, path] of Object.entries(COURSE_IMAGES)) {
-        if (course.title.includes(key) || (course.title.toLowerCase().includes(key.toLowerCase()))) {
-            finalImage = path;
-            break;
-        }
+    if (course.imageUrl && course.imageUrl.trim() !== "") {
+        return course.imageUrl;
     }
-
-    return finalImage;
+    return "/course-placeholder.jpg";
 }
