@@ -125,7 +125,7 @@ export default function PricingPage() {
                                 // 3. Portfolio Manager
                                 title: "Portfolio Manager",
                                 price: "$149.900",
-                                description: "La experiencia completa con mentoría directa y networking profesional.",
+                                description: "La experiencia completa con networking profesional y acceso exclusivo a la comunidad de inversores.",
                                 features: [
                                     "Todo lo del Plan Trader de Elite",
                                     <span key="new-course-pm" className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
