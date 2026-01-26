@@ -21,7 +21,11 @@ export async function GET() {
         });
 
         if (!subscription) {
-            return NextResponse.json({ active: false });
+            const allBundles = await prisma.bundle.findMany({
+                where: { published: true },
+                orderBy: { price: 'asc' }
+            });
+            return NextResponse.json({ active: false, otherBundles: allBundles });
         }
 
         // Fix: Only 'authorized' grants active access. 
@@ -35,10 +39,20 @@ export async function GET() {
 
         // Optional: Sync with MP if "pending" for too long? 
         // For now, trust the webhook flow, but return what we have.
+        // Fetch other published bundles for upgrade/downgrade
+        const otherBundles = await prisma.bundle.findMany({
+            where: {
+                published: true,
+                id: { not: subscription.bundleId } // Exclude current plan
+            },
+            orderBy: { price: 'asc' }
+        });
+
         return NextResponse.json({
             active: true,
             subscription,
-            bundleTitle: subscription.bundle.title
+            bundleTitle: subscription.bundle.title,
+            otherBundles
         });
 
     } catch (error) {
