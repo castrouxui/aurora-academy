@@ -9,7 +9,7 @@ export default withAuth(
         const userRole = token?.role;
 
         if (req.nextUrl.pathname.startsWith("/admin") && userRole !== "ADMIN") {
-            return NextResponse.redirect(new URL("/dashboard/courses", req.url));
+            return NextResponse.redirect(new URL("/dashboard/cursos", req.url));
         }
         // Protect Dashboard Routes (implicit by withAuth, just ensuring roll logic if needed)
     },

@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
                 transaction_amount: numericPrice,
                 currency_id: 'ARS',
             },
-            back_url: `${baseUrl}/dashboard/memberships`,
+            back_url: `${baseUrl}/dashboard/membresias`,
             payer_email: email || "test_user_1234@testuser.com", // MP needs an email, ensuring one is passed or fallback
             status: "pending",
             external_reference: JSON.stringify({

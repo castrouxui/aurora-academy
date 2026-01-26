@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User, Mail, Lock, Shield, Trash2, AlertTriangle } from "lucide-react";
+import { User, Mail, Lock, Shield, Trash2, AlertTriangle, ShieldCheck } from "lucide-react";
 import { signOut } from "next-auth/react";
 import {
     AlertDialog,
@@ -55,6 +55,11 @@ export default function SettingsPage() {
                                             className="bg-[#121620] border-gray-600 pl-10 text-white"
                                             disabled
                                         />
+                                        {session?.user?.telegramVerified && (
+                                            <div className="absolute right-3 top-3 text-green-500" title="Verificado en Telegram">
+                                                <ShieldCheck size={18} fill="currentColor" className="text-green-500/20" />
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="space-y-2">

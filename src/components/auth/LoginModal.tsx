@@ -113,7 +113,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                 {providers?.google && (
                     <div className="flex flex-col space-y-3">
                         <Button
-                            onClick={() => signIn("google", { callbackUrl: redirectUrl || "/dashboard/cursos" })}
+                            onClick={() => signIn("google", { callbackUrl: redirectUrl || "/dashboard" })}
                             variant="outline"
                             className="h-12 w-full justify-start gap-3 border-border bg-secondary text-secondary-foreground hover:bg-secondary/80 font-normal"
                         >

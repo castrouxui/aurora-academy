@@ -140,11 +140,11 @@ export function Navbar() {
                     )}
                     {session && session.user.role !== 'ADMIN' && (
                       <>
-                        <Link href="/dashboard/courses" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                        <Link href="/dashboard/cursos" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
                           <BookOpen size={16} />
                           Mis Cursos
                         </Link>
-                        <Link href="/dashboard/memberships" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                        <Link href="/dashboard/membresias" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
                           <TrendingUp size={16} />
                           Membresía
                         </Link>
@@ -168,7 +168,7 @@ export function Navbar() {
           {/* Mobile Hamburger Button */}
           <div className="flex items-center md:hidden ml-auto gap-4">
             {session && (
-              <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"}>
+              <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/cursos"}>
                 <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700 object-cover aspect-square" />
               </Link>
             )}
@@ -233,7 +233,7 @@ export function Navbar() {
 
                 {session && (
                   <Link
-                    href="/dashboard/courses"
+                    href="/dashboard/cursos"
                     className="flex items-center w-full px-5 py-4 bg-primary/10 border border-primary/20 rounded-2xl text-primary mb-2 shadow-lg shadow-primary/5"
                     onClick={toggleMenu}
                   >
@@ -307,7 +307,7 @@ export function Navbar() {
                   </button>
                 </div>
                 <Link
-                  href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"}
+                  href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/cursos"}
                   className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white py-4 rounded-2xl font-bold border border-white/10 transition-all"
                   onClick={toggleMenu}
                 >

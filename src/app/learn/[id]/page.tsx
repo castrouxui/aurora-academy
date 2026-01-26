@@ -99,7 +99,7 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
     const userRole = session?.user?.role;
     const backLink = (userRole === "ADMIN" || userRole === "INSTRUCTOR")
         ? "/admin/courses"
-        : "/dashboard/courses";
+        : "/dashboard/cursos";
 
     return (
         <CoursePlayerClient
