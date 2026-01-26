@@ -97,8 +97,9 @@ export default function PricingPage() {
                                     "Curso de Opciones Financieras",
                                     "Futuros Financieros",
                                     "Análisis Técnico & Price Action",
-                                    "Comunidad: Canal Telegram",
-                                    "Mentoría 1 a 1"
+                                    "Acceso a Comunidad de Inversores",
+                                    "Acceso al Canal de Aurora Academy",
+                                    "Reunión 1 a 1 con Fran Castro"
                                 ],
                                 tag: null,
                                 isRecommended: false
@@ -118,13 +119,14 @@ export default function PricingPage() {
                                     "Domina el Stop Loss en 15 minutos",
                                     "Análisis Técnico & Price Action",
                                     "Futuros Financieros",
-                                    "Comunidad: Canal Telegram Aurora"
+                                    "Acceso al Canal de Aurora Academy"
                                 ],
                                 excludedFeatures: [
                                     "Análisis Fundamental & Cartera",
                                     "Dominando el Riesgo",
                                     "Valuación Real",
-                                    "Mentoría 1 a 1"
+                                    "Acceso a Comunidad de Inversores",
+                                    "Reunión 1 a 1 con Fran Castro"
                                 ],
                                 tag: "EL MÁS BUSCADO",
                                 isRecommended: true
