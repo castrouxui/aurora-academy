@@ -13,19 +13,27 @@ export async function GET(request: Request) {
     }
 
     try {
-        console.log("Starting migration...");
-        // Use local node_modules binary to avoid npx download attempts
-        // Vercel serverless functions should have access to dependencies
-        const { stdout, stderr } = await execAsync("./node_modules/.bin/prisma migrate deploy");
+        console.log("Starting debug diagnostics...");
+        console.log("CWD:", process.cwd());
 
-        console.log("Migration output:", stdout);
-        if (stderr) console.error("Migration stderr:", stderr);
+        // List directories to find prisma
+        const { stdout: lsRoot } = await execAsync("ls -la");
+        const { stdout: lsNodeModules } = await execAsync("ls -la node_modules").catch(() => ({ stdout: "node_modules not found" }));
+        const { stdout: lsBin } = await execAsync("ls -la node_modules/.bin").catch(() => ({ stdout: "node_modules/.bin not found" }));
+
+        // Try generic path or resolve 'prisma' from require
+        let prismaPath = "prisma";
+        try {
+            // This might find the absolute path
+            prismaPath = require.resolve("prisma/package.json");
+        } catch (e) { console.log("Could not resolve prisma path") }
 
         return NextResponse.json({
-            success: true,
-            message: "Database migrated successfully",
-            output: stdout,
-            errorOutput: stderr
+            info: "Diagnostic run",
+            cwd: process.cwd(),
+            rootListing: lsRoot.split("\n"),
+            binListing: lsBin.length > 500 ? lsBin.substring(0, 500) + "..." : lsBin,
+            pathAttempt: prismaPath,
         });
     } catch (error) {
         console.error("Migration failed:", error);
