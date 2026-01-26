@@ -98,7 +98,7 @@ export default function SettingsPage() {
                             <div className="flex items-center justify-between p-4 bg-[#121620] rounded-lg border border-gray-700 opacity-50 cursor-not-allowed">
                                 <div>
                                     <p className="text-sm font-medium text-white">Cambiar Contraseña</p>
-                                    <p className="text-xs text-gray-400">Próximamente disponible</p>
+                                    <p className="text-[10px] text-gray-500 uppercase font-bold">Próximamente disponible</p>
                                 </div>
                                 <Button variant="outline" size="sm" disabled className="border-gray-600 text-gray-400">
                                     <Lock size={14} className="mr-2" />

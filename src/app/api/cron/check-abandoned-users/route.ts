@@ -55,38 +55,27 @@ export async function GET(req: Request) {
 
             const subject = "🎁 Tu futuro en el trading te espera";
             const html = `
-                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background: #0B0F19; color: #fff; border-radius: 12px; overflow: hidden;">
-                    <div style="background: url('https://auroracademy.net/banner-email.jpg') center/cover; padding: 40px 20px; text-align: center;">
-                        <h1 style="margin: 0; font-size: 28px; font-weight: bold; color: #fff;">¡No dejes pasar tu oportunidad!</h1>
-                    </div>
-                    <div style="padding: 30px 20px; color: #cbd5e1;">
-                        <p style="font-size: 16px;">Hola <strong>${user.name?.split(' ')[0] || 'Trader'}</strong>,</p>
-                        <p>Notamos que te registraste en Aurora Academy pero aún no has desbloqueado todo tu potencial.</p>
-                        <p>Nuestra comunidad de traders está logrando resultados increíbles, y queremos que seas parte de ella.</p>
-                        
-                        <div style="background: #1e293b; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #5D5CDE;">
-                            <p style="margin: 0; font-weight: bold; color: #fff;">🚀 Accede hoy y obtén:</p>
-                            <ul style="margin: 10px 0 0 20px; padding: 0;">
-                                <li>Cursos de nivel profesional</li>
-                                <li>Certificación oficial</li>
-                                <li>Mentoria en vivo</li>
-                            </ul>
-                        </div>
+                <h1 style="margin-top: 0; font-size: 24px; font-weight: bold;">¡No dejes pasar tu oportunidad!</h1>
+                <p style="font-size: 16px; margin-bottom: 24px;">Hola <strong>${user.name?.split(' ')[0] || 'Trader'}</strong>,</p>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 24px;">Notamos que te registraste en Aurora Academy pero aún no has desbloqueado todo tu potencial. Nuestra comunidad está logrando resultados increíbles, y queremos que seas parte de ella.</p>
+                
+                <div style="background-color: rgba(93, 92, 222, 0.05); border-left: 4px solid #5D5CDE; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                    <p style="margin: 0 0 10px 0; font-weight: bold; color: #5D5CDE;">🚀 Accede hoy y obtén:</p>
+                    <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                        <li>Cursos de nivel profesional</li>
+                        <li>Certificación oficial</li>
+                        <li>Mentoria en vivo</li>
+                    </ul>
+                </div>
 
-                        <div style="text-align: center; margin-top: 30px;">
-                            <a href="https://auroracademy.net/membresias" style="background-color: #5D5CDE; color: white; padding: 14px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 15px rgba(93, 92, 222, 0.4);">
-                                Ver Planes Disponibles
-                            </a>
-                        </div>
-                    </div>
-                    <div style="padding: 20px; text-align: center; font-size: 12px; color: #64748b; background: #070a10;">
-                        ¿Dudas? Responde a este correo y te ayudamos.<br>
-                        © ${new Date().getFullYear()} Aurora Academy
-                    </div>
+                <div style="text-align: center; margin-top: 32px;">
+                    <a href="https://auroracademy.net/membresias" style="background-color: #5D5CDE; color: white; padding: 14px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; display: inline-block;">
+                        Ver Planes Disponibles
+                    </a>
                 </div>
             `;
 
-            await sendEmail(user.email, subject, html);
+            await sendEmail(user.email, subject, html, `Hola ${user.name || 'Trader'}, no pierdas la oportunidad de potenciar tu trading.`);
         }));
 
         const sentCount = results.filter(r => r.status === 'fulfilled').length;

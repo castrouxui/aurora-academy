@@ -83,7 +83,7 @@ export function Navbar() {
             <div className="relative group cursor-default">
               <button className="text-sm font-medium text-gray-500 flex items-center gap-2 px-4 py-2 cursor-default hover:text-gray-400 transition-colors">
                 Empresas
-                <span className="text-sm uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">Próximamente</span>
+                <span className="text-[10px] uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">Próximamente</span>
               </button>
             </div>
 
@@ -238,7 +238,7 @@ export function Navbar() {
                 <div className="flex items-center w-full px-4 py-3 text-base font-medium text-gray-500 opacity-60">
                   <Building2 className="mr-4" size={20} />
                   <span className="text-lg font-bold">Empresas</span>
-                  <span className="ml-auto text-sm uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">
+                  <span className="ml-auto text-[10px] uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">
                     Próximamente
                   </span>
                 </div>

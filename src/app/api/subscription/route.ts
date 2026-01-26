@@ -94,9 +94,10 @@ export async function POST(req: Request) {
                 await sendEmail(
                     session.user.email,
                     "Suscripción Cancelada - Aurora Academy",
-                    `<p>Hola ${session.user.name || ''},</p>
+                    `<p>Hola <strong>${session.user.name || ''}</strong>,</p>
                     <p>Confirmamos que tu suscripción ha sido cancelada exitosamente desde el panel de control.</p>
-                    <p>Tendrás acceso hasta el final del período actual.</p>`
+                    <p>Seguirás teniendo acceso completo hasta el final del período actual facturado.</p>`,
+                    `Confirmación de cancelación de suscripción.`
                 );
             }
 

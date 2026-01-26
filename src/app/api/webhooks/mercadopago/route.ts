@@ -58,9 +58,12 @@ export async function POST(request: Request) {
                         await sendEmail(
                             user.email,
                             "¡Pago Confirmado! - Aurora Academy",
-                            `<h1>¡Gracias por tu compra, ${user.name || ''}!</h1>
-                             <p>Hemos recibido tu pago correctamente. Ya tenés acceso inmediato a tu contenido.</p>
-                             <p>Podés empezar a aprender ahora mismo en <a href="https://auroracademy.net/dashboard">Tu Panel</a>.</p>`
+                            `<h1 style="margin-top: 0; margin-bottom: 24px; font-size: 24px;">¡Gracias por tu compra, ${user.name?.split(' ')[0] || ''}!</h1>
+                             <p style="font-size: 16px; line-height: 1.6; margin-bottom: 24px;">Hemos recibido tu pago correctamente. Ya tenés acceso inmediato a todo tu contenido premium.</p>
+                             <div style="text-align: center; margin-top: 32px;">
+                                <a href="https://auroracademy.net/dashboard" style="background-color: #5D5CDE; color: white; padding: 14px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; display: inline-block;">Empezar a Aprender</a>
+                             </div>`,
+                            `Tu pago ha sido procesado con éxito.`
                         );
                     }
 
@@ -91,21 +94,26 @@ export async function POST(request: Request) {
                     await sendEmail(
                         updated.user.email,
                         "Suscripción Cancelada - Aurora Academy",
-                        `<p>Hola ${updated.user.name || ''},</p>
-                         <p>Confirmamos que tu suscripción al plan <strong>${updated.bundle.title}</strong> ha sido cancelada.</p>
-                         <p>Tendrás acceso hasta el final del período actual.</p>
-                         <p>¡Esperamos verte pronto!</p>`
+                        `<h2 style="margin-top: 0; margin-bottom: 24px; font-size: 22px;">Confirmación de Cancelación</h2>
+                         <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">Hola <strong>${updated.user.name || ''}</strong>,</p>
+                         <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">Confirmamos que tu suscripción al plan <strong>${updated.bundle.title}</strong> ha sido cancelada satisfactoriamente.</p>
+                         <p style="font-size: 16px; line-height: 1.6; margin-bottom: 24px;">Seguirás teniendo acceso hasta el final del período actual facturado.</p>
+                         <p style="font-size: 14px; opacity: 0.8;">¡Esperamos verte de nuevo muy pronto!</p>`,
+                        `Tu suscripción ha sido cancelada.`
                     );
                 } else if (subscriptionData.status === 'authorized') {
                     // 1. WELCOME EMAIL
                     await sendEmail(
                         updated.user.email,
                         `¡Bienvenido al Plan ${updated.bundle.title}! - Aurora Academy`,
-                        `<h1>¡Suscripción Activada!</h1>
-                         <p>Hola ${updated.user.name || ''},</p>
-                         <p>Tu suscripción <strong>${updated.bundle.title}</strong> está activa.</p>
-                         <p>Ahora tenés acceso ilimitado a todos los cursos y beneficios de tu plan.</p>
-                         <p>Accedé ahora: <a href="https://auroracademy.net/dashboard">Ir a mi Panel</a></p>`
+                        `<h1 style="margin-top: 0; margin-bottom: 24px; font-size: 24px;">¡Suscripción Activada! ✨</h1>
+                         <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">Hola <strong>${updated.user.name || ''}</strong>,</p>
+                         <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">Tu suscripción al plan <strong>${updated.bundle.title}</strong> ya está activa.</p>
+                         <p style="font-size: 16px; line-height: 1.6; margin-bottom: 32px;">Ahora tenés acceso ilimitado a todos los cursos, mentorías y beneficios de tu plan.</p>
+                         <div style="text-align: center;">
+                            <a href="https://auroracademy.net/dashboard" style="background-color: #5D5CDE; color: white; padding: 14px 32px; text-decoration: none; border-radius: 12px; font-weight: bold; display: inline-block;">Acceder a mi Panel</a>
+                         </div>`,
+                        `¡Bienvenido a Aurora Academy! Tu suscripción ya está activa.`
                     );
 
                     // 2. AUTO-CANCEL OLD SUBSCRIPTIONS (Upgrade/Downgrade Logic)

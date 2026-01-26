@@ -73,7 +73,7 @@ export default async function CompanyDashboardPage() {
                 <div className="bg-[#1F2937]/30 border border-gray-800 p-6 rounded-2xl flex flex-col justify-center items-center text-center">
                     <BarChart3 className="text-gray-600 mb-3" size={32} />
                     <h3 className="text-gray-400 font-medium">Reporte de Impacto</h3>
-                    <p className="text-xs text-gray-500 mt-1">Próximamente disponible</p>
+                    <p className="text-[10px] text-gray-500 mt-1 uppercase font-bold tracking-tight">Próximamente disponible</p>
                 </div>
             </div>
 

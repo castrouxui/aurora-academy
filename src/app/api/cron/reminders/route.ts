@@ -37,13 +37,20 @@ export async function GET(req: Request) {
                     sub.user.email,
                     "Tu suscripción se renovará pronto - Aurora Academy",
                     `
-                    <h1>Hola ${sub.user.name || 'Estudiante'},</h1>
-                    <p>Te recordamos que tu suscripción al plan <strong>${sub.bundle.title}</strong> se renovará automáticamente en los próximos días.</p>
-                    <p>Si deseás continuar, no tenés que hacer nada.</p>
-                    <p>Si necesitás gestionar tu suscripción, podés hacerlo desde tu <a href="https://auroracademy.net/dashboard/subscription">Panel de Control</a>.</p>
-                    <br>
-                    <p>Saludos,<br>El equipo de Aurora Academy</p>
-                    `
+                    <h2 style="margin-top: 0; margin-bottom: 24px; font-size: 22px;">Hola <strong>${sub.user.name || 'Estudiante'}</strong>,</h2>
+                    <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">Te recordamos que tu suscripción al plan <strong>${sub.bundle.title}</strong> se renovará automáticamente en los próximos días.</p>
+                    <p style="font-size: 16px; line-height: 1.6; margin-bottom: 24px;">Si deseás continuar aprendiendo con nosotros, no tenés que hacer nada. El cargo se procesará automáticamente.</p>
+                    
+                    <div style="text-align: center; margin-top: 32px;">
+                        <a href="https://auroracademy.net/dashboard/memberships" style="background-color: #5D5CDE; color: white; padding: 12px 24px; text-decoration: none; border-radius: 10px; font-weight: bold; display: inline-block;">Gestionar mi Suscripción</a>
+                    </div>
+                    
+                    <p style="font-size: 14px; margin-top: 40px; opacity: 0.8;">
+                        Saludos,<br>
+                        <strong>El equipo de Aurora Academy</strong>
+                    </p>
+                    `,
+                    `Recordatorio de renovación automática para ${sub.bundle.title}.`
                 );
                 results.push({ email: sub.user.email, sent });
             }
