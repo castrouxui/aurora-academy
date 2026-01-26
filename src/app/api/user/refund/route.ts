@@ -66,6 +66,33 @@ export async function POST(req: Request) {
             data: { status: "refunded" }
         });
 
+        // 5. If it was a Bundle purchase, check if there's an active Subscription to cancel
+        if (purchase.bundleId) {
+            const subscription = await prisma.subscription.findFirst({
+                where: {
+                    userId: session.user.id,
+                    bundleId: purchase.bundleId,
+                    status: 'authorized'
+                }
+            });
+
+            if (subscription) {
+                try {
+                    // Update Local status
+                    await prisma.subscription.update({
+                        where: { id: subscription.id },
+                        data: { status: "cancelled" }
+                    });
+
+                    // Optional: Call Mercado Pago to cancel PreApproval if needed
+                    // But usually for a partial/initial refund, we just want to stop access.
+                    // If it was already paid, MP refund handles the money.
+                } catch (subError) {
+                    console.error("[REFUND] Failed to cancel associated subscription:", subError);
+                }
+            }
+        }
+
         // Revoke Access
         // Since access logic typically queries for purchases with status 'approved', changing to 'refunded'
         // automatically revokes access in most implementation patterns.
