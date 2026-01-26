@@ -1,10 +1,11 @@
 "use client";
 
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { FloatingInput } from "@/components/ui/FloatingInput";
+import toast from "react-hot-toast";
 
 import { Logo } from "@/components/layout/Logo";
 import { signIn, getProviders, LiteralUnion, ClientSafeProvider } from "next-auth/react";
@@ -22,22 +23,16 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
     useBodyScrollLock(isOpen);
     const [mode, setMode] = useState<'login' | 'register'>(view === 'purchase' ? 'register' : 'login');
     const [providers, setProviders] = useState<Record<LiteralUnion<string>, ClientSafeProvider> | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        getProviders().then(setProviders);
-    }, []);
+    // ... (useEffect)
 
-    if (!isOpen) return null;
-
-    const isRegister = mode === 'register';
-    const titleText = isRegister ? "Crea tu cuenta para continuar" : "Bienvenido de nuevo";
-    const googleText = isRegister ? "Registrarse con Google" : "Continuar con Google";
-    const submitText = isRegister ? "Registrarse" : "Iniciar Sesión";
-
-    const toggleMode = () => setMode(prev => prev === 'login' ? 'register' : 'login');
+    // ... (variables)
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsLoading(true);
+
         const email = (e.currentTarget.elements.namedItem('email') as HTMLInputElement).value;
         const password = (e.currentTarget.elements.namedItem('password') as HTMLInputElement).value;
 
@@ -50,12 +45,13 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
             });
 
             if (result?.error) {
-                // You could add error handling state here if needed
-                console.error("Login failed:", result.error);
+                toast.error("Credenciales inválidas. Por favor verifique sus datos.");
+                setIsLoading(false);
                 return;
             }
 
             if (result?.ok) {
+                toast.success("¡Bienvenido!");
                 // Fetch the session to check the role
                 const session = await getProviders().then(() => fetch("/api/auth/session").then(res => res.json()));
 
@@ -71,8 +67,13 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
             }
         } catch (error) {
             console.error("Login error:", error);
+            toast.error("Ocurrió un error inesperado.");
+            setIsLoading(false);
         }
     };
+
+    // ... rest of component
+
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
@@ -148,9 +149,17 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                     />
                     <Button
                         type="submit"
-                        className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium mt-2 rounded-xl"
+                        disabled={isLoading}
+                        className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium mt-2 rounded-xl flex items-center justify-center gap-2"
                     >
-                        {submitText}
+                        {isLoading ? (
+                            <>
+                                <Loader2 className="animate-spin" size={20} />
+                                <span>Procesando...</span>
+                            </>
+                        ) : (
+                            submitText
+                        )}
                     </Button>
                 </form>
 
