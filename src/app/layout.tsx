@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 
 const manrope = Manrope({
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 export const viewport: Viewport = {
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     siteName: "Aurora Academy",
     images: [
       {
-        url: "/og-image.jpg", // Make sure to add this image later or use a valid path
+        url: "/logo-full.png",
         width: 1200,
         height: 630,
         alt: "Aurora Academy - Trading Institucional",
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Aurora Academy - Aprende a Invertir",
     description: "Plataforma educativa para inversores. Cursos de forex, índices y criptomonedas.",
-    images: ["/og-image.jpg"],
+    images: ["/logo-full.png"],
   },
   icons: {
     icon: "/icon.png",
