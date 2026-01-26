@@ -132,10 +132,10 @@ export default function PricingPage() {
                                         <span>🔥</span> 1 curso nuevo cada 15 días
                                     </span>,
                                     "Curso de IA para Inversores",
-                                    "Acceso al Canal de Aurora Academy",
                                     "Análisis Fundamental & Cartera",
                                     "Dominando el Riesgo: Volatilidad",
-                                    "Valuación Real: Beneficio vs. Caja"
+                                    "Valuación Real: Beneficio vs. Caja",
+                                    "Acceso al Canal de Aurora Academy"
                                 ],
                                 tag: null,
                                 isRecommended: false,
