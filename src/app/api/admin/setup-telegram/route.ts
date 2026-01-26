@@ -9,9 +9,9 @@ export async function GET(req: Request) {
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const host = req.headers.get("host") || "aurora-academy.onrender.com";
-    const protocol = host.includes("localhost") ? "http" : "https";
-    const baseUrl = `${protocol}://${host}`;
+    const host = req.headers.get("host");
+    const protocol = host?.includes("localhost") ? "http" : "https";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (host ? `${protocol}://${host}` : "https://auroracademy.net");
 
     try {
         const result = await setTelegramWebhook(baseUrl);
