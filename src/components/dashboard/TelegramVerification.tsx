@@ -11,13 +11,13 @@ import { useSession } from "next-auth/react";
 export function TelegramVerification({ initialHandle, isVerified }: { initialHandle?: string | null, isVerified: boolean }) {
     const { update } = useSession();
     const [step, setStep] = useState<"enter-handle" | "enter-otp">(initialHandle && !isVerified ? "enter-otp" : "enter-handle");
-    const [handle, setHandle] = useState(initialHandle || "");
+    const [handle, setHandle] = useState(initialHandle || ""); // This will now store the Chat ID
     const [otp, setOtp] = useState("");
     const [loading, setLoading] = useState(false);
     const [verified, setVerified] = useState(isVerified);
 
     const handleSendOTP = async () => {
-        if (!handle) return toast.error("Ingresa tu usuario de Telegram");
+        if (!handle) return toast.error("Ingresa tu ID de chat");
         setLoading(true);
         try {
             const res = await fetch("/api/user/telegram/send-otp", {
@@ -26,7 +26,7 @@ export function TelegramVerification({ initialHandle, isVerified }: { initialHan
             });
             const data = await res.json();
             if (res.ok) {
-                toast.success(data.message || "Código enviado a Telegram");
+                toast.success(data.message || "Código enviado");
                 setStep("enter-otp");
             } else {
                 toast.error(data.error || "Error al enviar código");
@@ -71,7 +71,7 @@ export function TelegramVerification({ initialHandle, isVerified }: { initialHan
                     </div>
                     <div>
                         <p className="text-sm font-bold text-white">Vínculo con Telegram Activo</p>
-                        <p className="text-xs text-emerald-500/80">@{handle}</p>
+                        <p className="text-xs text-emerald-500/80">ID: {handle}</p>
                     </div>
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500 text-white px-2 py-0.5 rounded-full">Verificado</span>
@@ -89,17 +89,16 @@ export function TelegramVerification({ initialHandle, isVerified }: { initialHan
             {step === "enter-handle" ? (
                 <div className="space-y-3">
                     <p className="text-xs text-gray-400">
-                        Ingresa tu nombre de usuario para recibir un código de seguridad.
-                        Asegúrate de haber iniciado una conversación con nuestro bot <a href="https://t.me/AuroraAcademyBot" target="_blank" className="text-primary hover:underline">@AuroraAcademyBot</a>.
+                        1. Entrá a <a href="https://t.me/AuroraAcademyBot" target="_blank" className="text-primary hover:underline font-bold">@AuroraAcademyBot</a> y enviá el comando <code>/start</code>. <br />
+                        2. El bot te dará un <b>ID de chat</b>. Pegalo aquí debajo:
                     </p>
                     <div className="flex gap-2">
                         <div className="relative flex-1">
-                            <span className="absolute left-3 top-2.5 text-gray-500 text-sm font-bold">@</span>
                             <Input
-                                placeholder="usuario_telegram"
+                                placeholder="Ej: 123456789"
                                 value={handle}
                                 onChange={(e) => setHandle(e.target.value)}
-                                className="bg-black/20 border-gray-600 pl-7 text-white"
+                                className="bg-black/20 border-gray-600 text-white"
                             />
                         </div>
                         <Button
@@ -114,7 +113,7 @@ export function TelegramVerification({ initialHandle, isVerified }: { initialHan
             ) : (
                 <div className="space-y-3">
                     <p className="text-xs text-gray-400 italic">
-                        Hemos enviado un código a <b>@{handle}</b>. Ingresalo debajo:
+                        Hemos enviado un código a tu Telegram. Ingresalo debajo:
                     </p>
                     <div className="flex gap-2">
                         <Input
@@ -136,7 +135,7 @@ export function TelegramVerification({ initialHandle, isVerified }: { initialHan
                         onClick={() => setStep("enter-handle")}
                         className="text-[10px] text-gray-500 hover:text-white uppercase font-bold tracking-wider"
                     >
-                        Cambiar Usuario
+                        Cambiar ID
                     </button>
                 </div>
             )}

@@ -37,3 +37,20 @@ export async function sendTelegramMessage(chatId: string, message: string) {
 export function generateOTP(length: number = 6): string {
     return Math.floor(100000 + Math.random() * 900000).toString().substring(0, length);
 }
+/**
+ * Sets the Telegram Webhook URL
+ */
+export async function setTelegramWebhook(url: string) {
+    if (!BOT_TOKEN) return { success: false, error: "No token" };
+    try {
+        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/setWebhook`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: `${url}/api/webhooks/telegram` })
+        });
+        const data = await response.json();
+        return { success: data.ok, data };
+    } catch (error) {
+        return { success: false, error };
+    }
+}
