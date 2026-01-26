@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { FloatingInput } from "@/components/ui/FloatingInput";
 
 import { Logo } from "@/components/layout/Logo";
 import { signIn, getProviders, LiteralUnion, ClientSafeProvider } from "next-auth/react";
@@ -129,31 +130,25 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                 {/* Email/Password Form */}
                 <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col gap-4"
+                    className="flex flex-col gap-5"
                 >
-                    <div className="space-y-2">
-                        <label className="text-xs font-medium text-muted-foreground">Correo Electrónico</label>
-                        <input
-                            name="email"
-                            type="email"
-                            placeholder="nombre@ejemplo.com"
-                            required
-                            className="w-full bg-input border border-border text-foreground rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-xs font-medium text-muted-foreground">Contraseña</label>
-                        <input
-                            name="password"
-                            type="password"
-                            placeholder="••••••••"
-                            required
-                            className="w-full bg-input border border-border text-foreground rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
-                        />
-                    </div>
+                    <FloatingInput
+                        label="Correo Electrónico"
+                        name="email"
+                        type="email"
+                        required
+                        className="bg-[#111827] border-gray-700" // Override for darker modal theme if needed
+                    />
+                    <FloatingInput
+                        label="Contraseña"
+                        name="password"
+                        type="password"
+                        required
+                        className="bg-[#111827] border-gray-700"
+                    />
                     <Button
                         type="submit"
-                        className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium mt-2"
+                        className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium mt-2 rounded-xl"
                     >
                         {submitText}
                     </Button>
