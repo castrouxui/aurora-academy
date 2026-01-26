@@ -94,9 +94,6 @@ export default function PricingPage() {
                                     "Valor Tiempo del Dinero: TNA, TEA"
                                 ],
                                 excludedFeatures: [
-                                    "Curso de Opciones Financieras",
-                                    "Futuros Financieros",
-                                    "Análisis Técnico & Price Action",
                                     "Acceso a Comunidad de Inversores",
                                     "Acceso al Canal de Aurora Academy",
                                     "Reunión 1 a 1 con Fran Castro"
@@ -122,9 +119,6 @@ export default function PricingPage() {
                                     "Acceso al Canal de Aurora Academy"
                                 ],
                                 excludedFeatures: [
-                                    "Análisis Fundamental & Cartera",
-                                    "Dominando el Riesgo",
-                                    "Valuación Real",
                                     "Acceso a Comunidad de Inversores",
                                     "Reunión 1 a 1 con Fran Castro"
                                 ],
