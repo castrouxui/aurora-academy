@@ -91,12 +91,12 @@ export function PricingCard({
 
             {/* Special Feature Banner (e.g. for Master Plan) */}
             {specialFeature && (
-                <div className="mb-4 rounded-lg bg-gradient-to-br from-[#5D5CDE]/20 to-purple-900/40 border border-[#5D5CDE]/30 p-4">
-                    <p className="text-sm font-bold text-white mb-1 flex items-center gap-2">
-                        <span className="text-lg">🌟</span>
-                        {specialFeature.title}
+                <div className="mb-4 mt-4 rounded-lg bg-gradient-to-br from-[#5D5CDE]/40 to-purple-900/60 border border-[#5D5CDE]/60 p-4 shadow-lg shadow-[#5D5CDE]/10">
+                    <p className="text-sm font-bold text-white mb-1 flex items-start gap-3">
+                        <PricingCheckmark />
+                        <span className="leading-tight">{specialFeature.title}</span>
                     </p>
-                    <p className="text-sm text-gray-300 leading-relaxed">
+                    <p className="text-sm text-gray-200 leading-relaxed pl-8">
                         {specialFeature.description}
                     </p>
                 </div>
