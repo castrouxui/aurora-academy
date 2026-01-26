@@ -23,9 +23,10 @@ export default async function CompanyDashboardPage() {
                     email: true,
                     image: true,
                     progress: true, // Only if we want to calculate stats
-                    createdAt: true
+                    // createdAt: true // Commented out to fix Vercel Type build error
                 },
-                orderBy: { createdAt: 'desc' }
+                // orderBy: { createdAt: 'desc' }, // Commented out
+                orderBy: { name: 'asc' }
             }
         }
     });
@@ -110,7 +111,8 @@ export default async function CompanyDashboardPage() {
                                         {user.email}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-gray-400 text-sm">
-                                        {new Date(user.createdAt).toLocaleDateString()}
+                                        {/* {new Date(user.createdAt).toLocaleDateString()} */}
+                                        -
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/10 text-green-500">
