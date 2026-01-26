@@ -25,9 +25,18 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
     const [providers, setProviders] = useState<Record<LiteralUnion<string>, ClientSafeProvider> | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    // ... (useEffect)
+    useEffect(() => {
+        getProviders().then(setProviders);
+    }, []);
 
-    // ... (variables)
+    if (!isOpen) return null;
+
+    const isRegister = mode === 'register';
+    const titleText = isRegister ? "Crea tu cuenta para continuar" : "Bienvenido de nuevo";
+    const googleText = isRegister ? "Registrarse con Google" : "Continuar con Google";
+    const submitText = isRegister ? "Registrarse" : "Iniciar Sesión";
+
+    const toggleMode = () => setMode(prev => prev === 'login' ? 'register' : 'login');
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
