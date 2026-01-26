@@ -20,11 +20,15 @@ export async function GET(req: Request) {
     const protocol = host?.includes("localhost") ? "http" : "https";
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (host ? `${protocol}://${host}` : "https://auroracademy.net");
 
+    // Allow passing token via URL if it's missing in Env Vars (for first-time setup)
+    const urlToken = searchParams.get("token");
+
     try {
-        const result = await setTelegramWebhook(baseUrl);
+        const result = await setTelegramWebhook(baseUrl, urlToken || undefined);
         return NextResponse.json({
             success: result.success,
             message: result.success ? "Webhook registrado correctamente" : (result.error || "Error al registrar webhook"),
+            tokenUsed: urlToken ? "Proporcionado via URL" : "Cargado desde Env Vars",
             details: result.data || result.error || null,
             url: `${baseUrl}/api/webhooks/telegram`
         });
