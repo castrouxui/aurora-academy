@@ -102,7 +102,7 @@ export function PricingCard({
                 </div>
             )}
 
-            <div className="flex-1" />
+
 
             <Button
                 onClick={onAction}

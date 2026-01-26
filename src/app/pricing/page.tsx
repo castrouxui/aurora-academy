@@ -79,7 +79,7 @@ export default function PricingPage() {
             <section className="relative z-10 pb-16">
                 <Container>
                     {/* Dynamic Bundle Grid */}
-                    <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12">
+                    <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12 items-start">
                         {[
                             {
                                 // 1. Inversor Inicial
