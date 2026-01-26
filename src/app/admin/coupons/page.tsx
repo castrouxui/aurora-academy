@@ -42,9 +42,48 @@ export default function CouponsPage() {
         }
     };
 
+
+    // Usage Modal State
+    const [isUsageModalOpen, setIsUsageModalOpen] = useState(false);
+    const [usageLoading, setUsageLoading] = useState(false);
+    const [usageStats, setUsageStats] = useState<any[]>([]);
+    const [selectedCouponCode, setSelectedCouponCode] = useState("");
+
     useEffect(() => {
         fetchCoupons();
     }, []);
+
+    const handleDelete = async (id: string) => {
+        if (!confirm("¿Estás seguro de eliminar este cupón? Esta acción no se puede deshacer.")) return;
+
+        try {
+            const res = await fetch(`/api/coupons?id=${id}`, { method: "DELETE" });
+            if (!res.ok) throw new Error("Failed to delete");
+            toast.success("Cupón eliminado");
+            fetchCoupons();
+        } catch (error) {
+            console.error(error);
+            toast.error("Error al eliminar (quizás ya tiene usos)");
+        }
+    };
+
+    const handleViewUsage = async (coupon: Coupon) => {
+        setSelectedCouponCode(coupon.code);
+        setIsUsageModalOpen(true);
+        setUsageLoading(true);
+        try {
+            const res = await fetch(`/api/coupons/${coupon.id}/usage`);
+            if (res.ok) {
+                const data = await res.json();
+                setUsageStats(data);
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error al cargar usos");
+        } finally {
+            setUsageLoading(false);
+        }
+    };
 
     const handleEdit = (coupon: Coupon) => {
         setEditingId(coupon.id);
@@ -203,16 +242,40 @@ export default function CouponsPage() {
                     )}
                     {coupons.map((coupon) => (
                         <div key={coupon.id} className={`relative bg-[#1F2937]/30 border ${coupon.active ? 'border-gray-800' : 'border-red-900/30'} p-5 rounded-xl space-y-4 hover:border-[#5D5CDE]/50 transition-colors group`}>
-                            {/* Edit Button */}
-                            <button
-                                onClick={() => handleEdit(coupon)}
-                                className="absolute top-4 right-4 p-2 bg-gray-800/50 rounded-lg text-gray-400 hover:text-white hover:bg-[#5D5CDE] transition-all opacity-0 group-hover:opacity-100"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                                    <path d="m15 5 4 4" />
-                                </svg>
-                            </button>
+                            {/* Action Buttons */}
+                            <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button
+                                    onClick={() => handleViewUsage(coupon)}
+                                    className="p-2 bg-gray-800/50 rounded-lg text-gray-400 hover:text-white hover:bg-[#5D5CDE] transition-all"
+                                    title="Ver Usos"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                </button>
+                                <button
+                                    onClick={() => handleEdit(coupon)}
+                                    className="p-2 bg-gray-800/50 rounded-lg text-gray-400 hover:text-white hover:bg-[#5D5CDE] transition-all"
+                                    title="Editar"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                        <path d="m15 5 4 4" />
+                                    </svg>
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(coupon.id)}
+                                    className="p-2 bg-gray-800/50 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                                    title="Eliminar"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M3 6h18" />
+                                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                                    </svg>
+                                </button>
+                            </div>
 
                             <div className="flex justify-between items-start">
                                 <div>
@@ -243,6 +306,64 @@ export default function CouponsPage() {
                             </div>
                         </div>
                     ))}
+                </div>
+            )}
+
+            {/* Usage Modal */}
+            {isUsageModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-[#111827] border border-gray-800 rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl">
+                        <div className="p-6 border-b border-gray-800 flex justify-between items-center">
+                            <h3 className="text-xl font-bold text-white">
+                                Usos del cupón <span className="text-[#5D5CDE]">{selectedCouponCode}</span>
+                            </h3>
+                            <button
+                                onClick={() => setIsUsageModalOpen(false)}
+                                className="text-gray-400 hover:text-white transition-colors"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                            </button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto p-6">
+                            {usageLoading ? (
+                                <div className="flex justify-center py-12">
+                                    <Loader2 className="animate-spin text-[#5D5CDE]" size={32} />
+                                </div>
+                            ) : usageStats.length === 0 ? (
+                                <div className="text-center py-12 text-gray-500">
+                                    Este cupón no ha sido utilizado aún.
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {usageStats.map((usage: any, i) => (
+                                        <div key={i} className="flex items-center justify-between bg-white/5 p-4 rounded-xl border border-white/5">
+                                            <div className="flex items-center gap-3">
+                                                <div className="bg-[#5D5CDE]/20 p-2 rounded-full text-[#5D5CDE]">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-white">{usage.user.name || "Usuario sin nombre"}</p>
+                                                    <p className="text-xs text-gray-400">{usage.user.email}</p>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-sm text-gray-300 font-mono">
+                                                    {format(new Date(usage.createdAt), "dd MMM yyyy, HH:mm")}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="p-4 border-t border-gray-800 bg-gray-900/50 rounded-b-2xl">
+                            <div className="text-xs text-gray-500 text-center">
+                                Total de usos: {usageStats.length}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
