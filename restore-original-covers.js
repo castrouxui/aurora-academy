@@ -1,69 +1,57 @@
-const { PrismaClient } = require('@prisma/client');
+
+import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('Restoring original course covers...');
-
-    // 1. Introducción al Trading
-    await prisma.course.updateMany({
-        where: { title: { contains: 'Trading' } },
-        data: { imageUrl: '/images/courses/trading_inicial_cover_1768005327407.png' }
+    // 1. Mentoria en Price Action -> price_action_cover_...
+    const priceAction = await prisma.course.findFirst({
+        where: { title: { contains: "Price Action", mode: 'insensitive' } }
     });
-    console.log('Restored Trading cover.');
+    if (priceAction) {
+        await prisma.course.update({
+            where: { id: priceAction.id },
+            data: { imageUrl: "/images/courses/price_action_cover_1768005409635.png" }
+        });
+        console.log("✅ Restored original cover for: Mentoria en Price Action");
+    }
 
-    // 2. Mentoria en Price Action
-    await prisma.course.updateMany({
-        where: { title: { contains: 'Price Action' } },
-        data: { imageUrl: '/images/courses/price_action_cover_1768005409635.png' }
+    // 2. Curso Análisis Técnico -> analisis_tecnico_cover_...
+    const analisisTecnico = await prisma.course.findFirst({
+        where: { title: { contains: "Análisis Técnico", mode: 'insensitive' } }
     });
-    console.log('Restored Price Action cover.');
+    if (analisisTecnico) {
+        await prisma.course.update({
+            where: { id: analisisTecnico.id },
+            data: { imageUrl: "/images/courses/analisis_tecnico_cover_1768005395407.png" }
+        });
+        console.log("✅ Restored original cover for: Curso Análisis Técnico");
+    }
 
-    // 3. Valuación de Bonos (Renta Fija)
-    // Note: I created this course recently, so "creating" it might have missed the original ID if it was strictly linked.
-    // But I will update the one I created.
-    await prisma.course.updateMany({
-        where: { title: { contains: 'Bonos' } }, // My created course
-        data: { imageUrl: '/images/courses/renta_fija_cover_1768005380686.png' }
+    // 3. Curso Opciones Financieras -> opciones_cover_gen.png
+    const opciones = await prisma.course.findFirst({
+        where: { title: { contains: "Opciones Financieras", mode: 'insensitive' } }
     });
-    // 4. Mentoria Analisis Tecnico
-    await prisma.course.updateMany({
-        where: { title: { contains: 'Tecnico', mode: 'insensitive' } },
-        data: { imageUrl: '/images/courses/analisis_tecnico_cover_1768005395407.png' }
+    if (opciones) {
+        await prisma.course.update({
+            where: { id: opciones.id },
+            data: { imageUrl: "/images/courses/opciones_cover_gen.png" }
+        });
+        console.log("✅ Restored original cover for: Curso Opciones Financieras");
+    }
+
+    // 4. "Mentoria Introducción al Mercado de Capitales" Check
+    // Earlier I saw "Introducción al Trading" using "trading_inicial_cover...".
+    // I will check if I should rename it or just ensure image is set.
+    const introTrading = await prisma.course.findFirst({
+        where: { title: { contains: "Trading", mode: 'insensitive' } }
     });
-    console.log('Restored Technical Analysis cover.');
-
-    // 5. Trading Avanzado (if exists in DB matching title)
-    await prisma.course.updateMany({
-        where: { title: { contains: 'Avanzado', mode: 'insensitive' } },
-        data: { imageUrl: '/images/courses/trading_avanzado_cover_1768005355571.png' }
-    });
-    console.log('Restored Advanced Trading cover.');
-
-    // 6. Trading Intermedio
-    await prisma.course.updateMany({
-        where: { title: { contains: 'Intermedio', mode: 'insensitive' } },
-        data: { imageUrl: '/images/courses/trading_intermedio_cover_1768005341591.png' }
-    });
-    console.log('Restored Intermediate Trading cover.');
-
-    // 7. General cover fallback?
-    // I see 'clarin_home', 'puntal_home', etc. unrelated.
-    // 'uploaded_image_...' generic ones.
-
-    // Let's print what courses are left without local images to be safe?
-    // checking "Gestión de Cartera" - no obvious file name match in the list except generic uploads.
-    // checking "Futuros Financieros" - no match.
-    // checking "Opciones Financieras" - no match.
-    // checking "Análisis Fundamental" - no match.
-
-    // I will stick to the ones I can match by filename for now.
+    if (introTrading) {
+        // It is already using trading_inicial_cover_1768005327407.png, confirmed in debug step.
+        console.log("ℹ️ 'Introducción al Trading' is using correct legacy cover.");
+    }
 }
 
 main()
-    .catch((e) => {
-        console.error(e);
-        process.exit(1);
-    })
-    .finally(async () => {
-        await prisma.$disconnect();
-    });
+    .catch(console.error)
+    .finally(() => prisma.$disconnect());

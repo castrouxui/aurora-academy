@@ -59,10 +59,10 @@ export function BundleClient({ bundle }: BundleClientProps) {
                                 <Badge className="bg-[#5D5CDE]/20 text-[#bebeff] hover:bg-[#5D5CDE]/30 border-0 px-4 py-1 text-sm">
                                     Pack de Cursos
                                 </Badge>
-                                <h1 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+                                <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight">
                                     {bundle.title}
                                 </h1>
-                                <p className="text-xl text-gray-300 leading-relaxed">
+                                <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
                                     {bundle.description}
                                 </p>
                             </div>
