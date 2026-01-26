@@ -38,6 +38,10 @@ export async function GET(request: Request) {
         });
     } catch (error) {
         console.error("Reset error:", error);
-        return NextResponse.json({ error: "Failed to reset admin" }, { status: 500 });
+        return NextResponse.json({
+            error: "Failed to reset admin",
+            details: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined
+        }, { status: 500 });
     }
 }
