@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PricingCheckmark } from "@/components/pricing/PricingCheckmark";
+import { PricingCheckmark } from "@/components/membresias/PricingCheckmark";
 import { ChevronDown, ChevronUp, PlayCircle, Check, FileText } from "lucide-react";
 
 interface CourseTabsProps {

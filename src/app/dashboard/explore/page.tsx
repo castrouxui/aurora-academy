@@ -1,6 +1,6 @@
 "use client";
 
-import { CourseCatalog } from "@/components/courses/CourseCatalog";
+import { CourseCatalog } from "@/components/cursos/CourseCatalog";
 import { Suspense } from "react";
 
 export default function ExplorePage() {

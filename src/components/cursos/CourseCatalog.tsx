@@ -1,8 +1,8 @@
 "use client";
 
-import { CourseCard } from "@/components/courses/CourseCard";
+import { CourseCard } from "@/components/cursos/CourseCard";
 import { getCourseImage } from "@/lib/course-constants";
-import { FilterModal, type FilterState } from "@/components/courses/FilterModal";
+import { FilterModal, type FilterState } from "@/components/cursos/FilterModal";
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { useState, useEffect } from "react";
@@ -37,7 +37,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
         async function fetchCourses() {
             try {
                 // Fetch published courses only (Bundles are now in /pricing only)
-                const coursesRes = await fetch("/api/courses?published=true");
+                const coursesRes = await fetch("/api/cursos?published=true");
 
                 if (coursesRes.ok) {
                     const coursesData = await coursesRes.json();

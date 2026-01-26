@@ -56,7 +56,7 @@ export default function AdminDashboard() {
             change: "Disponibles",
             icon: BookOpen,
             color: "text-purple-500",
-            href: "/admin/courses"
+            href: "/admin/cursos"
         },
         {
             title: "Ventas Totales",

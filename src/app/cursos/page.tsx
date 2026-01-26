@@ -1,7 +1,7 @@
 "use client";
 
 import { Navbar } from "@/components/layout/Navbar";
-import { CourseCatalog } from "@/components/courses/CourseCatalog";
+import { CourseCatalog } from "@/components/cursos/CourseCatalog";
 import { Suspense } from "react";
 
 export default function CoursesPage() {

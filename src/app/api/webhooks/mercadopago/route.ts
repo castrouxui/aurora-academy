@@ -19,14 +19,12 @@ export async function POST(request: Request) {
         const topic = url.searchParams.get("topic") || url.searchParams.get("type");
         const id = url.searchParams.get("id") || url.searchParams.get("data.id");
 
-        console.log(`[WEBHOOK] Received: topic=${topic}, id=${id}`);
 
         if (topic === "payment" && id) {
             const client = getClient();
             const payment = new Payment(client);
             const paymentData = await payment.get({ id });
 
-            console.log(`[WEBHOOK] Payment Status: ${paymentData.status}`);
 
             if (paymentData.status === "approved") {
                 const { user_id, course_id, bundle_id } = paymentData.metadata;

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PricingCard } from "@/components/pricing/PricingCard";
-import { PricingCheckmark } from "@/components/pricing/PricingCheckmark";
+import { PricingCard } from "@/components/membresias/PricingCard";
+import { PricingCheckmark } from "@/components/membresias/PricingCheckmark";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
 import { Container } from "@/components/layout/Container";
@@ -213,7 +213,7 @@ export default function PricingPage() {
             <LoginModal
                 isOpen={isLoginModalOpen}
                 onClose={() => setIsLoginModalOpen(false)}
-                redirectUrl="/pricing"
+                redirectUrl="/membresias"
                 view="purchase"
             />
         </div >

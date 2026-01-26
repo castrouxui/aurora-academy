@@ -1,14 +1,14 @@
 import { Container } from "@/components/layout/Container";
-import { CourseHero } from "@/components/courses/detail/CourseHero";
-import { CourseFloatingCard } from "@/components/courses/detail/CourseFloatingCard";
-import { CourseTabs } from "@/components/courses/detail/CourseTabs";
-import { InstructorCard } from "@/components/courses/InstructorCard";
-import { CourseFAQ } from "@/components/courses/detail/CourseFAQ";
+import { CourseHero } from "@/components/cursos/detail/CourseHero";
+import { CourseFloatingCard } from "@/components/cursos/detail/CourseFloatingCard";
+import { CourseTabs } from "@/components/cursos/detail/CourseTabs";
+import { InstructorCard } from "@/components/cursos/InstructorCard";
+import { CourseFAQ } from "@/components/cursos/detail/CourseFAQ";
 import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
-import { MobileCourseCTA } from "@/components/courses/detail/MobileCourseCTA";
-// import { CourseSidebar } from "@/components/courses/detail/CourseSidebar"; // Unused
+import { MobileCourseCTA } from "@/components/cursos/detail/MobileCourseCTA";
+// import { CourseSidebar } from "@/components/cursos/detail/CourseSidebar"; // Unused
 
 interface CourseDetailContentProps {
     courseData: any;

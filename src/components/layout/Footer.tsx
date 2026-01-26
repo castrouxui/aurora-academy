@@ -24,7 +24,7 @@ export function Footer() {
                                 Estudia con traders de toda la región y crea vínculos para toda la vida
                             </h2>
 
-                            <Link href="/pricing">
+                            <Link href="/membresias">
                                 <Button className="shiny-hover h-14 px-8 rounded-full bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-black text-lg shadow-[0_0_20px_rgba(93,92,222,0.5)] transition-all hover:scale-105">
                                     Unirme a la comunidad
                                     <MoveRight className="ml-2 w-5 h-5" />
@@ -99,9 +99,9 @@ export function Footer() {
                         <div className="space-y-4">
                             <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Plataforma</h4>
                             <ul className="space-y-3 text-sm">
-                                <li><Link href="/courses" className="hover:text-white transition-colors">Cursos</Link></li>
-                                <li><Link href="/pricing" className="hover:text-white transition-colors">Precios</Link></li>
-                                <li><Link href="/about" className="hover:text-white transition-colors">Nosotros</Link></li>
+                                <li><Link href="/cursos" className="hover:text-white transition-colors">Cursos</Link></li>
+                                <li><Link href="/membresias" className="hover:text-white transition-colors">Precios</Link></li>
+                                <li><Link href="/nosotros" className="hover:text-white transition-colors">Nosotros</Link></li>
                             </ul>
                         </div>
 

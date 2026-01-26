@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { CourseDetailContent } from "@/components/courses/CourseDetailContent";
+import { CourseDetailContent } from "@/components/cursos/CourseDetailContent";
 import { getYouTubeId } from "@/lib/utils";
 import { getCourseImage } from "@/lib/course-constants";
 

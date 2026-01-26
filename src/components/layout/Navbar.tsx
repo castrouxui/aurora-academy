@@ -70,12 +70,12 @@ export function Navbar() {
           <div className="hidden md:flex items-center gap-2">
 
             {/* 1. Membresías */}
-            <Link href="/pricing" className={getLinkClass("/pricing")}>
+            <Link href="/membresias" className={getLinkClass("/membresias")}>
               Membresías
             </Link>
 
             {/* 2. Cursos */}
-            <Link href="/courses?category=all" className={getLinkClass("/courses")}>
+            <Link href="/cursos?category=all" className={getLinkClass("/cursos")}>
               Cursos
             </Link>
 
@@ -88,7 +88,7 @@ export function Navbar() {
             </div>
 
             {/* 4. Nosotros */}
-            <Link href="/about" className={getLinkClass("/about")}>
+            <Link href="/nosotros" className={getLinkClass("/nosotros")}>
               Nosotros
             </Link>
           </div>

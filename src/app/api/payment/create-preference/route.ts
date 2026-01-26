@@ -98,9 +98,9 @@ export async function POST(req: NextRequest) {
                 }
             ],
             back_urls: {
-                success: `${baseUrl}/dashboard/courses`,
-                failure: `${baseUrl}/pricing`,
-                pending: `${baseUrl}/pricing`,
+                success: `${baseUrl}/dashboard/cursos`,
+                failure: `${baseUrl}/membresias`,
+                pending: `${baseUrl}/membresias`,
             },
             // auto_return removed to fix creation error
             metadata: {

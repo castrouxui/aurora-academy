@@ -26,7 +26,7 @@ export function HeroBanner() {
                         </p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
-                        <Link href="/pricing" className="w-full sm:w-auto">
+                        <Link href="/membresias" className="w-full sm:w-auto">
                             <Button
                                 className="h-12 sm:h-14 px-8 sm:px-10 text-lg sm:text-xl w-full sm:w-auto bg-[#5D5CDE] text-white hover:bg-[#4B4AC0] border-transparent font-bold rounded-full shadow-lg shiny-hover transition-transform hover:scale-105"
                             >

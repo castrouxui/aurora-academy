@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { BookOpen, Award, ArrowRight } from "lucide-react";
+import { BookOpen, Award, ArrowRight, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -89,6 +89,60 @@ export default function StudentDashboard() {
             color: "text-amber-500",
         }] : [])
     ];
+
+    const hasPurchases = stats.totalCourses > 0 || membershipItems.length > 0;
+
+    if (!hasPurchases && !loading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="w-full max-w-4xl bg-gradient-to-br from-[#131722] to-[#0B0F19] border border-[#5D5CDE]/30 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden shadow-2xl shadow-[#5D5CDE]/10 group">
+                    {/* Background Effects */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-[#5D5CDE]/10 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-[#5D5CDE]/20 transition-all duration-1000" />
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -ml-16 -mb-16 group-hover:bg-indigo-500/20 transition-all duration-1000" />
+
+                    <div className="relative z-10 flex flex-col items-center">
+                        <div className="w-16 h-16 bg-[#5D5CDE]/20 rounded-2xl flex items-center justify-center mb-6 text-[#5D5CDE] shadow-[0_0_30px_rgba(93,92,222,0.3)]">
+                            <BookOpen size={32} />
+                        </div>
+
+                        <h1 className="text-3xl md:text-5xl font-bold text-white mb-6">
+                            Bienvenido a Aurora Academy
+                            <span className="text-[#5D5CDE]">.</span>
+                        </h1>
+
+                        <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+                            Tu cuenta ha sido creada exitosamente. Para comenzar tu transformación como trader profesional, selecciona tu plan o adquiere tu primer curso.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                            <Link href="/membresias">
+                                <Button className="h-14 px-8 text-lg bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-xl font-bold shiny-hover shadow-lg shadow-[#5D5CDE]/30 w-full sm:w-auto">
+                                    Ver Membresías
+                                    <ArrowRight className="ml-2 w-5 h-5" />
+                                </Button>
+                            </Link>
+                            <Link href="/cursos">
+                                <Button variant="outline" className="h-14 px-8 text-lg border-white/10 text-white hover:bg-white/5 rounded-xl font-bold w-full sm:w-auto">
+                                    Explorar Cursos
+                                </Button>
+                            </Link>
+                        </div>
+
+                        <div className="mt-12 flex items-center justify-center gap-8 text-sm text-gray-500">
+                            <div className="flex items-center gap-2">
+                                <Award className="text-amber-500" size={16} />
+                                <span>Certificados Oficiales</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Users className="text-blue-500" size={16} />
+                                <span>Comunidad Exclusiva</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-8">
@@ -210,7 +264,7 @@ export default function StudentDashboard() {
                         ) : (
                             <div className="text-center py-8">
                                 <p className="text-gray-400 mb-6 font-medium">No has iniciado ningún curso aún.</p>
-                                <Link href="/courses">
+                                <Link href="/cursos">
                                     <Button variant="outline" className="border-white/10 text-white hover:bg-white/10 hover:text-white rounded-xl font-bold shiny-hover">
                                         Explorar Cursos
                                     </Button>
