@@ -174,19 +174,24 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                         </h3>
 
                         <div className="mb-6 md:mb-8">
-                            <h2 className="text-xl md:text-3xl font-bold text-foreground mb-2 leading-tight pr-8">
+                            <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2 leading-tight pr-8">
                                 {courseTitle}
                             </h2>
                             <div className="flex flex-col mt-3 md:mt-4">
                                 {appliedCoupon ? (
                                     <>
-                                        <div className="flex items-center gap-2 text-muted-foreground line-through text-sm">
-                                            <span>{coursePrice}</span>
-                                            <span>ARS</span>
+                                        <div className="flex items-center gap-2 text-muted-foreground line-through text-xs font-medium">
+                                            <span>
+                                                {new Intl.NumberFormat("es-AR", {
+                                                    style: "currency",
+                                                    currency: "ARS",
+                                                    minimumFractionDigits: 0,
+                                                    maximumFractionDigits: 0
+                                                }).format(Number(coursePrice.replace(/[^0-9]/g, '')))}
+                                            </span>
                                         </div>
                                         <div className="flex items-end gap-2 text-green-400">
                                             {(() => {
-                                                // Helper to parse price string "$45.000" -> 45000
                                                 const numericParams = Number(coursePrice.replace(/[^0-9]/g, ''));
                                                 let final = numericParams;
                                                 if (appliedCoupon.type === 'PERCENTAGE') {
@@ -195,20 +200,28 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                                     final = final - appliedCoupon.discount;
                                                 }
                                                 return (
-                                                    <>
-                                                        <span className="text-3xl md:text-4xl font-bold tracking-tight">
-                                                            ${Math.max(0, final).toLocaleString('es-AR')}
-                                                        </span>
-                                                        <span className="text-green-500/80 font-medium mb-1.5 text-sm md:text-base">ARS</span>
-                                                    </>
+                                                    <span className="text-3xl md:text-4xl font-black tracking-tight">
+                                                        {new Intl.NumberFormat("es-AR", {
+                                                            style: "currency",
+                                                            currency: "ARS",
+                                                            minimumFractionDigits: 0,
+                                                            maximumFractionDigits: 0
+                                                        }).format(Math.max(0, final))}
+                                                    </span>
                                                 );
                                             })()}
                                         </div>
                                     </>
                                 ) : (
                                     <div className="flex items-end gap-2">
-                                        <span className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">{coursePrice}</span>
-                                        <span className="text-muted-foreground font-medium mb-1.5 text-sm md:text-base">ARS</span>
+                                        <span className="text-3xl md:text-4xl font-black text-white tracking-tight">
+                                            {new Intl.NumberFormat("es-AR", {
+                                                style: "currency",
+                                                currency: "ARS",
+                                                minimumFractionDigits: 0,
+                                                maximumFractionDigits: 0
+                                            }).format(Number(coursePrice.replace(/[^0-9]/g, '')))}
+                                        </span>
                                     </div>
                                 )}
                             </div>

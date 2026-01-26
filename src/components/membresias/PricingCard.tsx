@@ -55,11 +55,16 @@ export function PricingCard({
             <div className="mb-4 text-center">
                 <h3 className="text-xl font-bold text-white">{title}</h3>
                 <div className="mt-3 flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-extrabold tracking-tight text-white drop-shadow-md">
-                        {price}
+                    <span className="text-4xl font-black tracking-tight text-white drop-shadow-sm">
+                        {new Intl.NumberFormat("es-AR", {
+                            style: "currency",
+                            currency: "ARS",
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0
+                        }).format(Number(price.replace(/[^0-9]/g, "")))}
                     </span>
-                    <span className="text-sm font-medium text-gray-400">
-                        ARS / {periodicity}
+                    <span className="text-sm font-medium text-gray-500">
+                        / {periodicity}
                     </span>
                 </div>
                 <div className="mt-3 text-sm text-gray-300 font-medium space-y-1">
