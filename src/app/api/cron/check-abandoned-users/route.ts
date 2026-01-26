@@ -13,9 +13,16 @@ export async function GET(req: Request) {
         // NOTE: We need a 'notified' flag or we rely on the window.
         // Let's rely on a window of 24h to 25h ago for simplicity since we don't have a 'notified' column yet.
 
+        // Calculate previous calendar day (Yesterday 00:00 - 23:59)
+        // Cron runs at 13:00 UTC (10:00 AM ARG) daily.
+        // We want users who registered "yesterday".
+
         const now = new Date();
-        const yesterdayStart = new Date(now.getTime() - 25 * 60 * 60 * 1000); // 25 hours ago
-        const yesterdayEnd = new Date(now.getTime() - 24 * 60 * 60 * 1000);   // 24 hours ago
+        const yesterday = new Date(now);
+        yesterday.setDate(yesterday.getDate() - 1);
+
+        const yesterdayStart = new Date(yesterday.setHours(0, 0, 0, 0));
+        const yesterdayEnd = new Date(yesterday.setHours(23, 59, 59, 999));
 
         const abandonedUsers = await prisma.user.findMany({
             where: {
