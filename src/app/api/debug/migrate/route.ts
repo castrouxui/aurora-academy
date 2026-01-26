@@ -14,8 +14,9 @@ export async function GET(request: Request) {
 
     try {
         console.log("Starting migration...");
-        // Execute prisma migrate deploy
-        const { stdout, stderr } = await execAsync("npx prisma migrate deploy");
+        // Use local node_modules binary to avoid npx download attempts
+        // Vercel serverless functions should have access to dependencies
+        const { stdout, stderr } = await execAsync("./node_modules/.bin/prisma migrate deploy");
 
         console.log("Migration output:", stdout);
         if (stderr) console.error("Migration stderr:", stderr);
