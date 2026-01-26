@@ -7,6 +7,8 @@ declare module "next-auth" {
             role: string;
             companyId?: string;
             isCompanyAdmin?: boolean;
+            telegram?: string;
+            telegramVerified?: boolean;
         } & DefaultSession["user"];
     }
 
@@ -15,6 +17,8 @@ declare module "next-auth" {
         role: string;
         companyId?: string;
         isCompanyAdmin?: boolean;
+        telegram?: string;
+        telegramVerified?: boolean;
     }
 }
 
@@ -24,5 +28,7 @@ declare module "next-auth/jwt" {
         role: string;
         companyId?: string;
         isCompanyAdmin?: boolean;
+        telegram?: string;
+        telegramVerified?: boolean;
     }
 }

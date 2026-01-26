@@ -111,6 +111,10 @@ export const authOptions: AuthOptions = {
                 token.companyId = user.companyId;
                 // @ts-ignore
                 token.isCompanyAdmin = user.isCompanyAdmin;
+                // @ts-ignore
+                token.telegram = user.telegram;
+                // @ts-ignore
+                token.telegramVerified = user.telegramVerified;
             }
 
             // Update session trigger
@@ -126,6 +130,8 @@ export const authOptions: AuthOptions = {
                 session.user.role = token.role as any;
                 session.user.companyId = token.companyId as string | undefined;
                 session.user.isCompanyAdmin = token.isCompanyAdmin as boolean | undefined;
+                session.user.telegram = token.telegram as string | undefined;
+                session.user.telegramVerified = token.telegramVerified as boolean | undefined;
             }
             return session;
         },

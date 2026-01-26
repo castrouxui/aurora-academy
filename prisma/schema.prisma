@@ -43,7 +43,8 @@ model User {
   companyId      String?
   createdAt      DateTime       @default(now())
   isCompanyAdmin Boolean        @default(false)
-  password       String?
+  telegram       String?
+  telegramVerified Boolean      @default(false)
   updatedAt      DateTime       @updatedAt
   accounts       Account[]
   purchases      Purchase[]

@@ -19,6 +19,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { TelegramVerification } from "@/components/dashboard/TelegramVerification";
 
 export default function SettingsPage() {
     const { data: session } = useSession();
@@ -68,6 +69,13 @@ export default function SettingsPage() {
                                     </div>
                                 </div>
                             </div>
+                            <div className="pt-6 border-t border-gray-700/50">
+                                <TelegramVerification
+                                    initialHandle={session?.user?.telegram}
+                                    isVerified={session?.user?.telegramVerified || false}
+                                />
+                            </div>
+
                             <div className="pt-2">
                                 <p className="text-xs text-yellow-500/80">
                                     * Para cambiar estos datos, contacta a soporte o edítalos en tu proveedor de identidad (Google).
