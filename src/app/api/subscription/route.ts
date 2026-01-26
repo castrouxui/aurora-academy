@@ -32,24 +32,16 @@ export async function GET() {
         // 'cancelled' or 'paused' are inactive immediately (since we don't track expiry date yet).
         // 'pending' also doesn't grant access until confirmed.
         const isActive = subscription.status === 'authorized';
-
-        if (!isActive) {
-            return NextResponse.json({ active: false });
-        }
-
-        // Optional: Sync with MP if "pending" for too long? 
-        // For now, trust the webhook flow, but return what we have.
-        // Fetch other published bundles for upgrade/downgrade
         const otherBundles = await prisma.bundle.findMany({
             where: {
                 published: true,
-                id: { not: subscription.bundleId } // Exclude current plan
+                id: { not: subscription.bundleId }
             },
             orderBy: { price: 'asc' }
         });
 
         return NextResponse.json({
-            active: true,
+            active: isActive,
             subscription,
             bundleTitle: subscription.bundle.title,
             otherBundles

@@ -7,7 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Business Section Models added in v2
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -35,23 +34,23 @@ model Session {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  name          String?
-  email         String?        @unique
-  emailVerified DateTime?
-  image         String?
-  role          String         @default("ESTUDIANTE")
-  password      String?
-  accounts      Account[]
-  purchases     Purchase[]
-  sessions      Session[]
-  subscriptions Subscription[]
-  isCompanyAdmin Boolean        @default(false)
+  id             String         @id @default(cuid())
+  name           String?
+  email          String?        @unique
+  emailVerified  DateTime?
+  image          String?
+  role           String         @default("ESTUDIANTE")
   companyId      String?
+  createdAt      DateTime       @default(now())
+  isCompanyAdmin Boolean        @default(false)
+  password       String?
+  updatedAt      DateTime       @updatedAt
+  accounts       Account[]
+  purchases      Purchase[]
+  sessions       Session[]
+  subscriptions  Subscription[]
   company        Company?       @relation(fields: [companyId], references: [id])
-  progress      UserProgress[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  progress       UserProgress[]
 }
 
 model UserProgress {
@@ -222,16 +221,15 @@ model Coupon {
 }
 
 model Company {
-  id          String   @id @default(cuid())
-  name        String
-  logo        String?
-  domain      String?
-  accessCode  String   @unique
-  maxSeats    Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  users       User[]
+  id         String   @id @default(cuid())
+  name       String
+  logo       String?
+  domain     String?
+  accessCode String   @unique
+  maxSeats   Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  users      User[]
 }
 
 model Lead {
@@ -241,7 +239,7 @@ model Lead {
   email       String
   phone       String?
   employees   String
-  status      String   @default("NEW") // NEW, CONTACTED, CLOSED
+  status      String   @default("NEW")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

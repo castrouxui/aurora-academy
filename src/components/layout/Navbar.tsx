@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
 import { Logo } from "./Logo";
-import { Menu, X, Search, LogOut, BookOpen, User, LayoutDashboard, TrendingUp, ChevronDown, Building2, GraduationCap, PlayCircle, FileText, Lock } from "lucide-react"; // Added icons
+import { Menu, X, Search, LogOut, BookOpen, User, LayoutDashboard, TrendingUp, ChevronDown, Building2, GraduationCap, PlayCircle, FileText, Lock, ArrowRight } from "lucide-react"; // Added icons
 import { useSession, signOut } from "next-auth/react";
 // import { cn } from "@/lib/utils"; 
 import { LoginModal } from "@/components/auth/LoginModal";
@@ -139,10 +139,16 @@ export function Navbar() {
                       </Link>
                     )}
                     {session && session.user.role !== 'ADMIN' && (
-                      <Link href="/dashboard/courses" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                        <BookOpen size={16} />
-                        Mis Cursos
-                      </Link>
+                      <>
+                        <Link href="/dashboard/courses" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                          <BookOpen size={16} />
+                          Mis Cursos
+                        </Link>
+                        <Link href="/dashboard/memberships" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                          <TrendingUp size={16} />
+                          Membresía
+                        </Link>
+                      </>
                     )}
                     <div className="h-px bg-gray-700 my-1"></div>
                     <button onClick={() => signOut()} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors">
@@ -179,116 +185,151 @@ export function Navbar() {
       </nav >
 
       {/* Mobile Menu Overlay */}
-      {
-        isOpen && (
-          <div className="fixed inset-0 z-[9999] bg-[#0B0F19] md:hidden animate-in fade-in slide-in-from-top-[2%] duration-300 flex flex-col">
-
-            {/* Mobile Header */}
-            <div className="w-full border-b border-white/5 bg-[#0B0F19]">
-              <div className="flex h-16 items-center justify-between px-6 max-w-7xl mx-auto">
-                <div className="flex-shrink-0">
-                  <Logo />
-                </div>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={toggleMenu}
-                    className="text-white focus:outline-none p-2 rounded-full hover:bg-white/5"
-                  >
-                    <X size={24} />
-                  </button>
-                </div>
-              </div>
+      {isOpen && (
+        <div className="fixed inset-0 z-[9999] bg-[#0B0F19] md:hidden flex flex-col animate-in fade-in duration-300">
+          {/* Mobile Header (Higher quality) */}
+          <div className="w-full border-b border-white/5 bg-[#0B0F19]/95 backdrop-blur-xl">
+            <div className="flex h-16 items-center justify-between px-6">
+              <Logo />
+              <button
+                onClick={toggleMenu}
+                className="text-white bg-white/5 p-2.5 rounded-xl hover:bg-white/10 transition-colors"
+                aria-label="Close menu"
+              >
+                <X size={24} />
+              </button>
             </div>
+          </div>
 
-            <div className="flex flex-col flex-1 px-6 py-8 overflow-y-auto">
-              {/* Mobile Search */}
-              <div className="relative w-full mb-8">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                  <Search size={20} />
-                </div>
-                <input
-                  type="text"
-                  placeholder="¿Qué quieres aprender hoy?"
-                  className="w-full bg-white/5 border border-white/10 text-white text-lg rounded-2xl py-4 pl-12 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                />
+          <div className="flex flex-col flex-1 px-6 py-8 overflow-y-auto space-y-10">
+            {/* Search - More Integrated */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const term = (e.currentTarget.elements.namedItem('search-mobile') as HTMLInputElement).value;
+                if (term) {
+                  router.push(`/cursos?search=${encodeURIComponent(term)}`);
+                  toggleMenu();
+                }
+              }}
+              className="relative group lg:hidden"
+            >
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-primary transition-colors">
+                <Search size={18} />
               </div>
+              <input
+                name="search-mobile"
+                type="text"
+                placeholder="¿Qué quieres aprender?"
+                className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 pl-12 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all text-base"
+              />
+            </form>
 
-              {/* Main Navigation Links */}
-              <div className="flex flex-col space-y-2 mb-8">
+            {/* Navigation Groups */}
+            <div className="space-y-8">
+              {/* Primary (Academical) */}
+              <div className="space-y-3">
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] ml-4 mb-2">Academia</p>
+
+                {session && (
+                  <Link
+                    href="/dashboard/courses"
+                    className="flex items-center w-full px-5 py-4 bg-primary/10 border border-primary/20 rounded-2xl text-primary mb-2 shadow-lg shadow-primary/5"
+                    onClick={toggleMenu}
+                  >
+                    <PlayCircle className="mr-4" size={22} />
+                    <span className="text-lg font-bold">Ir a mis cursos</span>
+                    <ArrowRight className="ml-auto opacity-50" size={18} />
+                  </Link>
+                )}
+
                 <Link
-                  href="/pricing"
-                  className={getMobileLinkClass("/pricing")}
+                  href="/membresias"
+                  className={getMobileLinkClass("/membresias")}
                   onClick={toggleMenu}
                 >
-                  <TrendingUp className="mr-4 text-gray-500" size={20} />
-                  <span className="text-lg font-bold text-gray-300">Membresías</span>
+                  <TrendingUp className="mr-4 text-gray-400" size={20} />
+                  <span className="text-lg font-bold">Membresías</span>
                 </Link>
 
-                {/* Cursos */}
                 <Link
-                  href="/courses?category=all"
-                  className={getMobileLinkClass("/courses")}
+                  href="/cursos?category=all"
+                  className={getMobileLinkClass("/cursos")}
                   onClick={toggleMenu}
                 >
-                  <BookOpen className="mr-4 text-[#5D5CDE]" size={20} />
+                  <BookOpen className="mr-4 text-gray-400" size={20} />
                   <span className="text-lg font-bold text-white">Cursos</span>
                 </Link>
+              </div>
 
-                {/* Empresas - Próximamente */}
-                <div className="flex items-center w-full px-4 py-3 text-base font-medium text-gray-500 opacity-60">
+              {/* Secondary (Institutional) */}
+              <div className="space-y-2">
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] ml-4 mb-2">Institucional</p>
+
+                <div className="flex items-center w-full px-5 py-3 text-gray-500 opacity-60">
                   <Building2 className="mr-4" size={20} />
-                  <span className="text-lg font-bold">Empresas</span>
-                  <span className="ml-auto text-[10px] uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">
+                  <span className="text-lg font-semibold">Empresas</span>
+                  <span className="ml-auto text-[10px] uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-1 rounded-full">
                     Próximamente
                   </span>
                 </div>
 
                 <Link
-                  href="/about"
-                  className={getMobileLinkClass("/about")}
+                  href="/nosotros"
+                  className={getMobileLinkClass("/nosotros")}
                   onClick={toggleMenu}
                 >
-                  <User className="mr-4 text-gray-500" size={20} />
-                  <span className="text-lg font-bold">Nosotros</span>
+                  <User className="mr-4 text-gray-400" size={20} />
+                  <span className="text-lg font-semibold">Nosotros</span>
                 </Link>
               </div>
             </div>
+          </div>
 
-            {/* User Session / Auth */}
-            <div className="mt-auto">
-              {session ? (
-                <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                  <div className="flex items-center gap-4 mb-4">
-                    <Image src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`} alt="" width={48} height={48} className="rounded-full border border-gray-700 object-cover aspect-square" />
-                    <div>
-                      <p className="text-white font-bold text-lg">{session.user?.name}</p>
-                      <p className="text-sm text-gray-400">{session.user?.email}</p>
-                    </div>
+          {/* User Section / Boton Inferior */}
+          <div className="p-6 border-t border-white/5 bg-black/20">
+            {session ? (
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 px-2">
+                  <Image
+                    src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`}
+                    alt=""
+                    width={44}
+                    height={44}
+                    className="rounded-full ring-2 ring-white/5"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white font-bold text-base truncate">{session.user?.name}</p>
+                    <p className="text-xs text-gray-500 truncate">{session.user?.email}</p>
                   </div>
-                  <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"} className="w-full flex items-center justify-center gap-2 bg-[#5D5CDE] text-white py-3 rounded-xl font-bold mb-3 hover:bg-[#4B4AC0]" onClick={toggleMenu}>
-                    <LayoutDashboard size={20} />
-                    Ir al Dashboard
-                  </Link>
-                  <button onClick={() => signOut()} className="w-full flex items-center justify-center gap-2 py-3 text-red-400 hover:bg-white/5 rounded-xl font-medium transition-colors">
+                  <button onClick={() => signOut()} className="p-2.5 text-red-400 hover:bg-red-400/10 rounded-xl transition-colors">
                     <LogOut size={20} />
-                    Cerrar sesión
                   </button>
                 </div>
-              ) : (
-                <Button
-                  className="w-full h-14 text-lg font-bold bg-[#5D5CDE] text-white rounded-2xl shadow-lg shiny-hover"
-                  onClick={() => {
-                    toggleMenu();
-                    openLoginModal();
-                  }}
+                <Link
+                  href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"}
+                  className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white py-4 rounded-2xl font-bold border border-white/10 transition-all"
+                  onClick={toggleMenu}
                 >
-                  Acceder a la Academia
-                </Button>
-              )}
-            </div>
+                  <LayoutDashboard size={20} />
+                  Panel de Alumno
+                </Link>
+              </div>
+            ) : (
+              <Button
+                className="w-full h-14 text-lg font-bold bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-xl shadow-primary/10 shiny-hover"
+                onClick={() => {
+                  toggleMenu();
+                  openLoginModal();
+                }}
+              >
+                Acceder a la Academia
+              </Button>
+            )}
           </div>
-        )
-      }
+        </div>
+      )}
+
 
       {/* Login Modal */}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
