@@ -36,7 +36,7 @@ export default function AdminDashboard() {
     const kpiData = [
         {
             title: "Ingresos Totales",
-            value: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(stats.revenue),
+            value: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", notation: "compact", maximumFractionDigits: 1 }).format(stats.revenue),
             change: "Histórico",
             icon: DollarSign,
             color: "text-emerald-500",
@@ -102,7 +102,7 @@ export default function AdminDashboard() {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-xl md:text-2xl font-black text-white tracking-tight break-all" title={String(stat.value)}>
+                                <div className="text-xl md:text-2xl font-black text-white tracking-tight" title={String(stat.value)}>
                                     {stat.value}
                                 </div>
                                 <p className="text-xs text-gray-500 mt-1">{stat.change}</p>
