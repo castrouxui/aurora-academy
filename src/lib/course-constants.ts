@@ -2,7 +2,7 @@ export const COURSE_IMAGES: Record<string, string> = {
     // Verified Covers
     "Trading": "/images/courses/trading_inicial_cover_1768005327407.png",
     // "Price Action": "/images/courses/price_action_cover_1768005409635.png", // Allow DB override
-    "Bonos": "/images/courses/renta_fija_cover_1768005380686.png",
+    // "Bonos": "/images/courses/renta_fija_cover_1768005380686.png",
     // "Tecnico": "/images/courses/analisis_tecnico_cover_1768005395407.png", // Allow DB override 
     "Avanzado": "/images/courses/trading_avanzado_cover_1768005355571.png",
     "Intermedio": "/images/courses/trading_intermedio_cover_1768005341591.png",
