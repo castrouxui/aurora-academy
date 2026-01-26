@@ -74,23 +74,44 @@ export async function POST(req: Request) {
             // 2. Send Confirmation to Client
             const clientSubject = `Recibimos tu solicitud - Aurora Academy`;
             const clientHtml = `
-                <div style="font-family: sans-serif; color: #333; max-width: 600px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; background-color: #f9f9f9;">
-                    <div style="background-color: #5D5CDE; padding: 24px; text-align: center;">
-                        <img src="https://auroracademy.net/logo-white.png" alt="Aurora Academy" style="height: 40px; margin-bottom: 10px;" />
-                        <h2 style="color: white; margin: 0; font-size: 20px;">¡Gracias por contactarnos!</h2>
-                    </div>
-                    <div style="padding: 30px; background-color: white;">
-                        <p style="font-size: 16px; margin-bottom: 16px;">Hola <strong>${name}</strong>,</p>
-                        <p style="font-size: 16px; line-height: 1.5; color: #4b5563; margin-bottom: 24px;">
-                            Hemos recibido tu solicitud de presupuesto para <strong>${companyName}</strong> correctamente.
-                        </p>
-                        <p style="font-size: 16px; line-height: 1.5; color: #4b5563; margin-bottom: 24px;">
-                            Un especialista de nuestro equipo de Educación Corporativa analizará tus requerimientos y se pondrá en contacto contigo en las próximas <strong>24 horas hábiles</strong>.
-                        </p>
-                        <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 30px 0;" />
-                        <p style="font-size: 14px; color: #6b7280; text-align: center;">
-                            Si tienes alguna duda urgente, puedes responder a este correo.
-                        </p>
+                <div style="font-family: 'Segoe UI', user-select: none; Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f5; padding: 40px 0;">
+                    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+                        
+                        <!-- Header -->
+                        <div style="background-color: #0B0F19; padding: 40px 20px; text-align: center; border-bottom: 2px solid #5D5CDE;">
+                            <img src="https://auroracademy.net/logo-full.png" alt="Aurora Academy" style="height: 50px; width: auto; display: block; margin: 0 auto;" />
+                        </div>
+
+                        <!-- Content -->
+                        <div style="padding: 40px 30px;">
+                            <h2 style="color: #111827; margin-top: 0; margin-bottom: 16px; font-size: 24px; text-align: center;">¡Gracias por contactarnos!</h2>
+                            
+                            <p style="font-size: 16px; line-height: 1.6; color: #4b5563; margin-bottom: 24px;">
+                                Hola <strong>${name}</strong>,
+                            </p>
+                            
+                            <p style="font-size: 16px; line-height: 1.6; color: #4b5563; margin-bottom: 24px;">
+                                Hemos recibido correctamente tu solicitud de presupuesto para <strong>${companyName}</strong>. 
+                            </p>
+                            
+                            <div style="background-color: #f3f4f6; border-left: 4px solid #5D5CDE; padding: 16px; margin-bottom: 24px; border-radius: 4px;">
+                                <p style="margin: 0; color: #1f2937; font-size: 15px;">
+                                    Un especialista de nuestro equipo de Educación Corporativa analizará tus requerimientos y se pondrá en contacto contigo en las próximas <strong>24 horas hábiles</strong>.
+                                </p>
+                            </div>
+
+                            <p style="font-size: 14px; color: #6b7280; text-align: center; margin-top: 40px;">
+                                Atentamente,<br/>
+                                <strong>El equipo de Aurora Academy</strong>
+                            </p>
+                        </div>
+                        
+                        <!-- Footer -->
+                        <div style="background-color: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
+                            <p style="font-size: 12px; color: #9ca3af; margin: 0;">
+                                © ${new Date().getFullYear()} Aurora Academy. Todos los derechos reservados.
+                            </p>
+                        </div>
                     </div>
                 </div>
             `;
