@@ -125,4 +125,3 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Error creating preference', details: error.message || error }, { status: 500 });
     }
 }
-```
