@@ -3,14 +3,23 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, CreditCard, AlertTriangle, CheckCircle, XCircle, Award } from "lucide-react";
+import { Loader2, CreditCard, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { PaymentModal } from "@/components/checkout/PaymentModal";
+import { PricingCard } from "@/components/membresias/PricingCard";
+import { PLANS } from "@/constants/pricing";
 
 export default function SubscriptionPage() {
     const [subscription, setSubscription] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+    const [selectedPlan, setSelectedPlan] = useState({
+        title: "",
+        price: "",
+        bundleId: ""
+    });
 
     useEffect(() => {
         fetchSubscription();
@@ -21,8 +30,6 @@ export default function SubscriptionPage() {
             const res = await fetch("/api/subscription");
             if (res.ok) {
                 const data = await res.json();
-                // Data.active is only true for 'authorized' status
-                // We keep the data even if not active to show otherBundles or status
                 setSubscription(data);
             }
         } catch (error) {
@@ -60,6 +67,11 @@ export default function SubscriptionPage() {
         }
     };
 
+    const handlePurchase = (title: string, price: string, bundleId: string) => {
+        setSelectedPlan({ title, price, bundleId });
+        setIsPaymentModalOpen(true);
+    };
+
     if (loading) {
         return (
             <div className="flex h-[50vh] items-center justify-center">
@@ -69,7 +81,7 @@ export default function SubscriptionPage() {
     }
 
     return (
-        <div className="space-y-8 max-w-4xl mx-auto pb-12">
+        <div className="space-y-8 max-w-5xl mx-auto pb-12">
             <div>
                 <h1 className="text-3xl font-bold text-white">Mi Membresía</h1>
                 <p className="text-gray-400 mt-2">Gestioná tu suscripción y métodos de pago.</p>
@@ -168,54 +180,49 @@ export default function SubscriptionPage() {
             )}
 
             {/* Other Plans Section */}
-            <div className="pt-8 border-t border-white/5">
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-                    <div>
-                        <h2 className="text-2xl font-bold text-white mb-2">Otros Planes Disponibles</h2>
-                        <p className="text-gray-400">Mejorá tu plan o cambiá a uno que se adapte mejor a tus necesidades.</p>
-                    </div>
+            <div className="pt-12 border-t border-white/5">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl font-bold text-white mb-4">Elegí tu Plan</h2>
+                    <p className="text-gray-400 max-w-2xl mx-auto">
+                        Accedé a contenido exclusivo y llevá tu aprendizaje al siguiente nivel con nuestras membresías premium.
+                    </p>
                 </div>
 
                 {subscription?.otherBundles && subscription.otherBundles.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
-                        {subscription.otherBundles.map((bundle: any) => (
-                            <Card key={bundle.id} className="bg-black/20 border-white/5 flex flex-col justify-between hover:border-[#5D5CDE]/30 hover:bg-white/5 transition-all duration-300 group">
-                                <CardHeader>
-                                    <div className="flex justify-between items-start mb-4">
-                                        <div className="p-2.5 bg-[#5D5CDE]/10 rounded-xl text-[#5D5CDE] group-hover:scale-110 transition-transform">
-                                            <Award size={22} />
-                                        </div>
-                                        {bundle.price === 0 && (
-                                            <span className="text-xs bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full font-black border border-emerald-500/20">
-                                                GRATIS
-                                            </span>
-                                        )}
-                                    </div>
-                                    <CardTitle className="text-white text-xl font-bold">{bundle.title}</CardTitle>
-                                    <CardDescription className="text-gray-400 line-clamp-2 mt-2 leading-relaxed">
-                                        {bundle.description || "Potencia tus habilidades con lo mejor de Aurora Academy."}
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="mb-8 flex items-baseline gap-1">
-                                        <span className="text-4xl font-black text-white">
-                                            {new Intl.NumberFormat("es-AR", {
-                                                style: "currency",
-                                                currency: "ARS",
-                                                minimumFractionDigits: 0,
-                                                maximumFractionDigits: 0
-                                            }).format(bundle.price)}
-                                        </span>
-                                        <span className="text-gray-500 text-sm font-medium">/mes</span>
-                                    </div>
-                                    <Link href="/membresias">
-                                        <Button className="w-full h-11 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl font-bold transition-all">
-                                            Ver Detalles
-                                        </Button>
-                                    </Link>
-                                </CardContent>
-                            </Card>
-                        ))}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                        {subscription.otherBundles.map((bundle: any) => {
+                            // Find matching plan details from constants
+                            const planDetails = PLANS.find(p => p.title.toLowerCase() === bundle.title.toLowerCase()) || {
+                                title: bundle.title,
+                                price: `$${new Intl.NumberFormat("es-AR").format(bundle.price)}`,
+                                description: bundle.description || "Potencia tus habilidades con lo mejor de Aurora Academy.",
+                                features: ["Contenido premium", "Acceso ilimitado"],
+                                excludedFeatures: [],
+                                tag: null,
+                                isRecommended: false
+                            };
+
+                            return (
+                                <PricingCard
+                                    key={bundle.id}
+                                    title={planDetails.title}
+                                    price={planDetails.price}
+                                    periodicity="mes"
+                                    tag={planDetails.tag || undefined}
+                                    isRecommended={planDetails.isRecommended}
+                                    specialFeature={planDetails.specialFeature}
+                                    description={
+                                        <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center">
+                                            {planDetails.description}
+                                        </p>
+                                    }
+                                    features={planDetails.features}
+                                    excludedFeatures={planDetails.excludedFeatures}
+                                    buttonText="Suscribirme Ahora"
+                                    onAction={() => handlePurchase(bundle.title, String(bundle.price), bundle.id)}
+                                />
+                            );
+                        })}
                     </div>
                 ) : (
                     <Card className="bg-white/5 border-white/5 border-dashed py-12">
@@ -228,6 +235,15 @@ export default function SubscriptionPage() {
                     </Card>
                 )}
             </div>
+
+            {/* Payment Modal */}
+            <PaymentModal
+                isOpen={isPaymentModalOpen}
+                onClose={() => setIsPaymentModalOpen(false)}
+                courseTitle={selectedPlan.title}
+                coursePrice={selectedPlan.price}
+                bundleId={selectedPlan.bundleId}
+            />
         </div>
     );
 }
