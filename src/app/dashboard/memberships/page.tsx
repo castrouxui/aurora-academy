@@ -22,6 +22,7 @@ import {
 import { PricingCard } from "@/components/membresias/PricingCard";
 import { PLANS } from "@/constants/pricing";
 import { PaymentModal } from "@/components/checkout/PaymentModal";
+import { SyncPaymentsButton } from "@/components/dashboard/SyncPaymentsButton";
 
 export default function MyMembershipsPage() {
     const searchParams = useSearchParams();
@@ -195,12 +196,17 @@ export default function MyMembershipsPage() {
                         <p className="text-gray-400 mb-8 max-w-md mx-auto text-lg leading-relaxed">
                             No tenés suscripciones activas. Accedé a contenido exclusivo, mentorías y comunidad con nuestros planes.
                         </p>
-                        <Button
-                            onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })}
-                            className="bg-[#5D5CDE] hover:bg-[#4b4ac6] font-bold h-14 px-12 rounded-2xl shadow-xl shadow-[#5D5CDE]/20 text-lg transition-all hover:scale-105 active:scale-95"
-                        >
-                            Explorar Membresías
-                        </Button>
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <Button
+                                onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })}
+                                className="bg-[#5D5CDE] hover:bg-[#4b4ac6] font-bold h-14 px-12 rounded-2xl shadow-xl shadow-[#5D5CDE]/20 text-lg transition-all hover:scale-105 active:scale-95"
+                            >
+                                Explorar Membresías
+                            </Button>
+                            <SyncPaymentsButton
+                                className="h-14 px-8 rounded-2xl border-white/10 hover:bg-white/5 text-gray-400 font-bold"
+                            />
+                        </div>
                     </CardContent>
                 </Card>
             )}

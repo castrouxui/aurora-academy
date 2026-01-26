@@ -78,12 +78,34 @@ export async function POST(request: Request) {
 
             console.log(`[WEBHOOK] Subscription ${id} Status: ${subscriptionData.status}`);
 
-            // Update local DB status (authorized, paused, cancelled)
-            const updated = await prisma.subscription.update({
+            // SELF-HEALING SUBSCRIPTION UPDATE (UPSERT)
+            // If the record wasn't created during checkout (e.g. window closed too fast), 
+            // the webhook will create it using metadata/external_reference.
+
+            let userId = "";
+            let bundleId = "";
+
+            if (subscriptionData.external_reference) {
+                try {
+                    const ext = JSON.parse(subscriptionData.external_reference);
+                    userId = ext.user_id;
+                    bundleId = ext.bundle_id;
+                } catch (e) {
+                    console.error("[WEBHOOK] Failed to parse external_reference", e);
+                }
+            }
+
+            const updated = await prisma.subscription.upsert({
                 where: { mercadoPagoId: id },
-                data: {
-                    status: subscriptionData.status,
+                update: {
+                    status: subscriptionData.status || 'pending',
                     updatedAt: new Date()
+                },
+                create: {
+                    mercadoPagoId: id,
+                    userId: userId,
+                    bundleId: bundleId,
+                    status: subscriptionData.status || 'pending',
                 },
                 include: { user: true, bundle: true }
             });
