@@ -67,7 +67,7 @@ export function PricingCard({
                 </div>
             </div>
 
-            <ul className="mb-6 flex-1 space-y-4">
+            <ul className="mb-0 space-y-4">
                 {features.map((feature, index) => (
                     <li key={`inc-${index}`} className="flex items-start gap-3">
                         <PricingCheckmark />
@@ -91,7 +91,7 @@ export function PricingCard({
 
             {/* Special Feature Banner (e.g. for Master Plan) */}
             {specialFeature && (
-                <div className="mb-4 mt-4 rounded-lg bg-gradient-to-br from-[#5D5CDE]/40 to-purple-900/60 border border-[#5D5CDE]/60 p-4 shadow-lg shadow-[#5D5CDE]/10">
+                <div className="mt-4 rounded-lg bg-gradient-to-br from-[#5D5CDE]/40 to-purple-900/60 border border-[#5D5CDE]/60 p-4 shadow-lg shadow-[#5D5CDE]/10">
                     <p className="text-sm font-bold text-white mb-1 flex items-start gap-3">
                         <PricingCheckmark />
                         <span className="leading-tight">{specialFeature.title}</span>
@@ -101,6 +101,8 @@ export function PricingCard({
                     </p>
                 </div>
             )}
+
+            <div className="flex-1" />
 
             <Button
                 onClick={onAction}
