@@ -80,100 +80,49 @@ export default function PricingPage() {
                 <Container>
                     {/* Dynamic Bundle Grid */}
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12 items-start">
-                        {[
-                            {
-                                // 1. Inversor Inicial
-                                title: "Inversor Inicial",
-                                price: "$54.900",
-                                description: "El escalón de entrada para dominar los conceptos base.",
-                                features: [
-                                    "Introducción al Mercado de Capitales",
-                                    "Renta Fija / Bonos",
-                                    "Valuación de Bonos: TIR, Paridad",
-                                    "Valor Tiempo del Dinero: TNA, TEA"
-                                ],
-                                excludedFeatures: [
-                                    "Acceso a Comunidad de Inversores",
-                                    "Acceso al Canal de Aurora Academy"
-                                ],
-                                tag: null,
-                                isRecommended: false
-                            },
-                            {
-                                // 2. Trader de Elite
-                                title: "Trader de Elite",
-                                price: "$89.900",
-                                description: "Para quienes operan activamente y buscan actualización constante.",
-                                features: [
-                                    "Todo lo del Plan Inversor Inicial",
-                                    <span key="new-course" className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
-                                        <span>🔥</span> Curso nuevo cada 15 días
-                                    </span>,
-                                    "Curso de Opciones Financieras",
-                                    "Domina el Stop Loss en 15 minutos",
-                                    "Análisis Técnico & Price Action",
-                                    "Futuros Financieros",
-                                    "Acceso al Canal de Aurora Academy"
-                                ],
-                                excludedFeatures: [
-                                    "Acceso a Comunidad de Inversores"
-                                ],
-                                tag: "EL MÁS BUSCADO",
-                                isRecommended: true
-                            },
-                            {
-                                // 3. Portfolio Manager
-                                title: "Portfolio Manager",
-                                price: "$149.900",
-                                description: "La experiencia completa con networking profesional y acceso exclusivo a la comunidad de inversores.",
-                                features: [
-                                    "Todo lo del Plan Trader de Elite",
-                                    <span key="new-course-pm" className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
-                                        <span>🔥</span> Curso nuevo cada 15 días
-                                    </span>,
-                                    "Análisis Fundamental & Cartera",
-                                    "Dominando el Riesgo: Volatilidad",
-                                    "Valuación Real: Beneficio vs. Caja",
-                                    "Acceso al Canal de Aurora Academy"
-                                ],
-                                tag: null,
-                                isRecommended: false,
-                                // Special highlight for High Ticket
-                                specialFeature: {
-                                    title: "Acceso a Comunidad de Inversores",
-                                    description: "Networking profesional con otros inversores."
-                                }
-                            }
-                        ].map((plan, index) => {
-                            // Map to existing bundles for ID if available
-                            const bundle = bundles.sort((a, b) => parseFloat(a.price) - parseFloat(b.price))[index];
-                            const bundleId = bundle?.id;
+                        {loading ? (
+                            // Skeletons
+                            [1, 2, 3].map((i) => (
+                                <div key={i} className="h-[500px] w-full bg-gray-900/50 rounded-2xl animate-pulse" />
+                            ))
+                        ) : bundles.length > 0 ? (
+                            bundles.sort((a, b) => parseFloat(a.price) - parseFloat(b.price)).map((bundle, index) => {
+                                // Logic to determine if it's the "middle" or "featured" plan
+                                // Usually the middle one in a set of 3 is emphasized
+                                const isFeatured = bundles.length === 3 && index === 1;
 
-                            return (
-                                <PricingCard
-                                    key={index}
-                                    title={plan.title}
-                                    price={plan.price}
-                                    periodicity="mes"
-                                    tag={plan.tag || undefined}
-                                    isRecommended={plan.isRecommended}
-                                    specialFeature={plan.specialFeature}
-                                    description={
-                                        <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center">
-                                            {plan.description}
-                                        </p>
-                                    }
-                                    features={plan.features}
-                                    excludedFeatures={plan.excludedFeatures}
-                                    buttonText={bundleId ? "Suscribirme" : "No disponible"}
-                                    onAction={() => {
-                                        if (bundleId) {
-                                            handlePurchase(plan.title, plan.price.replace(".", "").replace("$", "").trim(), undefined, bundleId);
+                                const features = [
+                                    ...bundle.courses.map((c: any) => `Curso: ${c.title}`),
+                                    ...bundle.items.map((i: any) => i.name)
+                                ];
+
+                                return (
+                                    <PricingCard
+                                        key={bundle.id}
+                                        title={bundle.title}
+                                        price={new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(bundle.price)}
+                                        periodicity="mes"
+                                        tag={isFeatured ? "EL MÁS BUSCADO" : undefined}
+                                        isRecommended={isFeatured}
+                                        description={
+                                            <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center">
+                                                {bundle.description || "Acceso completo a nuestra plataforma educativa."}
+                                            </p>
                                         }
-                                    }}
-                                />
-                            );
-                        })}
+                                        features={features}
+                                        excludedFeatures={[]} // We don't have this in DB yet, so empty
+                                        buttonText="Suscribirme"
+                                        onAction={() => {
+                                            handlePurchase(bundle.title, bundle.price.toString(), undefined, bundle.id);
+                                        }}
+                                    />
+                                );
+                            })
+                        ) : (
+                            <div className="col-span-full text-center text-gray-400 py-12">
+                                No hay planes disponibles en este momento.
+                            </div>
+                        )}
                     </div>
 
                     {/* Pricing Footer Info */}
