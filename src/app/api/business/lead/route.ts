@@ -68,7 +68,39 @@ export async function POST(req: Request) {
         // Send Email to Admin (Self)
         // Note: Using SMTP_EMAIL as recipient ensures the admin receives it
         if (process.env.SMTP_EMAIL) {
+            // 1. Send Notification to Admin
             await sendEmail(process.env.SMTP_EMAIL, subject, html);
+
+            // 2. Send Confirmation to Client
+            const clientSubject = `Recibimos tu solicitud - Aurora Academy`;
+            const clientHtml = `
+                <div style="font-family: sans-serif; color: #333; max-width: 600px; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; background-color: #f9f9f9;">
+                    <div style="background-color: #5D5CDE; padding: 24px; text-align: center;">
+                        <img src="https://auroracademy.net/logo-white.png" alt="Aurora Academy" style="height: 40px; margin-bottom: 10px;" />
+                        <h2 style="color: white; margin: 0; font-size: 20px;">¡Gracias por contactarnos!</h2>
+                    </div>
+                    <div style="padding: 30px; background-color: white;">
+                        <p style="font-size: 16px; margin-bottom: 16px;">Hola <strong>${name}</strong>,</p>
+                        <p style="font-size: 16px; line-height: 1.5; color: #4b5563; margin-bottom: 24px;">
+                            Hemos recibido tu solicitud de presupuesto para <strong>${companyName}</strong> correctamente.
+                        </p>
+                        <p style="font-size: 16px; line-height: 1.5; color: #4b5563; margin-bottom: 24px;">
+                            Un especialista de nuestro equipo de Educación Corporativa analizará tus requerimientos y se pondrá en contacto contigo en las próximas <strong>24 horas hábiles</strong>.
+                        </p>
+                        <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 30px 0;" />
+                        <p style="font-size: 14px; color: #6b7280; text-align: center;">
+                            Si tienes alguna duda urgente, puedes responder a este correo.
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            try {
+                await sendEmail(email, clientSubject, clientHtml);
+            } catch (err) {
+                console.error("Failed to send confirmation to client:", err);
+                // We don't fail the request if client email fails, as long as admin got it.
+            }
         }
 
         return NextResponse.json({ success: true });
