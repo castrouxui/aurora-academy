@@ -24,9 +24,9 @@ export const authOptions: AuthOptions = {
 
                 const { email, password, isRegister } = credentials;
 
-                // --- REGISTRATION LOGIC ---
+                const bcrypt = await import("bcryptjs");
+
                 if (isRegister === "true") {
-                    // Check if user exists
                     const existingUser = await prisma.user.findUnique({
                         where: { email }
                     });
@@ -35,57 +35,35 @@ export const authOptions: AuthOptions = {
                         throw new Error("El usuario ya existe");
                     }
 
-                    // Hash password
-                    // @ts-ignore
-                    const bcrypt = await import("bcryptjs");
                     const hashedPassword = await bcrypt.hash(password, 10);
 
-                    // Create new user
                     const newUser = await prisma.user.create({
                         data: {
                             email,
-                            name: email.split("@")[0], // Default name from email part
+                            name: email.split("@")[0],
                             image: `https://ui-avatars.com/api/?name=${email}&background=random`,
-                            role: "ESTUDIANTE"
-                            // Password is NOT stored in User model in schema provided (Account model usually handles oauth, but for credentials we need password field)
-                            // WAIT. The schema doesn't have a 'password' field on User model?!
-                            // Let me check schema again.
+                            role: "ESTUDIANTE",
+                            password: hashedPassword
                         }
                     });
 
-                    // CRITICAL: Schema check shows User model has NO password field. Account is for OAuth.
-                    // We need to store password somewhere. 
-                    // Usually we add `password String?` to User model.
-                    // Or we create a Credential/Account record.
-                    // Given I cannot edit schema right now easily without migration flow (which requires DB access/reset), 
-                    // I will check if I can use the 'Account' table to store a "credentials" provider entry with the hash as access_token or similar hack?
-                    // NO. I MUST add password to schema to do this right. 
-                    // OR I check if I missed the password field in my view_file of schema.
-
-                    // Actually, if I look at previous view_file of schema:
-                    // model User { ... email, name, image, role, accounts, sessions ... } -> NO PASSWORD field.
-
-                    // Options:
-                    // 1. Add `password` column to User table (Best practice). I can run `prisma db push` easily as I am in dev mode.
-                    // 2. Mock it again? No, user wants real flow.
-
-                    // Strategy:
-                    // I will first attempt to find a User, if not found, I will THROW error saying "Schema missing password".
-                    // Actually, I will pause this Edit to Add password field to Schema FIRST.
-                    throw new Error("Schema update required");
+                    return {
+                        id: newUser.id,
+                        name: newUser.name,
+                        email: newUser.email,
+                        image: newUser.image,
+                        role: newUser.role as any,
+                    };
                 } else {
-                    // --- LOGIN LOGIC ---
                     const user = await prisma.user.findUnique({
                         where: { email }
                     });
 
-                    if (!user || !(user as any).password) {
+                    if (!user || !user.password) {
                         throw new Error("Usuario no encontrado o contraseña incorrecta");
                     }
 
-                    // @ts-ignore
-                    const bcrypt = await import("bcryptjs");
-                    const isValid = await bcrypt.compare(password, (user as any).password);
+                    const isValid = await bcrypt.compare(password, user.password);
 
                     if (!isValid) {
                         throw new Error("Contraseña incorrecta");
@@ -96,7 +74,7 @@ export const authOptions: AuthOptions = {
                         name: user.name,
                         email: user.email,
                         image: user.image,
-                        role: user.role as "ADMIN" | "INSTRUCTOR" | "ESTUDIANTE",
+                        role: user.role as any,
                     };
                 }
             }
@@ -104,36 +82,41 @@ export const authOptions: AuthOptions = {
     ],
     callbacks: {
         async jwt({ token, user, trigger, session }) {
-            if (user) {
-                token.id = user.id;
-                token.role = user.role;
-                // @ts-ignore
-                token.companyId = user.companyId;
-                // @ts-ignore
-                token.isCompanyAdmin = user.isCompanyAdmin;
-                // @ts-ignore
-                token.telegram = user.telegram;
-                // @ts-ignore
-                token.telegramVerified = user.telegramVerified;
-            }
+            try {
+                if (user) {
+                    token.id = user.id;
+                    token.role = user.role;
+                    token.companyId = (user as any).companyId;
+                    token.isCompanyAdmin = (user as any).isCompanyAdmin;
+                    token.telegram = (user as any).telegram;
+                    token.telegramVerified = (user as any).telegramVerified;
+                }
 
-            // Update session trigger
-            if (trigger === "update" && session) {
-                token = { ...token, ...session }
-            }
+                if (trigger === "update" && session) {
+                    return { ...token, ...session };
+                }
 
-            return token;
+                return token;
+            } catch (error) {
+                console.error("[NEXT-AUTH] JWT Callback Error:", error);
+                return token;
+            }
         },
         async session({ session, token }) {
-            if (token && session.user) {
-                session.user.id = token.id as string;
-                session.user.role = token.role as any;
-                session.user.companyId = token.companyId as string | undefined;
-                session.user.isCompanyAdmin = token.isCompanyAdmin as boolean | undefined;
-                session.user.telegram = token.telegram as string | undefined;
-                session.user.telegramVerified = token.telegramVerified as boolean | undefined;
+            try {
+                if (token && session.user) {
+                    session.user.id = token.id as string;
+                    session.user.role = token.role as any;
+                    session.user.companyId = token.companyId as string | undefined;
+                    session.user.isCompanyAdmin = token.isCompanyAdmin as boolean | undefined;
+                    session.user.telegram = token.telegram as string | undefined;
+                    session.user.telegramVerified = token.telegramVerified as boolean | undefined;
+                }
+                return session;
+            } catch (error) {
+                console.error("[NEXT-AUTH] Session Callback Error:", error);
+                return session;
             }
-            return session;
         },
     },
     theme: {
@@ -141,8 +124,6 @@ export const authOptions: AuthOptions = {
     },
     debug: true,
     secret: process.env.NEXTAUTH_SECRET,
-    // @ts-ignore
-    trustHost: true,
 };
 
 // Conditionally append Google Provider if keys are present
