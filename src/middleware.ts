@@ -4,8 +4,8 @@ import { NextResponse } from "next/server";
 export default withAuth(
     function middleware(req: NextRequestWithAuth) {
         // Protect Admin Routes
-        // Explicitly check role exists on token to avoid TS errors
-        const token = req.nextauth.token;
+        // Casting to any to avoid build-time type resolution issues on Vercel
+        const token = req.nextauth.token as any;
         const userRole = token?.role;
 
         if (req.nextUrl.pathname.startsWith("/admin") && userRole !== "ADMIN") {
