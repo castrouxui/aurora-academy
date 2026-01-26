@@ -40,10 +40,11 @@ export function generateOTP(length: number = 6): string {
 /**
  * Sets the Telegram Webhook URL
  */
-export async function setTelegramWebhook(url: string) {
-    if (!BOT_TOKEN) return { success: false, error: "No token" };
+export async function setTelegramWebhook(url: string, overrideToken?: string) {
+    const token = overrideToken || BOT_TOKEN;
+    if (!token) return { success: false, error: "No token. Asegúrate de configurar TELEGRAM_BOT_TOKEN." };
     try {
-        const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/setWebhook`, {
+        const response = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ url: `${url}/api/webhooks/telegram` })
