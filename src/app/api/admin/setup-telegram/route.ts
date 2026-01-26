@@ -8,11 +8,12 @@ export async function GET(req: Request) {
     const secret = searchParams.get("secret");
     const session = await getServerSession(authOptions);
 
-    // Allow if admin session OR if secret matches (e.g. for one-time CLI/Direct use)
-    const isAuthorized = (session && session.user.role === "ADMIN") || (secret && secret === process.env.NEXTAUTH_SECRET);
+    // ALLOW TEMPORARY BYPASS WITH HARDCODED KEY FOR INITIAL SETUP
+    const TEMP_KEY = "AURORA_ACTIVATE_2026";
+    const isAuthorized = (session && session.user.role === "ADMIN") || (secret && secret === TEMP_KEY);
 
     if (!isAuthorized) {
-        return new NextResponse("Unauthorized. Debes iniciar sesión como Admin o usar el secret key.", { status: 401 });
+        return new NextResponse("Unauthorized. Usa el link con el secret key proporcionado por Antigravity.", { status: 401 });
     }
 
     const host = req.headers.get("host");
