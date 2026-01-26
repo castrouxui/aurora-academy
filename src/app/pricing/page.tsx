@@ -87,7 +87,6 @@ export default function PricingPage() {
                                 price: "$54.900",
                                 description: "El escalón de entrada para dominar los conceptos base.",
                                 features: [
-                                    "Acceso a +4 Cursos Fundamentales",
                                     "Introducción al Mercado de Capitales",
                                     "Renta Fija / Bonos",
                                     "Valuación de Bonos: TIR, Paridad",
@@ -95,8 +94,7 @@ export default function PricingPage() {
                                 ],
                                 excludedFeatures: [
                                     "Acceso a Comunidad de Inversores",
-                                    "Acceso al Canal de Aurora Academy",
-                                    "Reunión 1 a 1 con Fran Castro"
+                                    "Acceso al Canal de Aurora Academy"
                                 ],
                                 tag: null,
                                 isRecommended: false
@@ -108,7 +106,6 @@ export default function PricingPage() {
                                 description: "Para quienes operan activamente y buscan actualización constante.",
                                 features: [
                                     "Todo lo del Plan Inversor Inicial",
-                                    "Acceso a +9 Cursos Especializados",
                                     <span key="new-course" className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
                                         <span>🔥</span> Curso nuevo cada 15 días
                                     </span>,
@@ -119,8 +116,7 @@ export default function PricingPage() {
                                     "Acceso al Canal de Aurora Academy"
                                 ],
                                 excludedFeatures: [
-                                    "Acceso a Comunidad de Inversores",
-                                    "Reunión 1 a 1 con Fran Castro"
+                                    "Acceso a Comunidad de Inversores"
                                 ],
                                 tag: "EL MÁS BUSCADO",
                                 isRecommended: true
@@ -132,7 +128,6 @@ export default function PricingPage() {
                                 description: "La experiencia completa con mentoría directa y networking profesional.",
                                 features: [
                                     "Todo lo del Plan Trader de Elite",
-                                    "Acceso a +15 Cursos Avanzados",
                                     <span key="new-course-pm" className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
                                         <span>🔥</span> Curso nuevo cada 15 días
                                     </span>,
