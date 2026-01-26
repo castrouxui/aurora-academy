@@ -15,7 +15,8 @@ export default function BusinessForm() {
         companyName: "Axe Capital",
         email: "castrouxui@gmail.com",
         phone: "+5492614729836",
-        employees: "11-50"
+        employees: "11-50",
+        plan: ""
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -68,6 +69,8 @@ export default function BusinessForm() {
         );
     }
 
+    const inputClasses = "bg-[#111827] border-gray-700 focus:border-[#5D5CDE] text-white";
+
     return (
         <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -77,6 +80,7 @@ export default function BusinessForm() {
                     required
                     value={formData.name}
                     onChange={handleChange}
+                    className={inputClasses}
                 />
                 <FloatingInput
                     label="Empresa"
@@ -84,6 +88,7 @@ export default function BusinessForm() {
                     required
                     value={formData.companyName}
                     onChange={handleChange}
+                    className={inputClasses}
                 />
             </div>
 
@@ -94,6 +99,7 @@ export default function BusinessForm() {
                 required
                 value={formData.email}
                 onChange={handleChange}
+                className={inputClasses}
             />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -104,6 +110,7 @@ export default function BusinessForm() {
                     required
                     value={formData.phone}
                     onChange={handleChange}
+                    className={inputClasses}
                 />
                 <FloatingSelect
                     label="Empleados"
@@ -111,6 +118,7 @@ export default function BusinessForm() {
                     required
                     value={formData.employees}
                     onChange={handleChange}
+                    className={inputClasses}
                     options={[
                         { value: "", label: "Seleccionar cantidad" },
                         { value: "1-10", label: "1-10 empleados" },
@@ -121,24 +129,38 @@ export default function BusinessForm() {
                 />
             </div>
 
+            <FloatingSelect
+                label="Plan de Interés"
+                name="plan"
+                required
+                value={formData.plan}
+                onChange={handleChange}
+                className={inputClasses}
+                options={[
+                    { value: "", label: "Seleccionar plan" },
+                    { value: "Inversor Inicial", label: "Inversor Inicial" },
+                    { value: "Trader de Elite", label: "Trader de Elite" },
+                    { value: "Portfolio Manager", label: "Portfolio Manager" },
+                    { value: "Enterprise", label: "Enterprise / A medida" },
+                ]}
+            />
+
             <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full relative overflow-hidden group bg-[#5D5CDE] text-white font-bold py-4 rounded-xl hover:bg-[#4b4ac0] transition-all transform active:scale-[0.98] shadow-lg shadow-[#5D5CDE]/20 hover:shadow-[#5D5CDE]/40"
+                className="w-full relative overflow-hidden group bg-[#5D5CDE] text-white font-bold h-14 rounded-xl hover:bg-[#4b4ac0] transition-all transform active:scale-[0.98] shadow-lg shadow-[#5D5CDE]/20 hover:shadow-[#5D5CDE]/40 flex items-center justify-center gap-2"
             >
-                <div className="flex items-center justify-center gap-2 relative z-10">
-                    {isLoading ? (
-                        <>
-                            <Loader2 className="animate-spin" size={20} />
-                            <span>Enviando...</span>
-                        </>
-                    ) : (
-                        <>
-                            <span>Solicitar Propuesta</span>
-                            <Send size={18} className="group-hover:translate-x-1 transition-transform" />
-                        </>
-                    )}
-                </div>
+                {isLoading ? (
+                    <>
+                        <Loader2 className="animate-spin" size={20} />
+                        <span>Enviando...</span>
+                    </>
+                ) : (
+                    <>
+                        <span>Solicitar Propuesta</span>
+                        <Send size={18} className="group-hover:translate-x-1 transition-transform" />
+                    </>
+                )}
                 {/* Shine effect */}
                 <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent z-0" />
             </button>
@@ -153,7 +175,3 @@ export default function BusinessForm() {
         </form>
     );
 }
-
-// Add shimmer animation to tailwind config if not present, but for now we rely on standard hover
-
-

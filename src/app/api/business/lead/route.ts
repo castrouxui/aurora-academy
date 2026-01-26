@@ -5,20 +5,21 @@ import { sendEmail } from "@/lib/email";
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { name, companyName, email, phone, employees } = body;
+        const { name, companyName, email, phone, employees, plan } = body;
 
         if (!name || !companyName || !email) {
             return new NextResponse("Missing required fields", { status: 400 });
         }
 
         // Save to DB
+        // NOTE: We append plan to employees field to save it without schema migration for now
         await prisma.lead.create({
             data: {
                 name,
                 companyName,
                 email,
                 phone: phone || null,
-                employees: employees || "Unknown",
+                employees: `${employees || "Unknown"}${plan ? ` | Plan: ${plan}` : ""}`,
             }
         });
 
@@ -53,6 +54,10 @@ export async function POST(req: Request) {
                             <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 14px;">Tamaño del Equipo</td>
                             <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6; font-weight: 600; text-align: right;">${employees}</td>
                         </tr>
+                        <tr>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6; color: #6b7280; font-size: 14px;">Plan de Interés</td>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6; font-weight: 600; text-align: right;">${plan || '-'}</td>
+                        </tr>
                     </table>
 
                     <div style="text-align: center;">
@@ -78,7 +83,7 @@ export async function POST(req: Request) {
                     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
                         
                         <!-- Header -->
-                        <div style="background-color: #0B0F19; padding: 40px 20px; text-align: center; border-bottom: 2px solid #5D5CDE;">
+                        <div style="background-color: #101319; padding: 40px 20px; text-align: center; border-bottom: 2px solid #5D5CDE;">
                             <img src="https://auroracademy.net/logo-full.png" alt="Aurora Academy" style="height: 50px; width: auto; display: block; margin: 0 auto;" />
                         </div>
 
@@ -91,7 +96,7 @@ export async function POST(req: Request) {
                             </p>
                             
                             <p style="font-size: 16px; line-height: 1.6; color: #4b5563; margin-bottom: 24px;">
-                                Hemos recibido correctamente tu solicitud de presupuesto para <strong>${companyName}</strong>. 
+                                Hemos recibido correctamente tu solicitud de presupuesto${plan ? ` para el plan <strong>${plan}</strong>` : ''} en <strong>${companyName}</strong>. 
                             </p>
                             
                             <div style="background-color: #f3f4f6; border-left: 4px solid #5D5CDE; padding: 16px; margin-bottom: 24px; border-radius: 4px;">
