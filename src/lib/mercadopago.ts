@@ -1,4 +1,4 @@
-import MercadoPagoConfig, { PreApproval, Payment } from "mercadopago";
+import MercadoPagoConfig, { PreApproval, PaymentRefund } from "mercadopago";
 
 export const getMercadoPagoClient = () => {
     if (!process.env.MP_ACCESS_TOKEN) {
@@ -26,8 +26,8 @@ export const cancelSubscription = async (id: string) => {
 export const refundPayment = async (paymentId: string) => {
     try {
         const client = getMercadoPagoClient();
-        const payment = new Payment(client);
-        await payment.refund({ paymentId });
+        const refund = new PaymentRefund(client);
+        await refund.create({ payment_id: paymentId });
         console.log(`[MP] Payment ${paymentId} refunded successfully.`);
         return true;
     } catch (error) {
