@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Link from "next/link";
@@ -21,6 +21,7 @@ interface MobileSidebarProps {
         name?: string | null;
         email?: string | null;
         image?: string | null;
+        telegramVerified?: boolean;
     };
 }
 
@@ -95,7 +96,12 @@ export function MobileSidebar({ items, role, user }: MobileSidebarProps) {
                                     className="w-10 h-10 rounded-full border border-gray-700"
                                 />
                                 <div className="overflow-hidden">
-                                    <p className="text-sm font-medium text-white truncate">{user.name}</p>
+                                    <p className="text-sm font-medium text-white truncate flex items-center gap-1">
+                                        {user.name}
+                                        {user.telegramVerified && (
+                                            <ShieldCheck size={14} className="text-green-500 fill-green-500/20" />
+                                        )}
+                                    </p>
                                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                                 </div>
                             </div>

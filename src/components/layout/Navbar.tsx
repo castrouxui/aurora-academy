@@ -129,7 +129,12 @@ export function Navbar() {
                 {isUserMenuOpen && (
                   <div className="absolute right-0 mt-3 w-56 bg-[#1F2937] border border-gray-700 rounded-xl shadow-2xl overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
                     <div className="px-4 py-3 border-b border-gray-700 bg-white/5">
-                      <p className="text-sm text-white font-bold truncate">{session.user.name}</p>
+                      <p className="text-sm text-white font-bold truncate flex items-center gap-1">
+                        {session.user.name}
+                        {session.user.telegramVerified && (
+                          <ShieldCheck size={14} className="text-green-500 fill-green-500/20" />
+                        )}
+                      </p>
                       <p className="text-sm text-gray-400 truncate">{session.user.email}</p>
                     </div>
                     {session.user.role === 'ADMIN' && (

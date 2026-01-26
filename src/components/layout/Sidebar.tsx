@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/layout/Logo";
 import { Button } from "@/components/ui/button";
-import { LogOut, ChevronLeft, ChevronRight, Settings } from "lucide-react";
+import { LogOut, ChevronLeft, ChevronRight, Settings, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOut } from "next-auth/react";
 
@@ -21,6 +21,7 @@ interface SidebarProps {
         name?: string | null;
         email?: string | null;
         image?: string | null;
+        telegramVerified?: boolean;
     };
     roleLabel: string;
 }
@@ -120,7 +121,12 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
                                 className="w-10 h-10 rounded-full border border-gray-700 shrink-0"
                             />
                             <div className="overflow-hidden">
-                                <p className="text-sm font-medium text-white truncate">{user.name}</p>
+                                <p className="text-sm font-medium text-white truncate flex items-center gap-1">
+                                    {user.name}
+                                    {user.telegramVerified && (
+                                        <ShieldCheck size={14} className="text-green-500 fill-green-500/20" />
+                                    )}
+                                </p>
                                 <p className="text-xs text-gray-500 truncate">{user.email}</p>
                             </div>
                         </div>
