@@ -24,6 +24,15 @@ export async function GET() {
             return NextResponse.json({ active: false });
         }
 
+        // Fix: Only 'authorized' grants active access. 
+        // 'cancelled' or 'paused' are inactive immediately (since we don't track expiry date yet).
+        // 'pending' also doesn't grant access until confirmed.
+        const isActive = subscription.status === 'authorized';
+
+        if (!isActive) {
+            return NextResponse.json({ active: false });
+        }
+
         // Optional: Sync with MP if "pending" for too long? 
         // For now, trust the webhook flow, but return what we have.
         return NextResponse.json({
