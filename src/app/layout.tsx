@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/auth/Providers";
@@ -6,8 +6,14 @@ import { Toaster } from "sonner";
 
 const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-sans",
 });
+
+export const viewport: Viewport = {
+  themeColor: "#0B0F19",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata: Metadata = {
   title: {
