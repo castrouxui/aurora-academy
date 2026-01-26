@@ -24,8 +24,8 @@ export async function GET(req: Request) {
         const result = await setTelegramWebhook(baseUrl);
         return NextResponse.json({
             success: result.success,
-            message: result.success ? "Webhook registrado correctamente" : "Error al registrar webhook",
-            details: result.data,
+            message: result.success ? "Webhook registrado correctamente" : (result.error || "Error al registrar webhook"),
+            details: result.data || result.error || null,
             url: `${baseUrl}/api/webhooks/telegram`
         });
     } catch (error: any) {
