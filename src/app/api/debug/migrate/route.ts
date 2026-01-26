@@ -48,6 +48,12 @@ export async function GET(request: Request) {
         // password
         await prisma.$executeRawUnsafe(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "password" TEXT;`);
 
+        // createdAt
+        await prisma.$executeRawUnsafe(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;`);
+
+        // updatedAt
+        await prisma.$executeRawUnsafe(`ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;`);
+
         // FOREIGN KEY for companyId
         // This is tricky safely, but let's try. IF NOT EXISTS is hard for constraints in raw sql one-liner.
         // We generally skip constraint creation in hotfix if strictness unimportant, but let's try basic one.
