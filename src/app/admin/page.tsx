@@ -102,7 +102,9 @@ export default function AdminDashboard() {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-black text-white tracking-tight">{stat.value}</div>
+                                <div className="text-xl md:text-2xl font-black text-white tracking-tight break-all" title={String(stat.value)}>
+                                    {stat.value}
+                                </div>
                                 <p className="text-xs text-gray-500 mt-1">{stat.change}</p>
                             </CardContent>
                         </Card>
