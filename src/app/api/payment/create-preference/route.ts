@@ -112,8 +112,6 @@ export async function POST(req: NextRequest) {
             notification_url: `${baseUrl}/api/webhooks/mercadopago`,
         };
 
-        console.log("Creating Preference with body:", JSON.stringify(preferenceBody, null, 2));
-
         const result = await preference.create({
             body: preferenceBody
         });
@@ -127,3 +125,4 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Error creating preference', details: error.message || error }, { status: 500 });
     }
 }
+```
