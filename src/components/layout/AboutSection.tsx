@@ -17,7 +17,7 @@ export function AboutSection() {
                             </h2>
                             <div className="space-y-4 text-gray-400 text-lg leading-relaxed">
                                 <p>
-                                    Hola, soy <strong>Francisco Castro</strong>, CEO de <strong>Aurora Advisors</strong> y fundador de <strong>Aurora Academy</strong>. Soy Licenciado en Administración y especialista en mercados financieros (<Link href="https://www.cnv.gov.ar/sitioWeb/RegistrosPublicos/Idoneos" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">Matriculado CNV 2688</Link>).
+                                    Hola, soy <strong>Francisco Castro</strong>, CEO de <strong>Aurora Advisors</strong> y co-fundador de <strong>Aurora Academy</strong>. Soy Licenciado en Administración y especialista en mercados financieros (<Link href="https://www.cnv.gov.ar/sitioWeb/RegistrosPublicos/Idoneos" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">Matriculado CNV 2688</Link>).
                                 </p>
                                 <p>
                                     Con más de 10 años de experiencia en el sector bursátil, he asesorado a cientos de individuos y empresas. Sin embargo, mi verdadera pasión radica en la educación: creé Aurora Academy con la misión de democratizar el acceso al conocimiento financiero profesional.

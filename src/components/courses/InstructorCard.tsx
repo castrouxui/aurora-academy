@@ -48,7 +48,7 @@ export function InstructorCard() {
                     </div>
 
                     <p className="text-gray-300 leading-relaxed text-sm">
-                        CEO de Aurora Advisors y fundador de Aurora Academy. Con más de 10 años en el sector bursátil, su misión es democratizar el acceso al conocimiento financiero profesional, enseñando no solo a invertir, sino a entender el porqué detrás de cada decisión.
+                        CEO de Aurora Advisors y co-fundador de Aurora Academy. Con más de 10 años en el sector bursátil, su misión es democratizar el acceso al conocimiento financiero profesional, enseñando no solo a invertir, sino a entender el porqué detrás de cada decisión.
                     </p>
 
                     <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
