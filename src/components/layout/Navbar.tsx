@@ -121,7 +121,7 @@ export function Navbar() {
             {session?.user ? (
               <div className="relative">
                 <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-3 focus:outline-none hover:bg-white/5 p-1 pr-3 rounded-full transition-colors border border-transparent hover:border-white/5">
-                  <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700" />
+                  <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700 object-cover aspect-square" />
                   <span className="text-sm font-medium text-gray-300 hidden lg:block max-w-[100px] truncate">{session.user.name?.split(' ')[0] || 'User'}</span>
                   <ChevronDown size={16} className="text-gray-500 hidden lg:block" />
                 </button>
@@ -163,7 +163,7 @@ export function Navbar() {
           <div className="flex items-center md:hidden ml-auto gap-4">
             {session && (
               <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/courses"}>
-                <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700" />
+                <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700 object-cover aspect-square" />
               </Link>
             )}
             <button
@@ -259,7 +259,7 @@ export function Navbar() {
               {session ? (
                 <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
                   <div className="flex items-center gap-4 mb-4">
-                    <Image src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`} alt="" width={48} height={48} className="rounded-full border border-gray-700" />
+                    <Image src={session.user?.image || `https://ui-avatars.com/api/?name=${session.user?.name}&background=random`} alt="" width={48} height={48} className="rounded-full border border-gray-700 object-cover aspect-square" />
                     <div>
                       <p className="text-white font-bold text-lg">{session.user?.name}</p>
                       <p className="text-sm text-gray-400">{session.user?.email}</p>
