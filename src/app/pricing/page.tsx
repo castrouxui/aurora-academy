@@ -89,9 +89,16 @@ export default function PricingPage() {
                                 features: [
                                     "Acceso a +4 Cursos Fundamentales",
                                     "Introducción al Mercado de Capitales",
-                                    "Renta Fija",
+                                    "Renta Fija / Bonos",
                                     "Valuación de Bonos: TIR, Paridad",
                                     "Valor Tiempo del Dinero: TNA, TEA"
+                                ],
+                                excludedFeatures: [
+                                    "Curso de Opciones Financieras",
+                                    "Futuros Financieros",
+                                    "Análisis Técnico & Price Action",
+                                    "Comunidad: Canal Telegram",
+                                    "Mentoría 1 a 1"
                                 ],
                                 tag: null,
                                 isRecommended: false
@@ -104,7 +111,7 @@ export default function PricingPage() {
                                 features: [
                                     "Todo lo del Plan Inversor Inicial",
                                     "Acceso a +9 Cursos Especializados",
-                                    <span className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                                    <span key="new-course" className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
                                         <span>🔥</span> Curso nuevo cada 15 días
                                     </span>,
                                     "Curso de Opciones Financieras",
@@ -112,6 +119,12 @@ export default function PricingPage() {
                                     "Análisis Técnico & Price Action",
                                     "Futuros Financieros",
                                     "Comunidad: Canal Telegram Aurora"
+                                ],
+                                excludedFeatures: [
+                                    "Análisis Fundamental & Cartera",
+                                    "Dominando el Riesgo",
+                                    "Valuación Real",
+                                    "Mentoría 1 a 1"
                                 ],
                                 tag: "EL MÁS BUSCADO",
                                 isRecommended: true
@@ -124,7 +137,7 @@ export default function PricingPage() {
                                 features: [
                                     "Todo lo del Plan Trader de Elite",
                                     "Acceso a +15 Cursos Avanzados",
-                                    <span className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                                    <span key="new-course-pm" className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
                                         <span>🔥</span> Curso nuevo cada 15 días
                                     </span>,
                                     "Análisis Fundamental & Cartera",
@@ -161,6 +174,7 @@ export default function PricingPage() {
                                         </p>
                                     }
                                     features={plan.features}
+                                    excludedFeatures={plan.excludedFeatures}
                                     buttonText={bundleId ? "Suscribirme" : "No disponible"}
                                     onAction={() => {
                                         if (bundleId) {
