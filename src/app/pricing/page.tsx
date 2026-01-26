@@ -139,15 +139,14 @@ export default function PricingPage() {
                                     "Análisis Fundamental & Cartera",
                                     "Dominando el Riesgo: Volatilidad",
                                     "Valuación Real: Beneficio vs. Caja",
-                                    "Acceso al Canal de Aurora Academy",
-                                    "Acceso a Comunidad de Inversores"
+                                    "Acceso al Canal de Aurora Academy"
                                 ],
                                 tag: null,
                                 isRecommended: false,
                                 // Special highlight for High Ticket
                                 specialFeature: {
-                                    title: "Mentoría 1 a 1 con Fran Castro",
-                                    description: "Reunión mensual privada para seguimiento de cartera."
+                                    title: "Acceso a Comunidad de Inversores",
+                                    description: "Networking profesional con otros inversores y alumnos avanzados."
                                 }
                             }
                         ].map((plan, index) => {
