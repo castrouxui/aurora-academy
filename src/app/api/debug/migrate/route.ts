@@ -16,24 +16,28 @@ export async function GET(request: Request) {
         console.log("Starting debug diagnostics...");
         console.log("CWD:", process.cwd());
 
-        // List directories to find prisma
-        const { stdout: lsRoot } = await execAsync("ls -la");
-        const { stdout: lsNodeModules } = await execAsync("ls -la node_modules").catch(() => ({ stdout: "node_modules not found" }));
-        const { stdout: lsBin } = await execAsync("ls -la node_modules/.bin").catch(() => ({ stdout: "node_modules/.bin not found" }));
+        // Check if prisma folder exists in node_modules
+        const { stdout: lsNodeModules } = await execAsync("ls -la node_modules").catch(e => ({ stdout: e.message }));
+        const { stdout: lsPrisma } = await execAsync("ls -la node_modules/prisma").catch(e => ({ stdout: "node_modules/prisma not found" }));
+        const { stdout: lsPrismaBuild } = await execAsync("ls -la node_modules/prisma/build").catch(e => ({ stdout: "node_modules/prisma/build not found" }));
 
-        // Try generic path or resolve 'prisma' from require
-        let prismaPath = "prisma";
+        // Try to invoke index.js directly if possible
+        // const { stdout: runAttempt } = await execAsync("node node_modules/prisma/build/index.js --version").catch(e => ({ stdout: e.message }));
+
+        let prismaPath = "unresolved";
         try {
-            // This might find the absolute path
-            prismaPath = require.resolve("prisma/package.json");
-        } catch (e) { console.log("Could not resolve prisma path") }
+            // We just want to check if require finds it
+            require("prisma/package.json");
+            prismaPath = "package.json found";
+        } catch (e) { prismaPath = "require failed"; }
 
         return NextResponse.json({
-            info: "Diagnostic run",
+            info: "Diagnostic run 2",
             cwd: process.cwd(),
-            rootListing: lsRoot.split("\n"),
-            binListing: lsBin.length > 500 ? lsBin.substring(0, 500) + "..." : lsBin,
-            pathAttempt: prismaPath,
+            nodeModules: lsNodeModules.split("\n"),
+            prismaDir: lsPrisma.split("\n"),
+            prismaBuild: lsPrismaBuild.split("\n"),
+            prismaReq: prismaPath
         });
     } catch (error) {
         console.error("Migration failed:", error);
