@@ -4,9 +4,15 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { setTelegramWebhook } from "@/lib/telegram";
 
 export async function GET(req: Request) {
+    const { searchParams } = new URL(req.url);
+    const secret = searchParams.get("secret");
     const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== "ADMIN") {
-        return new NextResponse("Unauthorized", { status: 401 });
+
+    // Allow if admin session OR if secret matches (e.g. for one-time CLI/Direct use)
+    const isAuthorized = (session && session.user.role === "ADMIN") || (secret && secret === process.env.NEXTAUTH_SECRET);
+
+    if (!isAuthorized) {
+        return new NextResponse("Unauthorized. Debes iniciar sesión como Admin o usar el secret key.", { status: 401 });
     }
 
     const host = req.headers.get("host");
