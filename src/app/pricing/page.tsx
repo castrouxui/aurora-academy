@@ -141,7 +141,7 @@ export default function PricingPage() {
                                 // Special highlight for High Ticket
                                 specialFeature: {
                                     title: "Acceso a Comunidad de Inversores",
-                                    description: "Networking profesional con otros inversores y alumnos avanzados."
+                                    description: "Networking profesional con otros inversores."
                                 }
                             }
                         ].map((plan, index) => {
