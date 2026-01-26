@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookOpen, Package, ShoppingCart, Compass, GraduationCap, ShieldCheck, Building2, Receipt, Users } from "lucide-react";
+import { LayoutDashboard, BookOpen, Package, ShoppingCart, Compass, GraduationCap, ShieldCheck, Building2, FileText, Users } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 import { useSession, signOut } from "next-auth/react";
 import { Loader2 } from "lucide-react";
@@ -42,7 +42,7 @@ export default function DashboardLayout({
     // Navigation Config
     const adminNav = [
         { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-        { name: "Ventas", href: "/admin/sales", icon: Receipt }, // Updated to /admin/sales to match verification
+        { name: "Ventas", href: "/admin/sales", icon: FileText }, // Updated to /admin/sales to match verification
         { name: "Cursos", href: "/admin/courses", icon: BookOpen },
         { name: "Membresías", href: "/admin/bundles", icon: Package },
         { name: "Usuarios", href: "/admin/users", icon: Users },
