@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
 import { Logo } from "./Logo";
-import { Menu, X, Search, LogOut, BookOpen, User, LayoutDashboard, TrendingUp, ChevronDown, Building2, GraduationCap, PlayCircle, FileText, Lock, ArrowRight } from "lucide-react"; // Added icons
+import { Menu, X, Search, LogOut, BookOpen, User, LayoutDashboard, TrendingUp, ChevronDown, Building2, GraduationCap, PlayCircle, FileText, Lock, ArrowRight, ShieldCheck } from "lucide-react"; // Added icons
 import { useSession, signOut } from "next-auth/react";
 // import { cn } from "@/lib/utils"; 
 import { LoginModal } from "@/components/auth/LoginModal";
