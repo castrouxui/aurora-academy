@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookOpen, Package, ShoppingCart, Compass, GraduationCap, ShieldCheck, Building2 } from "lucide-react";
+import { LayoutDashboard, BookOpen, Package, ShoppingCart, Compass, GraduationCap, ShieldCheck, Building2, Receipt, Users } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 import { useSession, signOut } from "next-auth/react";
 import { Loader2 } from "lucide-react";
