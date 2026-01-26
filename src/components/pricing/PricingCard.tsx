@@ -104,18 +104,20 @@ export function PricingCard({
 
 
 
-            <Button
-                onClick={onAction}
-                className={cn(
-                    "w-full h-12 rounded-xl text-sm font-bold transition-all duration-300",
-                    isRecommended
-                        ? "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
-                        : "bg-white/5 border border-white/10 hover:bg-white hover:text-black text-white shiny-hover"
-                )}
-                variant={isRecommended ? "default" : "outline"}
-            >
-                {buttonText}
-            </Button>
+            <div className="mt-8">
+                <Button
+                    onClick={onAction}
+                    className={cn(
+                        "w-full h-12 rounded-xl text-sm font-bold transition-all duration-300",
+                        isRecommended
+                            ? "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
+                            : "bg-white/5 border border-white/10 hover:bg-white hover:text-black text-white shiny-hover"
+                    )}
+                    variant={isRecommended ? "default" : "outline"}
+                >
+                    {buttonText}
+                </Button>
+            </div>
         </div>
     );
 }
