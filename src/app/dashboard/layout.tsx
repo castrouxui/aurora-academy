@@ -52,6 +52,7 @@ export default function DashboardLayout({
         { name: "Inicio", href: "/dashboard", icon: LayoutDashboard },
         { name: "Mis Cursos", href: "/dashboard/courses", icon: BookOpen },
         { name: "Membresías", href: "/dashboard/memberships", icon: Package },
+        { name: "Compras", href: "/dashboard/purchases", icon: ShoppingCart },
         { name: "Explorar", href: "/dashboard/explore", icon: Compass },
         { name: "Certificados", href: "/dashboard/certificates", icon: GraduationCap },
     ];
