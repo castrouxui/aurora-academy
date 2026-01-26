@@ -81,47 +81,79 @@ export default function PricingPage() {
                     {/* Dynamic Bundle Grid */}
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12 items-start">
                         {loading ? (
-                            // Skeletons
                             [1, 2, 3].map((i) => (
                                 <div key={i} className="h-[500px] w-full bg-gray-900/50 rounded-2xl animate-pulse" />
                             ))
-                        ) : bundles.length > 0 ? (
-                            bundles.sort((a, b) => parseFloat(a.price) - parseFloat(b.price)).map((bundle, index) => {
-                                // Logic to determine if it's the "middle" or "featured" plan
-                                // Usually the middle one in a set of 3 is emphasized
-                                const isFeatured = bundles.length === 3 && index === 1;
+                        ) : (
+                            [
+                                {
+                                    // 1. Inversor Inicial
+                                    title: "Inversor Inicial",
+                                    description: "El escalón de entrada para dominar los conceptos base.",
+                                    tag: null,
+                                    isRecommended: false,
+                                    excludedFeatures: ["Acceso a Comunidad de Inversores", "Acceso al Canal de Aurora Academy"]
+                                },
+                                {
+                                    // 2. Trader de Elite
+                                    title: "Trader de Elite",
+                                    description: "Para quienes operan activamente y buscan actualización constante.",
+                                    tag: "EL MÁS BUSCADO",
+                                    isRecommended: true,
+                                    excludedFeatures: ["Acceso a Comunidad de Inversores"]
+                                },
+                                {
+                                    // 3. Portfolio Manager
+                                    title: "Portfolio Manager",
+                                    description: "La experiencia completa con networking profesional y acceso exclusivo a la comunidad de inversores.",
+                                    tag: null,
+                                    isRecommended: false,
+                                    specialFeature: {
+                                        title: "Acceso a Comunidad de Inversores",
+                                        description: "Networking profesional con otros inversores."
+                                    },
+                                    excludedFeatures: []
+                                }
+                            ].map((plan, index) => {
+                                // Match DB Bundle by sorting price (Low -> High)
+                                const bundle = bundles.sort((a, b) => parseFloat(a.price) - parseFloat(b.price))[index];
+                                const bundleId = bundle?.id;
 
-                                const features = [
+                                // Dynamic Content
+                                const price = bundle
+                                    ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(bundle.price)
+                                    : "Consultar";
+
+                                const features = bundle ? [
                                     ...bundle.courses.map((c: any) => `Curso: ${c.title}`),
                                     ...bundle.items.map((i: any) => i.name)
-                                ];
+                                ] : [];
 
                                 return (
                                     <PricingCard
-                                        key={bundle.id}
-                                        title={bundle.title}
-                                        price={new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(bundle.price)}
+                                        key={index}
+                                        title={plan.title}
+                                        price={price}
                                         periodicity="mes"
-                                        tag={isFeatured ? "EL MÁS BUSCADO" : undefined}
-                                        isRecommended={isFeatured}
+                                        tag={plan.tag || undefined}
+                                        isRecommended={plan.isRecommended}
+                                        specialFeature={plan.specialFeature}
                                         description={
                                             <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center">
-                                                {bundle.description || "Acceso completo a nuestra plataforma educativa."}
+                                                {plan.description}
                                             </p>
                                         }
                                         features={features}
-                                        excludedFeatures={[]} // We don't have this in DB yet, so empty
-                                        buttonText="Suscribirme"
+                                        excludedFeatures={plan.excludedFeatures}
+                                        buttonText={bundleId ? "Suscribirme" : "No disponible"}
                                         onAction={() => {
-                                            handlePurchase(bundle.title, bundle.price.toString(), undefined, bundle.id);
+                                            if (bundleId && bundle) {
+                                                handlePurchase(plan.title, bundle.price.toString(), undefined, bundleId);
+                                            }
                                         }}
                                     />
                                 );
                             })
-                        ) : (
-                            <div className="col-span-full text-center text-gray-400 py-12">
-                                No hay planes disponibles en este momento.
-                            </div>
                         )}
                     </div>
 
