@@ -15,15 +15,21 @@ export default function StudentDashboard() {
         totalCourses: 0
     });
     const [recentCourse, setRecentCourse] = useState<any>(null);
+    const [membershipItems, setMembershipItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetchData() {
             if (!session) return;
             try {
-                const res = await fetch("/api/my-courses");
-                if (res.ok) {
-                    const courses = await res.json();
+                // Parallel fetch for courses and bundles
+                const [coursesRes, bundlesRes] = await Promise.all([
+                    fetch("/api/my-courses"),
+                    fetch("/api/my-bundles")
+                ]);
+
+                if (coursesRes.ok) {
+                    const courses = await coursesRes.json();
 
                     const inProgress = courses.filter((c: any) => c.progress > 0 && c.progress < 100).length;
                     const completed = courses.filter((c: any) => c.progress === 100).length;
@@ -34,10 +40,18 @@ export default function StudentDashboard() {
                         totalCourses: courses.length
                     });
 
-                    // Find the first course in progress, or just the first course if none are in progress
                     const recent = courses.find((c: any) => c.progress > 0 && c.progress < 100) || courses[0];
                     setRecentCourse(recent);
                 }
+
+                if (bundlesRes.ok) {
+                    const bundles = await bundlesRes.json();
+                    // Extract all unique items from bundles
+                    const allItems = bundles.flatMap((b: any) => b.items || []);
+                    // Filter duplicates by name + content if needed, or just show all
+                    setMembershipItems(allItems);
+                }
+
             } catch (error) {
                 console.error("Error fetching dashboard data:", error);
             } finally {
@@ -66,6 +80,14 @@ export default function StudentDashboard() {
             icon: Award,
             color: "text-purple-500",
         },
+        // Only show resources stat if they have any
+        ...(membershipItems.length > 0 ? [{
+            title: "Recursos Extra",
+            value: membershipItems.length.toString(),
+            description: "Enlaces de membresía",
+            icon: Award, // Reusing Award or similar, usually LinkIcon but importing specifically
+            color: "text-amber-500",
+        }] : [])
     ];
 
     return (
@@ -81,7 +103,7 @@ export default function StudentDashboard() {
             </div>
 
             {/* Stats Grid */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className={`grid gap-4 md:grid-cols-2 ${membershipItems.length > 0 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'}`}>
                 {statCards.map((stat) => (
                     <Card key={stat.title} className="bg-white/5 border-white/5 shadow-lg group hover:border-[#5D5CDE]/30 hover:bg-white/10 transition-all duration-300">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -99,6 +121,52 @@ export default function StudentDashboard() {
                     </Card>
                 ))}
             </div>
+
+            {/* Resources Section - Show only if items exist */}
+            {membershipItems.length > 0 && (
+                <Card className="bg-[#131722] border-amber-500/20 shadow-xl shadow-amber-500/5 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-bl-full -mr-8 -mt-8 pointer-events-none" />
+                    <CardHeader className="border-b border-white/5 pb-4">
+                        <CardTitle className="text-white flex items-center gap-2">
+                            <span className="text-amber-500">✨</span> Recursos de tu Membresía
+                        </CardTitle>
+                        <CardDescription className="text-gray-400">
+                            Acceso exclusivo a grupos y herramientas de tus planes.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {membershipItems.map((item, idx) => (
+                                <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 hover:border-amber-500/50 transition-colors gap-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-10 w-10 shrink-0 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-500">
+                                            {/* Generic link icon */}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-white text-sm">{item.name}</p>
+                                            <p className="text-xs text-gray-400 w-full truncate max-w-[200px]">
+                                                {item.type === 'LINK' ? 'Enlace externo' : 'Recurso descargable'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {item.content && (item.content.startsWith('http') || item.content.startsWith('www')) ? (
+                                        <Link href={item.content} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                                            <Button size="sm" className="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold">
+                                                Acceder
+                                            </Button>
+                                        </Link>
+                                    ) : (
+                                        <div className="bg-black/30 px-3 py-2 rounded text-sm text-gray-300 font-mono w-full sm:w-auto text-center select-all">
+                                            {item.content || "Sin contenido"}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
 
             {/* Recent Activity / Continue Learning */}
             <div className="grid gap-6 md:grid-cols-2">
@@ -143,7 +211,7 @@ export default function StudentDashboard() {
                             <div className="text-center py-8">
                                 <p className="text-gray-400 mb-6 font-medium">No has iniciado ningún curso aún.</p>
                                 <Link href="/courses">
-                                    <Button variant="outline" className="border-white/10 text-white hover:bg-white hover:text-black rounded-xl font-bold shiny-hover">
+                                    <Button variant="outline" className="border-white/10 text-white hover:bg-white/10 hover:text-white rounded-xl font-bold shiny-hover">
                                         Explorar Cursos
                                     </Button>
                                 </Link>
