@@ -7,7 +7,7 @@ const categories = [
     { name: "Fondos Comunes de Inversión", count: "Curso Especializado", icon: LineChart },
     { name: "IA + Inversiones", count: "Masterclass", icon: Bot },
     { name: "Cripto", count: "Próximamente", icon: Bitcoin, status: "coming_soon" },
-    { name: "Bonos", count: "Próximamente", icon: Wallet, status: "coming_soon" },
+    { name: "Bonos", count: "Curso Especializado", icon: Wallet },
 ];
 
 export function Categories() {
