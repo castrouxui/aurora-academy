@@ -99,7 +99,7 @@ export default function PricingPage() {
                                     // Specifically for Trader & Portfolio: "1 curso nuevo cada 15 días"
                                     if (index >= 1) {
                                         displayFeatures.push(
-                                            <span key={`benefit-15d-${bundle.id}`} className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                                            <span key={`benefit-15d-${bundle.id}`} className="inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
                                                 <span>🔥</span> 1 curso nuevo cada 15 días
                                             </span>
                                         );

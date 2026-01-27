@@ -75,7 +75,7 @@ export function PricingCard({
                 {features.map((feature, index) => (
                     <li key={`inc-${index}`} className="flex items-start gap-3">
                         <PricingCheckmark />
-                        <span className="text-sm text-gray-300 leading-tight w-full">
+                        <span className="text-sm font-medium text-gray-100 leading-tight w-full">
                             {feature}
                         </span>
                     </li>
