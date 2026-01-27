@@ -15,7 +15,7 @@ export default function BusinessPage() {
                     <div className="max-w-3xl mx-auto text-center">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5D5CDE]/10 text-[#5D5CDE] border border-[#5D5CDE]/20 mb-6 animate-in fade-in slide-in-from-bottom-4">
                             <Building2 size={16} />
-                            <span className="text-sm font-semibold">Aurora for Business</span>
+                            <span className="text-sm font-semibold">Aurora Academy para Empresas</span>
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-500">
                             Potenciá el bienestar financiero de <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5D5CDE] to-[#b3b2f7]">tu equipo</span>
@@ -26,9 +26,9 @@ export default function BusinessPage() {
                         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-10 duration-1000">
                             <a
                                 href="#contact-form"
-                                className="bg-[#5D5CDE] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#4b4ac0] transition-colors flex items-center justify-center gap-2"
+                                className="h-14 px-10 text-xl bg-[#5D5CDE] text-white hover:bg-[#4B4AC0] border-transparent font-bold rounded-full shadow-lg shiny-hover transition-all hover:scale-105 active:scale-95 flex items-center justify-center"
                             >
-                                Hablar con un asesor <ChevronRight size={20} />
+                                Hablar con un asesor
                             </a>
                         </div>
                     </div>
@@ -66,6 +66,35 @@ export default function BusinessPage() {
                                 Empleados con menos estrés financiero son 2x más productivos. Te damos las métricas para demostrarlo.
                             </p>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Ecosystem / Value Add Section */}
+            <section className="py-24 bg-gradient-to-b from-[#111827] to-[#0B0F19] relative overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent"></div>
+
+                <div className="container mx-auto px-4">
+                    <div className="text-center max-w-2xl mx-auto mb-16">
+                        <h2 className="text-3xl font-bold text-white mb-4">Más que cursos, un ecosistema</h2>
+                        <p className="text-gray-400">
+                            La educación financiera efectiva requiere constancia. Nuestro método asegura que tu equipo no solo aprenda, sino que aplique.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {[
+                            { title: "Mentoría en Vivo", desc: "Clases semanales para analizar el mercado real.", icon: "⚡" },
+                            { title: "Comunidad VIP", desc: "Networking entre profesionales y expertos.", icon: "🤝" },
+                            { title: "Soporte 24/7", desc: "Canal directo para dudas técnicas y teóricas.", icon: "💬" },
+                            { title: "Certificación", desc: "Diplomas verificables al completar trayectos.", icon: "🎓" }
+                        ].map((item, i) => (
+                            <div key={i} className="bg-[#1F2937]/30 border border-gray-800 p-6 rounded-2xl hover:bg-[#1F2937]/50 transition-all text-center group">
+                                <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300 transform inline-block">{item.icon}</div>
+                                <h3 className="text-white font-bold mb-2">{item.title}</h3>
+                                <p className="text-sm text-gray-400">{item.desc}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
