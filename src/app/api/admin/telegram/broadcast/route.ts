@@ -4,6 +4,29 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { sendTelegramMessage } from "@/lib/telegram";
 
+export async function GET(req: Request) {
+    const session = await getServerSession(authOptions);
+
+    if (!session || session.user.role !== "ADMIN") {
+        return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    try {
+        const count = await prisma.user.count({
+            where: {
+                telegramVerified: true,
+                telegram: { not: null }
+            }
+        });
+
+        return NextResponse.json({ count });
+    } catch (error) {
+        console.error("[TELEGRAM STATS] Error:", error);
+        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
+}
+
+
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
 

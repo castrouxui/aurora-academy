@@ -81,12 +81,74 @@ export default function PricingPage() {
                 <Container>
                     {/* Dynamic Bundle Grid */}
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12 items-start">
-                        {PLANS.map((plan, index) => {
-                            // Map to existing bundles for ID if available
-                            const bundle = bundles.sort((a, b) => parseFloat(a.price) - parseFloat(b.price))[index];
-                            const bundleId = bundle?.id;
+                        {bundles.length > 0 ? (
+                            // Render based on Dynamic Bundles from DB
+                            bundles
+                                .sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
+                                .map((bundle, index, sortedArr) => {
+                                    // Try to match with metadata from PLANS, or fallback
+                                    const staticPlan = PLANS[index];
+                                    const isRecommended = staticPlan?.isRecommended || index === 1;
+                                    const tag = staticPlan?.tag || (index === 1 ? "EL MÁS BUSCADO" : undefined);
 
-                            return (
+                                    // Logic for "Everything in previous plan"
+                                    let displayFeatures: string[] = [];
+                                    const currentCourseTitles = bundle.courses.map((c: any) => c.title);
+
+                                    if (index > 0) {
+                                        const prevBundle = sortedArr[index - 1];
+                                        const prevCourseTitles = prevBundle.courses.map((c: any) => c.title);
+
+                                        // Check if current bundle has all courses of previous bundle
+                                        const hasAllPrevious = prevCourseTitles.length > 0 &&
+                                            prevCourseTitles.every((t: string) => currentCourseTitles.includes(t));
+
+                                        if (hasAllPrevious) {
+                                            displayFeatures.push(`Todo lo del Plan ${prevBundle.title}`);
+                                            // Add only the NEW courses
+                                            const newCourses = currentCourseTitles.filter((t: string) => !prevCourseTitles.includes(t));
+                                            displayFeatures.push(...newCourses);
+                                        } else {
+                                            // No full overlap, just list everything
+                                            displayFeatures.push(...currentCourseTitles);
+                                        }
+                                    } else {
+                                        // First plan, list all
+                                        displayFeatures.push(...currentCourseTitles);
+                                    }
+
+                                    // Add the items (benefits)
+                                    // Optionally dedupe these too if needed, but usually they are distinct enough or we act additive
+                                    displayFeatures.push(...bundle.items.map((i: any) => i.name));
+
+                                    return (
+                                        <PricingCard
+                                            key={bundle.id}
+                                            title={bundle.title}
+                                            price={bundle.price.toString()}
+                                            periodicity="mes"
+                                            tag={tag}
+                                            isRecommended={isRecommended}
+                                            specialFeature={staticPlan?.specialFeature}
+                                            description={
+                                                <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center">
+                                                    {bundle.description || staticPlan?.description || "Acceso completo"}
+                                                </p>
+                                            }
+                                            features={displayFeatures}
+                                            // Dynamic bundles usually imply you get what is listed, so no "excluded" logic unless manually calculated
+                                            excludedFeatures={[]}
+                                            buttonText="Suscribirme"
+                                            onAction={() => {
+                                                handlePurchase(bundle.title, bundle.price.toString(), undefined, bundle.id);
+                                            }}
+                                        />
+                                    );
+                                })
+                        ) : (
+                            // Fallback to Skeleton or Empty State if loading (handled by loading check usually)
+                            // or PLANS if fetch failed? Let's stick to PLANS as fallback if bundles is empty
+                            PLANS.map((plan, index) => (
                                 <PricingCard
                                     key={index}
                                     title={plan.title}
@@ -102,15 +164,10 @@ export default function PricingPage() {
                                     }
                                     features={plan.features}
                                     excludedFeatures={plan.excludedFeatures}
-                                    buttonText={bundleId ? "Suscribirme" : "No disponible"}
-                                    onAction={() => {
-                                        if (bundleId) {
-                                            handlePurchase(plan.title, plan.price.replace(".", "").replace("$", "").trim(), undefined, bundleId);
-                                        }
-                                    }}
+                                    buttonText="No disponible"
                                 />
-                            );
-                        })}
+                            ))
+                        )}
                     </div>
 
                     {/* Pricing Footer Info */}

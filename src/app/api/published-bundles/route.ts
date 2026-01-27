@@ -6,7 +6,8 @@ export async function GET() {
         const bundles = await prisma.bundle.findMany({
             where: { published: true },
             include: {
-                courses: { select: { title: true } }
+                courses: { select: { title: true } },
+                items: { select: { name: true } }
             }
         });
         return NextResponse.json(bundles);
