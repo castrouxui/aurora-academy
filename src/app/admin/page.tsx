@@ -70,7 +70,11 @@ export default function AdminDashboard() {
             fetchStats();
         }, 60000);
 
-        // Timer update every second for UI
+        return () => clearInterval(interval);
+    }, []); // Empty dependency array to run once on mount
+
+    // Timer update every second for UI
+    useEffect(() => {
         const timer = setInterval(() => {
             if (lastUpdated) {
                 const diff = Math.floor((new Date().getTime() - lastUpdated.getTime()) / 1000);
@@ -79,8 +83,8 @@ export default function AdminDashboard() {
             }
         }, 1000);
 
-        return () => { clearInterval(interval); clearInterval(timer); };
-    }, [lastUpdated]); // Re-bind timer if lastUpdated changes (optional, but clean)
+        return () => clearInterval(timer);
+    }, [lastUpdated]);
 
     const refreshDashboard = () => {
         setLoading(true);
