@@ -85,8 +85,8 @@ export const authOptions: AuthOptions = {
             try {
                 if (user) {
                     token.id = user.id;
-                    // EMERGENCY HOTFIX: Force Admin Role for specific email
-                    const adminEmails = ["aurora@admin.com"];
+                    // EMERGENCY HOTFIX: Force Admin Role for specific emails
+                    const adminEmails = ["aurora@admin.com", "admin@aurora.com"];
                     if (user.email && adminEmails.includes(user.email)) {
                         token.role = "ADMIN";
                     } else {

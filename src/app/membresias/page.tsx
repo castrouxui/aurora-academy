@@ -76,35 +76,7 @@ export default function PricingPage() {
                         Desde tus primeros pasos hasta operar como un profesional.
                     </p>
 
-                    {/* Billing Cycle Switch */}
-                    <div className="flex items-center justify-center mb-8">
-                        <div className="bg-[#0B0F19] p-1 rounded-full flex relative border border-white/10 shadow-inner">
-                            <button
-                                onClick={() => setBillingCycle("monthly")}
-                                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${billingCycle === "monthly"
-                                        ? "bg-[#1F2937] text-white shadow-lg border border-white/5"
-                                        : "text-gray-400 hover:text-white"
-                                    }`}
-                            >
-                                Mensual
-                            </button>
-                            <button
-                                onClick={() => setBillingCycle("annual")}
-                                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${billingCycle === "annual"
-                                        ? "bg-[#1F2937] text-white shadow-lg border border-white/5"
-                                        : "text-gray-400 hover:text-white"
-                                    }`}
-                            >
-                                Anual
-                                <span className={`${billingCycle === "annual"
-                                        ? "bg-emerald-600 text-white"
-                                        : "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20"
-                                    } text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-extrabold ml-1 transition-colors duration-300`}>
-                                    -23% OFF
-                                </span>
-                            </button>
-                        </div>
-                    </div>
+                    {/* Billing Cycle Switch Hidden for Launch */}
                 </Container>
             </section>
 
