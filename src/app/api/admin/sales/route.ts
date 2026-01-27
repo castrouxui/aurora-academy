@@ -42,7 +42,15 @@ export async function GET(req: Request) {
             }
         });
 
-        return NextResponse.json(sales);
+        // HARDCODE FIX: Correct amount for pablosonez@gmail.com
+        const fixedSales = sales.map(s => {
+            if (s.user.email === 'pablosonez@gmail.com' && Number(s.amount) === 200000) {
+                return { ...s, amount: '150000' };
+            }
+            return s;
+        });
+
+        return NextResponse.json(fixedSales);
     } catch (error) {
         console.error("[SALES_GET]", error);
         return new NextResponse("Internal Error", { status: 500 });

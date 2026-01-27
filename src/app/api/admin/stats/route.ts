@@ -58,25 +58,29 @@ export async function GET() {
 
         let revenue = 0;
 
-        for (const sale of allSales) {
+        // --- HARDCODE FIX: Correct amount for pablosonez@gmail.com ---
+        // (Requested by user to fix production data discrepancy)
+        const correctedSales = allSales.map(s => {
+            if (s.user.email === 'pablosonez@gmail.com' && Number(s.amount) === 200000) {
+                return { ...s, amount: '150000' };
+            }
+            return s;
+        });
+
+        for (const sale of correctedSales) {
             const itemId = sale.course?.title || sale.bundle?.title || "unknown";
             const key = `${sale.user.email}-${itemId}-${sale.amount}`;
 
             // Check if we already have this key in our unique list "recently"
-            // Since we are iterating a flat list, we just check if any existing unique sale matches
-            // AND is within 60s. 
-            // NOTE: iterating the whole unique array for every item is O(N^2), might be slow for 10k+ items.
-            // Optimization: The duplicates are likely adjacent or very close since we sort by createdAt.
-            // So checking the last few added items might be enough? 
-            // But 'uniqueSales' will be built in reverse order of time (Newest...Oldest).
-            // A duplicate would be slightly older than the one we just added.
-
             const isDuplicate = uniqueSales.some(existing => {
                 const existingKey = `${existing.user.email}-${existing.course?.title || existing.bundle?.title || "unknown"}-${existing.amount}`;
-                if (existingKey !== key) return false;
 
-                const timeDiff = Math.abs(new Date(existing.createdAt).getTime() - new Date(sale.createdAt).getTime());
-                return timeDiff < 60000;
+                // If keys match, it's a candidate for duplicate
+                if (existingKey === key) {
+                    const timeDiff = Math.abs(new Date(existing.createdAt).getTime() - new Date(sale.createdAt).getTime());
+                    return timeDiff < 60000;
+                }
+                return false;
             });
 
             if (!isDuplicate) {
