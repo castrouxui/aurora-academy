@@ -221,7 +221,10 @@ export default function PricingPage() {
                         <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
                             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">PAGA CON:</span>
                             <div className="flex items-center gap-3">
-                                <img src="/mercadopago.png" alt="Mercado Pago" className="h-5 w-auto opacity-90" />
+                                {/* Mercado Pago Chip */}
+                                <div className="bg-white/90 rounded px-1.5 h-6 flex items-center justify-center">
+                                    <img src="/payment-icons/mercadopago-new.png" alt="Mercado Pago" className="h-5 w-auto object-contain" />
+                                </div>
                                 <CardsIcons />
                             </div>
                         </div>
