@@ -36,7 +36,7 @@ export function PricingCard({
     return (
         <div
             className={cn(
-                "relative flex flex-col rounded-[24px] border p-6 shadow-xl transition-all duration-300 hover:scale-[1.01] h-full",
+                "relative flex flex-col rounded-[20px] md:rounded-[24px] border p-4 md:p-6 shadow-xl transition-all duration-300 hover:scale-[1.01] h-full",
                 isRecommended
                     ? "border-white/20 bg-[#10141d]" // Removed ring, kept subtle border or just bg
                     : "border-white/10 bg-[#10141d] hover:border-white/20",
@@ -44,8 +44,8 @@ export function PricingCard({
             )}
         >
             {(isRecommended || tag) && (
-                <div className="absolute top-5 right-5">
-                    <span className="rounded-full bg-gradient-to-r from-[#5D5CDE] to-[#9233EA] px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wider shadow-lg border border-white/10">
+                <div className="absolute top-4 right-4 md:top-5 md:right-5">
+                    <span className="rounded-full bg-gradient-to-r from-[#5D5CDE] to-[#9233EA] px-2.5 py-0.5 md:px-3 md:py-1 text-[9px] md:text-[10px] font-bold text-white uppercase tracking-wider shadow-lg border border-white/10">
                         {tag || "Recomendado"}
                     </span>
                 </div>

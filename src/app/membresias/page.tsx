@@ -142,9 +142,15 @@ export default function PricingPage() {
                                             return name;
                                         });
 
-                                        // Simple deduplication against already added features (strings only)
+                                        // Simple deduplication logic
                                         const existingStrings = displayFeatures.filter(f => typeof f === 'string') as string[];
-                                        const newItems = items.filter((item: string) => !existingStrings.includes(item));
+                                        // Filter dynamic items that are already in the list OR are "Acceso a Comunidad de Inversores"
+                                        const newItems = items.filter((item: string) => {
+                                            if (existingStrings.includes(item)) return false;
+                                            // Specific check for Comunidad to ensure it stays LAST as per user request (it's in static features)
+                                            if (item.toLowerCase().includes("comunidad de inversores")) return false;
+                                            return true;
+                                        });
 
                                         displayFeatures.push(...newItems);
                                     }
@@ -197,27 +203,25 @@ export default function PricingPage() {
                         )}
                     </div>
 
-                    {/* Pricing Footer Info Centered */}
-                    <div className="mx-auto max-w-6xl mt-12 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 px-6 text-sm text-gray-400 border-t border-white/5 pt-8 text-center">
-                        <div className="flex items-center gap-2">
-                            <span className="text-xl">🇦🇷</span>
-                            <span className="font-medium whitespace-nowrap">Precios en pesos argentinos.</span>
+                    {/* Pricing Footer Info Centered matches Platzi */}
+                    <div className="mx-auto max-w-6xl mt-8 md:mt-12 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 px-4 md:px-6 py-6 text-sm text-gray-400 border-t border-white/5 pt-8 text-center">
+                        <div className="flex items-center gap-2 md:gap-3 opacity-80">
+                            <span className="text-lg">🇦🇷</span>
+                            <span className="font-normal text-gray-300 whitespace-nowrap">Precios en pesos argentinos.</span>
                         </div>
 
-                        <div className="h-[1px] w-8 md:h-4 md:w-[1px] bg-white/20 hidden md:block" />
+                        <div className="h-[24px] w-[1px] bg-white/10 hidden md:block" />
 
-                        <div className="flex items-center gap-4">
-                            <span className="text-xs uppercase tracking-wider opacity-60">Paga con:</span>
-                            <div className="flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-70 hover:opacity-100 pb-1">
-                                <img src="/mercadopago.png" alt="Mercado Pago" className="h-5 w-auto" />
-                                <div className="flex gap-2">
-                                    <CardsIcons />
-                                </div>
+                        <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">PAGA CON:</span>
+                            <div className="flex items-center gap-3">
+                                <img src="/mercadopago.png" alt="Mercado Pago" className="h-5 w-auto opacity-90" />
+                                <CardsIcons />
                             </div>
                         </div>
                     </div>
-                </Container >
-            </section >
+                </Container>
+            </section>
 
             {/* Payment Modal */}
             {
@@ -240,6 +244,6 @@ export default function PricingPage() {
                 redirectUrl="/membresias"
                 view="purchase"
             />
-        </div >
+        </div>
     );
 }
