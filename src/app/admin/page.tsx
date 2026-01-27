@@ -22,7 +22,12 @@ export default function AdminDashboard() {
     async function fetchStats() {
         // No loading state change to prevent flickers on auto-refresh
         try {
-            const res = await fetch("/api/admin/stats");
+            // Explicitly prevent caching
+            const res = await fetch("/api/admin/stats", {
+                cache: 'no-store',
+                headers: { 'Pragma': 'no-cache' }
+            });
+
             if (res.ok) {
                 const data = await res.json();
 
@@ -44,7 +49,11 @@ export default function AdminDashboard() {
                 }
 
                 setStats(data);
-                setLastUpdated(new Date());
+                setLastUpdated(new Date()); // This triggers the "Just now" status
+            } else {
+                // If error, maybe clear status or show offline? 
+                // For now, let's keep old data but log error.
+                console.error("Stats API returned error:", res.status);
             }
         } catch (error) {
             console.error("Error fetching stats:", error);
