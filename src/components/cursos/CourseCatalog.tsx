@@ -37,7 +37,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
         async function fetchCourses() {
             try {
                 // Fetch published courses only (Bundles are now in /pricing only)
-                const coursesRes = await fetch("/api/cursos?published=true");
+                const coursesRes = await fetch("/api/courses?published=true");
 
                 if (coursesRes.ok) {
                     const coursesData = await coursesRes.json();
