@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
                 }
             ],
             back_urls: {
-                success: `${baseUrl}/dashboard/cursos`,
+                success: `${baseUrl}/dashboard`, // Redirect to main dashboard
                 failure: `${baseUrl}/membresias`,
                 pending: `${baseUrl}/membresias`,
             },

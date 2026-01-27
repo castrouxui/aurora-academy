@@ -109,7 +109,7 @@ export default function StudentDashboard() {
                 </p>
             </div>
 
-            <TelegramReminder isVerified={session?.user?.telegramVerified || false} />
+            {/* <TelegramReminder isVerified={session?.user?.telegramVerified || false} /> */}{/* DISABLED */}
 
             {/* Promotional Banner for Users with 0 Purchases */}
             {!hasPurchases && <PromotionalBanner />}
