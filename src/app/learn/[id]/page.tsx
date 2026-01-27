@@ -16,7 +16,10 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
                 orderBy: { position: 'asc' },
                 include: {
                     lessons: {
-                        orderBy: { position: 'asc' }
+                        orderBy: { position: 'asc' },
+                        include: {
+                            resources: true
+                        }
                     }
                 }
             }
@@ -90,7 +93,8 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
                 lastPlayedTime: progressMap.get(lesson.id)?.lastPlayedTime || 0,
                 type: "video" as const,
                 current: false,
-                videoUrl: lesson.videoUrl || ""
+                videoUrl: lesson.videoUrl || "",
+                resources: lesson.resources || []
             }))
         }))
     };

@@ -241,7 +241,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                         <div className="mx-auto max-w-5xl">
                             <div className="mb-6 border-b border-gray-800 overflow-x-auto">
                                 <nav className="-mb-px flex space-x-6 lg:space-x-8">
-                                    {["description", "notes", "resources"].map((tab) => (
+                                    {["description", "resources"].map((tab) => (
                                         <button
                                             key={tab}
                                             onClick={() => setActiveTab(tab)}
@@ -253,7 +253,6 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                             )}
                                         >
                                             {tab === "description" && "Descripción"}
-                                            {tab === "notes" && "Apuntes"}
                                             {tab === "resources" && "Recursos"}
                                         </button>
                                     ))}
@@ -295,12 +294,6 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                             </Button>
                                         </div>
                                     </>
-                                )}
-                                {activeTab === "notes" && (
-                                    <div className="flex flex-col items-center justify-center py-12 text-gray-500 border border-dashed border-gray-800 rounded-xl bg-card/20">
-                                        <FileText className="h-10 w-10 mb-3 opacity-50" />
-                                        <p>Tus apuntes personales para esta clase irán aquí.</p>
-                                    </div>
                                 )}
                                 {activeTab === "resources" && activeLesson && (
                                     <div className="space-y-3">
