@@ -6,6 +6,7 @@ import { CTASection } from "@/components/layout/CTASection";
 import { Footer } from "@/components/layout/Footer";
 import { StatsStrip } from "@/components/layout/StatsStrip";
 
+import { EcosystemSection } from "@/components/layout/EcosystemSection";
 import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
           <CourseList />
         </div>
 
+        <EcosystemSection />
         <TestimonialsSection />
         <CTASection />
 
