@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
 import { Container } from "@/components/layout/Container";
 import { PaymentModal } from "@/components/checkout/PaymentModal";
+import { CardsIcons } from "@/components/ui/CardsIcons";
 import { useSession } from "next-auth/react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { PLANS } from "@/constants/pricing";
@@ -186,18 +187,25 @@ export default function PricingPage() {
                     </div>
 
                     {/* Pricing Footer Info */}
-                    <div className="mx-auto max-w-4xl mt-6 flex items-center justify-center gap-8 px-4 text-sm text-gray-400">
+                    <div className="mx-auto max-w-6xl mt-12 flex flex-col md:flex-row items-center justify-between gap-6 px-6 text-sm text-gray-400 border-t border-white/5 pt-8">
                         <div className="flex items-center gap-2">
-                            <span className="text-lg">🇦🇷</span>
-                            <span>Precios en pesos argentinos.</span>
+                            <span className="text-xl">🇦🇷</span>
+                            <span className="font-medium">Precios en pesos argentinos.</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-xs">Pagá con</span>
-                            <img
-                                src="/mercadopago.png"
-                                alt="Mercado Pago"
-                                className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
-                            />
+
+                        <div className="flex items-center gap-4">
+                            <span className="text-xs uppercase tracking-wider opacity-60">Medios de pago:</span>
+                            <div className="flex items-center gap-3 grayscale hover:grayscale-0 transition-all opacity-70 hover:opacity-100">
+                                <img src="/mercadopago.png" alt="Mercado Pago" className="h-6 w-auto" />
+                                {/* Simple SVGs / Images for cards would go here. Using a generic 'Cards' representation or text if icons are missing, but requested specific icons. 
+                                    Since I don't have local assets for Visa/Master, I'll use a text representation or Lucide icons if appropriate, 
+                                    but usually these are images. I will assume we might need to add them later or use a generic 'Credit Cards' text/icon if images aren't present.
+                                    For now, I'll stick to formatting the right side container.
+                                */}
+                                <div className="flex gap-2">
+                                    <CardsIcons />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </Container >
