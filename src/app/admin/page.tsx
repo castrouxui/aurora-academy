@@ -233,6 +233,7 @@ function RecoveryButton() {
                     {result.message}
                 </span>
             )}
+            <GrantAccessModal />
             <Button
                 onClick={handleRecover}
                 disabled={loading}
@@ -247,5 +248,172 @@ function RecoveryButton() {
                 Actualizar datos
             </Button>
         </div>
+    );
+}
+
+function GrantAccessModal() {
+    const [isOpen, setIsOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [courses, setCourses] = useState<any[]>([]);
+    const [bundles, setBundles] = useState<any[]>([]);
+
+    // Form state
+    const [email, setEmail] = useState("");
+    const [selectedId, setSelectedId] = useState("");
+    const [type, setType] = useState<"COURSE" | "BUNDLE">("COURSE");
+    const [status, setStatus] = useState<{ success: boolean; msg: string } | null>(null);
+
+    useEffect(() => {
+        if (isOpen) {
+            // Fetch catalog for dropdown
+            const fetchCatalog = async () => {
+                try {
+                    // Quick fetch of ALL courses/bundles via stats or public API? 
+                    // Let's assume we can fetch from our exploration APIs or similar.
+                    // For simplicity in Admin, let's fetch from the explorer APIs which are public.
+                    const [resCourses, resBundles] = await Promise.all([
+                        fetch('/api/courses'),
+                        fetch('/api/bundles')
+                    ]);
+
+                    if (resCourses.ok) setCourses(await resCourses.json());
+                    if (resBundles.ok) setBundles(await resBundles.json());
+                } catch (e) {
+                    console.error("Error fetching catalog", e);
+                }
+            };
+            fetchCatalog();
+        }
+    }, [isOpen]);
+
+    const handleGrant = async () => {
+        if (!email || !selectedId) return;
+
+        setLoading(true);
+        setStatus(null);
+        try {
+            const body = {
+                email,
+                courseId: type === "COURSE" ? selectedId : undefined,
+                bundleId: type === "BUNDLE" ? selectedId : undefined
+            };
+
+            const res = await fetch('/api/admin/grant-access', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                setStatus({ success: true, msg: "¡Acceso otrogado exitosamente!" });
+                setTimeout(() => {
+                    setIsOpen(false);
+                    setStatus(null);
+                    setEmail("");
+                    setSelectedId("");
+                }, 2000);
+            } else {
+                setStatus({ success: false, msg: data.error || "Error al otorgar acceso" });
+            }
+        } catch (error) {
+            setStatus({ success: false, msg: "Error de conexión" });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <>
+            <Button
+                onClick={() => setIsOpen(true)}
+                className="bg-[#5D5CDE] hover:bg-[#4b4ac0] text-white gap-2"
+            >
+                <Users size={16} /> Otorgar Acceso
+            </Button>
+
+            {isOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="bg-[#1a1b26] border border-white/10 w-full max-w-md p-6 rounded-2xl shadow-2xl relative">
+                        <h2 className="text-xl font-bold text-white mb-4">Otorgar Acceso Manual</h2>
+                        <p className="text-sm text-gray-400 mb-6">
+                            Habilita un curso o paquete a un usuario registrado que tuvo problemas con el pago.
+                        </p>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Email del Usuario</label>
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="usuario@ejemplo.com"
+                                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#5D5CDE] outline-none"
+                                />
+                            </div>
+
+                            <div className="flex gap-4">
+                                <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
+                                    <input
+                                        type="radio"
+                                        name="type"
+                                        checked={type === "COURSE"}
+                                        onChange={() => { setType("COURSE"); setSelectedId(""); }}
+                                    /> Curso
+                                </label>
+                                <label className="flex items-center gap-2 text-white text-sm cursor-pointer">
+                                    <input
+                                        type="radio"
+                                        name="type"
+                                        checked={type === "BUNDLE"}
+                                        onChange={() => { setType("BUNDLE"); setSelectedId(""); }}
+                                    /> Paquete
+                                </label>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">
+                                    Seleccionar {type === "COURSE" ? "Curso" : "Paquete"}
+                                </label>
+                                <select
+                                    value={selectedId}
+                                    onChange={(e) => setSelectedId(e.target.value)}
+                                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-[#5D5CDE] outline-none appearance-none"
+                                >
+                                    <option value="">-- Seleccionar --</option>
+                                    {type === "COURSE"
+                                        ? courses.map(c => <option key={c.id} value={c.id}>{c.title}</option>)
+                                        : bundles.map(b => <option key={b.id} value={b.id}>{b.title}</option>)
+                                    }
+                                </select>
+                            </div>
+
+                            {status && (
+                                <div className={`p-3 rounded-lg text-sm font-medium text-center ${status.success ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}>
+                                    {status.msg}
+                                </div>
+                            )}
+
+                            <div className="flex gap-3 mt-6">
+                                <Button
+                                    variant="ghost"
+                                    className="flex-1 text-gray-400 hover:text-white"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    Cancelar
+                                </Button>
+                                <Button
+                                    className="flex-1 bg-[#5D5CDE] hover:bg-[#4b4ac0] text-white"
+                                    onClick={handleGrant}
+                                    disabled={loading || !email || !selectedId}
+                                >
+                                    {loading ? "Procesando..." : "Confirmar Acceso"}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 }
