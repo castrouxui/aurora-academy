@@ -158,7 +158,6 @@ export default function PricingPage() {
                                             tag={tag}
                                             isRecommended={isRecommended}
                                             // Use static special feature (Community Block) if available
-                                            specialFeature={staticPlan?.specialFeature}
                                             description={
                                                 <p className="text-gray-400 text-sm min-h-[40px] flex items-center text-left">
                                                     {/* Prioritize STATIC description for better copy */}
@@ -185,7 +184,6 @@ export default function PricingPage() {
                                     periodicity="mes"
                                     tag={plan.tag || undefined}
                                     isRecommended={plan.isRecommended}
-                                    specialFeature={plan.specialFeature}
                                     description={
                                         <p className="text-gray-400 text-sm min-h-[40px] flex items-center text-left">
                                             {plan.description}

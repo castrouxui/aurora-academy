@@ -26,7 +26,7 @@ export const PLANS = [
         description: "Para quienes operan activamente y buscan actualización constante.",
         features: [
             "Todo lo del Plan Inversor Inicial",
-            <span key="new-course" className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+            <span key="new-course" className="inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
                 <span>🔥</span> 1 curso nuevo cada 15 días
             </span>,
             "Curso de Opciones Financieras",
@@ -48,21 +48,17 @@ export const PLANS = [
         description: "La experiencia completa con networking profesional y acceso exclusivo a la comunidad de inversores.",
         features: [
             "Todo lo del Plan Trader de Elite",
-            <span key="new-course-pm" className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+            <span key="new-course-pm" className="inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
                 <span>🔥</span> 1 curso nuevo cada 15 días
             </span>,
             "Curso de IA para Inversores",
             "Análisis Fundamental & Cartera",
             "Dominando el Riesgo: Volatilidad",
             "Valuación Real: Beneficio vs. Caja",
-            "Acceso al Canal de Aurora Academy"
+            "Acceso al Canal de Aurora Academy",
+            "Acceso a Comunidad de Inversores" // Moved from specialFeature
         ],
         tag: null,
-        isRecommended: false,
-        // Special highlight for High Ticket
-        specialFeature: {
-            title: "Acceso a Comunidad de Inversores",
-            description: "Networking profesional con otros inversores."
-        }
+        isRecommended: false
     }
 ];

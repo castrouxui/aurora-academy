@@ -238,7 +238,6 @@ export default function MyMembershipsPage() {
                                 periodicity="mes"
                                 tag={plan.tag || undefined}
                                 isRecommended={plan.isRecommended}
-                                specialFeature={plan.specialFeature}
                                 description={
                                     <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center italic">
                                         {plan.description}

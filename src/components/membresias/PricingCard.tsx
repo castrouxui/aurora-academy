@@ -54,7 +54,7 @@ export function PricingCard({
             <div className="mb-4 text-left">
                 <h3 className="text-xl font-bold text-white mb-1">{title}</h3>
                 <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-black tracking-tighter text-white">
+                    <span className="text-3xl font-black tracking-tighter text-white">
                         {new Intl.NumberFormat("es-AR", {
                             style: "currency",
                             currency: "ARS",
@@ -93,7 +93,7 @@ export function PricingCard({
                 ))}
             </ul>
 
-            {/* Special Feature Banner */}
+            {/* Special Feature Banner Removed as per request, logic handled in parent/constants */}
             {specialFeature && (
                 <div className="mt-4 mb-2 rounded-xl bg-[#5D5CDE]/10 border border-[#5D5CDE]/30 p-3">
                     <p className="text-xs font-bold text-[#5D5CDE] mb-0.5 flex items-center gap-2">
@@ -110,7 +110,7 @@ export function PricingCard({
                 <Button
                     onClick={onAction}
                     className={cn(
-                        "w-full h-14 text-sm font-bold transition-all duration-300 rounded-lg", // Increased height to h-14
+                        "w-full h-14 text-sm font-bold transition-all duration-300 rounded-xl", // Increased radius to rounded-xl
                         isRecommended
                             ? "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
                             : "bg-transparent border border-white/20 hover:bg-white hover:text-black text-white"
