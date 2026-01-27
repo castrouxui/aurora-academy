@@ -148,6 +148,37 @@ export default function MyMembershipsPage() {
                             </div>
                         </div>
 
+                        {/* Plan Benefits / Links Section */}
+                        {subscription.subscription.bundle?.items?.length > 0 && (
+                            <div className="border-t border-white/5 pt-8">
+                                <h3 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
+                                    <span className="text-[#5D5CDE]">✨</span> Accesos y Beneficios Exclusivos
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {subscription.subscription.bundle.items.map((item: any) => (
+                                        <div key={item.id} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 hover:border-[#5D5CDE]/50 transition-colors">
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-10 w-10 shrink-0 rounded-lg bg-[#5D5CDE]/20 flex items-center justify-center text-[#5D5CDE]">
+                                                    <CheckCircle size={20} />
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="font-bold text-white text-sm truncate">{item.name}</p>
+                                                    <p className="text-xs text-gray-500">Beneficio incluido</p>
+                                                </div>
+                                            </div>
+                                            {item.content && (item.content.startsWith('http') || item.content.startsWith('www')) && (
+                                                <a href={item.content} target="_blank" rel="noopener noreferrer">
+                                                    <Button size="sm" className="bg-[#5D5CDE] hover:bg-[#4b4ac6] text-white font-bold h-9">
+                                                        Entrar
+                                                    </Button>
+                                                </a>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         <div className="border-t border-white/5 pt-8">
                             <h3 className="text-lg font-bold text-white mb-5">Gestión de Cuenta</h3>
                             <div className="flex flex-col sm:flex-row gap-4">

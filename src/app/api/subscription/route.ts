@@ -16,7 +16,13 @@ export async function GET() {
                 userId: session.user.id,
                 status: { in: ['authorized', 'pending', 'paused', 'cancelled'] }
             },
-            include: { bundle: true },
+            include: {
+                bundle: {
+                    include: {
+                        items: true
+                    }
+                }
+            },
             orderBy: { createdAt: 'desc' }
         });
 
