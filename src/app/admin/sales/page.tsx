@@ -123,6 +123,9 @@ export default function AdminSalesPage() {
                 return <Badge variant="success" className="gap-1"><CheckCircle size={10} /> Aprobado</Badge>;
             case 'rejected':
                 return <Badge variant="destructive" className="gap-1"><XCircle size={10} /> Rechazado</Badge>;
+            case 'refunded':
+            case 'refund':
+                return <Badge variant="outline" className="gap-1 border-orange-500 text-orange-500 bg-orange-500/10"><Clock size={10} /> Reembolsado</Badge>;
             default:
                 return <Badge variant="warning" className="gap-1"><Clock size={10} /> Pendiente</Badge>;
         }
