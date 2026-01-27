@@ -14,7 +14,7 @@ export const PLANS = [
         ],
         excludedFeatures: [
             "Acceso a Comunidad de Inversores",
-            "Acceso al Canal de Aurora Academy"
+            "Acceso a Canal de Aurora Academy"
         ],
         tag: null,
         isRecommended: false
