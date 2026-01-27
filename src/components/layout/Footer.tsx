@@ -1,8 +1,17 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./Logo";
-import { Facebook, Instagram, Linkedin, Twitter, Youtube, MoveRight, Bitcoin, TrendingUp, DollarSign, Send } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Youtube, MoveRight, Bitcoin, TrendingUp, DollarSign, Send } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+
+// Custom X Icon (Lucide doesn't have it yet)
+function XIcon({ className }: { className?: string }) {
+    return (
+        <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor" width="1em" height="1em">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+        </svg>
+    );
+}
 
 export function Footer() {
     return (
@@ -88,10 +97,10 @@ export function Footer() {
                                 </p>
                             </div>
                             <div className="flex gap-4">
-                                <SocialIcon icon={<Instagram size={20} />} href="#" />
-                                <SocialIcon icon={<Twitter size={20} />} href="#" />
-                                <SocialIcon icon={<Youtube size={20} />} href="#" />
-                                <SocialIcon icon={<Send size={20} />} href="#" />
+                                <SocialIcon icon={<Instagram size={20} />} href="https://www.instagram.com/auroradvisorsok/" />
+                                <SocialIcon icon={<XIcon className="w-5 h-5" />} href="https://x.com/francastromt" />
+                                <SocialIcon icon={<Youtube size={20} />} href="https://www.youtube.com/channel/UCkMuy306bU7ZOrNb3NgYqew" />
+                                <SocialIcon icon={<Send size={20} />} href="https://t.me/Auroradvisors" />
                             </div>
                         </div>
 
@@ -134,7 +143,7 @@ export function Footer() {
 
 function SocialIcon({ icon, href }: { icon: React.ReactNode; href: string }) {
     return (
-        <a href={href} className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">
+        <a href={href} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">
             {icon}
         </a>
     );
