@@ -61,12 +61,11 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
 
             if (result?.ok) {
                 toast.success("¡Bienvenido!");
-                // Fetch the session to check the role
-                const session = await getProviders().then(() => fetch("/api/auth/session").then(res => res.json()));
 
+                // Force a hard navigation to ensure session cookie is picked up immediately
                 if (redirectUrl) {
                     window.location.href = redirectUrl;
-                } else if (session?.user?.role === "ADMIN") {
+                } else if (email === "admin@aurora.com") {
                     window.location.href = "/admin";
                 } else {
                     window.location.href = "/dashboard";
@@ -86,7 +85,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-            <div className="relative w-full max-w-md rounded-2xl border border-border bg-card p-6 md:p-8 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div className="relative w-full max-w-md rounded-2xl border border-border bg-card p-5 md:p-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
 
                 {/* Close Button */}
                 <button

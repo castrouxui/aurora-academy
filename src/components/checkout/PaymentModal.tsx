@@ -163,7 +163,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 Mobile: h-[100dvh] but scrollable content if it overflows.
                 Desktop: Max height with internal scrolling.
             */}
-            <div className="bg-card w-full h-[100dvh] md:h-auto md:max-h-[90vh] md:max-w-3xl rounded-none md:rounded-3xl shadow-2xl overflow-y-auto md:overflow-visible border-0 md:border border-border flex flex-col md:flex-row relative">
+            <div className="bg-card w-full h-[100dvh] md:h-auto md:max-h-[85vh] md:max-w-2xl rounded-none md:rounded-2xl shadow-2xl overflow-y-auto md:overflow-visible border-0 md:border border-border flex flex-col md:flex-row relative">
 
                 {/* Close Button (Absolute) - Fixed position on mobile to be always visible */}
                 <button
