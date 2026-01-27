@@ -78,39 +78,79 @@ export default function BusinessPage() {
                         <p className="text-gray-400">Elegí la duración que mejor se adapte a tu presupuesto anual.</p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                        {/* Plan Semestral */}
-                        <div className="relative p-8 rounded-3xl border border-gray-800 bg-[#0B0F19] flex flex-col">
-                            <h3 className="text-xl font-bold text-white mb-2">Semestral</h3>
-                            <p className="text-gray-400 text-sm mb-6">Para proyectos a mediano plazo</p>
+                    <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        {/* Business Starter */}
+                        <div className="relative p-8 rounded-3xl border border-gray-800 bg-[#0B0F19] flex flex-col hover:border-gray-700 transition-colors">
+                            <h3 className="text-xl font-bold text-white mb-2">Business Starter</h3>
+                            <div className="text-[#5D5CDE] font-semibold text-sm mb-1">1 a 10 Licencias</div>
+                            <p className="text-gray-400 text-sm mb-6">PyMEs y equipos pequeños</p>
+
                             <div className="flex-1 space-y-4 mb-8">
-                                <li className="flex gap-3 text-gray-300"><CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} /> Acceso total a cursos</li>
-                                <li className="flex gap-3 text-gray-300"><CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} /> Panel de métricas</li>
-                                <li className="flex gap-3 text-gray-300"><CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} /> Soporte prioritario</li>
+                                <li className="flex gap-3 text-gray-300">
+                                    <CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} />
+                                    <span className="text-sm">Precio Fijo por Pack</span>
+                                </li>
+                                <li className="flex gap-3 text-gray-300">
+                                    <CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} />
+                                    <span className="text-sm">Ahorro -20% vs particular</span>
+                                </li>
+                                <li className="flex gap-3 text-gray-300">
+                                    <CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} />
+                                    <span className="text-sm">Pago Único (Acceso de por vida)</span>
+                                </li>
                             </div>
                         </div>
 
-                        {/* Plan Anual - Highlighted */}
+                        {/* Business Growth - Highlighted */}
                         <div className="relative p-8 rounded-3xl border border-[#5D5CDE] bg-[#111827] flex flex-col transform md:-translate-y-4 shadow-[0_0_50px_rgba(93,92,222,0.1)]">
-                            <div className="absolute top-0 right-0 bg-[#5D5CDE] text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl">RECOMENDADO</div>
-                            <h3 className="text-xl font-bold text-white mb-2">Anual</h3>
-                            <p className="text-gray-400 text-sm mb-6">Máximo impacto y retención</p>
+                            <div className="absolute top-0 right-0 bg-[#5D5CDE] text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl">POPULAR</div>
+                            <h3 className="text-xl font-bold text-white mb-2">Business Growth</h3>
+                            <div className="text-[#5D5CDE] font-semibold text-sm mb-1">11 a 30 Licencias</div>
+                            <p className="text-gray-400 text-sm mb-6">Empresas en crecimiento</p>
+
                             <div className="flex-1 space-y-4 mb-8">
-                                <li className="flex gap-3 text-white"><CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} /> Todo lo del Semestral</li>
-                                <li className="flex gap-3 text-white"><CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} /> Webinars exclusivos</li>
-                                <li className="flex gap-3 text-white"><CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} /> Reporte de impacto ROI</li>
-                                <li className="flex gap-3 text-white"><CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} /> Onboarding personalizado</li>
+                                <li className="flex gap-3 text-white">
+                                    <CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} />
+                                    <span className="text-sm">Precio por Cupo Reducido</span>
+                                </li>
+                                <li className="flex gap-3 text-white">
+                                    <CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} />
+                                    <span className="text-sm">Dashboard de Métricas Básico</span>
+                                </li>
+                                <li className="flex gap-3 text-white">
+                                    <CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} />
+                                    <span className="text-sm">Pago Único</span>
+                                </li>
+                                <li className="flex gap-3 text-white">
+                                    <CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} />
+                                    <span className="text-sm">Soporte Prioritario</span>
+                                </li>
                             </div>
                         </div>
 
                         {/* Plan Enterprise */}
-                        <div className="relative p-8 rounded-3xl border border-gray-800 bg-[#0B0F19] flex flex-col">
+                        <div className="relative p-8 rounded-3xl border border-gray-800 bg-[#0B0F19] flex flex-col hover:border-gray-700 transition-colors">
                             <h3 className="text-xl font-bold text-white mb-2">Enterprise</h3>
-                            <p className="text-gray-400 text-sm mb-6">Para +50 colaboradores</p>
+                            <div className="text-[#5D5CDE] font-semibold text-sm mb-1">+100 Licencias</div>
+                            <p className="text-gray-400 text-sm mb-6">Grandes corporaciones</p>
+
                             <div className="flex-1 space-y-4 mb-8">
-                                <li className="flex gap-3 text-gray-300"><CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} /> Contenido a medida</li>
-                                <li className="flex gap-3 text-gray-300"><CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} /> API de integración</li>
-                                <li className="flex gap-3 text-gray-300"><CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} /> Account Manager dedicado</li>
+                                <li className="flex gap-3 text-gray-300">
+                                    <CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} />
+                                    <span className="text-sm">Cotización a Medida</span>
+                                </li>
+                                <li className="flex gap-3 text-gray-300">
+                                    <CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} />
+                                    <span className="text-sm">Soporte Dedicado 24/7</span>
+                                </li>
+                                <li className="flex gap-3 text-gray-300">
+                                    <CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} />
+                                    <span className="text-sm">Reportes Trimestrales</span>
+                                </li>
+                                <li className="flex gap-3 text-gray-300">
+                                    <CheckCircle2 className="text-[#5D5CDE] shrink-0" size={20} />
+                                    <span className="text-sm">Integraciones API</span>
+                                </li>
                             </div>
                         </div>
                     </div>

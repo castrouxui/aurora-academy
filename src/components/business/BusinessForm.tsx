@@ -121,10 +121,10 @@ export default function BusinessForm() {
                     className={inputClasses}
                     options={[
                         { value: "", label: "Seleccionar cantidad" },
-                        { value: "1-10", label: "1-10 empleados" },
-                        { value: "11-50", label: "11-50 empleados" },
-                        { value: "51-200", label: "51-200 empleados" },
-                        { value: "+200", label: "+200 empleados" },
+                        { value: "1-10", label: "1-10 empleados (Starter)" },
+                        { value: "11-30", label: "11-30 empleados (Growth)" },
+                        { value: "31-100", label: "31-100 empleados" },
+                        { value: "+100", label: "+100 empleados (Enterprise)" },
                     ]}
                 />
             </div>
@@ -138,10 +138,9 @@ export default function BusinessForm() {
                 className={inputClasses}
                 options={[
                     { value: "", label: "Seleccionar plan" },
-                    { value: "Inversor Inicial", label: "Inversor Inicial" },
-                    { value: "Trader de Elite", label: "Trader de Elite" },
-                    { value: "Portfolio Manager", label: "Portfolio Manager" },
-                    { value: "Enterprise", label: "Enterprise / A medida" },
+                    { value: "Business Starter", label: "Business Starter (1-10)" },
+                    { value: "Business Growth", label: "Business Growth (11-30)" },
+                    { value: "Enterprise", label: "Enterprise (+100)" },
                 ]}
             />
 
