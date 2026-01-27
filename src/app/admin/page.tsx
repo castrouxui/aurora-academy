@@ -16,12 +16,35 @@ export default function AdminDashboard() {
     });
     const [loading, setLoading] = useState(true);
 
+    const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+    const [timeAgo, setTimeAgo] = useState("Sincronizando...");
+
     async function fetchStats() {
+        // No loading state change to prevent flickers on auto-refresh
         try {
             const res = await fetch("/api/admin/stats");
             if (res.ok) {
                 const data = await res.json();
+
+                // Soft Deduplication for Recent Sales Widget
+                if (data.recentSales) {
+                    const uniqueSales: any[] = [];
+                    data.recentSales.forEach((sale: any) => {
+                        const itemId = sale.course?.title || sale.bundle?.title || "unknown";
+                        const key = itemId + sale.amount + sale.user.email;
+
+                        const isDuplicate = uniqueSales.some((existing: any) => {
+                            const existingKey = (existing.course?.title || existing.bundle?.title || "unknown") + existing.amount + existing.user.email;
+                            return existingKey === key && Math.abs(new Date(existing.createdAt).getTime() - new Date(sale.createdAt).getTime()) < 60000;
+                        });
+
+                        if (!isDuplicate) uniqueSales.push(sale);
+                    });
+                    data.recentSales = uniqueSales;
+                }
+
                 setStats(data);
+                setLastUpdated(new Date());
             }
         } catch (error) {
             console.error("Error fetching stats:", error);
@@ -38,8 +61,17 @@ export default function AdminDashboard() {
             fetchStats();
         }, 60000);
 
-        return () => clearInterval(interval);
-    }, []);
+        // Timer update every second for UI
+        const timer = setInterval(() => {
+            if (lastUpdated) {
+                const diff = Math.floor((new Date().getTime() - lastUpdated.getTime()) / 1000);
+                if (diff < 60) setTimeAgo(`Actualizado hace ${diff} seg`);
+                else if (diff < 3600) setTimeAgo(`Actualizado hace ${Math.floor(diff / 60)} min`);
+            }
+        }, 1000);
+
+        return () => { clearInterval(interval); clearInterval(timer); };
+    }, [lastUpdated]); // Re-bind timer if lastUpdated changes (optional, but clean)
 
     const refreshDashboard = () => {
         setLoading(true);
@@ -94,7 +126,10 @@ export default function AdminDashboard() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-                    <p className="text-gray-400 mt-2">Bienvenido al panel de control de Aurora Academy.</p>
+                    <p className="text-gray-400 mt-2 flex items-center gap-2">
+                        Bienvenido al panel de control de Aurora Academy.
+                        {lastUpdated && <span className="text-xs bg-white/10 px-2 py-0.5 rounded text-emerald-400 border border-emerald-500/20">{timeAgo}</span>}
+                    </p>
                 </div>
                 <div className="flex items-center gap-2">
                     <RecoveryButton onRefresh={refreshDashboard} />

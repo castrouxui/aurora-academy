@@ -20,24 +20,88 @@ export default function AdminSalesPage() {
     const [sales, setSales] = useState<Sale[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [period, setPeriod] = useState("all");
+    const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+    const [timeAgo, setTimeAgo] = useState("Actualizando...");
+
+    const fetchSales = async () => {
+        // Don't set loading to true on background refreshes to avoid UI flicker
+        if (!lastUpdated) setIsLoading(true);
+
+        try {
+            const res = await fetch(`/api/admin/sales?period=${period}`);
+            if (res.ok) {
+                const data: Sale[] = await res.json();
+
+                // --- SOFT DEDUPLICATION LOGIC ---
+                // Filter out "double clicks" (Same user, same amount, same course/bundle, within 60s)
+                const uniqueSales: Sale[] = [];
+                const seen = new Set<string>();
+
+                // Sort by date desc first to keep the latest or first? 
+                // Let's keep the earlier one usually, but for display sort is desc.
+                // Actually key is: User-Item-Amount-TimeWindow
+
+                data.forEach(sale => {
+                    // Create a key based on User + Item + Amount
+                    // We assume data is sorted by date DESC from API.
+                    const itemId = sale.course?.title || sale.bundle?.title || "unknown";
+                    const key = `${sale.user.email}-${itemId}-${sale.amount}`;
+
+                    // We need to check if we recently added a similar confirmed sale
+                    // But simpler: just check if we have one with this key already?
+                    // No, user might bug twice.
+                    // Let's just use the exact filtering requested: Hide visual duplicates.
+                    // Unique PaymentID is technical, but User wants visual cleanup.
+
+                    // If we have seen this (User+Item+Amount) in the last few iterations of this loop... 
+                    // Since specific timestamps might vary slightly, let's just allow 1 per minute per user/item.
+
+                    const timeBucket = new Date(sale.createdAt).getTime();
+                    // Round to nearest minute roughly? No, too aggressive.
+
+                    // Simple approach: Check if we already have this key in `uniqueSales` within 60 seconds diff.
+                    const isDuplicate = uniqueSales.some(existing => {
+                        const existingKey = `${existing.user.email}-${existing.course?.title || existing.bundle?.title || "unknown"}-${existing.amount}`;
+                        if (existingKey !== key) return false;
+
+                        const timeDiff = Math.abs(new Date(existing.createdAt).getTime() - new Date(sale.createdAt).getTime());
+                        return timeDiff < 60000; // 60 seconds
+                    });
+
+                    if (!isDuplicate) {
+                        uniqueSales.push(sale);
+                    }
+                });
+
+                setSales(uniqueSales);
+                setLastUpdated(new Date());
+            }
+        } catch (error) {
+            console.error("Failed to fetch sales", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
-        async function fetchSales() {
-            setIsLoading(true);
-            try {
-                const res = await fetch(`/api/admin/sales?period=${period}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    setSales(data);
-                }
-            } catch (error) {
-                console.error("Failed to fetch sales", error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
         fetchSales();
+        const interval = setInterval(fetchSales, 60000); // Auto-refresh every 60s
+        return () => clearInterval(interval);
     }, [period]);
+
+    // Timer for "Updated X ago"
+    useEffect(() => {
+        const timer = setInterval(() => {
+            if (lastUpdated) {
+                const diff = Math.floor((new Date().getTime() - lastUpdated.getTime()) / 1000);
+                if (diff < 60) setTimeAgo(`Actualizado hace ${diff} seg`);
+                else if (diff < 3600) setTimeAgo(`Actualizado hace ${Math.floor(diff / 60)} min`);
+                else setTimeAgo(`Actualizado hace ${Math.floor(diff / 3600)} h`);
+            }
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [lastUpdated]);
+
 
     const formatCurrency = (amount: string) => {
         return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(Number(amount));
@@ -78,7 +142,14 @@ export default function AdminSalesPage() {
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <h1 className="text-3xl font-bold text-white">Ventas</h1>
+                <div>
+                    <h1 className="text-3xl font-bold text-white">Ventas</h1>
+                    {lastUpdated && (
+                        <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                            <Clock size={10} /> {timeAgo}
+                        </p>
+                    )}
+                </div>
 
                 <div className="flex items-center gap-2 bg-[#1F2937] p-1 rounded-lg border border-gray-700">
                     <button
