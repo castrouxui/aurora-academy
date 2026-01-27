@@ -10,6 +10,7 @@ declare module "next-auth" {
             isCompanyAdmin?: boolean;
             telegram?: string;
             telegramVerified?: boolean;
+            notificationPrefs?: any;
         } & DefaultSession["user"];
     }
 

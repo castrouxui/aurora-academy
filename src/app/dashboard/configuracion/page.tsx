@@ -20,6 +20,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { TelegramVerification } from "@/components/dashboard/TelegramVerification";
+import { NotificationPreferences } from "@/components/dashboard/NotificationPreferences";
 
 export default function SettingsPage() {
     const { data: session } = useSession();
@@ -138,6 +139,11 @@ export default function SettingsPage() {
                             </CardContent>
                         </Card>
                     )}
+
+                    {/* Notification Preferences */}
+                    <NotificationPreferences
+                        initialPrefs={session?.user?.notificationPrefs as any}
+                    />
 
                     {session?.user?.role === 'ADMIN' && (
                         <Card className="bg-[#1F2937] border-gray-700 border-l-4 border-l-blue-500">

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "@/components/layout/Logo";
 import { signOut } from "next-auth/react";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 
 interface NavItem {
     name: string;
@@ -104,6 +105,14 @@ export function MobileSidebar({ items, role, user }: MobileSidebarProps) {
                                     </p>
                                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                                 </div>
+                            </div>
+                            <div className="flex flex-col gap-2 px-2 mb-4">
+                                <Link href="/dashboard/settings" onClick={() => setIsOpen(false)}>
+                                    <button className="w-full text-left px-3 py-2 text-sm font-medium text-gray-400 rounded-lg hover:bg-[#1F2937] hover:text-white transition-colors">
+                                        Configuración
+                                    </button>
+                                </Link>
+                                <NotificationBell />
                             </div>
                             <Button
                                 variant="outline"

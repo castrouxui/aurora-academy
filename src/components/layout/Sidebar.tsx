@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut, ChevronLeft, ChevronRight, Settings, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOut } from "next-auth/react";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 
 interface NavItem {
     name: string;
@@ -54,6 +55,12 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
                 >
                     {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
                 </button>
+
+                {!isCollapsed && (
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2">
+                        <NotificationBell />
+                    </div>
+                )}
             </div>
 
             {/* Navigation */}
@@ -156,6 +163,7 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
                         >
                             <LogOut size={18} />
                         </Button>
+                        <NotificationBell />
                     </div>
                 )}
             </div>

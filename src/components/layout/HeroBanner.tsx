@@ -40,7 +40,7 @@ export function HeroBanner() {
                         </Link>
                     </div>
                     <p className="text-gray-400 text-sm font-medium mt-4 md:mt-6 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-                        Cancelá cuando quieras. Sin contratos largos.
+                        Aprendé a tu ritmo. Cancelá cuando quieras.
                     </p>
                 </div>
             </Container>

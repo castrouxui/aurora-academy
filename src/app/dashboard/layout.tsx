@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { MobileSidebar } from "@/components/layout/MobileSidebar";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { TelegramBlockingOverlay } from "@/components/dashboard/TelegramBlockingOverlay";
 
 export default function DashboardLayout({
     children,
@@ -63,8 +64,16 @@ export default function DashboardLayout({
 
     const navigation = isAdmin ? adminNav : studentNav;
 
+    const isStudent = session.user.role === "ESTUDIANTE";
+    const needsTelegram = isStudent && !session.user.telegramVerified;
+
     return (
         <div className="min-h-screen bg-[#0B0F19] flex">
+            {/* Mandatory Telegram Verification for Students */}
+            {needsTelegram && (
+                <TelegramBlockingOverlay user={session.user as any} />
+            )}
+
             {/* Desktop Sidebar - Now generic */}
             <Sidebar
                 items={navigation}

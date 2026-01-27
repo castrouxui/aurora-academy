@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Upload, X, Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Video, FileText, MoreVertical, Link as LinkIcon, Image as ImageIcon, CheckCircle, AlertCircle, Loader2, FolderPlus, ArrowLeft, Layers, Globe, Eye, EyeOff, UploadCloud, BarChart, Tag, DollarSign, FileVideo, File as FileIcon, Save } from "lucide-react";
+import { Upload, X, Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Video, FileText, MoreVertical, Link as LinkIcon, Image as ImageIcon, CheckCircle, AlertCircle, Loader2, FolderPlus, ArrowLeft, Layers, Globe, Eye, EyeOff, UploadCloud, BarChart, Tag, DollarSign, FileVideo, File as FileIcon, Save, Send } from "lucide-react";
 
 import { toast } from "sonner";
 
@@ -74,6 +74,7 @@ export default function CourseEditorPage() {
     const [course, setCourse] = useState<Course | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [isAnnouncing, setIsAnnouncing] = useState(false);
 
     // Add Module State
     const [isAddModuleOpen, setIsAddModuleOpen] = useState(false);
@@ -497,6 +498,33 @@ export default function CourseEditorPage() {
         }
     };
 
+    const handleAnnounce = async () => {
+        if (!course) return;
+        if (!confirm(`¿Querés anunciar el curso "${course.title}" en Telegram?`)) return;
+
+        setIsAnnouncing(true);
+        try {
+            const message = `🚀 <b>¡Nuevo Curso Lanzado!</b>\n\n<b>${course.title}</b>\n\n${course.shortDescription || course.description || ""}\n\n👉 <a href="${window.location.origin}/cursos/${course.id}">¡Miralos ahora!</a>`;
+
+            const res = await fetch("/api/admin/telegram/broadcast", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message }),
+            });
+
+            if (res.ok) {
+                toast.success("Anuncio enviado correctamente");
+            } else {
+                toast.error("Error al enviar el anuncio");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error de conexión");
+        } finally {
+            setIsAnnouncing(false);
+        }
+    };
+
     const openAddLesson = (moduleId: string) => {
         setActiveModuleId(moduleId);
         setActiveLessonId(null);
@@ -597,6 +625,18 @@ export default function CourseEditorPage() {
                                 Ver Curso
                             </Button>
                         </Link>
+
+                        {course.published && (
+                            <Button
+                                onClick={handleAnnounce}
+                                disabled={isAnnouncing}
+                                className="bg-sky-500 hover:bg-sky-600 text-white gap-2 shadow-lg shadow-sky-500/20 border-transparent"
+                            >
+                                {isAnnouncing ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                                Anunciar en Telegram
+                            </Button>
+                        )}
+
                         <Button
                             onClick={togglePublish}
                             className={course.published

@@ -39,11 +39,11 @@ function CheckoutContent() {
                     setIsModalOpen(true); // Auto-open modal
                 } else {
                     console.error("Item not found");
-                    router.push("/courses");
+                    router.push("/cursos");
                 }
             } catch (error) {
                 console.error(error);
-                router.push("/courses");
+                router.push("/cursos");
             } finally {
                 setLoading(false);
             }

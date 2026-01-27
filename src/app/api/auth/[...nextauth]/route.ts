@@ -88,8 +88,9 @@ export const authOptions: AuthOptions = {
                     token.role = user.role;
                     token.companyId = user.companyId;
                     token.isCompanyAdmin = user.isCompanyAdmin;
-                    token.telegram = user.telegram;
-                    token.telegramVerified = user.telegramVerified;
+                    token.telegram = (user as any).telegram;
+                    token.telegramVerified = (user as any).telegramVerified;
+                    token.notificationPrefs = (user as any).notificationPrefs;
                 }
 
                 if (trigger === "update" && session) {
@@ -111,6 +112,7 @@ export const authOptions: AuthOptions = {
                     session.user.isCompanyAdmin = token.isCompanyAdmin;
                     session.user.telegram = token.telegram;
                     session.user.telegramVerified = token.telegramVerified;
+                    session.user.notificationPrefs = token.notificationPrefs;
                 }
                 return session;
             } catch (error) {

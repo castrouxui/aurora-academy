@@ -76,7 +76,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             clearInterval(intervalId);
                             // Show success message for 3 seconds then redirect
                             setTimeout(() => {
-                                router.push('/dashboard/courses'); // Redirect to success
+                                router.push('/dashboard/cursos'); // Redirect to success
                                 onClose();
                             }, 3000);
                         }

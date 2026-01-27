@@ -45,7 +45,7 @@ export function CourseHero({
                 <div className="space-y-6 max-w-3xl">
                     {/* Breadcrumbs */}
                     <div className="flex items-center gap-2 text-[#5D5CDE] font-bold text-xs sm:text-sm mb-4 bg-black/40 backdrop-blur-md w-fit px-3 py-1 rounded-full border border-white/5">
-                        <Link href="/courses" className="hover:text-white transition-colors">Cursos</Link>
+                        <Link href="/cursos" className="hover:text-white transition-colors">Cursos</Link>
                         <span className="text-gray-500">/</span>
                         <span className="text-white truncate max-w-[200px]">{title}</span>
                     </div>

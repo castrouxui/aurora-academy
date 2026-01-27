@@ -47,9 +47,9 @@ export function BundleClient({ bundle }: BundleClientProps) {
 
             <div className="pt-32 pb-20">
                 <Container>
-                    <Link href="/courses" className="inline-flex items-center text-gray-400 hover:text-white mb-8 transition-colors">
-                        <ArrowLeft size={16} className="mr-2" />
-                        Volver al catálogo
+                    <Link href="/cursos" className="inline-flex items-center text-gray-400 hover:text-white mb-8 transition-colors">
+                        <ArrowLeft className="mr-2 w-4 h-4" />
+                        Volver a Carreras
                     </Link>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
