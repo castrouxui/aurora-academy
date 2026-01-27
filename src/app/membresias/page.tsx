@@ -26,6 +26,7 @@ export default function PricingPage() {
     // Dynamic State
     const [bundles, setBundles] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
 
     useEffect(() => {
         async function fetchBundles() {
@@ -70,10 +71,40 @@ export default function PricingPage() {
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
                         Evolucioná tu capital con el respaldo de expertos
                     </h1>
-                    <p className="text-lg leading-8 text-gray-300 max-w-2xl mx-auto">
+                    <p className="text-lg leading-8 text-gray-300 max-w-2xl mx-auto mb-10">
                         Tu hoja de ruta y acompañamiento diario en los mercados.
                         Desde tus primeros pasos hasta operar como un profesional.
                     </p>
+
+                    {/* Billing Cycle Switch */}
+                    <div className="flex items-center justify-center mb-8">
+                        <div className="bg-[#0B0F19] p-1 rounded-full flex relative border border-white/10 shadow-inner">
+                            <button
+                                onClick={() => setBillingCycle("monthly")}
+                                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 ${billingCycle === "monthly"
+                                        ? "bg-[#1F2937] text-white shadow-lg border border-white/5"
+                                        : "text-gray-400 hover:text-white"
+                                    }`}
+                            >
+                                Mensual
+                            </button>
+                            <button
+                                onClick={() => setBillingCycle("annual")}
+                                className={`px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${billingCycle === "annual"
+                                        ? "bg-[#1F2937] text-white shadow-lg border border-white/5"
+                                        : "text-gray-400 hover:text-white"
+                                    }`}
+                            >
+                                Anual
+                                <span className={`${billingCycle === "annual"
+                                        ? "bg-emerald-600 text-white"
+                                        : "bg-emerald-400/10 text-emerald-400 border border-emerald-400/20"
+                                    } text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider font-extrabold ml-1 transition-colors duration-300`}>
+                                    -23% OFF
+                                </span>
+                            </button>
+                        </div>
+                    </div>
                 </Container>
             </section>
 
@@ -81,7 +112,8 @@ export default function PricingPage() {
             <section className="relative z-10 pb-16">
                 <Container>
                     {/* Dynamic Bundle Grid */}
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-12 items-start max-w-7xl mx-auto">
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-12 items-start max-w-7xl mx-auto mt-6">
+                        {/* mt-6 added to give space for the new top floating badges */}
                         {bundles.length > 0 ? (
                             // Render based on Dynamic Bundles from DB
                             bundles
@@ -91,6 +123,31 @@ export default function PricingPage() {
                                     const staticPlan = PLANS[index];
                                     const isRecommended = staticPlan?.isRecommended || index === 1;
                                     const tag = staticPlan?.tag || (index === 1 ? "EL MÁS BUSCADO" : undefined);
+
+                                    // Price Logic (Simulation for Localhost)
+                                    const basePrice = parseFloat(bundle.price);
+                                    let finalPrice = basePrice;
+                                    let periodicity = "mes";
+                                    let installmentsText = undefined;
+                                    let benefitBadge = undefined;
+                                    let savingsBadge = undefined;
+
+                                    if (billingCycle === "annual") {
+                                        finalPrice = basePrice * 10;
+                                        periodicity = "año";
+                                        // benefitBadge removed to clean up visual clutter
+                                        savingsBadge = "AHORRÁS 3 MESES";
+
+                                        // Installments logic: 4 cuotas sin interés
+                                        const installmentAmount = finalPrice / 4;
+                                        const formattedInstallment = new Intl.NumberFormat("es-AR", {
+                                            style: "currency",
+                                            currency: "ARS",
+                                            maximumFractionDigits: 0
+                                        }).format(installmentAmount);
+
+                                        installmentsText = `4 cuotas sin interés de ${formattedInstallment}`;
+                                    }
 
                                     // Feature Construction
                                     let displayFeatures: (string | React.ReactNode)[] = [];
@@ -165,10 +222,13 @@ export default function PricingPage() {
                                         <PricingCard
                                             key={bundle.id}
                                             title={bundle.title}
-                                            price={bundle.price.toString()}
-                                            periodicity="mes"
+                                            price={finalPrice.toString()}
+                                            periodicity={periodicity}
                                             tag={tag}
                                             isRecommended={isRecommended}
+                                            benefitBadge={benefitBadge}
+                                            savingsBadge={savingsBadge}
+                                            installments={installmentsText}
                                             // Use static special feature (Community Block) if available
                                             description={
                                                 <p className="text-gray-400 text-sm min-h-[40px] flex items-center text-left">
@@ -180,32 +240,63 @@ export default function PricingPage() {
                                             excludedFeatures={staticPlan?.excludedFeatures || []}
                                             buttonText="Suscribirme"
                                             onAction={() => {
-                                                handlePurchase(bundle.title, bundle.price.toString(), undefined, bundle.id);
+                                                handlePurchase(bundle.title, finalPrice.toString(), undefined, bundle.id);
                                             }}
                                         />
                                     );
                                 })
                         ) : (
-                            // Fallback to Skeleton or Empty State if loading (handled by loading check usually)
-                            // or PLANS if fetch failed? Let's stick to PLANS as fallback if bundles is empty
-                            PLANS.map((plan, index) => (
-                                <PricingCard
-                                    key={index}
-                                    title={plan.title}
-                                    price={plan.price}
-                                    periodicity="mes"
-                                    tag={plan.tag || undefined}
-                                    isRecommended={plan.isRecommended}
-                                    description={
-                                        <p className="text-gray-400 text-sm min-h-[40px] flex items-center text-left">
-                                            {plan.description}
-                                        </p>
-                                    }
-                                    features={plan.features}
-                                    excludedFeatures={plan.excludedFeatures}
-                                    buttonText="No disponible"
-                                />
-                            ))
+                            // Fallback to PLANS (This renders when bundles is empty, e.g. localhost without data)
+                            PLANS.map((plan, index) => {
+                                // Fallback Logic for Price - Need to strip "$" and "." to parse number
+                                // e.g. "$54.900" -> 54900
+                                const rawPriceString = plan.price.replace(/[^0-9]/g, '');
+                                const basePrice = parseFloat(rawPriceString);
+
+                                let finalPrice = basePrice;
+                                let periodicity = "mes";
+                                let installmentsText = undefined;
+                                let benefitBadge = undefined;
+                                let savingsBadge = undefined;
+
+                                if (billingCycle === "annual") {
+                                    finalPrice = basePrice * 10;
+                                    periodicity = "año";
+                                    // benefitBadge removed to clean up visual clutter
+                                    savingsBadge = "AHORRÁS 3 MESES";
+
+                                    const installmentAmount = finalPrice / 4;
+                                    const formattedInstallment = new Intl.NumberFormat("es-AR", {
+                                        style: "currency",
+                                        currency: "ARS",
+                                        maximumFractionDigits: 0
+                                    }).format(installmentAmount);
+
+                                    installmentsText = `4 cuotas sin interés de ${formattedInstallment}`;
+                                }
+
+                                return (
+                                    <PricingCard
+                                        key={index}
+                                        title={plan.title}
+                                        price={finalPrice.toString()}
+                                        periodicity={periodicity}
+                                        tag={plan.tag || undefined}
+                                        isRecommended={plan.isRecommended}
+                                        benefitBadge={benefitBadge}
+                                        savingsBadge={savingsBadge}
+                                        installments={installmentsText}
+                                        description={
+                                            <p className="text-gray-400 text-sm min-h-[40px] flex items-center text-left">
+                                                {plan.description}
+                                            </p>
+                                        }
+                                        features={plan.features}
+                                        excludedFeatures={plan.excludedFeatures}
+                                        buttonText="No disponible"
+                                    />
+                                );
+                            })
                         )}
                     </div>
 

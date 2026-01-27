@@ -33,7 +33,7 @@ export const PLANS = [
             "Domina el Stop Loss en 15 minutos",
             "Análisis Técnico & Price Action",
             "Futuros Financieros",
-            "Acceso al Canal de Aurora Academy"
+            "Acceso a Canal de Aurora Academy"
         ],
         excludedFeatures: [
             "Acceso a Comunidad de Inversores"
@@ -55,7 +55,7 @@ export const PLANS = [
             "Análisis Fundamental & Cartera",
             "Dominando el Riesgo: Volatilidad",
             "Valuación Real: Beneficio vs. Caja",
-            "Acceso al Canal de Aurora Academy",
+            "Acceso a Canal de Aurora Academy",
             "Acceso a Comunidad de Inversores" // Moved from specialFeature
         ],
         tag: null,
