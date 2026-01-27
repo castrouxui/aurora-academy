@@ -8,7 +8,7 @@ export function CTASection() {
         <section className="py-24 bg-black/20">
             <Container>
                 <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-                    <h2 className="text-3xl md:text-5xl font-black text-white mb-4 md:mb-6 uppercase tracking-tight">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 md:mb-6 tracking-tight">
                         ¿Por qué elegir <span className="text-[#5D5CDE]">Aurora</span>?
                     </h2>
                     <p className="text-gray-400 text-lg md:text-xl">

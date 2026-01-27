@@ -78,10 +78,7 @@ export function CourseList() {
         <section className="py-24 bg-[#0B0F19] transition-colors">
             <Container>
                 <div className="text-center mb-12 md:mb-16 space-y-4">
-                    <span className="bg-[#5D5CDE]/10 text-[#5D5CDE] px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider">
-                        Carreras y Cursos
-                    </span>
-                    <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
                         Potencia tu perfil profesional
                     </h2>
                     <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">

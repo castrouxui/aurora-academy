@@ -136,7 +136,7 @@ export function TestimonialsSection() {
         <section className="py-24 bg-[#0B0F19] relative overflow-hidden">
             <Container className="relative z-10">
                 <div className="text-center mb-12 md:mb-20 max-w-3xl mx-auto">
-                    <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tight">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">
                         ¿Qué dicen nuestros <span className="text-[#5D5CDE]">alumnos</span>?
                     </h2>
                     <p className="text-lg md:text-xl text-gray-400">
