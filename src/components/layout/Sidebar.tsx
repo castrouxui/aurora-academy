@@ -55,12 +55,6 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
                 >
                     {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
                 </button>
-
-                {!isCollapsed && (
-                    <div className="absolute right-6 top-1/2 -translate-y-1/2">
-                        <NotificationBell />
-                    </div>
-                )}
             </div>
 
             {/* Navigation */}
@@ -121,21 +115,24 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
             <div className="p-4 border-t border-[#1F2937]">
                 {!isCollapsed ? (
                     <>
-                        <div className="flex items-center gap-3 px-2 mb-4 animate-in fade-in duration-300">
-                            <img
-                                src={user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
-                                alt={user.name || "User"}
-                                className="w-10 h-10 rounded-full border border-gray-700 shrink-0"
-                            />
-                            <div className="overflow-hidden">
-                                <p className="text-sm font-medium text-white truncate flex items-center gap-1">
-                                    {user.name}
-                                    {user.telegramVerified && (
-                                        <ShieldCheck size={14} className="text-green-500 fill-green-500/20" />
-                                    )}
-                                </p>
-                                <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                        <div className="flex items-center justify-between px-2 mb-4 animate-in fade-in duration-300">
+                            <div className="flex items-center gap-3">
+                                <img
+                                    src={user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                    alt={user.name || "User"}
+                                    className="w-10 h-10 rounded-full border border-gray-700 shrink-0"
+                                />
+                                <div className="overflow-hidden">
+                                    <p className="text-sm font-medium text-white truncate flex items-center gap-1">
+                                        {user.name}
+                                        {user.telegramVerified && (
+                                            <ShieldCheck size={14} className="text-green-500 fill-green-500/20" />
+                                        )}
+                                    </p>
+                                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                                </div>
                             </div>
+                            <NotificationBell side="right" align="end" />
                         </div>
                         <Button
                             onClick={() => signOut({ callbackUrl: "/" })}
@@ -163,7 +160,7 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
                         >
                             <LogOut size={18} />
                         </Button>
-                        <NotificationBell />
+                        <NotificationBell side="right" />
                     </div>
                 )}
             </div>

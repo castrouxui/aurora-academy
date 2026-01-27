@@ -90,29 +90,31 @@ export function MobileSidebar({ items, role, user }: MobileSidebarProps) {
 
                     {user && (
                         <div className="mt-auto border-t border-[#1F2937] pt-4">
-                            <div className="flex items-center gap-3 px-2 mb-4">
-                                <img
-                                    src={user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
-                                    alt={user.name || "User"}
-                                    className="w-10 h-10 rounded-full border border-gray-700"
-                                />
-                                <div className="overflow-hidden">
-                                    <p className="text-sm font-medium text-white truncate flex items-center gap-1">
-                                        {user.name}
-                                        {user.telegramVerified && (
-                                            <ShieldCheck size={14} className="text-green-500 fill-green-500/20" />
-                                        )}
-                                    </p>
-                                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                            <div className="flex items-center justify-between px-2 mb-4">
+                                <div className="flex items-center gap-3">
+                                    <img
+                                        src={user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                        alt={user.name || "User"}
+                                        className="w-10 h-10 rounded-full border border-gray-700"
+                                    />
+                                    <div className="overflow-hidden">
+                                        <p className="text-sm font-medium text-white truncate flex items-center gap-1">
+                                            {user.name}
+                                            {user.telegramVerified && (
+                                                <ShieldCheck size={14} className="text-green-500 fill-green-500/20" />
+                                            )}
+                                        </p>
+                                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                                    </div>
                                 </div>
+                                <NotificationBell side="top" align="end" />
                             </div>
-                            <div className="flex flex-col gap-2 px-2 mb-4">
+                            <div className="px-2 mb-4">
                                 <Link href="/dashboard/settings" onClick={() => setIsOpen(false)}>
                                     <button className="w-full text-left px-3 py-2 text-sm font-medium text-gray-400 rounded-lg hover:bg-[#1F2937] hover:text-white transition-colors">
                                         Configuración
                                     </button>
                                 </Link>
-                                <NotificationBell />
                             </div>
                             <Button
                                 variant="outline"

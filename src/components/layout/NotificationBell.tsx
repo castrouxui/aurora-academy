@@ -24,7 +24,12 @@ interface Notification {
     createdAt: string;
 }
 
-export function NotificationBell() {
+interface NotificationBellProps {
+    side?: "top" | "bottom" | "left" | "right";
+    align?: "start" | "center" | "end";
+}
+
+export function NotificationBell({ side = "bottom", align = "end" }: NotificationBellProps) {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
@@ -106,7 +111,7 @@ export function NotificationBell() {
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 md:w-96 p-0 bg-[#1F2937] border-gray-700 shadow-2xl rounded-2xl overflow-hidden" align="end">
+            <PopoverContent className="w-80 md:w-96 p-0 bg-[#1F2937] border-gray-700 shadow-2xl rounded-2xl overflow-hidden" side={side} align={align}>
                 <div className="flex items-center justify-between p-4 border-b border-gray-700">
                     <h3 className="font-bold text-white flex items-center gap-2">
                         Notificaciones
