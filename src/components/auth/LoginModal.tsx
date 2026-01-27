@@ -173,15 +173,16 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                 </form>
 
                 {/* Toggle Mode */}
-                <div className="mt-6 text-center text-sm">
-                    <span className="text-muted-foreground">
-                        {isRegister ? "¿Ya tienes una cuenta?" : "¿No tienes una cuenta?"}
+                {/* Toggle Mode Standout */}
+                <div className="mt-6 pt-6 border-t border-gray-800 flex flex-col items-center justify-center gap-1 text-center">
+                    <span className="text-sm text-gray-400">
+                        {isRegister ? "¿Ya tienes una cuenta?" : "¿Aún no tienes una cuenta?"}
                     </span>
                     <button
                         onClick={toggleMode}
-                        className="ml-2 text-primary hover:underline font-medium focus:outline-none"
+                        className="text-lg font-bold text-[#5D5CDE] hover:text-[#706FDF] transition-all hover:scale-105 active:scale-95"
                     >
-                        {isRegister ? "Inicia Sesión" : "Regístrate"}
+                        {isRegister ? "¡Inicia Sesión aquí!" : "¡Regístrate gratis!"}
                     </button>
                 </div>
 

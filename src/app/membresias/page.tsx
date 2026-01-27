@@ -86,13 +86,26 @@ export default function PricingPage() {
                             bundles
                                 .sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
                                 .map((bundle, index, sortedArr) => {
-                                    // Try to match with metadata from PLANS, or fallback
+                                    // Try to match with metadata from PLANS
                                     const staticPlan = PLANS[index];
                                     const isRecommended = staticPlan?.isRecommended || index === 1;
                                     const tag = staticPlan?.tag || (index === 1 ? "EL MÁS BUSCADO" : undefined);
 
+                                    // Feature Construction
+                                    let displayFeatures: (string | React.ReactNode)[] = [];
+
+                                    // 1. INJECT FIXED BENEFITS (The "Marketing" ones)
+                                    // Specifically for Trader & Portfolio: "1 curso nuevo cada 15 días"
+                                    if (index >= 1) {
+                                        displayFeatures.push(
+                                            <span key={`benefit-15d-${bundle.id}`} className="inline-flex items-center gap-2 font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">
+                                                <span>🔥</span> 1 curso nuevo cada 15 días
+                                            </span>
+                                        );
+                                    }
+
+                                    // 2. DYNAMIC COURSES (The "Real" content)
                                     // Logic for "Everything in previous plan"
-                                    let displayFeatures: string[] = [];
                                     const currentCourseTitles = bundle.courses.map((c: any) => c.title);
 
                                     if (index > 0) {
@@ -117,9 +130,10 @@ export default function PricingPage() {
                                         displayFeatures.push(...currentCourseTitles);
                                     }
 
-                                    // Add the items (benefits)
-                                    // Optionally dedupe these too if needed, but usually they are distinct enough or we act additive
-                                    displayFeatures.push(...bundle.items.map((i: any) => i.name));
+                                    // 3. DYNAMIC ITEMS (Other benefits from DB)
+                                    if (bundle.items && bundle.items.length > 0) {
+                                        displayFeatures.push(...bundle.items.map((i: any) => i.name));
+                                    }
 
                                     return (
                                         <PricingCard
@@ -129,14 +143,15 @@ export default function PricingPage() {
                                             periodicity="mes"
                                             tag={tag}
                                             isRecommended={isRecommended}
+                                            // Use static special feature (Community Block) if available
                                             specialFeature={staticPlan?.specialFeature}
                                             description={
-                                                <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center">
-                                                    {bundle.description || staticPlan?.description || "Acceso completo"}
+                                                <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center text-center px-4">
+                                                    {/* Prioritize STATIC description for better copy */}
+                                                    {staticPlan?.description || bundle.description || "Acceso completo"}
                                                 </p>
                                             }
                                             features={displayFeatures}
-                                            // Dynamic bundles usually imply you get what is listed, so no "excluded" logic unless manually calculated
                                             excludedFeatures={[]}
                                             buttonText="Suscribirme"
                                             onAction={() => {
