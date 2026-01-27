@@ -56,7 +56,7 @@ export function CourseFloatingCard({
             <LoginModal
                 isOpen={isLoginModalOpen}
                 onClose={() => setIsLoginModalOpen(false)}
-                redirectUrl={`/courses/${courseId}`}
+                redirectUrl={`/cursos/${courseId}`}
                 view="purchase"
             />
             <PaymentModal
