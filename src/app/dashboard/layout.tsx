@@ -52,9 +52,9 @@ export default function DashboardLayout({
         { name: "Inicio", href: "/dashboard", icon: LayoutDashboard },
         { name: "Mis Cursos", href: "/dashboard/cursos", icon: BookOpen },
         { name: "Membresías", href: "/dashboard/membresias", icon: Package },
-        { name: "Compras", href: "/dashboard/purchases", icon: ShoppingCart },
-        { name: "Explorar", href: "/dashboard/explore", icon: Compass },
-        { name: "Certificados", href: "/dashboard/certificates", icon: GraduationCap },
+        { name: "Compras", href: "/dashboard/compras", icon: ShoppingCart },
+        { name: "Explorar", href: "/dashboard/explorar", icon: Compass },
+        { name: "Certificados", href: "/dashboard/certificados", icon: GraduationCap },
     ];
 
     if (session.user.isCompanyAdmin) {

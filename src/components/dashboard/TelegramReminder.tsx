@@ -25,7 +25,7 @@ export function TelegramReminder({ isVerified }: { isVerified: boolean }) {
                 </div>
 
                 <div className="flex items-center gap-3 w-full sm:w-auto">
-                    <Link href="/dashboard/settings" className="flex-1 sm:flex-initial">
+                    <Link href="/dashboard/configuracion" className="flex-1 sm:flex-initial">
                         <button className="w-full flex items-center justify-center gap-2 bg-[#0088cc] hover:bg-[#0077b5] text-white text-xs font-bold py-2.5 px-5 rounded-lg transition-all active:scale-95">
                             Vincular Ahora
                             <ArrowRight size={14} />

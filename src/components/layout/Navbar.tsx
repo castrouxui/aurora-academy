@@ -75,7 +75,7 @@ export function Navbar() {
             </Link>
 
             {/* 2. Cursos */}
-            <Link href="/cursos?category=all" className={getLinkClass("/cursos")}>
+            <Link href="/cursos" className={getLinkClass("/cursos")}>
               Cursos
             </Link>
 
@@ -101,7 +101,7 @@ export function Navbar() {
               onSubmit={(e) => {
                 e.preventDefault();
                 const term = (e.currentTarget.elements.namedItem('search') as HTMLInputElement).value;
-                if (term) router.push(`/courses?search=${encodeURIComponent(term)}`);
+                if (term) router.push(`/cursos?search=${encodeURIComponent(term)}`);
               }}
               className="hidden lg:flex relative w-[250px]"
             >
@@ -164,7 +164,7 @@ export function Navbar() {
                 )}
               </div>
             ) : (
-              <Button variant="default" onClick={openLoginModal} className="bg-primary hover:bg-primary/90 text-white font-bold rounded-full shadow-lg shiny-hover px-6 h-10 text-sm">
+              <Button variant="default" onClick={openLoginModal} className="bg-primary hover:bg-primary/90 text-white font-bold rounded-full shadow-lg shiny-hover px-6 h-10 text-sm active:scale-95 transition-all">
                 Acceder
               </Button>
             )}
@@ -258,7 +258,7 @@ export function Navbar() {
                 </Link>
 
                 <Link
-                  href="/cursos?category=all"
+                  href="/cursos"
                   className={getMobileLinkClass("/cursos")}
                   onClick={toggleMenu}
                 >
@@ -322,7 +322,7 @@ export function Navbar() {
               </div>
             ) : (
               <Button
-                className="w-full h-14 text-lg font-bold bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-xl shadow-primary/10 shiny-hover"
+                className="w-full h-14 text-lg font-bold bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-xl shadow-primary/10 shiny-hover active:scale-95 transition-all"
                 onClick={() => {
                   toggleMenu();
                   openLoginModal();

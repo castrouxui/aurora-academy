@@ -96,7 +96,7 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
                     )}
                     <nav className="space-y-1">
                         <Link
-                            href="/dashboard/settings"
+                            href="/dashboard/configuracion"
                             title={isCollapsed ? "Configuración" : undefined}
                             className={cn(
                                 "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-gray-400 hover:bg-[#1F2937] hover:text-white transition-colors",

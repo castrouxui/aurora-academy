@@ -29,13 +29,13 @@ export default function NotFound() {
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center relative z-10">
                     <Link href="/">
-                        <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-white min-w-[200px]">
+                        <Button size="lg" className="gap-2 bg-primary hover:bg-primary/90 text-white min-w-[200px] active:scale-95 transition-all">
                             <MoveLeft size={18} />
                             Volver al Inicio
                         </Button>
                     </Link>
-                    <Link href="/courses">
-                        <Button size="lg" variant="outline" className="min-w-[200px] border-gray-700 hover:bg-gray-800 text-gray-300">
+                    <Link href="/cursos">
+                        <Button size="lg" variant="outline" className="min-w-[200px] border-gray-700 hover:bg-gray-800 text-gray-300 active:scale-95 transition-all">
                             Explorar Cursos
                         </Button>
                     </Link>

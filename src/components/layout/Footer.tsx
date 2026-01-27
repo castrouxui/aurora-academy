@@ -25,7 +25,7 @@ export function Footer() {
                             </h2>
 
                             <Link href="/membresias">
-                                <Button className="shiny-hover h-14 px-8 rounded-full bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-black text-lg shadow-[0_0_20px_rgba(93,92,222,0.5)] transition-all hover:scale-105">
+                                <Button className="shiny-hover h-14 px-8 rounded-full bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-black text-lg shadow-[0_0_20px_rgba(93,92,222,0.5)] transition-all active:scale-95">
                                     Unirme a la comunidad
                                     <MoveRight className="ml-2 w-5 h-5" />
                                 </Button>

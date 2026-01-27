@@ -86,10 +86,10 @@ export const authOptions: AuthOptions = {
                 if (user) {
                     token.id = user.id;
                     token.role = user.role;
-                    token.companyId = (user as any).companyId;
-                    token.isCompanyAdmin = (user as any).isCompanyAdmin;
-                    token.telegram = (user as any).telegram;
-                    token.telegramVerified = (user as any).telegramVerified;
+                    token.companyId = user.companyId;
+                    token.isCompanyAdmin = user.isCompanyAdmin;
+                    token.telegram = user.telegram;
+                    token.telegramVerified = user.telegramVerified;
                 }
 
                 if (trigger === "update" && session) {
@@ -105,12 +105,12 @@ export const authOptions: AuthOptions = {
         async session({ session, token }) {
             try {
                 if (token && session.user) {
-                    session.user.id = token.id as string;
-                    session.user.role = token.role as any;
-                    session.user.companyId = token.companyId as string | undefined;
-                    session.user.isCompanyAdmin = token.isCompanyAdmin as boolean | undefined;
-                    session.user.telegram = token.telegram as string | undefined;
-                    session.user.telegramVerified = token.telegramVerified as boolean | undefined;
+                    session.user.id = token.id;
+                    session.user.role = token.role;
+                    session.user.companyId = token.companyId;
+                    session.user.isCompanyAdmin = token.isCompanyAdmin;
+                    session.user.telegram = token.telegram;
+                    session.user.telegramVerified = token.telegramVerified;
                 }
                 return session;
             } catch (error) {

@@ -22,7 +22,7 @@ interface CourseProps {
 }
 
 export function CourseCard({ course, isOwned = false }: { course: CourseProps, isOwned?: boolean }) {
-    const href = course.type === 'bundle' ? `/bundles/${course.id}` : (course.basePath ? `${course.basePath}/${course.id}` : `/courses/${course.id}`);
+    const href = course.type === 'bundle' ? `/bundles/${course.id}` : (course.basePath ? `${course.basePath}/${course.id}` : `/cursos/${course.id}`);
 
     // Determine Logic for Image
     const initialDesc = course.image;

@@ -294,7 +294,7 @@ export default function StudentDashboard() {
                                     <p className="text-lg text-white font-bold">¡Excelente trabajo!</p>
                                     <p className="text-sm text-gray-400">Has completado {stats.completed} curso(s)</p>
                                 </div>
-                                <Link href="/dashboard/certificates">
+                                <Link href="/dashboard/certificados">
                                     <Button variant="outline" className="text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10 hover:text-emerald-300 rounded-lg">
                                         Ver Mis Certificados
                                     </Button>

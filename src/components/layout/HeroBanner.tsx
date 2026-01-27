@@ -28,13 +28,13 @@ export function HeroBanner() {
                     <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
                         <Link href="/membresias" className="w-full sm:w-auto">
                             <Button
-                                className="h-12 sm:h-14 px-8 sm:px-10 text-lg sm:text-xl w-full sm:w-auto bg-[#5D5CDE] text-white hover:bg-[#4B4AC0] border-transparent font-bold rounded-full shadow-lg shiny-hover transition-transform hover:scale-105"
+                                className="h-12 sm:h-14 px-8 sm:px-10 text-lg sm:text-xl w-full sm:w-auto bg-[#5D5CDE] text-white hover:bg-[#4B4AC0] border-transparent font-bold rounded-full shadow-lg shiny-hover transition-all active:scale-95"
                             >
                                 Suscribirme
                             </Button>
                         </Link>
-                        <Link href="#courses" className="w-full sm:w-auto">
-                            <Button variant="outline" className="h-12 sm:h-14 px-8 sm:px-10 text-lg sm:text-xl w-full sm:w-auto text-white border-white/20 bg-white/5 hover:bg-white hover:text-black font-bold rounded-full backdrop-blur-sm transition-transform hover:scale-105">
+                        <Link href="#courses" className="w-full sm:w-auto relative z-20">
+                            <Button variant="outline" className="h-12 sm:h-14 px-8 sm:px-10 text-lg sm:text-xl w-full sm:w-auto text-white border-white/20 bg-white/5 hover:bg-white hover:text-black font-bold rounded-full backdrop-blur-sm transition-all active:scale-95">
                                 Ver catálogo de cursos
                             </Button>
                         </Link>

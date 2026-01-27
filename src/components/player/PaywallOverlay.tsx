@@ -29,10 +29,10 @@ export function PaywallOverlay({ courseId, onPurchase }: PaywallOverlayProps) {
                     Desbloquear Curso
                 </Button>
             ) : (
-                <Link href={`/courses/${courseId}`}>
+                <Link href={`/cursos/${courseId}`}>
                     <Button
                         size="lg"
-                        className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold px-8"
+                        className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold px-8 active:scale-95 transition-all"
                     >
                         Ver Opciones de Compra
                     </Button>

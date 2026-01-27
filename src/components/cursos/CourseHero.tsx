@@ -20,7 +20,7 @@ export function CourseHero({ title, description, rating, reviews, students, last
                     <div className="text-sm text-gray-400 mb-4 flex gap-2">
                         <Link href="/" className="hover:text-primary transition-colors">Home</Link>
                         <span>/</span>
-                        <Link href="/courses" className="hover:text-primary transition-colors">Cursos</Link>
+                        <Link href="/cursos" className="hover:text-primary transition-colors">Cursos</Link>
                         <span>/</span>
                         <span className="text-white truncate max-w-[200px]">{title}</span>
                     </div>
