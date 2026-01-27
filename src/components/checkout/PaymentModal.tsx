@@ -158,12 +158,12 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-0 md:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
             {/* 
-                Mobile: h-[100dvh] but scrollable content if it overflows.
-                Desktop: Max height with internal scrolling.
+                Mobile: Maximize width but keep margin. 
+                Desktop: Slightly smaller height, properly centered.
             */}
-            <div className="bg-card w-full h-[100dvh] md:h-auto md:max-h-[85vh] md:max-w-2xl rounded-none md:rounded-2xl shadow-2xl overflow-y-auto md:overflow-visible border-0 md:border border-border flex flex-col md:flex-row relative">
+            <div className="bg-card w-full max-w-4xl max-h-[90vh] md:h-auto md:max-h-[800px] rounded-2xl shadow-2xl overflow-hidden border border-border flex flex-col md:flex-row relative">
 
                 {/* Close Button (Absolute) - Fixed position on mobile to be always visible */}
                 <button

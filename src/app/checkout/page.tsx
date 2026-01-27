@@ -22,7 +22,7 @@ function CheckoutContent() {
     useEffect(() => {
         // If no ID provided, redirect back
         if (!bundleId && !courseId) {
-            router.push("/courses");
+            router.push("/cursos");
             return;
         }
 
