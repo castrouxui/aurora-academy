@@ -155,6 +155,12 @@ export default function PricingPage() {
                                         displayFeatures.push(...newItems);
                                     }
 
+                                    // 4. APPEND STATIC EXCLUSIVE FEATURES (that might have been deduplicated)
+                                    // Specifically for Portfolio Manager (Index 2) -> "Acceso a Comunidad de Inversores"
+                                    if (index === 2) {
+                                        displayFeatures.push("Acceso a Comunidad de Inversores");
+                                    }
+
                                     return (
                                         <PricingCard
                                             key={bundle.id}
