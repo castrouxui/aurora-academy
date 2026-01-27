@@ -48,7 +48,7 @@ export async function POST(request: Request) {
                             amount: paymentData.transaction_amount || 0,
                             status: 'approved',
                             paymentId: id,
-                            preferenceId: "",
+                            preferenceId: (paymentData as any).preference_id || "",
                         }
                     });
 

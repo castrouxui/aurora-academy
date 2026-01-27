@@ -23,24 +23,26 @@ export async function GET(req: NextRequest) {
         }
 
         // Search by userId and courseId if provided (more reliable than preferenceId for webhook sync)
+        // Search by userId and courseId/bundleId if provided (more reliable than preferenceId for webhook sync)
         const userId = searchParams.get('userId');
         const courseId = searchParams.get('courseId');
+        const bundleId = searchParams.get('bundleId');
 
-        if (userId && courseId) {
+        if (userId && (courseId || bundleId)) {
+            const whereClause: any = { userId, status: 'approved' };
+            if (courseId) whereClause.courseId = courseId;
+            if (bundleId) whereClause.bundleId = bundleId;
+
             const purchaseByContext = await prisma.purchase.findFirst({
-                where: {
-                    userId: userId,
-                    courseId: courseId,
-                    status: 'approved'
-                }
+                where: whereClause
             });
             if (purchaseByContext) {
                 return NextResponse.json({ status: 'approved', purchaseId: purchaseByContext.id });
             }
         }
 
-        // Fail-safe: Check MP API directly if Preference ID is known but DB record is missing
-        if (preferenceId && userId && courseId) {
+        // Fail-safe: Check MP API directly if we have any valid searchable ID
+        if (preferenceId || (userId && (courseId || bundleId))) {
             try {
                 if (!process.env.MP_ACCESS_TOKEN) {
                     console.warn("[FAILSAFE] Skipped: MP_ACCESS_TOKEN missing");
@@ -70,14 +72,24 @@ export async function GET(req: NextRequest) {
                     console.log(`[FAILSAFE] Found approved payment ${approvedPayment.id} for pref ${preferenceId}`);
 
                     // Create Purchase immediately
+                    const finalUserId = userId || (approvedPayment as any).metadata?.user_id;
+                    const finalCourseId = courseId || (approvedPayment as any).metadata?.course_id;
+                    const finalBundleId = bundleId || (approvedPayment as any).metadata?.bundle_id;
+
+                    if (!finalUserId) {
+                        console.error("[FAILSAFE] Cannot create purchase: Missing userId");
+                        return NextResponse.json({ status: 'pending' }); // Cannot credit to anyone
+                    }
+
                     const newPurchase = await prisma.purchase.create({
                         data: {
-                            userId: userId,
-                            courseId: courseId,
+                            userId: finalUserId,
+                            courseId: finalCourseId,
+                            bundleId: finalBundleId, // Add bundleId support here too
                             amount: approvedPayment.transaction_amount || 0,
                             status: 'approved',
                             paymentId: approvedPayment.id!.toString(),
-                            preferenceId: preferenceId
+                            preferenceId: preferenceId || (approvedPayment as any).preference_id || ""
                         }
                     });
 
