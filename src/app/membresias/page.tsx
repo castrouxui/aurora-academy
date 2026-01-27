@@ -133,7 +133,20 @@ export default function PricingPage() {
 
                                     // 3. DYNAMIC ITEMS (Other benefits from DB)
                                     if (bundle.items && bundle.items.length > 0) {
-                                        displayFeatures.push(...bundle.items.map((i: any) => i.name));
+                                        const items = bundle.items.map((i: any) => {
+                                            let name = i.name;
+                                            // Format "Canal" or "Telegram" items
+                                            if ((name.toLowerCase().includes("canal") || name.toLowerCase().includes("telegram")) && !name.toLowerCase().startsWith("acceso a")) {
+                                                return `Acceso a ${name}`;
+                                            }
+                                            return name;
+                                        });
+
+                                        // Simple deduplication against already added features (strings only)
+                                        const existingStrings = displayFeatures.filter(f => typeof f === 'string') as string[];
+                                        const newItems = items.filter((item: string) => !existingStrings.includes(item));
+
+                                        displayFeatures.push(...newItems);
                                     }
 
                                     return (
@@ -153,7 +166,7 @@ export default function PricingPage() {
                                                 </p>
                                             }
                                             features={displayFeatures}
-                                            excludedFeatures={[]}
+                                            excludedFeatures={staticPlan?.excludedFeatures || []}
                                             buttonText="Suscribirme"
                                             onAction={() => {
                                                 handlePurchase(bundle.title, bundle.price.toString(), undefined, bundle.id);

@@ -54,7 +54,7 @@ export function PricingCard({
             <div className="mb-4 text-left">
                 <h3 className="text-xl font-bold text-white mb-1">{title}</h3>
                 <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold tracking-tighter text-white">
+                    <span className="text-4xl font-black tracking-tighter text-white">
                         {new Intl.NumberFormat("es-AR", {
                             style: "currency",
                             currency: "ARS",
@@ -110,7 +110,7 @@ export function PricingCard({
                 <Button
                     onClick={onAction}
                     className={cn(
-                        "w-full h-10 text-sm font-bold transition-all duration-300 rounded-lg", // Explicitly rounded-lg
+                        "w-full h-14 text-sm font-bold transition-all duration-300 rounded-lg", // Increased height to h-14
                         isRecommended
                             ? "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
                             : "bg-transparent border border-white/20 hover:bg-white hover:text-black text-white"
