@@ -46,6 +46,25 @@ export async function POST(req: NextRequest) {
             }
         }
 
+        // 3a. Idempotency Check: Does user already have access?
+        const whereClause: any = {
+            userId: user.id,
+            status: 'approved'
+        };
+        if (courseId) whereClause.courseId = courseId;
+        if (bundleId) whereClause.bundleId = bundleId;
+
+        const existingPurchase = await prisma.purchase.findFirst({ where: whereClause });
+
+        if (existingPurchase) {
+            console.log(`[ADMIN] User ${email} already has access to ${courseId || bundleId}`);
+            return NextResponse.json({
+                success: true,
+                message: `El usuario ya tenía acceso a este contenido via compra #${existingPurchase.id.slice(-6)}`,
+                purchaseId: existingPurchase.id
+            });
+        }
+
         // 4. Create Purchase Record
         const newPurchase = await prisma.purchase.create({
             data: {
