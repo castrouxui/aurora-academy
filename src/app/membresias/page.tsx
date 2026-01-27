@@ -81,7 +81,7 @@ export default function PricingPage() {
             <section className="relative z-10 pb-16">
                 <Container>
                     {/* Dynamic Bundle Grid */}
-                    <div className="grid grid-cols-1 gap-8 md:grid-cols-3 mb-12 items-start">
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-12 items-start max-w-7xl mx-auto">
                         {bundles.length > 0 ? (
                             // Render based on Dynamic Bundles from DB
                             bundles
@@ -147,7 +147,7 @@ export default function PricingPage() {
                                             // Use static special feature (Community Block) if available
                                             specialFeature={staticPlan?.specialFeature}
                                             description={
-                                                <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center text-center px-4">
+                                                <p className="text-gray-400 text-sm min-h-[40px] flex items-center text-left">
                                                     {/* Prioritize STATIC description for better copy */}
                                                     {staticPlan?.description || bundle.description || "Acceso completo"}
                                                 </p>
@@ -174,7 +174,7 @@ export default function PricingPage() {
                                     isRecommended={plan.isRecommended}
                                     specialFeature={plan.specialFeature}
                                     description={
-                                        <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center">
+                                        <p className="text-gray-400 text-sm min-h-[40px] flex items-center text-left">
                                             {plan.description}
                                         </p>
                                     }

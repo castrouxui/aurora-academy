@@ -36,9 +36,9 @@ export function PricingCard({
     return (
         <div
             className={cn(
-                "relative flex flex-col rounded-[24px] border p-6 shadow-xl transition-all duration-300 hover:scale-[1.01] h-full max-w-[380px] mx-auto", // constrained width to help height ratio, 24px radius
+                "relative flex flex-col rounded-[24px] border p-6 shadow-xl transition-all duration-300 hover:scale-[1.01] h-full",
                 isRecommended
-                    ? "border-white ring-1 ring-white bg-[#10141d]"
+                    ? "border-white/20 bg-[#10141d]" // Removed ring, kept subtle border or just bg
                     : "border-white/10 bg-[#10141d] hover:border-white/20",
                 className
             )}
@@ -71,18 +71,18 @@ export function PricingCard({
                 </div>
             </div>
 
-            <ul className="mb-auto space-y-2.5 flex-1">
+            <ul className="mb-auto space-y-3 flex-1">
                 {features.map((feature, index) => (
-                    <li key={`inc-${index}`} className="flex items-start gap-2.5">
+                    <li key={`inc-${index}`} className="flex items-start gap-3">
                         <PricingCheckmark />
-                        <span className="text-xs md:text-sm text-gray-300 leading-snug w-full">
+                        <span className="text-sm text-gray-300 leading-tight w-full">
                             {feature}
                         </span>
                     </li>
                 ))}
 
                 {excludedFeatures.map((feature, index) => (
-                    <li key={`exc-${index}`} className="flex items-start gap-2.5 opacity-40">
+                    <li key={`exc-${index}`} className="flex items-start gap-3 opacity-40">
                         <div className="mt-0.5 min-w-[20px] flex justify-center">
                             <Lock className="h-4 w-4 text-gray-500" />
                         </div>
@@ -110,10 +110,10 @@ export function PricingCard({
                 <Button
                     onClick={onAction}
                     className={cn(
-                        "w-full h-10 text-sm font-bold transition-all duration-300",
+                        "w-full h-10 text-sm font-bold transition-all duration-300 rounded-lg", // Explicitly rounded-lg
                         isRecommended
-                            ? "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover rounded-md"
-                            : "bg-transparent border border-white/20 hover:bg-white hover:text-black text-white rounded-md"
+                            ? "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
+                            : "bg-transparent border border-white/20 hover:bg-white hover:text-black text-white"
                     )}
                 >
                     {buttonText}
