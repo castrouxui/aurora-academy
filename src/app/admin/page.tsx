@@ -16,22 +16,28 @@ export default function AdminDashboard() {
     });
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function fetchStats() {
-            try {
-                const res = await fetch("/api/admin/stats");
-                if (res.ok) {
-                    const data = await res.json();
-                    setStats(data);
-                }
-            } catch (error) {
-                console.error("Error fetching stats:", error);
-            } finally {
-                setLoading(false);
+    async function fetchStats() {
+        try {
+            const res = await fetch("/api/admin/stats");
+            if (res.ok) {
+                const data = await res.json();
+                setStats(data);
             }
+        } catch (error) {
+            console.error("Error fetching stats:", error);
+        } finally {
+            setLoading(false);
         }
+    }
+
+    useEffect(() => {
         fetchStats();
     }, []);
+
+    const refreshDashboard = () => {
+        setLoading(true);
+        fetchStats();
+    };
 
     const kpiData = [
         {
@@ -84,7 +90,7 @@ export default function AdminDashboard() {
                     <p className="text-gray-400 mt-2">Bienvenido al panel de control de Aurora Academy.</p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <RecoveryButton />
+                    <RecoveryButton onRefresh={refreshDashboard} />
                 </div>
             </div>
 
@@ -196,7 +202,7 @@ export default function AdminDashboard() {
     );
 }
 
-function RecoveryButton() {
+function RecoveryButton({ onRefresh }: { onRefresh: () => void }) {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<null | { recovered: number, message: string }>(null);
 
@@ -214,7 +220,7 @@ function RecoveryButton() {
                         : "Todo al día."
                 });
                 if (data.recovered > 0) {
-                    setTimeout(() => window.location.reload(), 1500);
+                    onRefresh(); // Use soft refresh instead of reload
                 }
             } else {
                 setResult({ recovered: 0, message: `Error: ${data.error || "Fallo del servidor"}` });
@@ -233,7 +239,7 @@ function RecoveryButton() {
                     {result.message}
                 </span>
             )}
-            <GrantAccessModal />
+            <GrantAccessModal onSuccess={onRefresh} />
             <Button
                 onClick={handleRecover}
                 disabled={loading}
@@ -251,7 +257,7 @@ function RecoveryButton() {
     );
 }
 
-function GrantAccessModal() {
+function GrantAccessModal({ onSuccess }: { onSuccess?: () => void }) {
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [courses, setCourses] = useState<any[]>([]);
@@ -307,6 +313,7 @@ function GrantAccessModal() {
             const data = await res.json();
             if (res.ok) {
                 setStatus({ success: true, msg: "¡Acceso otrogado exitosamente!" });
+                if (onSuccess) onSuccess();
                 setTimeout(() => {
                     setIsOpen(false);
                     setStatus(null);

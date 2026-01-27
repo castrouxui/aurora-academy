@@ -57,11 +57,20 @@ export async function GET() {
             firstSale: recentSales[0]
         });
 
+        // Deduplicate sales (e.g. from manual double-clicks)
+        const uniqueSales = recentSales.filter((sale, index, self) =>
+            index === self.findIndex((t) => (
+                t.user.email === sale.user.email &&
+                t.course?.title === sale.course?.title &&
+                t.bundle?.title === sale.bundle?.title
+            ))
+        );
+
         return NextResponse.json({
             revenue: Number(totalRevenue._sum.amount) || 0,
             activeStudents: usersCount,
             publishedCourses: coursesCount,
-            recentSales,
+            recentSales: uniqueSales,
             recentStudents
         });
     } catch (error) {
