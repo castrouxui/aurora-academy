@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
                 currency_id: 'ARS',
             },
             back_url: `${baseUrl}/dashboard/membresias`,
-            // payer_email removed to avoid "Email mismatch" errors in Mercado Pago
+            payer_email: email, // Now using the explicit MP email provided by user
             status: "pending",
             external_reference: JSON.stringify({
                 user_id: userId,

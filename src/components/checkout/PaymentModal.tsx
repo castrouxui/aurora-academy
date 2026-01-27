@@ -61,6 +61,15 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
         }
     };
 
+    const [mpEmail, setMpEmail] = useState(session?.user?.email || "");
+
+    // Update mpEmail when session loads
+    useEffect(() => {
+        if (session?.user?.email) {
+            setMpEmail(session.user.email);
+        }
+    }, [session]);
+
     // Polling for Payment Status
     useEffect(() => {
         let intervalId: NodeJS.Timeout;
@@ -90,12 +99,12 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
         return () => {
             if (intervalId) clearInterval(intervalId);
         };
-    }, [preferenceId, isOpen, router, onClose]);
+    }, [preferenceId, isOpen, router, onClose, effectiveUserId, courseId, paymentStatus]);
 
     // Create Preference Effect
     useEffect(() => {
-        if (isOpen && !preferenceId) {
-            // Create preference when modal opens or coupon changes (clearing prefId)
+        if (isOpen && !preferenceId && mpEmail) {
+            // Create preference when modal opens or coupon/email changes (clearing prefId)
             const createPreference = async () => {
                 setIsLoading(true);
                 setInitError(null); // Reset error
@@ -115,7 +124,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             courseId: courseId,
                             bundleId: bundleId,
                             userId: effectiveUserId,
-                            email: session?.user?.email,
+                            email: mpEmail, // Send editable MP Email
                             couponCode: appliedCoupon?.code // Send coupon code if applied
                         }),
                     });
@@ -127,7 +136,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                         setInitPoint(data.init_point);
                     } else {
                         console.error('Error fetching preference:', data);
-                        setInitError("Error creando orden de pago.");
+                        setInitError("Error creando orden de pago. Verifica tu email.");
                     }
                 } catch (error) {
                     console.error('Error:', error);
@@ -137,12 +146,14 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 }
             };
 
-            createPreference();
+            const timer = setTimeout(() => {
+                createPreference();
+            }, 800); // Debounce input
+
+            return () => clearTimeout(timer);
         }
-    }, [isOpen, courseTitle, coursePrice, preferenceId, courseId, effectiveUserId, appliedCoupon]);
+    }, [isOpen, courseTitle, coursePrice, preferenceId, courseId, effectiveUserId, appliedCoupon, bundleId, mpEmail]);
 
-
-    if (!isOpen) return null;
 
     if (!isOpen) return null;
 
@@ -247,6 +258,26 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                 </div>
                                 <span className="text-sm">Pago encriptado y 100% seguro.</span>
                             </div>
+                        </div>
+
+                        {/* Subscriber Email Input */}
+                        <div className="mb-6">
+                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
+                                Email de tu Cuenta Mercado Pago
+                            </label>
+                            <input
+                                type="email"
+                                value={mpEmail}
+                                onChange={(e) => {
+                                    setMpEmail(e.target.value);
+                                    setPreferenceId(null); // Re-trigger preference creation on change
+                                }}
+                                placeholder="tu@email.com"
+                                className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none h-10"
+                            />
+                            <p className="text-[10px] text-muted-foreground mt-1 leading-tight">
+                                * Debe coincidir con el email de tu cuenta de Mercado Pago para evitar errores.
+                            </p>
                         </div>
 
                         {/* Coupon Input */}
