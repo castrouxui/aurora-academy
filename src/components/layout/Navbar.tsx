@@ -164,7 +164,7 @@ export function Navbar() {
                 )}
               </div>
             ) : (
-              <Button variant="default" onClick={openLoginModal} className="bg-primary hover:bg-primary/90 text-white font-bold rounded-full shadow-lg shiny-hover px-6 h-10 text-sm active:scale-95 transition-all">
+              <Button variant="default" onClick={openLoginModal} className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold rounded-xl shadow-lg shiny-hover px-6 h-10 text-sm active:scale-95 transition-all">
                 Acceder
               </Button>
             )}
@@ -322,7 +322,7 @@ export function Navbar() {
               </div>
             ) : (
               <Button
-                className="w-full h-14 text-lg font-bold bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-xl shadow-primary/10 shiny-hover active:scale-95 transition-all"
+                className="w-full h-12 text-sm font-bold bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-xl shadow-lg shiny-hover active:scale-95 transition-all"
                 onClick={() => {
                   toggleMenu();
                   openLoginModal();

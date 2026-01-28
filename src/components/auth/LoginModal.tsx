@@ -158,7 +158,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                     <Button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium mt-2 rounded-xl flex items-center justify-center gap-2"
+                        className="w-full h-14 text-sm font-bold bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-xl shadow-lg shiny-hover transition-all flex items-center justify-center gap-2 mt-2"
                     >
                         {isLoading ? (
                             <>

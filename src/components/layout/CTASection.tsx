@@ -25,7 +25,7 @@ export function CTASection() {
                                 <p className="text-indigo-100 text-sm md:text-lg max-w-md">Sin teoría aburrida. Analizamos el mercado en vivo y operamos con dinero real desde el día 1.</p>
                             </div>
                             <Link href="/cursos">
-                                <Button className="w-fit bg-white text-[#5D5CDE] hover:bg-gray-100 font-bold rounded-full px-6 py-4 md:px-8 md:py-6 text-base md:text-lg shadow-lg shiny-hover active:scale-95 transition-all">
+                                <Button className="w-fit h-14 bg-white text-[#5D5CDE] hover:bg-gray-100 font-bold rounded-xl px-8 text-sm shadow-lg shiny-hover active:scale-95 transition-all">
                                     Ver Carreras
                                 </Button>
                             </Link>
@@ -65,7 +65,7 @@ export function CTASection() {
                                 </p>
                             </div>
                             <Link href="/nosotros">
-                                <Button variant="outline" className="w-fit border-white/20 text-white hover:bg-white hover:text-black font-bold rounded-full px-6 py-4 md:px-8 md:py-6 text-base md:text-lg shiny-hover backdrop-blur-sm bg-white/5 active:scale-95 transition-all">
+                                <Button variant="outline" className="w-fit h-14 border border-white/20 text-white hover:bg-white hover:text-black font-bold rounded-xl px-8 text-sm shiny-hover backdrop-blur-sm bg-white/5 active:scale-95 transition-all">
                                     Conocé al Equipo
                                 </Button>
                             </Link>
