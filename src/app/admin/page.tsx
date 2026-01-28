@@ -139,12 +139,12 @@ export default function AdminDashboard() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-                    <p className="text-gray-400 mt-2 flex items-center gap-2">
-                        Bienvenido al panel de control de Aurora Academy.
-                        {lastUpdated && <span className="text-xs bg-white/10 px-2 py-0.5 rounded text-emerald-400 border border-emerald-500/20">{timeAgo}</span>}
-                    </p>
+                    <div className="text-gray-400 mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
+                        <span>Bienvenido al panel de control de Aurora Academy.</span>
+                        {lastUpdated && <span className="text-xs bg-white/10 px-2 py-0.5 rounded text-emerald-400 border border-emerald-500/20 w-fit">{timeAgo}</span>}
+                    </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                     <RecoveryButton onRefresh={refreshDashboard} />
                 </div>
             </div>
@@ -288,7 +288,7 @@ function RecoveryButton({ onRefresh }: { onRefresh: () => void }) {
     };
 
     return (
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
             {result && (
                 <span className={`text-sm font-medium ${result.message.includes("Error") ? "text-red-400" : "text-green-400"} animate-in fade-in`}>
                     {result.message}
