@@ -25,12 +25,18 @@ export function AboutSection() {
                             <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tight mb-6">
                                 Democratizando el <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5D5CDE] to-indigo-400">Trading Profesional</span>
                             </h1>
-                            <div className="space-y-6 text-gray-400 text-lg leading-relaxed max-w-2xl">
+                            <div className="space-y-4 text-gray-400 text-lg leading-relaxed max-w-2xl text-justify">
                                 <p>
-                                    Hola, soy <strong className="text-white">Francisco Castro</strong>, CEO de Aurora Advisors. Con más de 10 años en el mercado y matrícula CNV 2688, creé esta academia con un solo objetivo: que dejes de adivinar y empieces a operar con criterio profesional.
+                                    Hola, soy <strong className="text-white">Francisco Castro</strong>, CEO de <strong>Aurora Advisors</strong> y co-fundador de <strong>Aurora Academy</strong>. Soy Licenciado en Administración y especialista en mercados financieros (<Link href="https://www.cnv.gov.ar/sitioWeb/RegistrosPublicos/Idoneos" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">Matriculado CNV 2688</Link>).
                                 </p>
                                 <p>
-                                    En Aurora Academy no vendemos señales mágicas. Enseñamos análisis, disciplina y estructura.
+                                    Con más de 10 años de experiencia en el sector bursátil, he asesorado a cientos de individuos y empresas. Sin embargo, mi verdadera pasión radica en la educación: creé Aurora Academy con la misión de democratizar el acceso al conocimiento financiero profesional.
+                                </p>
+                                <p>
+                                    En esta academia, vuelco toda mi experiencia práctica y teórica para que no solo inviertas, sino que entiendas el <em>porqué</em> detrás de cada decisión. Busco formarte para que puedas navegar los mercados con criterio propio, disciplina y herramientas estadísticas avanzadas.
+                                </p>
+                                <p>
+                                    Ya sea que estés dando tus primeros pasos o busques profesionalizar tu estrategia, aquí encontrarás un camino claro y estructurado para potenciar tu libertad financiera.
                                 </p>
                             </div>
                         </div>
@@ -75,7 +81,7 @@ export function AboutSection() {
                                 src="/images/francisco-speaking.png"
                                 alt="Francisco Castro"
                                 fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
                                 priority
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent opacity-60" />
