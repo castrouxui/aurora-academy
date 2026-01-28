@@ -144,7 +144,7 @@ export function CourseFloatingCard({
                                 Comprar Ahora
                             </Button>
                         )}
-                        <p className="text-center text-xs text-gray-500 font-medium">Garantía de devolución de dinero de 30 días</p>
+                        <p className="text-center text-xs text-gray-500 font-medium">Garantía de devolución de dinero de 24 hs.</p>
                     </div>
 
                     {/* Course Include List */}
