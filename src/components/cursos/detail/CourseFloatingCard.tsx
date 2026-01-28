@@ -132,14 +132,14 @@ export function CourseFloatingCard({
                     <div className="space-y-3">
                         {hasAccess ? (
                             <Link href={`/learn/${courseId}`} className="block w-full">
-                                <Button className="w-full h-14 text-lg font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-lg shiny-hover transition-all">
+                                <Button className="w-full h-14 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover">
                                     Continuar Aprendiendo
                                 </Button>
                             </Link>
                         ) : (
                             <Button
                                 onClick={handlePurchase}
-                                className="w-full h-14 text-lg font-bold bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-xl shadow-lg shiny-hover transition-all"
+                                className="w-full h-14 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
                             >
                                 Comprar Ahora
                             </Button>
