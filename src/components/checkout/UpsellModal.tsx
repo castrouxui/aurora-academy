@@ -14,6 +14,7 @@ interface UpsellModalProps {
     onUpgrade: (bundleId: string, bundleTitle: string, bundlePrice: string) => void;
     courseTitle: string;
     coursePrice: string; // "$40.000"
+    courseId: string;
 }
 
 export function UpsellModal({
@@ -22,7 +23,8 @@ export function UpsellModal({
     onContinue,
     onUpgrade,
     courseTitle,
-    coursePrice
+    coursePrice,
+    courseId
 }: UpsellModalProps) {
     const [isLoading, setIsLoading] = useState(true);
     const [recommendedBundle, setRecommendedBundle] = useState<any>(null);
@@ -40,20 +42,39 @@ export function UpsellModal({
                 if (res.ok) {
                     const bundles = await res.json();
                     if (bundles.length > 0) {
-                        // Sort by price ascending
-                        const sorted = bundles.sort((a: any, b: any) => Number(a.price) - Number(b.price));
+                        // 1. Filter: Only consider bundles that INCLUDE this course
+                        const validBundles = bundles.filter((b: any) =>
+                            b.courses && b.courses.some((c: any) => c.id === courseId)
+                        );
 
-                        // Strategy: Find the first bundle that is MORE expensive than the course
-                        // If course is more expensive than all bundles (unlikely), pick the top one.
-                        let target = sorted.find((b: any) => Number(b.price) > numericCoursePrice);
-
-                        // If no bundle is more expensive (e.g. course is 200k, bundles are up to 150k),
-                        // suggest the top bundle anyway as it contains "More value".
-                        if (!target) {
-                            target = sorted[sorted.length - 1];
+                        if (validBundles.length === 0) {
+                            // If NO bundle includes this course, we cannot upsell.
+                            // In this case, we might want to auto-close or not show.
+                            // However, since isOpen is true, we should probably just set null and let the UI decide?
+                            // Better yet, if we can't upsell, immediately trigger onContinue?
+                            // Or show a specific "Error" state? 
+                            // SAFEST: Set null, effectively hiding it, but we need to tell parent?
+                            // Ideally, `isOpen` shouldn't be set true if no bundle exists, but we verify async.
+                            setRecommendedBundle(null);
+                            // Optional: Auto-redirect if we wanted to be aggressive
+                            // onContinue(); 
+                            return;
                         }
 
-                        // Just in case, if the course IS the bundle (unlikely context), ignore
+                        // 2. Sort available bundles by price
+                        const sorted = validBundles.sort((a: any, b: any) => Number(a.price) - Number(b.price));
+
+                        // 3. Strategy: Find the best value upgrade
+                        // Prefer the first one that is > coursePrice (Upsell)
+                        let target = sorted.find((b: any) => Number(b.price) > numericCoursePrice);
+
+                        // If all valid bundles are cheaper (unlikely for a bundle vs single course, but possible),
+                        // suggest the most expensive one (highest tier) or the cheapest one (best deal)?
+                        // Usually, suggest the one closest to price but higher (The "Next Step").
+                        if (!target) {
+                            // If no bundle is more expensive, pick the most expensive valid one (Top Tier)
+                            target = sorted[sorted.length - 1];
+                        }
 
                         setRecommendedBundle(target);
                     }
@@ -66,32 +87,30 @@ export function UpsellModal({
         }
 
         fetchBundles();
-    }, [isOpen, numericCoursePrice]);
+    }, [isOpen, numericCoursePrice, courseId]);
 
     // If loading or no bundle found, we render nothing (or could auto-skip)
     // For now, render loading spinner or specific state
-    if (isLoading) {
-        return null;
-    }
-
-    // If no bundle found after load, we should probably just call onContinue automatically?
-    // But we can't emit events during render. We'll show a "Proceed" fallback or just nothing.
-    // Ideally the parent waits or we show a simple view. 
-    // Let's show nothing and effects handle it? No, React warnings.
-    // Let's just show a fallback "Confirming..." and then skip.
-    if (!recommendedBundle) {
-        // Fallback UI if API failed
+    // If no recommended bundle found (e.g. course is not in any bundle), we should ideally skip.
+    if (!isLoading && !recommendedBundle) {
+        // Auto-skip logic could go here, but since we can't trigger state update in render,
+        // we show a "Continuar" dialog or a small error.
+        // Better UX: Show a "Proceeding to checkout..." temporary state and call onContinue via effect?
+        // For now, let's just let the user click "Continuar" to manually bypass.
         return (
             <Dialog open={isOpen} onOpenChange={onClose}>
                 <DialogContent className="bg-[#0B0F19] border-white/10 text-white p-0 overflow-hidden max-w-md">
                     <div className="p-6 text-center">
-                        <p>Preparando tu compra...</p>
-                        <Button onClick={onContinue} className="mt-4 w-full bg-[#5D5CDE]">Continuar</Button>
+                        <p className="text-gray-400 mb-4">Continuando con tu compra...</p>
+                        <Button onClick={onContinue} className="w-full bg-[#5D5CDE]">Continuar al pago</Button>
                     </div>
                 </DialogContent>
             </Dialog>
         );
     }
+
+    // While loading, show nothing or spinner
+    if (isLoading) return null;
 
     const bundlePrice = Number(recommendedBundle.price);
     const diff = bundlePrice - numericCoursePrice;

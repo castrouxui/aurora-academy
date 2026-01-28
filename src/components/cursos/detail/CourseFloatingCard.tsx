@@ -86,6 +86,7 @@ export function CourseFloatingCard({
                 onUpgrade={handleUpgradeToBundle}
                 courseTitle={title}
                 coursePrice={price}
+                courseId={courseId}
             />
 
             <PaymentModal
