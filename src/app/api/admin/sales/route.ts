@@ -54,12 +54,16 @@ export async function GET(req: Request) {
         const subscriptions = await prisma.subscription.findMany({
             where: startDate ? {
                 updatedAt: { gte: startDate }
-            } : {}
+            } : {},
+            include: {
+                user: { select: { email: true } }
+            }
         });
 
         const totalSubs = subscriptions.length;
-        const cancelledSubs = subscriptions.filter(s => s.status === 'cancelled').length;
         const activeSubs = subscriptions.filter(s => s.status === 'authorized').length;
+        const cancelledSubsList = subscriptions.filter(s => s.status === 'cancelled');
+        const cancelledSubs = cancelledSubsList.length;
         const churnRate = totalSubs > 0 ? (cancelledSubs / totalSubs) * 100 : 0;
 
         return NextResponse.json({
@@ -68,7 +72,8 @@ export async function GET(req: Request) {
                 total: totalSubs,
                 active: activeSubs,
                 cancelled: cancelledSubs,
-                churnRate: churnRate
+                churnRate: churnRate,
+                cancelledEmails: cancelledSubsList.map(s => s.user.email)
             }
         });
     } catch (error) {

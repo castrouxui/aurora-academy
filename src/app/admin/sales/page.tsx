@@ -19,7 +19,7 @@ interface Sale {
 
 export default function AdminSalesPage() {
     const [sales, setSales] = useState<Sale[]>([]);
-    const [subStats, setSubStats] = useState({ total: 0, active: 0, cancelled: 0, churnRate: 0 });
+    const [subStats, setSubStats] = useState<{ total: number, active: number, cancelled: number, churnRate: number, cancelledEmails?: string[] }>({ total: 0, active: 0, cancelled: 0, churnRate: 0, cancelledEmails: [] });
     const [isLoading, setIsLoading] = useState(true);
     const [period, setPeriod] = useState("all");
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -217,7 +217,21 @@ export default function AdminSalesPage() {
                             <div>
                                 <p className="text-gray-400 text-xs font-medium uppercase tracking-wider">Churn Rate (Bajas)</p>
                                 <h2 className="text-2xl font-bold text-white mt-2">{subStats.churnRate.toFixed(1)}%</h2>
-                                <p className="text-[10px] text-gray-500 mt-1">{subStats.cancelled} bajas / {subStats.total} total</p>
+                                <div className="group relative">
+                                    <p className="text-[10px] text-gray-500 mt-1 cursor-help hover:text-gray-300 transition-colors">
+                                        {subStats.cancelled} bajas / {subStats.total} total
+                                    </p>
+                                    {subStats.cancelledEmails && subStats.cancelledEmails.length > 0 && (
+                                        <div className="absolute top-full left-0 mt-2 z-50 w-64 p-3 bg-gray-900 border border-gray-700 rounded-lg shadow-xl hidden group-hover:block">
+                                            <p className="text-xs font-semibold text-gray-400 mb-2">Usuarios baja:</p>
+                                            <ul className="space-y-1">
+                                                {subStats.cancelledEmails.map((email: string, idx: number) => (
+                                                    <li key={idx} className="text-xs text-gray-300 truncate">{email}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                             <div className="bg-rose-500/10 p-3 rounded-full"><XCircle className="text-rose-400 h-6 w-6" /></div>
                         </div>
