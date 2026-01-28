@@ -49,11 +49,11 @@ export function AboutSection() {
                                     icon={<Instagram size={20} />}
                                     label="Instagram"
                                 />
-                                <SocialLink
+                                {/* <SocialLink
                                     href="https://t.me/Auroradvisors"
                                     icon={<Send size={20} />}
                                     label="Telegram"
-                                />
+                                /> */}
                                 <SocialLink
                                     href="https://twitter.com/francastromt"
                                     icon={(

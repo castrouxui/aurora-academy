@@ -55,6 +55,7 @@ model User {
   notificationPrefs Json?        @default("{\"telegram\": true, \"inApp\": true}")
   company        Company?       @relation(fields: [companyId], references: [id])
   progress       UserProgress[]
+  reviews        Review[]
 }
 
 model Notification {
@@ -111,6 +112,7 @@ model Course {
   modules          Module[]
   purchases        Purchase[]
   bundles          Bundle[]   @relation("BundleToCourse")
+  reviews          Review[]
 }
 
 model Bundle {
@@ -260,4 +262,18 @@ model Lead {
   status      String   @default("NEW")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String?  // Removed @db.Text as it might strict validation issues, String is enough for Prisma default
+  userId    String
+  courseId  String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+  @@index([userId])
 }

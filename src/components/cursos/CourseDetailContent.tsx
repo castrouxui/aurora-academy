@@ -8,6 +8,8 @@ import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
 import { MobileCourseCTA } from "@/components/cursos/detail/MobileCourseCTA";
+import { ReviewList } from "@/components/reviews/ReviewList";
+import { ReviewForm } from "@/components/reviews/ReviewForm";
 // import { CourseSidebar } from "@/components/cursos/detail/CourseSidebar"; // Unused
 
 interface CourseDetailContentProps {
@@ -16,6 +18,8 @@ interface CourseDetailContentProps {
     totalLessons: number;
     totalModules: number;
     breadcrumbs?: { label: string; href: string }[];
+    reviews?: any[];
+    canReview?: boolean;
 }
 
 export function CourseDetailContent({
@@ -23,7 +27,10 @@ export function CourseDetailContent({
     hasAccess,
     totalLessons,
     totalModules,
-    breadcrumbs
+
+    breadcrumbs,
+    reviews,
+    canReview
 }: CourseDetailContentProps) {
     return (
         <div className="bg-[#0B0F19] min-h-screen">
@@ -63,8 +70,25 @@ export function CourseDetailContent({
                         </div>
 
                         {/* FAQ Section */}
+                        {/* FAQ Section */}
                         <div id="faq" className="pt-12 border-t border-white/5">
                             <CourseFAQ />
+                        </div>
+
+                        {/* Reviews Section */}
+                        <div id="reviews" className="pt-12 border-t border-white/5">
+                            <div className="space-y-8">
+                                <h2 className="text-2xl font-black text-white font-headings">
+                                    Opiniones de Estudiantes
+                                    <span className="ml-3 text-lg font-medium text-gray-500">({reviews?.length || 0})</span>
+                                </h2>
+
+                                {canReview && (
+                                    <ReviewForm courseId={courseData.id} />
+                                )}
+
+                                <ReviewList reviews={reviews || []} />
+                            </div>
                         </div>
 
                         {/* Testimonials (Moved inside flow or keep separate?) 

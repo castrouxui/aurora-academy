@@ -70,10 +70,6 @@ export default function DashboardLayout({
     return (
         <div className="min-h-screen bg-[#0B0F19] flex">
             {/* Mandatory Telegram Verification for Students */}
-            {needsTelegram && (
-                <TelegramBlockingOverlay user={session.user as any} />
-            )}
-
             {/* Desktop Sidebar - Now generic */}
             <Sidebar
                 items={navigation}

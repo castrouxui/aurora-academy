@@ -16,10 +16,7 @@ const FREQUENTLY_ASKED_QUESTIONS = [
         question: "¿Otorgan certificado al finalizar?",
         answer: "¡Por supuesto! Al completar el 100% de las lecciones y aprobar los exámenes prácticos, recibirás un certificado digital oficial de Aurora Academy validando tus conocimientos, que podrás compartir en LinkedIn."
     },
-    {
-        question: "¿Tengo soporte si tengo dudas?",
-        answer: "Sí, contarás con acceso a nuestra comunidad exclusiva de alumnos en Telegram, donde podrás plantear tus dudas a los instructores y debatir con otros estudiantes. Además, realizamos sesiones de Q&A en vivo periódicamente."
-    },
+
     {
         question: "¿Qué métodos de pago aceptan?",
         answer: "Aceptamos todas las tarjetas de crédito y débito a través de MercadoPago (para Argentina) y PayPal (para pagos internacionales). También puedes abonar mediante transferencia bancaria o criptomonedas contactando a soporte."

@@ -125,9 +125,9 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
                                 <div className="overflow-hidden">
                                     <p className="text-sm font-medium text-white truncate flex items-center gap-1">
                                         {user.name}
-                                        {user.telegramVerified && (
+                                        {/* {user.telegramVerified && (
                                             <ShieldCheck size={14} className="text-green-500 fill-green-500/20" />
-                                        )}
+                                        )} */}
                                     </p>
                                     <p className="text-xs text-gray-500 truncate">{user.email}</p>
                                 </div>

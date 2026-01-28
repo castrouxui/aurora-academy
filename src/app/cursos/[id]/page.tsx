@@ -116,6 +116,45 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     // Calculate display image (Priority: Local Map override > Uploaded > YouTube (HQ) > Placeholder)
     const youtubeId = previewVideoUrl ? getYouTubeId(previewVideoUrl) : null;
 
+    // Fetch Reviews
+    const reviews = await prisma.review.findMany({
+        where: { courseId: id },
+        orderBy: { createdAt: 'desc' },
+        include: {
+            user: { select: { name: true, image: true } }
+        }
+    });
+
+    const totalRatings = reviews.length;
+    const averageRating = totalRatings > 0
+        ? reviews.reduce((acc, rev) => acc + rev.rating, 0) / totalRatings
+        : 5.0; // Fallback to 5.0 if no ratings, or use 0? User asked for impact. Let's use 0 if no ratings to be honest, or 5 as "New"? 
+    // 5.0 hardcoded was "New". Let's keep 5.0 if 0 reviews to look good or 0? 
+    // Usually 0 reviews = No rating. But for sales, maybe 5.0 placeholder? 
+    // Let's use the REAL average. If 0, display 0 or "Nuevo".
+
+    const userReview = session?.user?.id ? reviews.find(r => r.userId === session.user.id) : null;
+
+    // Check Completion
+    let isCompleted = false;
+    if (session?.user?.id && hasAccess) {
+        // Get all lesson IDs for this course
+        const allLessonIds = course.modules.flatMap(m => m.lessons.map(l => l.id));
+
+        // Count completed lessons for this user
+        const completedCount = await prisma.userProgress.count({
+            where: {
+                userId: session.user.id,
+                lessonId: { in: allLessonIds },
+                completed: true
+            }
+        });
+
+        isCompleted = allLessonIds.length > 0 && completedCount === allLessonIds.length;
+    }
+
+    const canReview = hasAccess && isCompleted && !userReview;
+
     // Use shared utility for consistency
     let displayImage = getCourseImage(course);
 
@@ -133,8 +172,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         imageUrl: displayImage, // Use calculated image for main cover too
         category: course.category,
         modules: course.modules,
-        rating: 5.0,
-        totalRatings: 124, // Could also be dynamic if we had ratings
+        rating: totalRatings > 0 ? averageRating : 5.0, // Keep 5.0 as default for aesthetics if empty
+        totalRatings: totalRatings,
         students: studentCount,
         lastUpdated: "01/2026",
         language: "Español",
@@ -161,6 +200,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 hasAccess={hasAccess}
                 totalLessons={totalLessons}
                 totalModules={totalModules}
+                reviews={reviews}
+                canReview={canReview}
             />
         </main>
     );

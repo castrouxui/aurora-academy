@@ -54,22 +54,7 @@ export function NotificationPreferences({ initialPrefs }: { initialPrefs?: Notif
             </CardHeader>
             <CardContent className="space-y-6">
                 <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 bg-[#121620] rounded-xl border border-gray-700 hover:border-primary/50 transition-colors group">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-[#0088cc]/10 rounded-lg text-[#0088cc]">
-                                <Send size={20} />
-                            </div>
-                            <div>
-                                <p className="text-sm font-bold text-white">Notificaciones por Telegram</p>
-                                <p className="text-xs text-gray-500">Recibí avisos directos en tu chat de Telegram.</p>
-                            </div>
-                        </div>
-                        <Checkbox
-                            checked={prefs.telegram}
-                            onChange={(e: any) => setPrefs({ ...prefs, telegram: e.target.checked })}
-                            className="border-gray-600 data-[state=checked]:bg-primary"
-                        />
-                    </div>
+                    {/* Telegram Notification Hidden */}
 
                     <div className="flex items-center justify-between p-4 bg-[#121620] rounded-xl border border-gray-700 hover:border-primary/50 transition-colors">
                         <div className="flex items-center gap-3">
