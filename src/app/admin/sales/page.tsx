@@ -19,6 +19,7 @@ interface Sale {
 
 export default function AdminSalesPage() {
     const [sales, setSales] = useState<Sale[]>([]);
+    const [subStats, setSubStats] = useState({ total: 0, active: 0, cancelled: 0, churnRate: 0 });
     const [isLoading, setIsLoading] = useState(true);
     const [period, setPeriod] = useState("all");
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -29,13 +30,18 @@ export default function AdminSalesPage() {
         try {
             const res = await fetch(`/api/admin/sales?period=${period}`);
             if (res.ok) {
-                const data: Sale[] = await res.json();
+                const data = await res.json();
+                // Check if response is the new object format or old array (backward compat if needed)
+                const salesData: Sale[] = Array.isArray(data) ? data : data.sales;
+                const subsData = data.subscriptions || { total: 0, active: 0, cancelled: 0, churnRate: 0 };
+
+                setSubStats(subsData);
 
                 // --- SOFT DEDUPLICATION LOGIC ---
                 const uniqueSales: Sale[] = [];
                 const seen = new Set<string>();
 
-                data.forEach(sale => {
+                salesData.forEach(sale => {
                     const itemId = sale.course?.title || sale.bundle?.title || "unknown";
                     const key = `${sale.user.email}-${itemId}-${sale.amount}`;
                     const timeBucket = new Date(sale.createdAt).getTime();
@@ -171,13 +177,13 @@ export default function AdminSalesPage() {
             </div>
 
             {/* METRICS GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <Card className="bg-gradient-to-r from-[#1F2937] to-[#111827] border-gray-700">
                     <CardContent className="p-6">
                         <div className="flex justify-between items-center">
                             <div>
                                 <p className="text-gray-400 text-xs font-medium uppercase tracking-wider">Ingresos Totales</p>
-                                <h2 className="text-3xl font-bold text-white mt-2">{formatCurrency(totalRevenue)}</h2>
+                                <h2 className="text-2xl font-bold text-white mt-2">{formatCurrency(totalRevenue)}</h2>
                             </div>
                             <div className="bg-emerald-500/10 p-3 rounded-full"><DollarSign className="text-emerald-400 h-6 w-6" /></div>
                         </div>
@@ -188,7 +194,7 @@ export default function AdminSalesPage() {
                         <div className="flex justify-between items-center">
                             <div>
                                 <p className="text-gray-400 text-xs font-medium uppercase tracking-wider">Transacciones</p>
-                                <h2 className="text-3xl font-bold text-white mt-2">{totalTransactions}</h2>
+                                <h2 className="text-2xl font-bold text-white mt-2">{totalTransactions}</h2>
                             </div>
                             <div className="bg-blue-500/10 p-3 rounded-full"><ShoppingCart className="text-blue-400 h-6 w-6" /></div>
                         </div>
@@ -199,9 +205,21 @@ export default function AdminSalesPage() {
                         <div className="flex justify-between items-center">
                             <div>
                                 <p className="text-gray-400 text-xs font-medium uppercase tracking-wider">Ticket Promedio</p>
-                                <h2 className="text-3xl font-bold text-white mt-2">{formatCurrency(avgTicket)}</h2>
+                                <h2 className="text-2xl font-bold text-white mt-2">{formatCurrency(avgTicket)}</h2>
                             </div>
                             <div className="bg-purple-500/10 p-3 rounded-full"><TrendingUp className="text-purple-400 h-6 w-6" /></div>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card className="bg-[#1F2937] border-gray-700">
+                    <CardContent className="p-6">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <p className="text-gray-400 text-xs font-medium uppercase tracking-wider">Churn Rate (Bajas)</p>
+                                <h2 className="text-2xl font-bold text-white mt-2">{subStats.churnRate.toFixed(1)}%</h2>
+                                <p className="text-[10px] text-gray-500 mt-1">{subStats.cancelled} bajas / {subStats.total} total</p>
+                            </div>
+                            <div className="bg-rose-500/10 p-3 rounded-full"><XCircle className="text-rose-400 h-6 w-6" /></div>
                         </div>
                     </CardContent>
                 </Card>

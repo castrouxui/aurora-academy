@@ -50,7 +50,27 @@ export async function GET(req: Request) {
             return s;
         });
 
-        return NextResponse.json(fixedSales);
+        // --- SUBSCRIPTION STATS ---
+        const subscriptions = await prisma.subscription.findMany({
+            where: startDate ? {
+                updatedAt: { gte: startDate }
+            } : {}
+        });
+
+        const totalSubs = subscriptions.length;
+        const cancelledSubs = subscriptions.filter(s => s.status === 'cancelled').length;
+        const activeSubs = subscriptions.filter(s => s.status === 'authorized').length;
+        const churnRate = totalSubs > 0 ? (cancelledSubs / totalSubs) * 100 : 0;
+
+        return NextResponse.json({
+            sales: fixedSales,
+            subscriptions: {
+                total: totalSubs,
+                active: activeSubs,
+                cancelled: cancelledSubs,
+                churnRate: churnRate
+            }
+        });
     } catch (error) {
         console.error("[SALES_GET]", error);
         return new NextResponse("Internal Error", { status: 500 });
