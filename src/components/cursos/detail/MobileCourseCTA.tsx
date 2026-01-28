@@ -1,4 +1,5 @@
 "use client";
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
@@ -7,6 +8,8 @@ import { LoginModal } from "@/components/auth/LoginModal";
 import { PaymentModal } from "@/components/checkout/PaymentModal";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { UpsellModal } from "@/components/checkout/UpsellModal";
+
 
 interface MobileCourseCTAProps {
     title: string;
@@ -25,13 +28,29 @@ export function MobileCourseCTA({
 }: MobileCourseCTAProps) {
     const { data: session } = useSession();
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+    const [isUpsellModalOpen, setIsUpsellModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+    // State for bundle purchase
+    const [selectedBundle, setSelectedBundle] = useState<{ id: string, title: string, price: string } | null>(null);
 
     const handlePurchase = () => {
         if (!session) {
             setIsLoginModalOpen(true);
             return;
         }
+        setIsUpsellModalOpen(true);
+    };
+
+    const handleContinueSingle = () => {
+        setIsUpsellModalOpen(false);
+        setSelectedBundle(null);
+        setIsPaymentModalOpen(true);
+    };
+
+    const handleUpgradeToBundle = (bundleId: string, bundleTitle: string, bundlePrice: string) => {
+        setIsUpsellModalOpen(false);
+        setSelectedBundle({ id: bundleId, title: bundleTitle, price: bundlePrice });
         setIsPaymentModalOpen(true);
     };
 
@@ -43,12 +62,23 @@ export function MobileCourseCTA({
                 redirectUrl={`/cursos/${courseId}`}
                 view="purchase"
             />
+
+            <UpsellModal
+                isOpen={isUpsellModalOpen}
+                onClose={() => setIsUpsellModalOpen(false)}
+                onContinue={handleContinueSingle}
+                onUpgrade={handleUpgradeToBundle}
+                courseTitle={title}
+                coursePrice={price}
+            />
+
             <PaymentModal
                 isOpen={isPaymentModalOpen}
                 onClose={() => setIsPaymentModalOpen(false)}
-                courseTitle={title}
-                coursePrice={price}
-                courseId={courseId}
+                courseTitle={selectedBundle ? selectedBundle.title : title}
+                coursePrice={selectedBundle ? selectedBundle.price : price}
+                courseId={selectedBundle ? undefined : courseId}
+                bundleId={selectedBundle ? selectedBundle.id : undefined}
             />
 
             <div className={cn("fixed bottom-0 left-0 right-0 p-4 bg-[#0B0F19]/95 backdrop-blur-md border-t border-white/10 z-50 md:hidden safe-area-pb", className)}>

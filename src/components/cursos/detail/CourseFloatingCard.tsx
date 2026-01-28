@@ -7,6 +7,8 @@ import { Play, PlayCircle, Clock, BarChart, Users, Globe, Captions, CheckCircle2
 import { useSession } from "next-auth/react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import Link from "next/link";
+import { UpsellModal } from "@/components/checkout/UpsellModal";
+
 
 interface CourseFloatingCardProps {
     title: string;
@@ -41,13 +43,30 @@ export function CourseFloatingCard({
 }: CourseFloatingCardProps) {
     const { data: session } = useSession();
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+    const [isUpsellModalOpen, setIsUpsellModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+    // State for bundle purchase (Upsell accepted)
+    const [selectedBundle, setSelectedBundle] = useState<{ id: string, title: string, price: string } | null>(null);
 
     const handlePurchase = () => {
         if (!session) {
             setIsLoginModalOpen(true);
             return;
         }
+        // Open Upsell instead of direct Payment
+        setIsUpsellModalOpen(true);
+    };
+
+    const handleContinueSingle = () => {
+        setIsUpsellModalOpen(false);
+        setSelectedBundle(null); // Ensure no bundle is selected
+        setIsPaymentModalOpen(true);
+    };
+
+    const handleUpgradeToBundle = (bundleId: string, bundleTitle: string, bundlePrice: string) => {
+        setIsUpsellModalOpen(false);
+        setSelectedBundle({ id: bundleId, title: bundleTitle, price: bundlePrice });
         setIsPaymentModalOpen(true);
     };
 
@@ -59,12 +78,24 @@ export function CourseFloatingCard({
                 redirectUrl={`/cursos/${courseId}`}
                 view="purchase"
             />
+
+            <UpsellModal
+                isOpen={isUpsellModalOpen}
+                onClose={() => setIsUpsellModalOpen(false)}
+                onContinue={handleContinueSingle}
+                onUpgrade={handleUpgradeToBundle}
+                courseTitle={title}
+                coursePrice={price}
+            />
+
             <PaymentModal
                 isOpen={isPaymentModalOpen}
                 onClose={() => setIsPaymentModalOpen(false)}
-                courseTitle={title}
-                coursePrice={price}
-                courseId={courseId}
+                // Dynamic Props: If bundle selected, use bundle info, else course info
+                courseTitle={selectedBundle ? selectedBundle.title : title}
+                coursePrice={selectedBundle ? selectedBundle.price : price}
+                courseId={selectedBundle ? undefined : courseId}
+                bundleId={selectedBundle ? selectedBundle.id : undefined}
             />
 
             <div className="bg-white/5 backdrop-blur-xl rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 sticky top-24">
