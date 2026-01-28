@@ -34,6 +34,7 @@ interface CoursePlayerProps {
     course: {
         id: string;
         title: string;
+        description?: string;
         modules: Module[];
     };
     isAccess: boolean; // Does user own this course?
@@ -266,9 +267,17 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
                                             <div className="space-y-4 flex-1">
                                                 <h2 className="text-xl lg:text-3xl font-bold text-white leading-tight">{activeLesson.title}</h2>
-                                                <p className="text-sm lg:text-base text-gray-400 leading-relaxed max-w-3xl">
-                                                    {activeLesson.description || "Sin descripción disponible para esta lección."}
-                                                </p>
+                                                <div className="text-sm lg:text-base text-gray-400 leading-relaxed max-w-3xl prose prose-invert">
+                                                    {/* Show Lesson Description OR Course Description as fallback */}
+                                                    {activeLesson.description ? (
+                                                        <p>{activeLesson.description}</p>
+                                                    ) : (
+                                                        <div className="opacity-80">
+                                                            <p className="text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Descripción del Curso</p>
+                                                            <p>{course.description || "Sin descripción disponible."}</p>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
 
                                             <Button

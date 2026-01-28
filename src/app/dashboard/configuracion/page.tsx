@@ -56,11 +56,13 @@ export default function SettingsPage() {
                                             className="bg-[#121620] border-gray-600 pl-10 text-white"
                                             disabled
                                         />
+                                        {/* Telegram Verified Shield - HIDDEN
                                         {session?.user?.telegramVerified && (
                                             <div className="absolute right-3 top-3 text-green-500" title="Verificado en Telegram">
                                                 <ShieldCheck size={18} fill="currentColor" className="text-green-500/20" />
                                             </div>
                                         )}
+                                        */}
                                     </div>
                                 </div>
                                 <div className="space-y-2">
@@ -75,12 +77,14 @@ export default function SettingsPage() {
                                     </div>
                                 </div>
                             </div>
+                            {/* Telegram Verification Section - HIDDEN
                             <div className="pt-6 border-t border-gray-700/50">
                                 <TelegramVerification
                                     initialHandle={session?.user?.telegram}
                                     isVerified={session?.user?.telegramVerified || false}
                                 />
                             </div>
+                            */}
 
                             <div className="pt-2">
                                 <p className="text-xs text-yellow-500/80">

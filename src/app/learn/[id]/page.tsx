@@ -81,6 +81,7 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
     const clientCourse = {
         id: course.id,
         title: course.title,
+        description: course.description || undefined,
         modules: course.modules.map((mod: any) => ({
             id: mod.id,
             title: mod.title,
