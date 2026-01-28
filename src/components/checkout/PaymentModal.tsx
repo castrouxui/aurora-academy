@@ -116,8 +116,9 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 setIsLoading(true);
                 setInitError(null); // Reset error
                 try {
-                    // Determine endpoint based on bundleId presence
-                    const endpoint = bundleId ? '/api/payment/create-subscription' : '/api/payment/create-preference';
+                    // Always use create-preference for now (treated as one-time purchases)
+                    // If we ever need real recurring subscriptions, we'll need a flag.
+                    const endpoint = '/api/payment/create-preference';
 
                     const response = await fetch(endpoint, {
                         method: 'POST',
