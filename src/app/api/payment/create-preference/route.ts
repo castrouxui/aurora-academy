@@ -65,7 +65,11 @@ export async function POST(req: NextRequest) {
                 const isExpired = coupon.expiresAt && new Date() > coupon.expiresAt;
                 const isExhausted = coupon.limit && coupon.used >= coupon.limit;
 
-                if (!isExpired && !isExhausted) {
+                // STRICT CHECK: Coupons are ONLY valid for Bundles (Memberships)
+                // If there is no bundleId, we ignore the coupon.
+                if (!bundleId) {
+                    console.warn(`Coupon ${couponCode} rejected: Not a membership purchase.`);
+                } else if (!isExpired && !isExhausted) {
                     appliedCouponId = coupon.id;
                     if (coupon.type === 'PERCENTAGE') {
                         // Discount is e.g. 20 for 20%

@@ -38,11 +38,18 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
     const handleApplyCoupon = async () => {
         setCouponError("");
         setIsValidatingCoupon(true);
+        // Check if it's a bundle purchase
+        if (!bundleId) {
+            setCouponError("Los cupones solo son válidos para membresías.");
+            setIsValidatingCoupon(false);
+            return;
+        }
+
         try {
             const res = await fetch("/api/coupons/validate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ code: couponCode }),
+                body: JSON.stringify({ code: couponCode, bundleId }), // Send bundleId context
             });
             const data = await res.json();
 
