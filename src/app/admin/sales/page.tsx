@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, DollarSign, Calendar, CheckCircle, XCircle, Clock, TrendingUp, CreditCard, ShoppingCart } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { toast } from "sonner";
 
 interface Sale {
     id: string;
@@ -57,6 +58,36 @@ export default function AdminSalesPage() {
                         uniqueSales.push(sale);
                     }
                 });
+
+                // --- NOTIFICATION LOGIC ---
+                // We compare the new sales list with the previous state (or a ref) to detect new items.
+                // Since this runs every 60s, it works as a poor-man's websocket.
+
+                // Only run check if not first load (to avoid spamming on refresh)
+                if (lastUpdated) {
+                    const existingIds = new Set(sales.map(s => s.id));
+                    const newSalesFound = uniqueSales.filter(s => !existingIds.has(s.id));
+
+                    if (newSalesFound.length > 0) {
+                        // Play sound (optional, browser might block)
+                        // const audio = new Audio('/sounds/cash.mp3'); audio.play().catch(e => {});
+
+                        // Show Toast
+                        if (newSalesFound.length === 1) {
+                            const newSale = newSalesFound[0];
+                            const itemName = newSale.course?.title || newSale.bundle?.title || "Producto";
+                            toast.success(`¡Nueva venta! $${Number(newSale.amount).toLocaleString('es-AR')}`, {
+                                description: `${newSale.user.name} compró ${itemName}`,
+                                duration: 8000,
+                            });
+                        } else {
+                            toast.success(`¡${newSalesFound.length} Nuevas ventas!`, {
+                                description: `Has generado ingresos recientes.`,
+                                duration: 8000,
+                            });
+                        }
+                    }
+                }
 
                 setSales(uniqueSales);
                 setLastUpdated(new Date());
