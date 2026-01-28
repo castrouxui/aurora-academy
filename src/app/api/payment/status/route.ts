@@ -75,22 +75,34 @@ export async function GET(req: NextRequest) {
                     const finalUserId = userId || (approvedPayment as any).metadata?.user_id;
                     const finalCourseId = courseId || (approvedPayment as any).metadata?.course_id;
                     const finalBundleId = bundleId || (approvedPayment as any).metadata?.bundle_id;
+                    const finalCouponId = (approvedPayment as any).metadata?.coupon_id;
 
                     if (!finalUserId) {
                         console.error("[FAILSAFE] Cannot create purchase: Missing userId");
                         return NextResponse.json({ status: 'pending' }); // Cannot credit to anyone
                     }
 
-                    const newPurchase = await prisma.purchase.create({
-                        data: {
-                            userId: finalUserId,
-                            courseId: finalCourseId,
-                            bundleId: finalBundleId, // Add bundleId support here too
-                            amount: approvedPayment.transaction_amount || 0,
-                            status: 'approved',
-                            paymentId: approvedPayment.id!.toString(),
-                            preferenceId: preferenceId || (approvedPayment as any).preference_id || ""
+                    const newPurchase = await prisma.$transaction(async (tx) => {
+                        const purchase = await tx.purchase.create({
+                            data: {
+                                userId: finalUserId,
+                                courseId: finalCourseId,
+                                bundleId: finalBundleId,
+                                couponId: finalCouponId || undefined,
+                                amount: approvedPayment.transaction_amount || 0,
+                                status: 'approved',
+                                paymentId: approvedPayment.id!.toString(),
+                                preferenceId: preferenceId || (approvedPayment as any).preference_id || ""
+                            }
+                        });
+
+                        if (finalCouponId) {
+                            await tx.coupon.update({
+                                where: { id: finalCouponId },
+                                data: { used: { increment: 1 } }
+                            });
                         }
+                        return purchase;
                     });
 
                     return NextResponse.json({ status: 'approved', purchaseId: newPurchase.id });

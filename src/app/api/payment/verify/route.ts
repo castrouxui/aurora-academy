@@ -23,7 +23,7 @@ export async function POST(req: Request) {
         console.log(`[VERIFY] Checking payment ${paymentId}. Status: ${paymentData.status}`);
 
         if (paymentData.status === "approved") {
-            const { user_id, course_id } = paymentData.metadata;
+            const { user_id, course_id, coupon_id } = paymentData.metadata;
 
             if (!user_id || !course_id) {
                 return NextResponse.json({ error: "Invalid payment metadata" }, { status: 400 });
@@ -43,16 +43,27 @@ export async function POST(req: Request) {
                 });
             }
 
-            // Create Purchase
-            const newPurchase = await prisma.purchase.create({
-                data: {
-                    userId: user_id,
-                    courseId: course_id,
-                    amount: paymentData.transaction_amount || 0,
-                    status: 'approved',
-                    paymentId: String(paymentId),
-                    preferenceId: "",
+            // Create Purchase with Transaction
+            const newPurchase = await prisma.$transaction(async (tx) => {
+                const purchase = await tx.purchase.create({
+                    data: {
+                        userId: user_id,
+                        courseId: course_id,
+                        couponId: coupon_id || undefined,
+                        amount: paymentData.transaction_amount || 0,
+                        status: 'approved',
+                        paymentId: String(paymentId),
+                        preferenceId: "",
+                    }
+                });
+
+                if (coupon_id) {
+                    await tx.coupon.update({
+                        where: { id: coupon_id },
+                        data: { used: { increment: 1 } }
+                    });
                 }
+                return purchase;
             });
 
             console.log(`[VERIFY] Created purchase: ${newPurchase.id}`);

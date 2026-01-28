@@ -27,12 +27,12 @@ export async function POST(request: Request) {
 
 
             if (paymentData.status === "approved") {
-                const { user_id, course_id, bundle_id } = paymentData.metadata;
+                const { user_id, course_id, bundle_id, coupon_id } = paymentData.metadata;
 
                 if (user_id && (course_id || bundle_id)) {
                     // Check if purchase already exists
                     const existingPurchase = await prisma.purchase.findFirst({
-                        where: { paymentId: id }
+                        where: { paymentId: id },
                     });
 
                     if (existingPurchase) {
@@ -40,15 +40,29 @@ export async function POST(request: Request) {
                         return NextResponse.json({ status: "success", message: "Already processed" });
                     }
 
-                    await prisma.purchase.create({
-                        data: {
-                            userId: user_id,
-                            courseId: course_id,
-                            bundleId: bundle_id,
-                            amount: paymentData.transaction_amount || 0,
-                            status: 'approved',
-                            paymentId: id,
-                            preferenceId: (paymentData as any).preference_id || "",
+                    // Transaction to ensure atomicity
+                    await prisma.$transaction(async (tx) => {
+                        // 1. Create Purchase
+                        await tx.purchase.create({
+                            data: {
+                                userId: user_id,
+                                courseId: course_id,
+                                bundleId: bundle_id,
+                                couponId: coupon_id || undefined, // Save coupon usage
+                                amount: paymentData.transaction_amount || 0,
+                                status: "approved",
+                                paymentId: id,
+                                preferenceId: (paymentData as any).preference_id || "",
+                            },
+                        });
+
+                        // 2. Increment Coupon Usage
+                        if (coupon_id) {
+                            await tx.coupon.update({
+                                where: { id: coupon_id },
+                                data: { used: { increment: 1 } },
+                            });
+                            console.log(`[WEBHOOK] Incremented usage for coupon ${coupon_id}`);
                         }
                     });
 
