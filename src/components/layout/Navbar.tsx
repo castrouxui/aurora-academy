@@ -76,10 +76,17 @@ export function Navbar() {
 
             {/* 2. Cursos */}
             <Link href="/cursos" className={getLinkClass("/cursos")}>
-              Cursos
+              Catálogo
             </Link>
 
-            {/* 3. Empresas - PROXIMAMENTE */}
+            {/* 3. Mis Cursos (Logged In) */}
+            {session?.user && (
+              <Link href="/dashboard/cursos" className={getLinkClass("/dashboard/cursos")}>
+                Mis Cursos
+              </Link>
+            )}
+
+            {/* 4. Empresas - PROXIMAMENTE */}
             <div className="relative group cursor-default">
               <button className="text-sm font-medium text-gray-500 flex items-center gap-2 px-4 py-2 cursor-default hover:text-gray-400 transition-colors">
                 Empresas

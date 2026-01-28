@@ -213,81 +213,103 @@ Aprende a invertir tú también en: ${window.location.origin}`;
                         style={{
                             width: currentDim.width,
                             height: currentDim.height,
-                            backgroundColor: darkBg,
-                            borderColor: goldColor,
+                            backgroundColor: "#0F1115", // Darker, cleaner background
+                            backgroundImage: "radial-gradient(circle at center, #1a1f2e 0%, #0F1115 100%)",
                             color: white
                         }}
                         className={cn(
-                            "relative border-[16px] border-double shadow-2xl text-center flex flex-col items-center justify-between select-none font-sans shrink-0 bg-[#1a1f2e]",
+                            "relative shadow-2xl text-center flex flex-col items-center justify-between select-none font-sans shrink-0",
                             s.padding
                         )}
                     >
-                        {/* Watermark Dynamic Size */}
-                        <div className="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
-                            <Award className={s.watermarkSize} style={{ color: white }} />
+                        {/* Elegant Border */}
+                        <div className="absolute inset-4 border border-[#D4AF37]/30 pointer-events-none" />
+                        <div className="absolute inset-6 border border-[#D4AF37]/10 pointer-events-none" />
+
+                        {/* Corner Accents */}
+                        <div className="absolute top-4 left-4 w-16 h-16 border-t-2 border-l-2 border-[#D4AF37] pointer-events-none" />
+                        <div className="absolute top-4 right-4 w-16 h-16 border-t-2 border-r-2 border-[#D4AF37] pointer-events-none" />
+                        <div className="absolute bottom-4 left-4 w-16 h-16 border-b-2 border-l-2 border-[#D4AF37] pointer-events-none" />
+                        <div className="absolute bottom-4 right-4 w-16 h-16 border-b-2 border-r-2 border-[#D4AF37] pointer-events-none" />
+
+
+                        {/* Watermark */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none">
+                            <Logo />
                         </div>
 
                         <div className="relative z-10 flex flex-col items-center justify-between h-full w-full">
-                            {/* Main Content */}
-                            <div className="flex flex-col items-center w-full mt-2 flex-grow justify-center">
-                                <div className={cn("origin-center", s.logoScale)}>
+                            {/* Header */}
+                            <div className="flex flex-col items-center w-full mt-8 flex-grow justify-start pt-10">
+                                <div className={cn("origin-center mb-12", s.logoScale)}>
                                     <Logo />
                                 </div>
 
-                                <h2 style={{ color: goldColor }} className={cn("font-sans font-medium mb-2 uppercase tracking-[0.2em] leading-none", s.titleSize)}>
-                                    Certificado
+                                <h2 style={{ color: "#D4AF37", fontFamily: "Playfair Display, serif" }} className={cn("mb-4 uppercase tracking-[0.2em] leading-none font-medium", s.titleSize)}>
+                                    Certificado de Excelencia
                                 </h2>
-                                <p style={{ color: gray300 }} className={cn("font-light uppercase tracking-[0.3em] mb-6", s.labelSize)}>
-                                    de Finalización
+
+                                <p style={{ color: "#9ca3af" }} className={cn("font-light tracking-wide mb-8 text-sm uppercase", s.labelSize)}>
+                                    Este documento certifica que
                                 </p>
 
-                                <p style={{ color: gray400 }} className={cn("font-sans italic mb-4", s.labelSize)}>
-                                    Se otorga el presente reconocimiento a:
-                                </p>
-
-                                <h3 style={{ color: white, borderColor: 'rgba(212, 175, 55, 0.3)' }} className={cn(
-                                    "font-bold font-sans mb-6 pb-4 px-12 border-b-2 inline-block max-w-[90%] break-words leading-tight",
+                                <h3 style={{ color: "#ffffff", fontFamily: "Playfair Display, serif" }} className={cn(
+                                    "font-normal mb-8 pb-8 border-b border-[#D4AF37]/30 inline-block px-12 italic",
                                     s.studentSize
                                 )}>
                                     {studentName}
                                 </h3>
 
-                                <p style={{ color: gray400 }} className={cn("font-sans italic mb-4", s.labelSize)}>
-                                    Por haber completado satisfactoriamente el curso:
+                                <p style={{ color: "#9ca3af" }} className={cn("font-light tracking-wide mb-6 text-sm uppercase", s.labelSize)}>
+                                    Ha completado exitosamente el programa de
                                 </p>
 
-                                <h4 style={{ color: goldColor }} className={cn("font-bold max-w-3xl leading-snug mb-4 px-4", s.courseSize)}>
+                                <h4 style={{ color: "#ffffff" }} className={cn("font-bold max-w-4xl leading-snug mb-4 px-4 uppercase tracking-wider", s.courseSize)}>
                                     {courseName}
                                 </h4>
                             </div>
 
                             {/* Footer Content */}
-                            <div style={{ borderColor: gray500 }} className={cn(
-                                "flex w-full justify-between items-end border-t border-gray-700 w-full",
-                                s.footerPadding,
+                            <div className={cn(
+                                "flex w-full justify-between items-end w-full pb-12 px-12",
                                 s.footerMargin
                             )}>
-                                <div className="text-center flex-1 min-w-0">
-                                    <div className="flex flex-col items-center justify-end h-auto mb-2">
-                                        <p style={{ color: white }} className={cn("font-signature whitespace-nowrap", s.signatureSize)}>Lic. Francisco Castro</p>
+                                <div className="text-center w-64">
+                                    <div className="flex flex-col items-center justify-end h-auto mb-4">
+                                        {/* Signature Image or Font */}
+                                        <p style={{ color: "#D4AF37", fontFamily: "cursive" }} className={cn("text-2xl whitespace-nowrap mb-2")}>Francisco Castro</p>
                                     </div>
-                                    <div style={{ backgroundColor: gray500 }} className="h-[1px] w-[60%] mx-auto"></div>
-                                    <p style={{ color: gray500 }} className="mt-2 text-xs uppercase tracking-wider font-semibold">
-                                        Instructor
+                                    <div className="h-px w-full bg-[#D4AF37]/30 mx-auto"></div>
+                                    <p style={{ color: "#6b7280" }} className="mt-3 text-[10px] uppercase tracking-[0.2em] font-medium">
+                                        CEO & Founder
                                     </p>
                                 </div>
 
-                                <div className="shrink-0 px-4 pb-1">
-                                    <Award style={{ color: goldColor }} className="w-16 h-16 opacity-80" />
+                                <div className="shrink-0 px-4 pb-2 opacity-80">
+                                    {/* Seal */}
+                                    <div className="w-24 h-24 rounded-full border-2 border-[#D4AF37] flex items-center justify-center relative">
+                                        <div className="absolute inset-1 border border-[#D4AF37]/30 rounded-full" />
+                                        <Award style={{ color: "#D4AF37" }} className="w-10 h-10" />
+                                        <div className="absolute inset-0 rounded-full flex items-center justify-center">
+                                            <svg className="w-full h-full animate-spin-slow" viewBox="0 0 100 100">
+                                                <path id="curve" d="M 50 50 m -38 0 a 38 38 0 1 1 76 0 a 38 38 0 1 1 -76 0" fill="transparent" />
+                                                <text width="500">
+                                                    <textPath href="#curve" className="text-[10px] uppercase tracking-[0.18em] fill-[#D4AF37]">
+                                                        Aurora Academy • Aurora Academy •
+                                                    </textPath>
+                                                </text>
+                                            </svg>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div className="text-center flex-1 min-w-0">
-                                    <div className="flex flex-col items-center justify-end h-auto mb-2">
-                                        <p style={{ color: white }} className={cn("font-medium", s.signatureSize)}>{date}</p>
+                                <div className="text-center w-64">
+                                    <div className="flex flex-col items-center justify-end h-auto mb-4">
+                                        <p style={{ color: "#ffffff" }} className="text-xl font-light">{date}</p>
                                     </div>
-                                    <div style={{ backgroundColor: gray500 }} className="h-[1px] w-[60%] mx-auto"></div>
-                                    <p style={{ color: gray500 }} className="mt-2 text-xs uppercase tracking-wider font-semibold">
-                                        Fecha
+                                    <div className="h-px w-full bg-[#D4AF37]/30 mx-auto"></div>
+                                    <p style={{ color: "#6b7280" }} className="mt-3 text-[10px] uppercase tracking-[0.2em] font-medium">
+                                        Fecha de Emisión
                                     </p>
                                 </div>
                             </div>

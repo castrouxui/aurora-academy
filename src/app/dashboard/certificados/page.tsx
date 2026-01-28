@@ -9,18 +9,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { CertificateModal } from "@/components/certificates/CertificateModal";
 
-// Mock data (reuse logic from Courses page but filter for completed)
-// Ideally this would come from a dedicated API
-const MOCK_COURSES = [
-    {
-        id: "mock-2",
-        title: "Psicología del Inversor",
-        description: "Aprende a gestionar tus emociones y mantener la disciplina en tus operaciones.",
-        imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2670&auto=format&fit=crop",
-        progress: 100, // Completed
-        completedDate: "10 Enero 2026"
-    }
-];
+
 
 export default function CertificatesPage() {
     const { data: session } = useSession();
@@ -29,28 +18,24 @@ export default function CertificatesPage() {
     const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
     useEffect(() => {
-        // In a real app, fetch /api/my-courses?status=completed
-        // For now, we mock it or fetch all and filter
         async function fetchCourses() {
             try {
                 const res = await fetch("/api/my-courses");
                 if (res.ok) {
                     const data = await res.json();
                     const completed = data.filter((c: any) => c.progress === 100);
-                    // Combine with mock if empty to show example
-                    setCompletedCourses(completed.length > 0 ? completed : MOCK_COURSES);
+                    setCompletedCourses(completed);
                 } else {
-                    setCompletedCourses(MOCK_COURSES);
+                    setCompletedCourses([]);
                 }
             } catch (err) {
-                setCompletedCourses(MOCK_COURSES);
+                console.error("Failed to fetch courses for certificates", err);
+                setCompletedCourses([]);
             }
         }
 
         if (session?.user) {
             fetchCourses();
-        } else {
-            setCompletedCourses(MOCK_COURSES);
         }
     }, [session]);
 
