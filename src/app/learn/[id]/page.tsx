@@ -3,7 +3,7 @@ import { cn, getYouTubeId, formatDuration } from '@/lib/utils';
 import { notFound, redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { CoursePlayerClient } from "./CoursePlayerClient";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 
 export default async function CoursePlayerPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
