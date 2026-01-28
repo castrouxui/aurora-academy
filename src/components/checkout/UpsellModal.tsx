@@ -106,14 +106,14 @@ export function UpsellModal({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="bg-[#0B0F19] border-white/10 text-white p-0 overflow-hidden max-w-2xl">
                 {/* Header Banner */}
-                <div className="bg-gradient-to-r from-violet-600 to-indigo-600 p-6 text-center relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-4 opacity-10">
-                        <CheckCircle2 size={100} />
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-black text-white relative z-10 uppercase tracking-wide">
-                        {isSaving ? "¡OFERTA IMPERDIBLE!" : "¡ESPERÁ! HAY ALGO MEJOR"}
+                <div className="p-6 md:p-8 text-center relative overflow-hidden border-b border-white/10 bg-[#5D5CDE]/5">
+                    {/* Top gradient line */}
+                    <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#5D5CDE] to-transparent opacity-50"></div>
+
+                    <h2 className="text-xl md:text-2xl font-black text-white relative z-10 uppercase tracking-wide">
+                        {isSaving ? "¡OFERTA IMPERDIBLE!" : "RECOMENDACIÓN INTELIGENTE"}
                     </h2>
-                    <p className="text-white/90 font-medium mt-2 relative z-10">
+                    <p className="text-gray-400 font-medium mt-2 relative z-10 text-sm">
                         {isSaving
                             ? `Llevate TODO por menos dinero`
                             : `Por solo ${format(diff)} de diferencia...`
@@ -171,7 +171,7 @@ export function UpsellModal({
                             onClick={() => onUpgrade(recommendedBundle.id, recommendedBundle.title, recommendedBundle.price.toString())}
                             className="flex-[2] bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 text-base shadow-lg shadow-emerald-900/20 shiny-hover"
                         >
-                            ¡Quiero la Membresía!
+                            Quiero la Membresía
                         </Button>
                     </div>
                 </div>
