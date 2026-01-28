@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { TelegramReminder } from "@/components/dashboard/TelegramReminder";
 import { PromotionalBanner } from "@/components/dashboard/PromotionalBanner";
+import { QuoteOfTheWeek } from "@/components/dashboard/QuoteOfTheWeek";
 
 export default function StudentDashboard() {
     const { data: session } = useSession();
@@ -108,6 +109,8 @@ export default function StudentDashboard() {
                     Bienvenido a tu panel de aprendizaje. Aquí tienes un resumen de tu progreso.
                 </p>
             </div>
+
+            <QuoteOfTheWeek />
 
             {/* <TelegramReminder isVerified={session?.user?.telegramVerified || false} /> */}{/* DISABLED */}
 
