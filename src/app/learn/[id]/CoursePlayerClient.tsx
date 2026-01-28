@@ -263,46 +263,37 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                             <div className="min-h-[200px] pb-20 lg:pb-0">
                                 {activeTab === "description" && activeLesson && (
                                     <>
-                                        <div className="space-y-4">
-                                            <h2 className="text-xl lg:text-2xl font-bold">{activeLesson.title}</h2>
-                                            <p className="text-sm lg:text-base text-gray-400 leading-relaxed">
-                                                {activeLesson.description || "Sin descripción disponible para esta lección."}
-                                            </p>
-                                        </div>
+                                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+                                            <div className="space-y-4 flex-1">
+                                                <h2 className="text-xl lg:text-3xl font-bold text-white leading-tight">{activeLesson.title}</h2>
+                                                <p className="text-sm lg:text-base text-gray-400 leading-relaxed max-w-3xl">
+                                                    {activeLesson.description || "Sin descripción disponible para esta lección."}
+                                                </p>
+                                            </div>
 
-                                        {/* New Intuitive Completion UI */}
-                                        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-800/50 mt-6">
-                                            <div className="flex items-center gap-3">
-                                                <div className={cn(
-                                                    "h-12 w-12 rounded-full flex items-center justify-center transition-all shadow-lg",
+                                            <Button
+                                                onClick={() => handleToggleComplete(activeLesson.id, activeLesson.completed)}
+                                                variant={activeLesson.completed ? "outline" : "default"}
+                                                size="lg"
+                                                className={cn(
+                                                    "shrink-0 gap-2 transition-all font-bold h-12 px-6 rounded-xl border-2",
                                                     activeLesson.completed
-                                                        ? "bg-emerald-500/20 text-emerald-400 shadow-emerald-500/10"
-                                                        : "bg-gray-800 text-gray-500"
-                                                )}>
-                                                    {activeLesson.completed ? <CheckCircle size={24} className="animate-in zoom-in duration-300" /> : <MonitorPlay size={24} />}
-                                                </div>
-                                                <div>
-                                                    <p className="font-medium text-white">Estado de la clase</p>
-                                                    <p className={cn("text-sm transition-colors", activeLesson.completed ? "text-emerald-400" : "text-gray-400")}>
-                                                        {activeLesson.completed ? "¡Lección completada!" : "En progreso..."}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-center gap-3">
-                                                <label className="relative inline-flex items-center cursor-pointer group">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="sr-only peer"
-                                                        checked={activeLesson.completed}
-                                                        onChange={() => handleToggleComplete(activeLesson.id, activeLesson.completed)}
-                                                    />
-                                                    <div className="w-14 h-7 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-emerald-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-500"></div>
-                                                    <span className="ml-3 text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
-                                                        {activeLesson.completed ? "Marcada como vista" : "Marcar como vista"}
-                                                    </span>
-                                                </label>
-                                            </div>
+                                                        ? "border-emerald-500/50 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20"
+                                                        : "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white border-transparent shadow-lg shadow-indigo-500/20"
+                                                )}
+                                            >
+                                                {activeLesson.completed ? (
+                                                    <>
+                                                        <CheckCircle size={20} className="fill-current" />
+                                                        Completada
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <CheckCircle size={20} />
+                                                        Marcar como Vista
+                                                    </>
+                                                )}
+                                            </Button>
                                         </div>
                                     </>
 
