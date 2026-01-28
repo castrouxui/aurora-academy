@@ -13,7 +13,6 @@ export const PLANS = [
             "Valor Tiempo del Dinero: TNA, TEA"
         ],
         excludedFeatures: [
-            "Acceso a Comunidad de Inversores",
             "Acceso a Canal de Aurora Academy"
         ],
         tag: null,
@@ -35,9 +34,7 @@ export const PLANS = [
             "Futuros Financieros",
             "Acceso a Canal de Aurora Academy"
         ],
-        excludedFeatures: [
-            "Acceso a Comunidad de Inversores"
-        ],
+        excludedFeatures: [],
         tag: "EL MÁS BUSCADO",
         isRecommended: true
     },
@@ -45,7 +42,7 @@ export const PLANS = [
         // 3. Portfolio Manager
         title: "Portfolio Manager",
         price: "$149.900",
-        description: "La experiencia completa con networking profesional y acceso exclusivo a la comunidad de inversores.",
+        description: "La experiencia completa con networking profesional.",
         features: [
             "Todo lo del Plan Trader de Elite",
             <span key="new-course-pm" className="inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
@@ -55,8 +52,7 @@ export const PLANS = [
             "Análisis Fundamental & Cartera",
             "Dominando el Riesgo: Volatilidad",
             "Valuación Real: Beneficio vs. Caja",
-            "Acceso a Canal de Aurora Academy",
-            "Acceso a Comunidad de Inversores" // Moved from specialFeature
+            "Acceso a Canal de Aurora Academy"
         ],
         tag: null,
         isRecommended: false
