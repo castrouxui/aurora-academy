@@ -184,11 +184,9 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
         if (!isSeeking) {
             setPlayed(state.played);
             setPlayedSeconds(state.playedSeconds);
-
-            // Validate and call onProgress prop if exists (renamed for clarity in implementation plan, but using existing pattern)
-            // Actually, we'll add a specific prop for real-time updates if needed, or stick to onDuration?
-            // User requested real-time progress saving. We need to pass this up.
-            // Let's add a new prop `onProgressUpdate` to the interface first.
+            if (onProgressUpdate) {
+                onProgressUpdate(state.playedSeconds, duration);
+            }
         }
     };
 

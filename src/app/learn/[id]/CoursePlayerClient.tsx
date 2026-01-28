@@ -269,31 +269,43 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                                 {activeLesson.description || "Sin descripción disponible para esta lección."}
                                             </p>
                                         </div>
-                                        <div className="pt-6 flex items-center justify-end">
-                                            <Button
-                                                onClick={() => handleToggleComplete(activeLesson.id, activeLesson.completed)}
-                                                variant={activeLesson.completed ? "outline" : "default"}
-                                                className={cn(
-                                                    "gap-2 transition-all w-full sm:w-auto",
+
+                                        {/* New Intuitive Completion UI */}
+                                        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-800/50 mt-6">
+                                            <div className="flex items-center gap-3">
+                                                <div className={cn(
+                                                    "h-12 w-12 rounded-full flex items-center justify-center transition-all shadow-lg",
                                                     activeLesson.completed
-                                                        ? "border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10"
-                                                        : "bg-[#5D5CDE] text-white hover:bg-[#4B4AC0]"
-                                                )}
-                                            >
-                                                {activeLesson.completed ? (
-                                                    <>
-                                                        <CheckCircle size={18} />
-                                                        Completada
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <CheckCircle size={18} />
-                                                        Marcar como Vista
-                                                    </>
-                                                )}
-                                            </Button>
+                                                        ? "bg-emerald-500/20 text-emerald-400 shadow-emerald-500/10"
+                                                        : "bg-gray-800 text-gray-500"
+                                                )}>
+                                                    {activeLesson.completed ? <CheckCircle size={24} className="animate-in zoom-in duration-300" /> : <MonitorPlay size={24} />}
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium text-white">Estado de la clase</p>
+                                                    <p className={cn("text-sm transition-colors", activeLesson.completed ? "text-emerald-400" : "text-gray-400")}>
+                                                        {activeLesson.completed ? "¡Lección completada!" : "En progreso..."}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center gap-3">
+                                                <label className="relative inline-flex items-center cursor-pointer group">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="sr-only peer"
+                                                        checked={activeLesson.completed}
+                                                        onChange={() => handleToggleComplete(activeLesson.id, activeLesson.completed)}
+                                                    />
+                                                    <div className="w-14 h-7 bg-gray-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-emerald-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-emerald-500"></div>
+                                                    <span className="ml-3 text-sm font-medium text-gray-300 group-hover:text-white transition-colors">
+                                                        {activeLesson.completed ? "Marcada como vista" : "Marcar como vista"}
+                                                    </span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </>
+
                                 )}
                                 {activeTab === "resources" && activeLesson && (
                                     <div className="space-y-3">
@@ -468,12 +480,13 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                         ))}
                     </div>
                 </div>
-            </div>
+            </div >
 
             {/* Certificate Modal */}
-            <CertificateModal
+            < CertificateModal
                 isOpen={isCertificateOpen}
-                onClose={() => setIsCertificateOpen(false)}
+                onClose={() => setIsCertificateOpen(false)
+                }
                 courseName={course.title}
                 studentName={studentName}
                 date={completionDate}
