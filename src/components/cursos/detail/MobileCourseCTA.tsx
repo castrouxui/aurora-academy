@@ -91,14 +91,14 @@ export function MobileCourseCTA({
 
                     {hasAccess ? (
                         <Link href={`/learn/${courseId}`} className="flex-1">
-                            <Button className="w-full font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg h-12 rounded-lg">
+                            <Button className="w-full h-12 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover">
                                 Ver Curso
                             </Button>
                         </Link>
                     ) : (
                         <Button
                             onClick={handlePurchase}
-                            className="flex-[1.5] font-bold bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg h-12 rounded-lg"
+                            className="flex-[1.5] h-12 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
                         >
                             Comprar Ahora
                         </Button>

@@ -182,13 +182,13 @@ export function UpsellModal({
                         <Button
                             onClick={onContinue}
                             variant="ghost"
-                            className="flex-1 text-gray-400 hover:text-white hover:bg-white/10"
+                            className="flex-1 h-14 text-sm font-bold transition-all duration-300 rounded-xl bg-transparent border border-white/20 hover:bg-white hover:text-black text-white"
                         >
                             No, solo quiero el curso
                         </Button>
                         <Button
                             onClick={() => onUpgrade(recommendedBundle.id, recommendedBundle.title, recommendedBundle.price.toString())}
-                            className="flex-[2] bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-12 text-base shadow-lg shadow-emerald-900/20 shiny-hover"
+                            className="flex-[2] h-14 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
                         >
                             Quiero la Membresía
                         </Button>
