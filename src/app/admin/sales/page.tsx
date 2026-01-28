@@ -269,18 +269,18 @@ export default function AdminSalesPage() {
                 <Card className="bg-[#1F2937] border-gray-700">
                     <CardHeader><CardTitle className="text-white text-lg">Resumen de Actividad</CardTitle></CardHeader>
                     <CardContent>
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center p-3 rounded-lg bg-[#374151]/30">
-                                <span className="text-gray-300 text-sm">Aprobadas</span>
-                                <Badge variant="success">{sales.filter(s => s.status === 'approved').length}</Badge>
+                        <div className="grid grid-cols-3 gap-4 text-center">
+                            <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-[#374151]/10 border border-gray-700/50">
+                                <span className="text-emerald-400 font-bold text-2xl">{sales.filter(s => s.status === 'approved').length}</span>
+                                <span className="text-gray-400 text-xs mt-1">Aprobadas</span>
                             </div>
-                            <div className="flex justify-between items-center p-3 rounded-lg bg-[#374151]/30">
-                                <span className="text-gray-300 text-sm">Rechazadas</span>
-                                <Badge variant="destructive">{sales.filter(s => s.status === 'rejected').length}</Badge>
+                            <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-[#374151]/10 border border-gray-700/50">
+                                <span className="text-rose-400 font-bold text-2xl">{sales.filter(s => s.status === 'rejected').length}</span>
+                                <span className="text-gray-400 text-xs mt-1">Rechazadas</span>
                             </div>
-                            <div className="flex justify-between items-center p-3 rounded-lg bg-[#374151]/30">
-                                <span className="text-gray-300 text-sm">Pendientes</span>
-                                <Badge variant="warning">{sales.filter(s => s.status === 'pending').length}</Badge>
+                            <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-[#374151]/10 border border-gray-700/50">
+                                <span className="text-amber-400 font-bold text-2xl">{sales.filter(s => s.status === 'pending').length}</span>
+                                <span className="text-gray-400 text-xs mt-1">Pendientes</span>
                             </div>
                         </div>
                     </CardContent>
