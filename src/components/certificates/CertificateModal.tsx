@@ -245,15 +245,15 @@ Aprende a invertir tú también en: ${window.location.origin}`;
                                     <Logo />
                                 </div>
 
-                                <h2 style={{ color: "#D4AF37", fontFamily: "Playfair Display, serif" }} className={cn("mb-4 uppercase tracking-[0.2em] leading-none font-medium", s.titleSize)}>
-                                    Certificado de Excelencia
+                                <h2 style={{ color: "#D4AF37" }} className={cn("mb-4 uppercase tracking-[0.2em] leading-none font-medium", s.titleSize)}>
+                                    Certificado
                                 </h2>
 
                                 <p style={{ color: "#9ca3af" }} className={cn("font-light tracking-wide mb-8 text-sm uppercase", s.labelSize)}>
                                     Este documento certifica que
                                 </p>
 
-                                <h3 style={{ color: "#ffffff", fontFamily: "Playfair Display, serif" }} className={cn(
+                                <h3 style={{ color: "#ffffff" }} className={cn(
                                     "font-normal mb-8 pb-8 border-b border-[#D4AF37]/30 inline-block px-12 italic",
                                     s.studentSize
                                 )}>
@@ -277,7 +277,7 @@ Aprende a invertir tú también en: ${window.location.origin}`;
                                 <div className="text-center w-64">
                                     <div className="flex flex-col items-center justify-end h-auto mb-4">
                                         {/* Signature Image or Font */}
-                                        <p style={{ color: "#D4AF37", fontFamily: "cursive" }} className={cn("text-2xl whitespace-nowrap mb-2")}>Francisco Castro</p>
+                                        <p style={{ color: "#D4AF37" }} className={cn("text-2xl whitespace-nowrap mb-2")}>Lic. Francisco Castro</p>
                                     </div>
                                     <div className="h-px w-full bg-[#D4AF37]/30 mx-auto"></div>
                                     <p style={{ color: "#6b7280" }} className="mt-3 text-[10px] uppercase tracking-[0.2em] font-medium">

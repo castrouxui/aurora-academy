@@ -252,10 +252,10 @@ export default function StudentDashboard() {
                     <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/5 border-dashed">
                         <BookOpen className="mx-auto h-12 w-12 text-gray-600 mb-4" />
                         <h3 className="text-lg font-medium text-white mb-2">Aún no tienes cursos</h3>
-                        <p className="text-gray-400 mb-6 max-w-sm mx-auto">Explora nuestro catálogo y comienza tu camino como inversor hoy mismo.</p>
+                        <p className="text-gray-400 mb-6 max-w-sm mx-auto">Explora nuestros cursos y comienza tu camino como inversor hoy mismo.</p>
                         <Link href="/cursos">
                             <Button className="bg-[#5D5CDE] text-white hover:bg-[#4B4AC0]">
-                                Ver Catálogo
+                                Ver Cursos
                             </Button>
                         </Link>
                     </div>

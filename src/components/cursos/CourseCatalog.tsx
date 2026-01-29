@@ -113,7 +113,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
             <Container>
                 {showTitle && (
                     <div className="mb-12">
-                        <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-8">Catálogo de Cursos</h1>
+                        <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-8">Cursos</h1>
                     </div>
                 )}
 

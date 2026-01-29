@@ -95,7 +95,7 @@ export function CourseList() {
                 <div className="mt-16 text-center">
                     <Link href="/cursos">
                         <Button size="lg" className="h-14 px-10 rounded-full bg-[#1F2937] text-white hover:bg-black font-bold text-lg shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1">
-                            Explorar todo el catálogo
+                            Explorar todos los cursos
                         </Button>
                     </Link>
                 </div>

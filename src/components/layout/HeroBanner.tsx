@@ -35,7 +35,7 @@ export function HeroBanner() {
                         </Link>
                         <Link href="#courses" className="w-full sm:w-auto relative z-20">
                             <Button variant="outline" className="h-14 px-8 sm:px-10 text-sm font-bold w-full sm:w-auto text-white border border-white/20 bg-white/5 hover:bg-white hover:text-black rounded-xl backdrop-blur-sm transition-all active:scale-95">
-                                Ver catálogo de cursos
+                                Ver cursos
                             </Button>
                         </Link>
                     </div>

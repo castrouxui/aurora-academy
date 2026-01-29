@@ -203,7 +203,7 @@ export default function MyCoursesPage() {
                         <p className="text-gray-400 mb-6">
                             {activeTab === 'completed'
                                 ? "¡Sigue aprendiendo para conseguir tus certificados!"
-                                : "Explora nuestro catálogo y comienza a aprender hoy mismo."}
+                                : "Explora nuestros cursos y comienza a aprender hoy mismo."}
                         </p>
                         <Link href="/dashboard/explore">
                             <Button className="bg-primary hover:bg-primary/90">Explorar Cursos</Button>

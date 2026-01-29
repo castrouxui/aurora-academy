@@ -76,7 +76,7 @@ export function Navbar() {
 
             {/* 2. Cursos */}
             <Link href="/cursos" className={getLinkClass("/cursos")}>
-              Catálogo
+              Cursos
             </Link>
 
             {/* 3. Empresas - PROXIMAMENTE */}

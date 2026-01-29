@@ -692,7 +692,7 @@ export default function CourseEditorPage() {
                                     <ImageIcon size={20} className="text-[#5D5CDE]" /> Portada del Curso
                                 </h3>
                                 <p className="text-sm text-gray-400 leading-relaxed">
-                                    Esta imagen se mostrará en el catálogo de cursos y en la cabecera de la página del curso.
+                                    Esta imagen se mostrará en el listado de cursos y en la cabecera de la página del curso.
                                     <br />Recomendado: 1920x1080px (16:9). Formatos: PNG, JPG, WebP.
                                 </p>
                             </div>
