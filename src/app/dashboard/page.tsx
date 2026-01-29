@@ -64,6 +64,11 @@ export default function StudentDashboard() {
             }
         }
         fetchData();
+        useEffect(() => {
+            if (session?.user?.role === "ADMIN") {
+                window.location.href = "/admin";
+            }
+        }, [session]);
     }, [session]);
 
     if (loading) {

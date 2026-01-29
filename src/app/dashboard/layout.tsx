@@ -65,7 +65,7 @@ export default function DashboardLayout({
     const navigation = isAdmin ? adminNav : studentNav;
 
     const isStudent = session.user.role === "ESTUDIANTE";
-    const needsTelegram = false; // DISABLED: Telegram requirement is turned off per user request.
+    const needsTelegram = false; // DISABLED GLOBAL FOR NOW
 
     return (
         <div className="min-h-screen bg-[#0B0F19] flex">
