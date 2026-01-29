@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Bell, BellDot, X, Check, Trash2, ExternalLink } from "lucide-react";
 import {
     Popover,
@@ -34,7 +34,7 @@ export function NotificationBell({ side = "bottom", align = "end" }: Notificatio
     const [unreadCount, setUnreadCount] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
 
-    const fetchNotifications = async () => {
+    const fetchNotifications = useCallback(async () => {
         try {
             const res = await fetch("/api/notifications");
             if (res.ok) {
@@ -45,14 +45,14 @@ export function NotificationBell({ side = "bottom", align = "end" }: Notificatio
         } catch (error) {
             console.error("Error fetching notifications:", error);
         }
-    };
+    }, []);
 
     useEffect(() => {
         fetchNotifications();
         // Poll every 60 seconds
         const interval = setInterval(fetchNotifications, 60000);
         return () => clearInterval(interval);
-    }, []);
+    }, [fetchNotifications]);
 
     const markAsRead = async (id?: string) => {
         try {

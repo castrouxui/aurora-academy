@@ -18,7 +18,8 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
                     lessons: {
                         orderBy: { position: 'asc' },
                         include: {
-                            resources: true
+                            resources: true,
+                            quiz: true
                         }
                     }
                 }
@@ -95,7 +96,12 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
                 type: "video" as const,
                 current: false,
                 videoUrl: lesson.videoUrl || "",
-                resources: lesson.resources || []
+                resources: lesson.resources || [],
+                quiz: lesson.quiz ? {
+                    question: lesson.quiz.question,
+                    options: lesson.quiz.options,
+                    correctOption: lesson.quiz.correctOption
+                } : null
             }))
         }))
     };

@@ -1,4 +1,5 @@
 import { Container } from "@/components/layout/Container";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MoveRight, Bitcoin, TrendingUp, DollarSign } from "lucide-react";
 
@@ -34,10 +35,11 @@ export function StatsStrip() {
                                 {[1, 2, 3, 4].map((i) => (
                                     <div key={i} className="w-12 h-12 rounded-full border-2 border-black overflow-hidden relative bg-gray-800">
                                         {/* Using generic placeholders for demo */}
-                                        <img
+                                        <Image
                                             src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`}
                                             alt="Student"
-                                            className="w-full h-full object-cover"
+                                            fill
+                                            className="object-cover"
                                         />
                                     </div>
                                 ))}

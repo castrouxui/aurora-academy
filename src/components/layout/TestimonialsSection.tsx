@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import { Container } from "@/components/layout/Container";
-import { Quote, Star } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface Testimonial {

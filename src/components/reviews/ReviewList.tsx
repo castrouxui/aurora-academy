@@ -1,4 +1,5 @@
 import { Star, User } from "lucide-react";
+import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -28,9 +29,14 @@ export function ReviewList({ reviews }: { reviews: Review[] }) {
                 <div key={review.id} className="bg-white/5 border border-white/5 rounded-xl p-5 hover:border-white/10 transition-colors">
                     <div className="flex items-start justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-[#5D5CDE]/10 flex items-center justify-center overflow-hidden border border-white/10">
+                            <div className="w-10 h-10 rounded-full bg-[#5D5CDE]/10 flex items-center justify-center overflow-hidden border border-white/10 relative">
                                 {review.user.image ? (
-                                    <img src={review.user.image} alt={review.user.name || "User"} className="w-full h-full object-cover" />
+                                    <Image
+                                        src={review.user.image}
+                                        alt={review.user.name || "User"}
+                                        fill
+                                        className="object-cover"
+                                    />
                                 ) : (
                                     <User className="text-[#5D5CDE]" size={20} />
                                 )}

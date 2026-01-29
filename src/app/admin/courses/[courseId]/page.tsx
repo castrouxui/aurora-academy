@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Upload, X, Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Video, FileText, MoreVertical, Link as LinkIcon, Image as ImageIcon, CheckCircle, AlertCircle, Loader2, FolderPlus, ArrowLeft, Layers, Globe, Eye, EyeOff, UploadCloud, BarChart, Tag, DollarSign, FileVideo, File as FileIcon, Save, Send } from "lucide-react";
+import { Upload, X, Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Video, FileText, MoreVertical, Link as LinkIcon, Image as ImageIcon, CheckCircle, AlertCircle, Loader2, FolderPlus, ArrowLeft, Layers, Globe, Eye, EyeOff, UploadCloud, BarChart, Tag, DollarSign, FileVideo, File as FileIcon, Save, Send, BrainCircuit, Check, Circle } from "lucide-react";
 
 import { toast } from "sonner";
 
@@ -43,6 +43,7 @@ interface Lesson {
     published: boolean;
     position: number;
     resources: { id: string; title: string; url: string; type: string }[];
+    quiz?: { id: string; question: string; options: string[]; correctOption: number } | null;
 }
 
 interface Module {
@@ -95,6 +96,12 @@ export default function CourseEditorPage() {
     const [resourceTitle, setResourceTitle] = useState("");
     const [resourceUrl, setResourceUrl] = useState("");
     const [isAddingResource, setIsAddingResource] = useState(false);
+
+    // Quiz State
+    const [quizQuestion, setQuizQuestion] = useState("");
+    const [quizOptions, setQuizOptions] = useState<string[]>(["", "", "", ""]);
+    const [quizCorrectOption, setQuizCorrectOption] = useState(0);
+    const [isSubmittingQuiz, setIsSubmittingQuiz] = useState(false);
 
     // Upload State
     const [isUploading, setIsUploading] = useState(false);
@@ -531,8 +538,12 @@ export default function CourseEditorPage() {
         setLessonTitle("");
         setLessonUrl("");
         setLessonDesc("");
-        setResourceTitle(""); // Clear resource state
-        setResourceUrl("");   // Clear resource state
+        setResourceTitle("");
+        setResourceUrl("");
+        // Clear Quiz
+        setQuizQuestion("");
+        setQuizOptions(["", "", "", ""]);
+        setQuizCorrectOption(0);
         setIsAddLessonOpen(true);
     };
 
@@ -542,8 +553,19 @@ export default function CourseEditorPage() {
         setLessonTitle(lesson.title);
         setLessonUrl(lesson.videoUrl || "");
         setLessonDesc(lesson.description || "");
-        setResourceTitle(""); // Clear resource state
-        setResourceUrl("");   // Clear resource state
+        setResourceTitle("");
+        setResourceUrl("");
+
+        // Set Quiz
+        if (lesson.quiz) {
+            setQuizQuestion(lesson.quiz.question);
+            setQuizOptions(lesson.quiz.options.length >= 2 ? lesson.quiz.options : ["", "", "", ""]);
+            setQuizCorrectOption(lesson.quiz.correctOption);
+        } else {
+            setQuizQuestion("");
+            setQuizOptions(["", "", "", ""]);
+            setQuizCorrectOption(0);
+        }
         setIsAddLessonOpen(true);
     };
 
@@ -580,6 +602,63 @@ export default function CourseEditorPage() {
             if (res.ok) fetchCourse();
         } catch (error) {
             console.error(error);
+        }
+    };
+
+    const handleSaveQuiz = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!activeLessonId) return;
+
+        // Validation
+        if (!quizQuestion.trim()) return toast.error("La pregunta es requerida");
+        if (quizOptions.some(opt => !opt.trim())) return toast.error("Completa todas las opciones");
+
+        setIsSubmittingQuiz(true);
+        try {
+            const res = await fetch(`/api/lessons/${activeLessonId}/quiz`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    question: quizQuestion,
+                    options: quizOptions,
+                    correctOption: quizCorrectOption
+                })
+            });
+
+            if (res.ok) {
+                toast.success("Quiz guardado correctamente");
+                fetchCourse();
+            } else {
+                toast.error("Error al guardar el quiz");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error al guardar el quiz");
+        } finally {
+            setIsSubmittingQuiz(false);
+        }
+    };
+
+    const handleDeleteQuiz = async () => {
+        if (!activeLessonId) return;
+        if (!confirm("¿Eliminar la pregunta de esta clase?")) return;
+
+        setIsSubmittingQuiz(true);
+        try {
+            const res = await fetch(`/api/lessons/${activeLessonId}/quiz`, {
+                method: "DELETE"
+            });
+            if (res.ok) {
+                toast.success("Quiz eliminado");
+                setQuizQuestion("");
+                setQuizOptions(["", "", "", ""]);
+                setQuizCorrectOption(0);
+                fetchCourse();
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsSubmittingQuiz(false);
         }
     };
 
@@ -953,6 +1032,13 @@ export default function CourseEditorPage() {
                                             >
                                                 Recursos Adicionales
                                             </TabsTrigger>
+                                            <TabsTrigger
+                                                value="quiz"
+                                                disabled={!activeLessonId}
+                                                className="h-12 rounded-none border-b-2 border-transparent data-[state=active]:border-[#5D5CDE] data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 text-gray-400 data-[state=active]:text-white font-medium bg-transparent disabled:opacity-30"
+                                            >
+                                                Cuestionario (Quiz)
+                                            </TabsTrigger>
                                         </TabsList>
                                     </div>
 
@@ -1073,7 +1159,7 @@ export default function CourseEditorPage() {
                                                                     />
                                                                 </div>
                                                                 <p className="text-[10px] text-gray-500">
-                                                                    Tip: Para videos privados de YouTube, usa la opción "No listado" (Unlisted).
+                                                                    Tip: Para videos privados de YouTube, usa la opción &quot;No listado&quot; (Unlisted).
                                                                 </p>
                                                             </div>
 
@@ -1213,6 +1299,91 @@ export default function CourseEditorPage() {
                                                         className="h-[76px] w-12 bg-[#5D5CDE]/10 hover:bg-[#5D5CDE]/20 border border-[#5D5CDE]/20 text-[#5D5CDE] rounded-xl flex items-center justify-center"
                                                     >
                                                         {isAddingResource ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus size={20} />}
+                                                    </Button>
+                                                </div>
+                                            </div>
+
+                                        </TabsContent>
+
+                                        <TabsContent value="quiz" className="p-6 space-y-6 mt-0">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div>
+                                                    <h3 className="text-sm font-medium text-white mb-1">Pregunta de Repaso</h3>
+                                                    <p className="text-xs text-gray-500">El alumno deberá responder esto para completar la clase.</p>
+                                                </div>
+                                                {/* Badge or Status */}
+                                                {course?.modules
+                                                    .find(m => m.id === activeModuleId)
+                                                    ?.lessons.find(l => l.id === activeLessonId)
+                                                    ?.quiz ? (
+                                                    <span className="flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                                                        <BrainCircuit size={12} /> Quiz Activo
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-[10px] text-gray-500 bg-[#1a1f2e] px-2 py-0.5 rounded border border-gray-800">
+                                                        Sin pregunta
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <div className="space-y-4 bg-[#1a1f2e]/50 p-6 rounded-2xl border border-gray-800">
+                                                <div className="space-y-2">
+                                                    <Label className="text-xs font-medium text-gray-300">Pregunta</Label>
+                                                    <Input
+                                                        value={quizQuestion}
+                                                        onChange={(e) => setQuizQuestion(e.target.value)}
+                                                        placeholder="Ej: ¿Qué patrón de velas indica reversión alcista?"
+                                                        className="bg-[#0b0e14] border-gray-700 focus:border-[#5D5CDE]"
+                                                    />
+                                                </div>
+
+                                                <div className="space-y-3">
+                                                    <Label className="text-xs font-medium text-gray-300">Opciones de Respuesta</Label>
+                                                    <div className="space-y-2">
+                                                        {quizOptions.map((opt, idx) => (
+                                                            <div key={idx} className="flex items-center gap-3">
+                                                                <div
+                                                                    onClick={() => setQuizCorrectOption(idx)}
+                                                                    className={`w-5 h-5 rounded-full border flex items-center justify-center cursor-pointer transition-colors ${quizCorrectOption === idx ? 'border-[#5D5CDE] bg-[#5D5CDE]' : 'border-gray-600 hover:border-gray-500'}`}
+                                                                >
+                                                                    {quizCorrectOption === idx && <Check size={12} className="text-white" />}
+                                                                </div>
+                                                                <Input
+                                                                    value={opt}
+                                                                    onChange={(e) => {
+                                                                        const newOpts = [...quizOptions];
+                                                                        newOpts[idx] = e.target.value;
+                                                                        setQuizOptions(newOpts);
+                                                                    }}
+                                                                    placeholder={`Opción ${idx + 1}`}
+                                                                    className={`bg-[#0b0e14] border-gray-700 h-9 text-sm focus:border-[#5D5CDE] ${quizCorrectOption === idx ? 'ring-1 ring-[#5D5CDE] border-[#5D5CDE]' : ''}`}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    <p className="text-[10px] text-gray-500 ml-8">* Marca la casilla de la opción correcta.</p>
+                                                </div>
+
+                                                <div className="pt-4 flex justify-between items-center border-t border-gray-700/50">
+                                                    <Button
+                                                        type="button"
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        disabled={!quizQuestion && !quizOptions.some(o => o)}
+                                                        onClick={handleDeleteQuiz}
+                                                        className="text-red-400 hover:text-red-300 hover:bg-red-400/10 text-xs h-8"
+                                                    >
+                                                        Eliminar Quiz
+                                                    </Button>
+
+                                                    <Button
+                                                        type="button"
+                                                        onClick={handleSaveQuiz}
+                                                        disabled={isSubmittingQuiz}
+                                                        className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-xs h-8"
+                                                    >
+                                                        {isSubmittingQuiz ? <Loader2 size={12} className="animate-spin mr-1" /> : <Save size={12} className="mr-1" />}
+                                                        Guardar Quiz
                                                     </Button>
                                                 </div>
                                             </div>

@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { Play, Pause, Volume2, VolumeX, Loader2, Settings, Lock, AlertCircle, Maximize, Minimize } from "lucide-react";
+import { Play, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn, getYouTubeId } from '@/lib/utils';
+import { getYouTubeId } from '@/lib/utils';
 import { CustomControls } from "./CustomControls";
 
 
