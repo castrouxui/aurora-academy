@@ -55,14 +55,14 @@ export default function MyCoursesPage() {
                 const res = await fetch("/api/my-courses");
                 if (res.ok) {
                     const data = await res.json();
-                    setCourses(data.length > 0 ? data : MOCK_COURSES);
+                    setCourses(data);
                 } else {
-                    console.warn("API Error, using mock data");
-                    setCourses(MOCK_COURSES);
+                    console.warn("API Error");
+                    setCourses([]);
                 }
             } catch (error) {
-                console.error("Fetch error, using mock data", error);
-                setCourses(MOCK_COURSES);
+                console.error("Fetch error", error);
+                setCourses([]);
             } finally {
                 setLoading(false);
             }
@@ -99,7 +99,7 @@ export default function MyCoursesPage() {
         if (session?.user) {
             verifyPayment().then(() => fetchCourses());
         } else {
-            setCourses(MOCK_COURSES);
+            setCourses([]);
             setLoading(false);
         }
     }, [session]);
