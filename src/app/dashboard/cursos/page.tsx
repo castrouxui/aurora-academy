@@ -226,14 +226,30 @@ export default function MyCoursesPage() {
                                             </Button>
                                         </Link>
                                     </div>
-                                    {/* Certificate Lock Badge */}
+                                    {/* Status Badge */}
                                     <div className="absolute top-2 right-2">
                                         <div className={`backdrop-blur-md px-2 py-1 rounded-full text-[10px] font-medium border flex items-center gap-1 ${course.progress === 100
                                             ? 'bg-green-500/20 border-green-500/50 text-green-300'
-                                            : 'bg-black/60 border-gray-600/50 text-gray-400'
+                                            : course.progress > 0
+                                                ? 'bg-blue-500/20 border-blue-500/50 text-blue-300'
+                                                : 'bg-black/60 border-gray-600/50 text-gray-400'
                                             }`}>
-                                            {course.progress === 100 ? <Trophy size={12} /> : <Lock size={12} />}
-                                            {course.progress === 100 ? 'Certificado' : 'Bloqueado'}
+                                            {course.progress === 100 ? (
+                                                <>
+                                                    <Trophy size={12} />
+                                                    Certificado
+                                                </>
+                                            ) : course.progress > 0 ? (
+                                                <>
+                                                    <PlayCircle size={12} />
+                                                    En Curso
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <BookOpen size={12} />
+                                                    Sin Empezar
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

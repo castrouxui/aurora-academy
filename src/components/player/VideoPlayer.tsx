@@ -207,38 +207,58 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
             />
 
             <div className="absolute inset-0 z-0">
-                <ReactPlayer
-                    key={url}
-                    ref={playerRef}
-                    url={getPlayableUrl(url)}
-                    width="100%"
-                    height="100%"
-                    playing={isPlaying}
-                    volume={volume}
-                    muted={muted}
-                    playbackRate={playbackRate}
-                    onProgress={(state: any) => {
-                        handleProgress(state);
-                        if (onDuration) {
-                            // Hack: passing progress via a custom callback if needed, 
-                            // but better to add a dedicated prop in previous step.
-                            // I will add onProgressUpdate prop in the interface update below.
-                        }
-                    }}
-                    onDuration={(d: number) => {
-                        setDuration(d);
-                        setIsLoading(false);
-                        if (onDuration) onDuration(d);
-                    }}
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
-                    // ... config
-                    playsinline={true}
-                    onError={handleError}
-                    onReady={() => setIsLoading(false)}
-                    onStart={() => setIsLoading(false)}
-                    onEnded={onComplete}
-                />
+                {isLocked ? (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-gray-900/90 backdrop-blur-sm z-50">
+                        <div className="bg-gray-800 p-4 rounded-full mb-4 shadow-lg shadow-black/50">
+                            <Lock className="w-10 h-10 text-gray-400" />
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">Contenido Bloqueado</h3>
+                        <p className="text-gray-400 text-sm max-w-xs text-center mb-6">
+                            Adquiere este curso para acceder a todas las lecciones y recursos.
+                        </p>
+                        {onPurchase && (
+                            <Button onClick={onPurchase} className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold">
+                                Comprar Curso
+                            </Button>
+                        )}
+                    </div>
+                ) : (
+                    <ReactPlayer
+                        key={url}
+                        ref={playerRef}
+                        url={getPlayableUrl(url)}
+                        width="100%"
+                        height="100%"
+                        playing={isPlaying}
+                        volume={volume}
+                        muted={muted}
+                        playbackRate={playbackRate}
+                        onProgress={(state: any) => {
+                            handleProgress(state);
+                            // eslint-disable-next-line
+                            if (onDuration) {
+                                // Hack: passing progress via a custom callback if needed
+                            }
+                        }}
+                        onDuration={(d: number) => {
+                            setDuration(d);
+                            setIsLoading(false);
+                            if (onDuration) onDuration(d);
+                        }}
+                        onPlay={() => setIsPlaying(true)}
+                        onPause={() => setIsPlaying(false)}
+                        config={{
+                            youtube: {
+                                playerVars: { showinfo: 0, rel: 0, modestbranding: 1 }
+                            }
+                        }}
+                        playsinline={true}
+                        onError={handleError}
+                        onReady={() => setIsLoading(false)}
+                        onStart={() => setIsLoading(false)}
+                        onEnded={onComplete}
+                    />
+                )}
             </div>
 
             {/* Custom Controls */}
