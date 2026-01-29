@@ -1,8 +1,10 @@
 
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
     try {
@@ -11,7 +13,7 @@ export async function GET() {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const lessons = await db.lesson.findMany({
+        const lessons = await prisma.lesson.findMany({
             where: {
                 videoUrl: {
                     not: null
