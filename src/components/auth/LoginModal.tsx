@@ -65,7 +65,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: L
                 // Force a hard navigation to ensure session cookie is picked up immediately
                 if (redirectUrl) {
                     window.location.href = redirectUrl;
-                } else if (email === "admin@aurora.com") {
+                } else if (email === "admin@aurora.com" || email === "aurora@admin.com") {
                     window.location.href = "/admin";
                 } else {
                     window.location.href = "/dashboard";
