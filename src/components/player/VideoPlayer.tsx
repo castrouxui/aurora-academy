@@ -144,39 +144,53 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
         }
     };
 
+    const [retryAttempted, setRetryAttempted] = useState(false);
+
+    // Initial URL processing
+    const processUrl = useCallback((rawUrl: string) => {
+        if (!rawUrl) return "";
+        let finalUrl = rawUrl;
+
+        // Check Youtube
+        const youtubeId = getYouTubeId(rawUrl);
+        if (youtubeId) {
+            return `https://www.youtube.com/watch?v=${youtubeId}`;
+        }
+
+        // UploadThing Fix (Only apply if we haven't failed yet)
+        if (rawUrl.includes("utfs.io") && !retryAttempted) {
+            finalUrl = rawUrl.replace("utfs.io", "ovtcwtlzxz.ufs.sh");
+        }
+
+        // Add format hint
+        if ((finalUrl.includes("utfs.io") || finalUrl.includes("ufs.sh")) && !finalUrl.endsWith(".mp4")) {
+            return `${finalUrl}#.mp4`;
+        }
+
+        return finalUrl;
+    }, [retryAttempted]);
+
+    const [playableUrl, setPlayableUrl] = useState(processUrl(url));
+
+    // Update URL when prop changes or retry state changes
+    useEffect(() => {
+        setPlayableUrl(processUrl(url));
+    }, [url, processUrl]);
+
     const handleError = (e: any) => {
         console.error("Video Error:", e);
+
+        // Retry logic: If we modified the URL (e.g. ufs.sh replacement), try the original
+        if (!retryAttempted && url.includes("utfs.io")) {
+            console.log("Retrying with original URL...");
+            setRetryAttempted(true);
+            setHasError(false);
+            setIsLoading(true);
+            return; // Effect will trigger re-calculation of playableUrl
+        }
+
         setHasError(true);
         setIsLoading(false);
-    };
-
-    const getPlayableUrl = (originalUrl: string) => {
-        if (!originalUrl) return "";
-
-        console.log("[VideoPlayer] Processing URL:", originalUrl);
-
-        // Check if it's a YouTube video first
-        const youtubeId = getYouTubeId(originalUrl);
-        if (youtubeId) {
-            const ytUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
-            console.log("[VideoPlayer] Detected YouTube ID:", youtubeId, "->", ytUrl);
-            return ytUrl;
-        }
-
-        let url = originalUrl;
-
-        // Fix for 404s: Replace generic utfs.io with app-specific domain
-        if (url.includes("utfs.io")) {
-            url = url.replace("utfs.io", "ovtcwtlzxz.ufs.sh");
-        }
-
-        // Add format hint for ReactPlayer
-        if ((url.includes("utfs.io") || url.includes("ufs.sh")) && !url.endsWith(".mp4")) {
-            return `${url}#.mp4`;
-        }
-
-        console.log("[VideoPlayer] Final Playable URL:", url);
-        return url;
     };
 
     const handleProgress = (state: { played: number; playedSeconds: number }) => {
@@ -224,9 +238,9 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     </div>
                 ) : (
                     <ReactPlayer
-                        key={url}
+                        key={playableUrl} // Force remount on retry
                         ref={playerRef}
-                        url={getPlayableUrl(url)}
+                        url={playableUrl}
                         width="100%"
                         height="100%"
                         playing={isPlaying}
