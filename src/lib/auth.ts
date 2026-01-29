@@ -24,13 +24,13 @@ export const authOptions: AuthOptions = {
 
                 const { email, password, isRegister } = credentials;
 
-                // EMERGENCY BYPASS: Access for admin@aurora.com
-                if (email === "admin@aurora.com" && password === "admin123") {
-                    console.log("[AUTH] Emergency bypass triggered for admin@aurora.com");
+                // EMERGENCY BYPASS: Access for admin@aurora.com OR aurora@admin.com
+                if ((email === "admin@aurora.com" || email === "aurora@admin.com") && password === "admin123") {
+                    console.log(`[AUTH] Emergency bypass triggered for ${email}`);
                     return {
                         id: "emergency-admin",
                         name: "Admin Aurora",
-                        email: "admin@aurora.com",
+                        email: email,
                         role: "ADMIN" as any,
                         image: "https://ui-avatars.com/api/?name=Admin+Aurora&background=0D8ABC&color=fff"
                     };
