@@ -95,8 +95,9 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
                 lastPlayedTime: progressMap.get(lesson.id)?.lastPlayedTime || 0,
                 type: "video" as const,
                 current: false,
-                videoUrl: lesson.videoUrl || "",
-                resources: lesson.resources || [],
+                // SECURITY: Only send video URL and resources if user has access
+                videoUrl: isAccess ? (lesson.videoUrl || "") : "",
+                resources: isAccess ? (lesson.resources || []) : [],
                 quiz: lesson.quiz ? {
                     question: lesson.quiz.question,
                     options: lesson.quiz.options,

@@ -75,10 +75,12 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
         .find(l => l.id === activeLessonId);
 
     // Determines if CURRENTLY VIEWING lesson is locked
-    const isCurrentLessonLocked = !isAccess && activeLessonId !== course.modules[0]?.lessons[0]?.id;
+    // Strict Mode: If no access, EVERYTHING is locked.
+    const isCurrentLessonLocked = !isAccess;
 
-    // Determines if PREVIEW MODE applies (User has NO access AND it is the first lesson)
-    const isPreviewMode = !isAccess && activeLessonId === course.modules[0]?.lessons[0]?.id;
+    // Determines if PREVIEW MODE applies
+    // Disabled: User requested no access for unpaid users.
+    const isPreviewMode = false;
 
     const completionDate = new Date().toLocaleDateString();
 
