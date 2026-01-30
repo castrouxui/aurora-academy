@@ -162,30 +162,30 @@ export default function MyCoursesPage() {
                         <p className="text-gray-400">Gestiona el progreso de tus cursos.</p>
                     </div>
 
-                    <div className="grid grid-cols-3 md:flex gap-1 md:gap-2 bg-[#1F2937] p-1 rounded-lg w-full md:w-auto">
+                    <div className="flex overflow-x-auto md:overflow-visible gap-2 bg-[#1F2937] p-1 rounded-lg w-full md:w-auto scrollbar-hide scroll-smooth">
                         <Button
                             variant="ghost"
                             size="sm"
-                            className={`w-full md:w-auto ${activeTab === 'not-started' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
+                            className={`flex-shrink-0 ${activeTab === 'not-started' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
                             onClick={() => setActiveTab('not-started')}
                         >
-                            <span className="truncate">Sin Empezar</span>
+                            Sin Empezar
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
-                            className={`w-full md:w-auto ${activeTab === 'in-progress' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
+                            className={`flex-shrink-0 ${activeTab === 'in-progress' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
                             onClick={() => setActiveTab('in-progress')}
                         >
-                            <span className="truncate">En Progreso</span>
+                            En Progreso
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
-                            className={`w-full md:w-auto ${activeTab === 'completed' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
+                            className={`flex-shrink-0 ${activeTab === 'completed' ? 'bg-[#374151] text-white' : 'text-gray-400 hover:text-white'}`}
                             onClick={() => setActiveTab('completed')}
                         >
-                            <span className="truncate">Completados</span>
+                            Completados
                         </Button>
                     </div>
                 </div>
