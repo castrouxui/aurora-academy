@@ -23,7 +23,9 @@ export async function POST(req: Request) {
             return new NextResponse("Not Found", { status: 404 });
         }
 
-        if (Number(course.price) > 0) {
+        const isFree = Number(course.price) === 0 || ((course as any).discount && (course as any).discount === 100);
+
+        if (!isFree) {
             return new NextResponse("Course is not free", { status: 403 });
         }
 

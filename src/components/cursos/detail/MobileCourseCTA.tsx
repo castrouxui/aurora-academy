@@ -77,7 +77,7 @@ export function MobileCourseCTA({
 
             if (res.ok) {
                 toast.success("¡Inscripción exitosa!");
-                router.push(`/learn/${courseId}`);
+                toast.success("¡Inscripción exitosa!");
                 router.refresh();
             } else {
                 const data = await res.json();
@@ -145,7 +145,7 @@ export function MobileCourseCTA({
                             disabled={isEnrolling}
                             className="flex-[1.5] h-12 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover flex items-center justify-center gap-2"
                         >
-                            {isEnrolling ? <Loader2 className="animate-spin" /> : "Inscribirse Gratis"}
+                            {isEnrolling ? <Loader2 className="animate-spin" /> : "Obtener Oferta"}
                         </Button>
                     ) : (
                         <Button

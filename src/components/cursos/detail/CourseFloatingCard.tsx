@@ -94,8 +94,8 @@ export function CourseFloatingCard({
 
             if (res.ok) {
                 toast.success("¡Inscripción exitosa!");
-                router.push(`/learn/${courseId}`);
-                router.refresh();
+                toast.success("¡Inscripción exitosa!");
+                router.refresh(); // Just refresh to update UI state
             } else {
                 const data = await res.json();
                 toast.error(data.message || "Error al inscribirse");
@@ -203,7 +203,7 @@ export function CourseFloatingCard({
                                 disabled={isEnrolling}
                                 className="w-full h-14 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover flex items-center justify-center gap-2"
                             >
-                                {isEnrolling ? <Loader2 className="animate-spin" /> : "Inscribirse Gratis"}
+                                {isEnrolling ? <Loader2 className="animate-spin" /> : "Obtener Oferta"}
                             </Button>
                         ) : (
                             <Button
