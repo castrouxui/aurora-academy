@@ -11,7 +11,7 @@ export async function GET() {
     if (!session?.user) return new NextResponse("Unauthorized", { status: 401 });
 
     try {
-        const subscription = await prisma.subscription.findFirst({
+        const subscriptions = await prisma.subscription.findMany({
             where: {
                 userId: session.user.id,
                 status: { in: ['authorized', 'pending', 'paused', 'cancelled'] }
@@ -26,6 +26,9 @@ export async function GET() {
             orderBy: { createdAt: 'desc' }
         });
 
+        // Current Logic: Prioritize 'authorized' subscriptions, otherwise take the most recent one.
+        const subscription = subscriptions.find(s => s.status === 'authorized') || subscriptions[0];
+
         if (!subscription) {
             const allBundles = await prisma.bundle.findMany({
                 where: { published: true },
@@ -34,9 +37,6 @@ export async function GET() {
             return NextResponse.json({ active: false, otherBundles: allBundles });
         }
 
-        // Fix: Only 'authorized' grants active access. 
-        // 'cancelled' or 'paused' are inactive immediately (since we don't track expiry date yet).
-        // 'pending' also doesn't grant access until confirmed.
         const isActive = subscription.status === 'authorized';
         const otherBundles = await prisma.bundle.findMany({
             where: {
