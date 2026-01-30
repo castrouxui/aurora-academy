@@ -3,9 +3,13 @@
 import { useEffect, useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, DollarSign, Calendar, CheckCircle, XCircle, Clock, TrendingUp, CreditCard, ShoppingCart } from "lucide-react";
+import { Loader2, DollarSign, Calendar, CheckCircle, XCircle, Clock, TrendingUp, CreditCard, ShoppingCart, Pencil, Save } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface Sale {
     id: string;
@@ -211,12 +215,14 @@ export default function AdminSalesPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <Card className="bg-gradient-to-r from-[#1F2937] to-[#111827] border-gray-700">
                     <CardContent className="p-6">
-                        <div className="flex justify-between items-center">
-                            <div>
+                        <div className="flex justify-between items-start gap-4">
+                            <div className="min-w-0 flex-1">
                                 <p className="text-gray-400 text-xs font-medium uppercase tracking-wider">Ingresos Totales</p>
-                                <h2 className="text-2xl font-bold text-white mt-2">{formatCurrency(totalRevenue)}</h2>
+                                <h2 className="text-2xl font-bold text-white mt-2 truncate" title={formatCurrency(totalRevenue)}>
+                                    {formatCurrency(totalRevenue)}
+                                </h2>
                             </div>
-                            <div className="bg-emerald-500/10 p-3 rounded-full"><DollarSign className="text-emerald-400 h-6 w-6" /></div>
+                            <div className="bg-emerald-500/10 p-3 rounded-full flex-shrink-0"><DollarSign className="text-emerald-400 h-6 w-6" /></div>
                         </div>
                     </CardContent>
                 </Card>
@@ -347,7 +353,7 @@ export default function AdminSalesPage() {
                                 </thead>
                                 <tbody>
                                     {sales.map((sale) => (
-                                        <tr key={sale.id} className="border-b border-gray-800 hover:bg-[#111827]/50 transition-colors">
+                                        <tr key={sale.id} className="border-b border-gray-800 hover:bg-[#111827]/50 transition-colors group">
                                             <td className="px-4 py-3 font-medium text-white max-w-[200px] truncate" title={sale.course?.title || sale.bundle?.title}>
                                                 {sale.course?.title || sale.bundle?.title || "Ítem desconocido"}
                                             </td>
@@ -357,7 +363,12 @@ export default function AdminSalesPage() {
                                                     <span className="text-gray-500 text-xs">{sale.user.email}</span>
                                                 </div>
                                             </td>
-                                            <td className="px-4 py-3 font-bold text-emerald-400">{formatCurrency(sale.amount)}</td>
+                                            <td className="px-4 py-3 font-bold text-emerald-400">
+                                                <div className="flex items-center gap-2">
+                                                    {formatCurrency(sale.amount)}
+                                                    <EditAmountButton sale={sale} onUpdate={fetchSales} />
+                                                </div>
+                                            </td>
                                             <td className="px-4 py-3">{getStatusBadge(sale.status)}</td>
                                             <td className="px-4 py-3 text-gray-400 whitespace-nowrap">{formatDate(sale.createdAt)}</td>
                                             <td className="px-4 py-3 text-gray-500 font-mono text-xs max-w-[100px] truncate" title={sale.paymentId}>{sale.paymentId}</td>
@@ -370,5 +381,71 @@ export default function AdminSalesPage() {
                 </CardContent>
             </Card>
         </div>
+    );
+}
+function EditAmountButton({ sale, onUpdate }: { sale: Sale; onUpdate: () => void }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [amount, setAmount] = useState(sale.amount);
+    const [loading, setLoading] = useState(false);
+
+    const handleUpdate = async () => {
+        setLoading(true);
+        try {
+            const res = await fetch(`/api/admin/sales/${sale.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ amount }),
+            });
+
+            if (res.ok) {
+                toast.success("Monto actualizado correctamente");
+                onUpdate();
+                setIsOpen(false);
+            } else {
+                toast.error("Error al actualizar monto");
+            }
+        } catch (error) {
+            toast.error("Error de conexión");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-[#5D5CDE] hover:text-[#4b4ac0] hover:bg-[#5D5CDE]/10 transition-colors">
+                    <Pencil size={14} strokeWidth={2.5} />
+                </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-[#1F2937] border-gray-700 text-white sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Editar Monto de Venta</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="amount" className="text-right text-gray-400">
+                            Monto
+                        </Label>
+                        <Input
+                            id="amount"
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            className="col-span-3 bg-black/30 border-gray-600 text-white focus:border-[#5D5CDE]"
+                        />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button variant="ghost" onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white">
+                        Cancelar
+                    </Button>
+                    <Button onClick={handleUpdate} disabled={loading} className="bg-[#5D5CDE] hover:bg-[#4b4ac0] text-white">
+                        {loading ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                        Guardar Cambios
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 }
