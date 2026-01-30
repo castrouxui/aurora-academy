@@ -31,21 +31,45 @@ export async function GET() {
             });
         }
 
-        // Calculate progress
-        const aggregations = await prisma.purchase.aggregate({
-            _sum: {
-                amount: true,
-            },
+        // Calculate progress with deduplication logic (matching frontend)
+        const rawSales = await prisma.purchase.findMany({
             where: {
                 status: 'approved',
                 createdAt: {
                     gte: goal.startDate,
                     lte: goal.deadline
                 }
+            },
+            include: {
+                user: { select: { email: true } },
+                course: { select: { title: true } },
+                bundle: { select: { title: true } }
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+
+        const uniqueSales: typeof rawSales = [];
+
+        rawSales.forEach(sale => {
+            const itemId = sale.course?.title || sale.bundle?.title || "unknown";
+            const key = `${sale.user.email}-${itemId}-${sale.amount}`;
+
+            const isDuplicate = uniqueSales.some(existing => {
+                const existingItemId = existing.course?.title || existing.bundle?.title || "unknown";
+                const existingKey = `${existing.user.email}-${existingItemId}-${existing.amount}`;
+
+                if (existingKey !== key) return false;
+
+                const timeDiff = Math.abs(new Date(existing.createdAt).getTime() - new Date(sale.createdAt).getTime());
+                return timeDiff < 60000; // 1 minute window
+            });
+
+            if (!isDuplicate) {
+                uniqueSales.push(sale);
             }
         });
 
-        const currentAmount = aggregations._sum.amount || 0;
+        const currentAmount = uniqueSales.reduce((acc, sale) => acc + Number(sale.amount), 0);
 
         return NextResponse.json({ ...goal, currentAmount });
     } catch (error) {
