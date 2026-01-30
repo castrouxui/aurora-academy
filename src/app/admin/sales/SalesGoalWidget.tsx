@@ -100,7 +100,7 @@ export function SalesGoalWidget() {
                 <Target size={120} />
             </div>
 
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
                 <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
                     <Flag className="text-[#5D5CDE] h-5 w-5" />
                     Objetivo de Facturación
@@ -161,12 +161,12 @@ export function SalesGoalWidget() {
                                 </span>
                             </div>
                             <div className="text-right">
-                                <span className={`text-xl font-bold ${progress >= 100 ? 'text-emerald-400' : 'text-[#5D5CDE]'}`}>
+                                <span className="text-xl font-bold text-emerald-400">
                                     {progress.toFixed(1)}%
                                 </span>
                             </div>
                         </div>
-                        <Progress value={progress} className="h-3 bg-gray-800" indicatorClassName={progress >= 100 ? "bg-emerald-500" : "bg-[#5D5CDE]"} />
+                        <Progress value={progress} className="h-3 bg-gray-800" indicatorClassName="bg-emerald-500" />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 pt-2 border-t border-gray-800">
