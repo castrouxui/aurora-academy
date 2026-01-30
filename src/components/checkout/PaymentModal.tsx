@@ -171,7 +171,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 Mobile: Maximize width but keep margin. 
                 Desktop: Slightly smaller height, properly centered.
             */}
-            <div className="bg-card w-full max-w-4xl max-h-[90vh] md:h-auto md:max-h-[800px] rounded-2xl shadow-2xl overflow-hidden border border-border flex flex-col md:flex-row relative">
+            <div className="bg-card w-full max-w-4xl max-h-[90vh] md:h-auto md:max-h-[800px] rounded-2xl shadow-2xl overflow-y-auto md:overflow-hidden border border-border flex flex-col md:flex-row relative">
 
                 {/* Close Button (Absolute) - Fixed position on mobile to be always visible */}
                 <button

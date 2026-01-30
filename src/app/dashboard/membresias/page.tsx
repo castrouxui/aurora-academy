@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -37,6 +37,12 @@ export default function MyMembershipsPage() {
         price: "",
         bundleId: ""
     });
+
+    const plansRef = useRef<HTMLDivElement>(null);
+
+    const scrollToPlans = () => {
+        plansRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
 
     useEffect(() => {
         fetchData();
@@ -210,7 +216,7 @@ export default function MyMembershipsPage() {
                         Podes reactivarla eligiendo un plan a continuación.
                     </p>
                     <Button
-                        onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+                        onClick={scrollToPlans}
                         variant="outline"
                         className="bg-white/5 border-white/10 text-white hover:bg-white hover:text-black font-bold h-12 px-10 rounded-xl"
                     >
@@ -229,7 +235,7 @@ export default function MyMembershipsPage() {
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <Button
-                                onClick={() => window.scrollTo({ top: 800, behavior: 'smooth' })}
+                                onClick={scrollToPlans}
                                 className="bg-[#5D5CDE] hover:bg-[#4b4ac6] font-bold h-14 px-12 rounded-2xl shadow-xl shadow-[#5D5CDE]/20 text-lg transition-all hover:scale-105 active:scale-95"
                             >
                                 Explorar Membresías
@@ -243,7 +249,7 @@ export default function MyMembershipsPage() {
             )}
 
             {/* Catalog Section - Design Parity with Main Site */}
-            <div className="pt-16 border-t border-white/5">
+            <div ref={plansRef} className="pt-16 border-t border-white/5">
                 <div className="text-center mb-16">
                     <h2 className="text-4xl font-bold text-white mb-4 tracking-tight">Elegí tu Plan</h2>
                     <p className="text-gray-400 max-w-2xl mx-auto text-lg">
