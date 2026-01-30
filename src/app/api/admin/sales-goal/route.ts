@@ -51,6 +51,13 @@ export async function GET() {
         const uniqueSales: typeof rawSales = [];
 
         rawSales.forEach(sale => {
+            // HARDCODE FIX: Correct amount for pablosonez@gmail.com
+            // This mirrors the logic in /api/admin/sales/route.ts
+            if (sale.user.email === 'pablosonez@gmail.com' && Number(sale.amount) === 200000) {
+                // @ts-ignore
+                sale.amount = 150000;
+            }
+
             const itemId = sale.course?.title || sale.bundle?.title || "unknown";
             const key = `${sale.user.email}-${itemId}-${sale.amount}`;
 
