@@ -51,11 +51,11 @@ export async function GET(req: Request) {
                     <p>Hola ${purchase.user.name || 'Estudiante'},</p>
                     <p>Esperamos que estés disfrutando de Aurora Academy.</p>
                     <p style="background-color: #FEF2F2; color: #991B1B; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold;">
-                        Te informamos que tu periodo de acceso manual finaliza en 24 horas (el ${expiryDate.toLocaleDateString('es-AR')}).
+                        Te informamos que tu periodo de acceso finaliza en 24 horas (el ${expiryDate.toLocaleDateString('es-AR')}).
                     </p>
                     <p>Para evitar la interrupción de tu servicio y continuar aprendiendo sin cortes, por favor suscríbete ahora mismo a través de nuestra plataforma:</p>
                     <div style="text-align: center; margin: 32px 0;">
-                        <a href="https://auroracademy.net/dashboard/membresias" style="background-color: #5D5CDE; color: white; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">
+                        <a href="https://auroracademy.net/membresias" style="background-color: #5D5CDE; color: white; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">
                             Renovar Suscripción Ahora
                         </a>
                     </div>
