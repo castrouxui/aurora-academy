@@ -59,7 +59,7 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full border-b border-muted bg-background/80 backdrop-blur-md">
+      <nav className="fixed top-0 z-[500] w-full border-b border-muted bg-background/80 backdrop-blur-md">
         <Container className="flex h-16 items-center gap-6 justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
