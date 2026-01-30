@@ -115,7 +115,7 @@ export const renderEmailTemplate = (contentHtml: string, previewText?: string) =
     `;
 };
 
-export const sendEmail = async (to: string, subject: string, html: string, previewText?: string) => {
+export const sendEmail = async (to: string, subject: string, html: string, previewText?: string, bcc?: string) => {
     const { SMTP_EMAIL, SMTP_PASSWORD } = process.env;
 
     if (!SMTP_EMAIL || !SMTP_PASSWORD) {
@@ -140,6 +140,7 @@ export const sendEmail = async (to: string, subject: string, html: string, previ
         const info = await transporter.sendMail({
             from: `"Aurora Academy" <${SMTP_EMAIL}>`,
             to,
+            bcc,
             subject,
             html: brandedHtml,
         });
