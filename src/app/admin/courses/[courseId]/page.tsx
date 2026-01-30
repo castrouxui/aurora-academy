@@ -503,11 +503,11 @@ export default function CourseEditorPage() {
 
                         <Button
                             onClick={() => window.open(`/cursos/${courseId}`, '_blank')}
-                            variant="ghost"
-                            className="text-gray-400 hover:text-white h-9 w-9 p-0"
-                            title="Ver vista previa"
+                            variant="outline"
+                            className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white h-9 text-xs flex items-center gap-2"
                         >
-                            <ExternalLink size={16} />
+                            <ExternalLink size={14} />
+                            Vista Previa
                         </Button>
 
                         <Button

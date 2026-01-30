@@ -155,12 +155,26 @@ export function CourseFloatingCard({
 
                 <div className="p-6 md:p-8 space-y-6">
                     {/* Price Section */}
+                    {/* Price Section */}
                     <div className="space-y-2">
                         {isFree ? (
-                            <div className="flex flex-col">
-                                <span className="text-4xl font-black text-white">GRATIS</span>
-                                <span className="text-sm text-gray-500 font-medium">Por tiempo limitado</span>
-                            </div>
+                            <>
+                                <div className="flex items-baseline gap-3">
+                                    <span className="text-4xl font-black text-white">GRATIS</span>
+                                    {originalPrice && (
+                                        <span className="text-lg text-gray-500 line-through font-medium">{originalPrice}</span>
+                                    )}
+                                </div>
+                                {discount && (
+                                    <div className="flex items-center gap-2">
+                                        <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-sm font-bold">{discount} OFF</span>
+                                        <span className="text-emerald-400 text-sm font-medium">¡Oferta por tiempo limitado!</span>
+                                    </div>
+                                )}
+                                {!discount && (
+                                    <span className="text-sm text-gray-500 font-medium">Por tiempo limitado</span>
+                                )}
+                            </>
                         ) : (
                             <>
                                 <div className="flex items-baseline gap-3">

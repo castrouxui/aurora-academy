@@ -124,7 +124,10 @@ export function MobileCourseCTA({
                     <div className="flex-1">
                         <p className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-0.5">Precio Total</p>
                         {isFree ? (
-                            <p className="text-2xl font-black text-white">GRATIS</p>
+                            <div className="flex items-center gap-2">
+                                <p className="text-2xl font-black text-white">GRATIS</p>
+                                {/* We hide extended details on mobile specific bar to save space, or show small tag */}
+                            </div>
                         ) : (
                             <p className="text-2xl font-black text-white">{price}</p>
                         )}
