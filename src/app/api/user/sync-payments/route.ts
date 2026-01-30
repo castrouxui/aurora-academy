@@ -19,8 +19,10 @@ export async function POST() {
         const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
         const payment = new Payment(client);
         const preApproval = new PreApproval(client);
-        const email = session.user.email;
+        const email = session.user.email.toLowerCase().trim();
         const userId = session.user.id;
+
+        console.log(`[SYNC] Starting sync for user: ${email} (${userId})`);
 
         let syncCount = 0;
         const results = {
@@ -30,10 +32,11 @@ export async function POST() {
 
         // 1. SYNC ONE-TIME PAYMENTS (Purchases)
         try {
+            // Strategy: Get recent 50 payments globally
+            // Note: Use simple options to minimize API errors
             const paymentSearch = await payment.search({
                 options: {
-                    limit: 30,
-                    // Use simpler filters to avoid SDK sorting bugs
+                    limit: 50,
                     sort: 'date_created',
                     criteria: 'desc'
                 }
@@ -42,8 +45,13 @@ export async function POST() {
             const myPayments = (paymentSearch.results || []).filter((p: any) =>
                 p.id &&
                 p.status === 'approved' &&
-                (p.payer?.email === email || p.metadata?.user_id === userId)
+                (
+                    (p.payer?.email && p.payer.email.toLowerCase().trim() === email) ||
+                    (p.metadata?.user_id === userId)
+                )
             );
+
+            console.log(`[SYNC] Found ${myPayments.length} matching payments in recent list.`);
 
             for (const p of myPayments) {
                 const paymentId = String(p.id);
@@ -56,6 +64,7 @@ export async function POST() {
                     let courseId = metadata.course_id;
                     let bundleId = metadata.bundle_id;
 
+                    // Fallback: Try to match by Title if metadata is missing (manual payment)
                     if (!courseId && !bundleId) {
                         const title = p.description || p.additional_info?.items?.[0]?.title || "";
                         if (title) {
@@ -83,29 +92,62 @@ export async function POST() {
                         });
                         results.purchases++;
                         syncCount++;
+                        console.log(`[SYNC] Synced Purchase ${paymentId}`);
                     }
                 }
             }
         } catch (pError) {
             console.error("[SYNC] Payment search failed:", pError);
-            // Don't crash the whole route, move to subscriptions
         }
 
         // 2. SYNC SUBSCRIPTIONS (PreApprovals)
         try {
-            const subSearch = await preApproval.search({
+            // Search Strategy 1: Search by Payer Email explicitly (if API supports it)
+            let subResults: any[] = [];
+
+            try {
+                const emailSearch = await preApproval.search({
+                    options: {
+                        limit: 30,
+                        payer_email: email
+                    }
+                });
+                if (emailSearch.results && emailSearch.results.length > 0) {
+                    subResults = [...subResults, ...emailSearch.results];
+                }
+            } catch (e) {
+                console.warn("[SYNC] Email-specific sub search failed, falling back to global.");
+            }
+
+            // Search Strategy 2: Global Recent (in case email search failed or missed some)
+            const globalSubSearch = await preApproval.search({
                 options: {
-                    limit: 30,
+                    limit: 50,
                     sort: 'date_created',
                     criteria: 'desc'
                 }
             });
 
-            const mySubs = (subSearch.results || []).filter((s: any) =>
+            if (globalSubSearch.results) {
+                // De-duplicate based on ID
+                const existingIds = new Set(subResults.map(s => s.id));
+                globalSubSearch.results.forEach((s: any) => {
+                    if (!existingIds.has(s.id)) {
+                        subResults.push(s);
+                    }
+                });
+            }
+
+            const mySubs = subResults.filter((s: any) =>
                 s.id &&
-                (s.payer_email === email || (typeof s.external_reference === 'string' && s.external_reference.includes(userId))) &&
+                (
+                    (s.payer_email && s.payer_email.toLowerCase().trim() === email) ||
+                    (typeof s.external_reference === 'string' && s.external_reference.includes(userId))
+                ) &&
                 ['authorized', 'pending', 'paused', 'cancelled'].includes(s.status)
             );
+
+            console.log(`[SYNC] Found ${mySubs.length} matching subscriptions.`);
 
             for (const s of mySubs) {
                 const subId = String(s.id);
@@ -120,9 +162,12 @@ export async function POST() {
                         const ext = JSON.parse(extStr);
                         bundleId = ext.bundle_id;
                     } catch (e) {
+                        // Fallback: Title match
                         const reason = s.reason || "";
-                        const bundle = await prisma.bundle.findFirst({ where: { title: { contains: reason, mode: 'insensitive' } } });
-                        if (bundle) bundleId = bundle.id;
+                        if (reason) {
+                            const bundle = await prisma.bundle.findFirst({ where: { title: { contains: reason, mode: 'insensitive' } } });
+                            if (bundle) bundleId = bundle.id;
+                        }
                     }
 
                     if (bundleId) {
@@ -136,6 +181,9 @@ export async function POST() {
                         });
                         results.subscriptions++;
                         syncCount++;
+                        console.log(`[SYNC] Synced New Subscription ${subId}`);
+                    } else {
+                        console.log(`[SYNC] Found Sub ${subId} but could not match Bundle ID. Reason: ${s.reason}`);
                     }
                 } else if (exists.status !== s.status && s.status) {
                     await prisma.subscription.update({
@@ -143,6 +191,7 @@ export async function POST() {
                         data: { status: s.status, updatedAt: new Date() }
                     });
                     syncCount++;
+                    console.log(`[SYNC] Updated Subscription ${subId} Status`);
                 }
             }
         } catch (sError) {
