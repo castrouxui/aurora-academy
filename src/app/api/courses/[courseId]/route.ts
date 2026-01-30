@@ -60,7 +60,16 @@ export async function PATCH(
         const course = await prisma.course.update({
             where: { id: courseId },
             data: {
-                ...values,
+                title: values.title,
+                description: values.description,
+                shortDescription: values.shortDescription,
+                price: values.price,
+                imageUrl: values.imageUrl,
+                category: values.category,
+                level: values.level,
+                published: values.published,
+                learningOutcomes: values.learningOutcomes,
+                discount: values.discount, // New field
             },
         });
 

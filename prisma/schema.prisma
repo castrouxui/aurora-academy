@@ -101,6 +101,7 @@ model Course {
   title            String
   description      String?
   price            Decimal
+  discount         Int?       @default(0)
   imageUrl         String?
   category         String     @default("General")
   level            String     @default("Todos los niveles")

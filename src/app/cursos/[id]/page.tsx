@@ -180,8 +180,10 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         subtitles: "Español, Inglés",
         level: course.level || "Todos los niveles",
         duration: formattedDuration,
-        originalPrice: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price) * 1.5),
-        discount: "33%",
+        originalPrice: course.discount && course.discount > 0
+            ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price) / (1 - (course.discount / 100)))
+            : "",
+        discount: course.discount && course.discount > 0 ? `${course.discount}%` : "",
         instructor: {
             name: "Aurora Academy",
             image: "/logo.svg"
