@@ -236,16 +236,28 @@ export function Navbar() {
               <div className="space-y-3">
                 <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] ml-4 mb-2">Academia</p>
 
+                {/* Ir a mis cursos - Styled consistently but highlighted */}
+                {/* Main Action - Dynamic based on Role */}
                 {session && (
-                  <Link
-                    href="/dashboard/cursos"
-                    className="flex items-center w-full px-5 py-4 bg-primary/10 border border-primary/20 rounded-2xl text-primary mb-2 shadow-lg shadow-primary/5"
-                    onClick={toggleMenu}
-                  >
-                    <PlayCircle className="mr-4" size={22} />
-                    <span className="text-lg font-bold">Ir a mis cursos</span>
-                    <ArrowRight className="ml-auto opacity-50" size={18} />
-                  </Link>
+                  session.user.role === 'ADMIN' ? (
+                    <Link
+                      href="/admin"
+                      className="flex items-center w-full px-5 py-3 text-base font-medium transition-colors rounded-lg text-primary bg-primary/5 hover:bg-primary/10 border-l-4 border-primary"
+                      onClick={toggleMenu}
+                    >
+                      <LayoutDashboard className="mr-4" size={20} />
+                      <span className="text-lg font-bold">Panel de Administración</span>
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/dashboard/cursos"
+                      className="flex items-center w-full px-5 py-3 text-base font-medium transition-colors rounded-lg text-primary bg-primary/5 hover:bg-primary/10 border-l-4 border-primary"
+                      onClick={toggleMenu}
+                    >
+                      <PlayCircle className="mr-4" size={20} />
+                      <span className="text-lg font-bold">Ir a mis cursos</span>
+                    </Link>
+                  )
                 )}
 
                 <Link
@@ -311,14 +323,38 @@ export function Navbar() {
                     <LogOut size={20} />
                   </button>
                 </div>
-                <Link
-                  href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/cursos"}
-                  className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white py-4 rounded-2xl font-bold border border-white/10 transition-all"
-                  onClick={toggleMenu}
-                >
-                  <LayoutDashboard size={20} />
-                  Panel de Alumno
-                </Link>
+
+                {/* Dynamic Admin/Student Button */}
+                {session.user.role === 'ADMIN' ? (
+                  pathname.startsWith('/admin') ? (
+                    <Link
+                      href="/dashboard/cursos"
+                      className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white py-4 rounded-2xl font-bold border border-white/10 transition-all"
+                      onClick={toggleMenu}
+                    >
+                      <BookOpen size={20} />
+                      Ver como Alumno
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/admin"
+                      className="w-full flex items-center justify-center gap-2 bg-[#5D5CDE]/20 hover:bg-[#5D5CDE]/30 text-[#5D5CDE] py-4 rounded-2xl font-bold border border-[#5D5CDE]/20 transition-all"
+                      onClick={toggleMenu}
+                    >
+                      <LayoutDashboard size={20} />
+                      Panel de Administración
+                    </Link>
+                  )
+                ) : (
+                  <Link
+                    href="/dashboard/cursos"
+                    className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white py-4 rounded-2xl font-bold border border-white/10 transition-all"
+                    onClick={toggleMenu}
+                  >
+                    <LayoutDashboard size={20} />
+                    Panel de Alumno
+                  </Link>
+                )}
               </div>
             ) : (
               <Button
