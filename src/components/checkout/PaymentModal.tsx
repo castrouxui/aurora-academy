@@ -182,7 +182,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 </button>
 
                 {/* LEFT COLUMN: Order Summary (Darker/Card style) */}
-                <div className="w-full md:w-5/12 bg-muted/30 p-6 md:p-8 flex flex-col border-r border-border relative overflow-hidden shrink-0">
+                <div className="w-full md:w-5/12 bg-muted/30 p-5 md:p-8 flex flex-col border-r border-border relative overflow-hidden shrink-0">
 
                     {/* Background blob for visual interest */}
                     <div className="absolute top-0 left-0 w-full h-32 bg-primary/5 blur-3xl pointer-events-none"></div>
@@ -192,7 +192,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             Tu Resumen
                         </h3>
 
-                        <div className="mb-6 md:mb-8">
+                        <div className="mb-4 md:mb-8">
                             <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2 leading-tight pr-8">
                                 {courseTitle}
                             </h2>
@@ -247,7 +247,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                         </div>
 
                         {/* Features List */}
-                        <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
+                        <div className="hidden md:block space-y-3 md:space-y-4 mb-6 md:mb-8">
                             <div className="flex items-start gap-3 text-gray-300">
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
                                     <Zap size={16} className="text-green-400" />
@@ -345,7 +345,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 <div className="w-full md:w-7/12 bg-card relative flex flex-col">
 
                     {/* Mobile: Padded, Desktop: Internal Scroll */}
-                    <div className="p-6 md:p-8 flex-1 md:overflow-y-auto md:max-h-[calc(90vh-80px)]">
+                    <div className="p-5 md:p-8 flex-1 md:overflow-y-auto md:max-h-[calc(90vh-80px)]">
                         <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
                             Finalizar Compra
                         </h3>
