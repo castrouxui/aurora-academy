@@ -61,11 +61,11 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
     // If NO access, MUST be the first lesson (preview).
     const [activeLessonId, setActiveLessonId] = useState(() => {
         if (!isAccess) {
-            const firstLesson = course.modules[0]?.lessons[0];
+            const firstLesson = course.modules[0]?.lessons?.[0];
             return firstLesson ? firstLesson.id : null;
         }
         // Default to first lesson for now if logged in
-        const firstLesson = course.modules[0]?.lessons[0];
+        const firstLesson = course.modules[0]?.lessons?.[0];
         return firstLesson ? firstLesson.id : null;
     });
 
