@@ -33,26 +33,28 @@ export default function StudentDashboard() {
                 ]);
 
                 if (coursesRes.ok) {
-                    const courses = await coursesRes.json();
-                    setCourses(courses);
+                    const data = await coursesRes.json();
+                    const coursesList = Array.isArray(data) ? data : [];
+                    setCourses(coursesList);
 
-                    const inProgress = courses.filter((c: any) => c.progress > 0 && c.progress < 100).length;
-                    const completed = courses.filter((c: any) => c.progress === 100).length;
+                    const inProgress = coursesList.filter((c: any) => c.progress > 0 && c.progress < 100).length;
+                    const completed = coursesList.filter((c: any) => c.progress === 100).length;
 
                     setStats({
                         inProgress,
                         completed,
-                        totalCourses: courses.length
+                        totalCourses: coursesList.length
                     });
 
-                    const recent = courses.find((c: any) => c.progress > 0 && c.progress < 100) || courses[0];
+                    const recent = coursesList.find((c: any) => c.progress > 0 && c.progress < 100) || coursesList[0];
                     setRecentCourse(recent);
                 }
 
                 if (bundlesRes.ok) {
-                    const bundles = await bundlesRes.json();
+                    const data = await bundlesRes.json();
+                    const bundlesList = Array.isArray(data) ? data : [];
                     // Extract all unique items from bundles
-                    const allItems = bundles.flatMap((b: any) => b.items || []);
+                    const allItems = bundlesList.flatMap((b: any) => b.items || []);
                     // Filter duplicates by name + content if needed, or just show all
                     setMembershipItems(allItems);
                 }
@@ -64,11 +66,12 @@ export default function StudentDashboard() {
             }
         }
         fetchData();
-        useEffect(() => {
-            if (session?.user?.role === "ADMIN") {
-                window.location.href = "/admin";
-            }
-        }, [session]);
+    }, [session]);
+
+    useEffect(() => {
+        if (session?.user?.role === "ADMIN") {
+            window.location.href = "/admin";
+        }
     }, [session]);
 
     if (loading) {
