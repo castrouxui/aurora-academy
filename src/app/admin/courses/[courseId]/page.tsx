@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Upload, X, Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Video, FileText, MoreVertical, Link as LinkIcon, Image as ImageIcon, CheckCircle, AlertCircle, Loader2, FolderPlus, ArrowLeft, Layers, Globe, Eye, EyeOff, UploadCloud, BarChart, Tag, DollarSign, FileVideo, File as FileIcon, Save, Send, BrainCircuit, Check, Circle } from "lucide-react";
+import { Upload, X, Plus, GripVertical, Trash2, ChevronDown, ChevronRight, Video, FileText, MoreVertical, Link as LinkIcon, Image as ImageIcon, CheckCircle, AlertCircle, Loader2, FolderPlus, ArrowLeft, Layers, Globe, Eye, EyeOff, UploadCloud, BarChart, Tag, DollarSign, FileVideo, File as FileIcon, Save, Send, BrainCircuit, Check, Circle, ExternalLink } from "lucide-react";
 
 import { toast } from "sonner";
 
@@ -120,8 +120,10 @@ export default function CourseEditorPage() {
     const [priceInput, setPriceInput] = useState("");
     const [discountInput, setDiscountInput] = useState(""); // Discount state
 
-    // Title Local State
+    // Title & Metadata Local State
     const [titleInput, setTitleInput] = useState("");
+    const [categoryInput, setCategoryInput] = useState("");
+    const [levelInput, setLevelInput] = useState("");
 
     const fetchCourse = async () => {
         try {
@@ -149,6 +151,8 @@ export default function CourseEditorPage() {
             setPriceInput(course.price.toString());
             setTitleInput(course.title);
             setDiscountInput(course.discount?.toString() || "0");
+            setCategoryInput(course.category || "General");
+            setLevelInput(course.level || "Todos los niveles");
         }
     }, [course]);
 
@@ -167,9 +171,9 @@ export default function CourseEditorPage() {
                     description: course.description,
                     shortDescription: course.shortDescription,
                     price: price,
-                    discount: discount, // Send discount
-                    category: course.category,
-                    level: course.level,
+                    discount: discount,
+                    category: categoryInput,
+                    level: levelInput,
                     imageUrl: course.imageUrl,
                 }),
             });
@@ -494,7 +498,17 @@ export default function CourseEditorPage() {
                             {course.published ? "Público" : "Borrador"}
                         </span>
 
+
                         <div className="h-6 w-px bg-gray-700 mx-1"></div>
+
+                        <Button
+                            onClick={() => window.open(`/cursos/${courseId}`, '_blank')}
+                            variant="ghost"
+                            className="text-gray-400 hover:text-white h-9 w-9 p-0"
+                            title="Ver vista previa"
+                        >
+                            <ExternalLink size={16} />
+                        </Button>
 
                         <Button
                             onClick={handlePublishToggle}
@@ -550,15 +564,36 @@ export default function CourseEditorPage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label className="text-xs text-gray-400">Categoría</Label>
-                                    <Badge variant="outline" className="w-full justify-center py-1.5 bg-[#121620] border-gray-600 text-gray-300 font-normal">
-                                        {course.category}
-                                    </Badge>
+                                    <div className="relative">
+                                        <select
+                                            value={categoryInput}
+                                            onChange={(e) => setCategoryInput(e.target.value)}
+                                            className="w-full bg-[#121620] border border-gray-600 outline-none text-white text-xs rounded-md h-9 px-3 appearance-none focus:border-[#5D5CDE]"
+                                        >
+                                            <option value="General">General</option>
+                                            <option value="Trading">Trading</option>
+                                            <option value="Inversiones">Inversiones</option>
+                                            <option value="Criptomonedas">Criptomonedas</option>
+                                            <option value="Mindset">Mindset</option>
+                                        </select>
+                                        <ChevronDown size={14} className="absolute right-3 top-2.5 text-gray-500 pointer-events-none" />
+                                    </div>
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs text-gray-400">Nivel</Label>
-                                    <Badge variant="outline" className="w-full justify-center py-1.5 bg-[#121620] border-gray-600 text-gray-300 font-normal">
-                                        {course.level}
-                                    </Badge>
+                                    <div className="relative">
+                                        <select
+                                            value={levelInput}
+                                            onChange={(e) => setLevelInput(e.target.value)}
+                                            className="w-full bg-[#121620] border border-gray-600 outline-none text-white text-xs rounded-md h-9 px-3 appearance-none focus:border-[#5D5CDE]"
+                                        >
+                                            <option value="Todos los niveles">Todos los niveles</option>
+                                            <option value="Principiante">Principiante</option>
+                                            <option value="Intermedio">Intermedio</option>
+                                            <option value="Avanzado">Avanzado</option>
+                                        </select>
+                                        <ChevronDown size={14} className="absolute right-3 top-2.5 text-gray-500 pointer-events-none" />
+                                    </div>
                                 </div>
                             </div>
                         </CardContent>

@@ -102,11 +102,17 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     });
 
     // Format price
-    const formattedPrice = new Intl.NumberFormat("es-AR", {
-        style: "currency",
-        currency: "ARS",
-        minimumFractionDigits: 0
-    }).format(Number(course.price));
+    const basePrice = Number(course.price) || 0;
+    const discount = course.discount || 0;
+    const finalPrice = basePrice * (1 - discount / 100);
+
+    const formattedPrice = finalPrice === 0
+        ? "GRATIS"
+        : new Intl.NumberFormat("es-AR", {
+            style: "currency",
+            currency: "ARS",
+            minimumFractionDigits: 0
+        }).format(finalPrice);
 
     // Get first lesson video for preview
     const firstModule = course.modules.sort((a, b) => a.position - b.position)[0];
@@ -180,10 +186,10 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         subtitles: "Español, Inglés",
         level: course.level || "Todos los niveles",
         duration: formattedDuration,
-        originalPrice: course.discount && course.discount > 0
-            ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price) / (1 - (course.discount / 100)))
+        originalPrice: discount > 0
+            ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice)
             : "",
-        discount: course.discount && course.discount > 0 ? `${course.discount}%` : "",
+        discount: discount > 0 ? `${discount}%` : "",
         instructor: {
             name: "Aurora Academy",
             image: "/logo.svg"
@@ -192,7 +198,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         videoUrl: youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : previewVideoUrl,
         learningOutcomes: course.learningOutcomes,
         shortDescription: course.shortDescription,
-        rawPrice: Number(course.price)
+        rawPrice: finalPrice
     };
 
     return (
