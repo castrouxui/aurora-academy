@@ -63,7 +63,7 @@ export default function AdminLayout({
             />
 
             {/* Mobile Header & Sidebar */}
-            <div className="fixed top-0 left-0 right-0 h-16 bg-[#111827] border-b border-[#1F2937] z-20 flex items-center px-4 md:hidden">
+            <div className="fixed top-0 left-0 right-0 h-16 bg-[#111827] border-b border-[#1F2937] z-50 flex items-center px-4 md:hidden">
                 <MobileSidebar
                     items={navigation.map(n => ({ ...n, icon: n.icon }))}
                     role="ADMIN"

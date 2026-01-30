@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { X, ArrowRight, ShieldCheck, Lock, Zap, CheckCircle2, Loader2 } from 'lucide-react';
 import { useSession } from "next-auth/react";
-import { QRCodeSVG as QRCode } from 'qrcode.react';
 import { useRouter } from 'next/navigation';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
@@ -377,14 +376,8 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             </div>
                         ) : preferenceId ? (
                             <div className="space-y-6">
-
-                                {/* Step 1 Button */}
+                                {/* Payment Button */}
                                 <div>
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-bold border border-primary/30">1</div>
-                                        <h4 className="text-sm font-medium text-foreground">Ir a pagar</h4>
-                                    </div>
-
                                     <a
                                         href={preferenceId ? initPoint! : "#"}
                                         target="_blank"
@@ -406,33 +399,6 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                         {/* Shine effect */}
                                         <div className="absolute top-0 -left-full w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-[shimmer_2.5s_infinite]"></div>
                                     </a>
-                                </div>
-
-                                {/* Step 2 QR */}
-                                <div className="hidden md:block">
-                                    <div className="flex items-center gap-3 mb-3 mt-8">
-                                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-muted text-muted-foreground text-xs font-bold border border-border">2</div>
-                                        <h4 className="text-sm font-medium text-gray-300">O escanea el código QR</h4>
-                                    </div>
-
-                                    <div className="bg-muted/50 rounded-xl p-4 border border-border flex items-start gap-6">
-                                        <div className="bg-white p-2 rounded-lg shrink-0">
-                                            <QRCode value={initPoint || ""} size={100} level="M" />
-                                        </div>
-                                        <div className="py-1">
-                                            <p className="text-sm text-gray-300 mb-2 font-medium">Desde tu celular</p>
-                                            <p className="text-xs text-muted-foreground leading-relaxed max-w-[200px]">
-                                                Abre la App de Mercado Pago y escanea este código para pagar al instante.
-                                            </p>
-                                            <div className="mt-3 flex items-center gap-2">
-                                                <span className="relative flex h-2 w-2">
-                                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                                                </span>
-                                                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Esperando pago</span>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         ) : null}
