@@ -1,5 +1,4 @@
 "use client";
-"use client";
 
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
@@ -9,7 +8,9 @@ import { PaymentModal } from "@/components/checkout/PaymentModal";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { UpsellModal } from "@/components/checkout/UpsellModal";
-
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface MobileCourseCTAProps {
     title: string;
@@ -17,6 +18,7 @@ interface MobileCourseCTAProps {
     courseId: string;
     hasAccess?: boolean;
     className?: string; // Allow external styling
+    rawPrice?: number;
 }
 
 export function MobileCourseCTA({
@@ -24,12 +26,17 @@ export function MobileCourseCTA({
     price,
     courseId,
     hasAccess = false,
-    className
+    className,
+    rawPrice
 }: MobileCourseCTAProps) {
     const { data: session } = useSession();
+    const router = useRouter();
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [isUpsellModalOpen, setIsUpsellModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isEnrolling, setIsEnrolling] = useState(false);
+
+    const isFree = rawPrice === 0;
 
     // State for bundle purchase
     const [selectedBundle, setSelectedBundle] = useState<{ id: string, title: string, price: string } | null>(null);
@@ -52,6 +59,36 @@ export function MobileCourseCTA({
         setIsUpsellModalOpen(false);
         setSelectedBundle({ id: bundleId, title: bundleTitle, price: bundlePrice });
         setIsPaymentModalOpen(true);
+    };
+
+    const handleFreeEnroll = async () => {
+        if (!session) {
+            setIsLoginModalOpen(true);
+            return;
+        }
+
+        setIsEnrolling(true);
+        try {
+            const res = await fetch("/api/enroll/free", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ courseId }),
+            });
+
+            if (res.ok) {
+                toast.success("¡Inscripción exitosa!");
+                router.push(`/learn/${courseId}`);
+                router.refresh();
+            } else {
+                const data = await res.json();
+                toast.error(data.message || "Error al inscribirse");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error de conexión");
+        } finally {
+            setIsEnrolling(false);
+        }
     };
 
     return (
@@ -86,7 +123,11 @@ export function MobileCourseCTA({
                 <div className="flex items-center gap-4">
                     <div className="flex-1">
                         <p className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-0.5">Precio Total</p>
-                        <p className="text-2xl font-black text-white">{price}</p>
+                        {isFree ? (
+                            <p className="text-2xl font-black text-white">GRATIS</p>
+                        ) : (
+                            <p className="text-2xl font-black text-white">{price}</p>
+                        )}
                     </div>
 
                     {hasAccess ? (
@@ -95,6 +136,14 @@ export function MobileCourseCTA({
                                 Ver Curso
                             </Button>
                         </Link>
+                    ) : isFree ? (
+                        <Button
+                            onClick={handleFreeEnroll}
+                            disabled={isEnrolling}
+                            className="flex-[1.5] h-12 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover flex items-center justify-center gap-2"
+                        >
+                            {isEnrolling ? <Loader2 className="animate-spin" /> : "Inscribirse Gratis"}
+                        </Button>
                     ) : (
                         <Button
                             onClick={handlePurchase}

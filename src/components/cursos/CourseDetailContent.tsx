@@ -122,6 +122,7 @@ export function CourseDetailContent({
                                 hasAccess={hasAccess}
                                 videoThumbnail={courseData.videoThumbnail}
                                 videoUrl={courseData.videoUrl}
+                                rawPrice={courseData.rawPrice}
                             />
                         </div>
                     </div>
@@ -138,6 +139,7 @@ export function CourseDetailContent({
                 price={courseData.price}
                 courseId={courseData.id}
                 hasAccess={hasAccess}
+                rawPrice={courseData.rawPrice}
             />
         </div>
     );

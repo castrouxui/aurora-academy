@@ -136,12 +136,15 @@ export default function CourseEditorPage() {
         }
     }, [courseId]);
 
-    // Sync price to local input when course loads
+    const [titleInput, setTitleInput] = useState("");
+
+    // Sync input when course loads
     useEffect(() => {
         if (course) {
             setPriceInput(course.price.toString());
+            setTitleInput(course.title);
         }
-    }, [course?.price]);
+    }, [course]);
 
     const handleSaveCourse = async () => {
         if (!course) return;
@@ -153,6 +156,7 @@ export default function CourseEditorPage() {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
+                    title: titleInput,
                     description: course.description,
                     shortDescription: course.shortDescription,
                     price: price,
@@ -670,14 +674,14 @@ export default function CourseEditorPage() {
             {/* Header Section */}
             <div className="flex flex-col gap-6">
                 <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 flex-1">
                         <Link href="/admin/courses">
                             <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white hover:bg-white/5 rounded-xl">
                                 <ArrowLeft size={20} />
                             </Button>
                         </Link>
-                        <div>
-                            <div className="flex items-center gap-3 mb-1">
+                        <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
                                 <Badge variant="outline" className={`${course.published ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20'}`}>
                                     {course.published ? 'Publicado' : 'Borrador'}
                                 </Badge>
@@ -685,7 +689,12 @@ export default function CourseEditorPage() {
                                     <Layers size={12} /> {course.modules?.length || 0} Módulos
                                 </span>
                             </div>
-                            <h1 className="text-3xl font-bold text-white tracking-tight">{course.title}</h1>
+                            <Input
+                                value={titleInput}
+                                onChange={(e) => setTitleInput(e.target.value)}
+                                className="text-3xl font-bold text-white tracking-tight bg-transparent border-none p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-gray-600 w-full"
+                                placeholder="Título del Curso"
+                            />
                         </div>
                     </div>
                     <div className="flex gap-2">

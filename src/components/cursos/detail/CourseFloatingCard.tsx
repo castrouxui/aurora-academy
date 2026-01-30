@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PaymentModal } from "@/components/checkout/PaymentModal";
-import { Play, PlayCircle, Clock, BarChart, Users, Globe, Captions, CheckCircle2 } from "lucide-react";
+import { Play, PlayCircle, Clock, BarChart, Users, Globe, Captions, CheckCircle2, Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { LoginModal } from "@/components/auth/LoginModal";
 import Link from "next/link";
 import { UpsellModal } from "@/components/checkout/UpsellModal";
@@ -24,6 +26,7 @@ interface CourseFloatingCardProps {
     hasAccess?: boolean;
     videoThumbnail: string;
     videoUrl?: string;
+    rawPrice?: number;
 }
 
 export function CourseFloatingCard({
@@ -39,12 +42,17 @@ export function CourseFloatingCard({
     courseId,
     hasAccess = false,
     videoThumbnail,
-    videoUrl
+    videoUrl,
+    rawPrice
 }: CourseFloatingCardProps) {
     const { data: session } = useSession();
+    const router = useRouter();
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [isUpsellModalOpen, setIsUpsellModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isEnrolling, setIsEnrolling] = useState(false);
+
+    const isFree = rawPrice === 0;
 
     // State for bundle purchase (Upsell accepted)
     const [selectedBundle, setSelectedBundle] = useState<{ id: string, title: string, price: string } | null>(null);
@@ -68,6 +76,36 @@ export function CourseFloatingCard({
         setIsUpsellModalOpen(false);
         setSelectedBundle({ id: bundleId, title: bundleTitle, price: bundlePrice });
         setIsPaymentModalOpen(true);
+    };
+
+    const handleFreeEnroll = async () => {
+        if (!session) {
+            setIsLoginModalOpen(true);
+            return;
+        }
+
+        setIsEnrolling(true);
+        try {
+            const res = await fetch("/api/enroll/free", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ courseId }),
+            });
+
+            if (res.ok) {
+                toast.success("¡Inscripción exitosa!");
+                router.push(`/learn/${courseId}`);
+                router.refresh();
+            } else {
+                const data = await res.json();
+                toast.error(data.message || "Error al inscribirse");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error de conexión");
+        } finally {
+            setIsEnrolling(false);
+        }
     };
 
     return (
@@ -118,14 +156,23 @@ export function CourseFloatingCard({
                 <div className="p-6 md:p-8 space-y-6">
                     {/* Price Section */}
                     <div className="space-y-2">
-                        <div className="flex items-baseline gap-3">
-                            <span className="text-4xl font-black text-white">{price}</span>
-                            <span className="text-lg text-gray-500 line-through font-medium">{originalPrice}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-sm font-bold">{discount} OFF</span>
-                            <span className="text-emerald-400 text-sm font-medium">¡Oferta por tiempo limitado!</span>
-                        </div>
+                        {isFree ? (
+                            <div className="flex flex-col">
+                                <span className="text-4xl font-black text-white">GRATIS</span>
+                                <span className="text-sm text-gray-500 font-medium">Por tiempo limitado</span>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="flex items-baseline gap-3">
+                                    <span className="text-4xl font-black text-white">{price}</span>
+                                    <span className="text-lg text-gray-500 line-through font-medium">{originalPrice}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-sm font-bold">{discount} OFF</span>
+                                    <span className="text-emerald-400 text-sm font-medium">¡Oferta por tiempo limitado!</span>
+                                </div>
+                            </>
+                        )}
                     </div>
 
                     {/* CTAs */}
@@ -136,6 +183,14 @@ export function CourseFloatingCard({
                                     Continuar Aprendiendo
                                 </Button>
                             </Link>
+                        ) : isFree ? (
+                            <Button
+                                onClick={handleFreeEnroll}
+                                disabled={isEnrolling}
+                                className="w-full h-14 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover flex items-center justify-center gap-2"
+                            >
+                                {isEnrolling ? <Loader2 className="animate-spin" /> : "Inscribirse Gratis"}
+                            </Button>
                         ) : (
                             <Button
                                 onClick={handlePurchase}

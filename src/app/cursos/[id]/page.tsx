@@ -189,7 +189,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         videoThumbnail: displayImage,
         videoUrl: youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : previewVideoUrl,
         learningOutcomes: course.learningOutcomes,
-        shortDescription: course.shortDescription
+        shortDescription: course.shortDescription,
+        rawPrice: Number(course.price)
     };
 
     return (

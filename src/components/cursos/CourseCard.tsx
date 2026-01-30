@@ -18,6 +18,7 @@ interface CourseProps {
     tag: string;
     basePath?: string;
     videoUrl?: string; // New prop for video URL
+    rawPrice?: number;
     type?: 'course' | 'bundle';
 }
 
@@ -43,6 +44,7 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
     */
     const isCustomImage = displayImage && displayImage !== "/course-placeholder.jpg";
     const youtubeId = course.videoUrl ? getYouTubeId(course.videoUrl) : null;
+    const isFree = course.rawPrice === 0;
 
     let finalImageToRender = displayImage;
 
@@ -65,6 +67,15 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
                             <span className="bg-emerald-500/20 text-emerald-500 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20 flex items-center gap-1">
                                 <CheckCircle size={12} />
                                 Adquirido
+                            </span>
+                        </div>
+                    )}
+
+                    {/* FREE BADGE */}
+                    {!isOwned && isFree && (
+                        <div className="absolute top-4 right-4 z-20">
+                            <span className="bg-[#5D5CDE] text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-lg shadow-[#5D5CDE]/40 animate-pulse">
+                                Gratis por tiempo limitado
                             </span>
                         </div>
                     )}
@@ -106,7 +117,14 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
                     <div className="flex items-center justify-between mt-auto">
                         <div className="flex flex-col">
                             <span className="text-sm text-gray-400 font-medium uppercase tracking-wider mb-1">Inversión</span>
-                            <span className="text-white font-black text-xl">{course.price}</span>
+                            {isFree ? (
+                                <div className="flex items-center gap-2">
+                                    <span className="text-gray-500 line-through text-sm">$40.000</span>
+                                    <span className="text-[#5D5CDE] font-black text-xl">GRATIS</span>
+                                </div>
+                            ) : (
+                                <span className="text-white font-black text-xl">{course.price}</span>
+                            )}
                         </div>
                         <div className={cn(
                             "h-10 w-10 rounded-full flex items-center justify-center text-white transition-all shadow-lg",
