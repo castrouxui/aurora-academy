@@ -294,7 +294,7 @@ function RecoveryButton({ onRefresh }: { onRefresh: () => void }) {
                     {result.message}
                 </span>
             )}
-            <GrantAccessModal onSuccess={onRefresh} />
+            {/* <GrantAccessModal onSuccess={onRefresh} /> */}
             <Button
                 onClick={handleRecover}
                 disabled={loading}
