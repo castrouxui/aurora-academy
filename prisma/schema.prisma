@@ -293,3 +293,12 @@ model Review {
   @@index([courseId])
   @@index([userId])
 }
+
+model SalesGoal {
+  id           String   @id @default(cuid())
+  targetAmount Decimal  @default(5000000)
+  deadline     DateTime
+  startDate    DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

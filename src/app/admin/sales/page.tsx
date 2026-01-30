@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SalesGoalWidget } from "./SalesGoalWidget";
 
 interface Sale {
     id: string;
@@ -209,6 +210,11 @@ export default function AdminSalesPage() {
                         </button>
                     ))}
                 </div>
+            </div>
+
+            {/* SALES GOAL WIDGET */}
+            <div className="mb-6">
+                <SalesGoalWidget />
             </div>
 
             {/* METRICS GRID */}
