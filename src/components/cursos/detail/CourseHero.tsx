@@ -53,7 +53,7 @@ export function CourseHero({
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight drop-shadow-xl">
                         {title}
                     </h1>
-                    <p className="text-xl text-gray-200 leading-relaxed max-w-2xl drop-shadow-md">
+                    <p className="text-base md:text-xl text-gray-200 leading-relaxed max-w-2xl drop-shadow-md">
                         {shortDescription || description}
                     </p>
 
