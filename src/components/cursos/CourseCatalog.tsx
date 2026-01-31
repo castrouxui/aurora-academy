@@ -22,6 +22,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
     const [activeFilters, setActiveFilters] = useState<FilterState>({
         categories: [],
         levels: [],
+        types: [],
         price: null
     });
     const [sortBy, setSortBy] = useState("popular");
@@ -52,6 +53,11 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
 
                         const finalImage = getCourseImage(course);
 
+                        // Map database type to UI label
+                        let typeLabel = 'Curso';
+                        if (course.type === 'MENTORSHIP') typeLabel = 'Mentoría';
+                        if (course.type === 'MICRO_COURSE') typeLabel = 'Micro Curso';
+
                         return {
                             id: course.id,
                             title: course.title,
@@ -65,7 +71,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             rawPrice: course.price,
                             createdAt: course.createdAt,
                             videoUrl: firstLessonWithVideo?.videoUrl || null,
-                            type: 'course'
+                            type: typeLabel // Use mapped label
                         };
                     });
 
@@ -88,12 +94,13 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
             course.tag.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = activeFilters.categories.length === 0 || activeFilters.categories.some(cat => course.tag.includes(cat));
         const matchesLevel = activeFilters.levels.length === 0 || activeFilters.levels.includes(course.level);
+        const matchesType = !activeFilters.types || activeFilters.types.length === 0 || activeFilters.types.includes(course.type);
 
         let matchesPrice = true;
         if (activeFilters.price === "Gratis") matchesPrice = course.rawPrice === 0;
         if (activeFilters.price === "De Pago") matchesPrice = course.rawPrice > 0;
 
-        return matchesSearch && matchesCategory && matchesLevel && matchesPrice;
+        return matchesSearch && matchesCategory && matchesLevel && matchesType && matchesPrice;
     }).sort((a, b) => {
         switch (sortBy) {
             case "price-asc":
@@ -125,9 +132,9 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                     >
                         <SlidersHorizontal size={20} />
                         <span className="font-bold">Filtros</span>
-                        {(activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)) > 0 && (
+                        {(activeFilters.categories.length + activeFilters.levels.length + (activeFilters.types?.length || 0) + (activeFilters.price ? 1 : 0)) > 0 && (
                             <span className="ml-2 bg-[#5D5CDE] text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">
-                                {activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)}
+                                {activeFilters.categories.length + activeFilters.levels.length + (activeFilters.types?.length || 0) + (activeFilters.price ? 1 : 0)}
                             </span>
                         )}
                     </button>

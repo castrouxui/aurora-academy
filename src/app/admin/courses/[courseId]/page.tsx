@@ -16,7 +16,7 @@ import { toast } from "sonner";
 
 import Link from "next/link";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { useUploadThing } from "@/lib/uploadthing";
+import { useUploadThing, UploadButton } from "@/lib/uploadthing";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -66,7 +66,8 @@ interface Course {
     learningOutcomes?: string;
     published: boolean;
     modules: Module[];
-    discount?: number; // Added discount field
+    discount?: number;
+    type?: string;
 }
 
 export default function CourseEditorPage() {
@@ -97,14 +98,11 @@ export default function CourseEditorPage() {
     // Resource State
     const [resourceTitle, setResourceTitle] = useState("");
     const [resourceUrl, setResourceUrl] = useState("");
+    const [resourceType, setResourceType] = useState<"LINK" | "FILE">("LINK");
     const [isAddingResource, setIsAddingResource] = useState(false);
 
-    // Quiz State
-    const [quizQuestion, setQuizQuestion] = useState("");
-    const [quizOptions, setQuizOptions] = useState<string[]>(["", "", "", ""]);
-    const [quizCorrectOption, setQuizCorrectOption] = useState(0);
-    const [isSubmittingQuiz, setIsSubmittingQuiz] = useState(false);
-    const [isDeletingQuiz, setIsDeletingQuiz] = useState(false);
+    // Upload State
+    // Removed Quiz State
 
     // Upload State
     const [isUploading, setIsUploading] = useState(false);
@@ -124,6 +122,7 @@ export default function CourseEditorPage() {
     const [titleInput, setTitleInput] = useState("");
     const [categoryInput, setCategoryInput] = useState("");
     const [levelInput, setLevelInput] = useState("");
+    const [typeInput, setTypeInput] = useState("COURSE"); // Default type
 
     const fetchCourse = async () => {
         try {
@@ -153,6 +152,7 @@ export default function CourseEditorPage() {
             setDiscountInput(course.discount?.toString() || "0");
             setCategoryInput(course.category || "General");
             setLevelInput(course.level || "Todos los niveles");
+            setTypeInput(course.type || "COURSE");
         }
     }, [course]);
 
@@ -174,6 +174,7 @@ export default function CourseEditorPage() {
                     discount: discount,
                     category: categoryInput,
                     level: levelInput,
+                    type: typeInput,
                     imageUrl: course.imageUrl,
                 }),
             });
@@ -269,23 +270,10 @@ export default function CourseEditorPage() {
         setLessonDuration(lesson.duration || 0);
 
         // Initialize Resources
-        // Since we don't have a local state for the list of resources (it comes from the lesson object),
-        // we might rely on the course refresh. However, if we want to add/remove we normally interact with API.
-        // But for the input fields:
         setResourceTitle("");
         setResourceUrl("");
+        setResourceType("LINK");
         setIsAddingResource(false);
-
-        // Initialize Quiz
-        if (lesson.quiz) {
-            setQuizQuestion(lesson.quiz.question);
-            setQuizOptions(lesson.quiz.options);
-            setQuizCorrectOption(lesson.quiz.correctOption);
-        } else {
-            setQuizQuestion("");
-            setQuizOptions(["", "", "", ""]);
-            setQuizCorrectOption(0);
-        }
 
         setIsAddLessonOpen(true);
     };
@@ -373,12 +361,13 @@ export default function CourseEditorPage() {
                 body: JSON.stringify({
                     title: resourceTitle,
                     url: resourceUrl,
-                    type: "LINK"
+                    type: resourceType // dynamically set type
                 }),
             });
             if (res.ok) {
                 setResourceTitle("");
                 setResourceUrl("");
+                setResourceType("LINK");
                 toast.success("Recurso agregado");
                 fetchCourse(); // Refresh to see new resource
             }
@@ -418,54 +407,6 @@ export default function CourseEditorPage() {
             setResourceUrl("https://example.com/uploaded-file.pdf");
             toast.success("Archivo subido (Simulación)");
         }, 1500);
-    };
-
-    const handleSaveQuiz = async () => {
-        if (!activeLessonId) return;
-        setIsSubmittingQuiz(true);
-        try {
-            // Check if quiz exists via course data or try to update if it does
-            // Simplified: Upsert logic usually in API
-            const res = await fetch(`/api/lessons/${activeLessonId}/quiz`, {
-                method: "PUT", // Assumes API handles UPSERT
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    question: quizQuestion,
-                    options: quizOptions,
-                    correctOption: quizCorrectOption
-                }),
-            });
-
-            if (res.ok) {
-                toast.success("Cuestionario guardado");
-                fetchCourse();
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error("Error al guardar quiz");
-        } finally {
-            setIsSubmittingQuiz(false);
-        }
-    };
-
-    const handleDeleteQuiz = async () => {
-        if (!activeLessonId) return;
-        setIsDeletingQuiz(true); // Add state variable if needed or reuse submitting
-        try {
-            const res = await fetch(`/api/lessons/${activeLessonId}/quiz`, {
-                method: "DELETE",
-            });
-            if (res.ok) {
-                toast.success("Cuestionario eliminado");
-                setQuizQuestion("");
-                setQuizOptions(["", "", "", ""]);
-                fetchCourse();
-            }
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsDeletingQuiz(false);
-        }
     };
 
     // File upload handlers for video
@@ -612,6 +553,26 @@ export default function CourseEditorPage() {
                                         <ChevronDown size={14} className="absolute right-3 top-2.5 text-gray-500 pointer-events-none" />
                                     </div>
                                 </div>
+
+                                <div className="space-y-2 col-span-2">
+                                    <Label className="text-xs text-gray-400">Tipo de Contenido</Label>
+                                    <div className="flex gap-2 p-1 bg-[#121620] rounded-lg border border-gray-600">
+                                        {['COURSE', 'MENTORSHIP', 'MICRO_COURSE'].map((type) => (
+                                            <button
+                                                key={type}
+                                                onClick={() => setTypeInput(type)}
+                                                className={`flex-1 text-xs font-medium py-1.5 rounded-md transition-all ${typeInput === type
+                                                    ? 'bg-[#5D5CDE] text-white shadow-sm'
+                                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                                    }`}
+                                            >
+                                                {type === 'COURSE' && 'Curso'}
+                                                {type === 'MENTORSHIP' && 'Mentoría'}
+                                                {type === 'MICRO_COURSE' && 'Micro Curso'}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
@@ -695,9 +656,27 @@ export default function CourseEditorPage() {
                                     </div>
                                 )}
                                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <Button variant="outline" size="sm" className="bg-transparent border-white text-white hover:bg-white hover:text-black text-xs">
-                                        Cambiar Imagen
-                                    </Button>
+                                    <div className="bg-white p-2 rounded-lg">
+                                        <UploadButton
+                                            endpoint="courseImage"
+                                            onClientUploadComplete={(res) => {
+                                                if (res?.[0]) {
+                                                    setCourse(prev => prev ? { ...prev, imageUrl: res[0].url } : null);
+                                                    toast.success("Imagen actualizada");
+                                                }
+                                            }}
+                                            onUploadError={(error: Error) => {
+                                                toast.error(`Error: ${error.message}`);
+                                            }}
+                                            appearance={{
+                                                button: "bg-[#5D5CDE] text-white text-xs px-4 py-2 h-auto",
+                                                allowedContent: "hidden"
+                                            }}
+                                            content={{
+                                                button: "Cambiar Imagen"
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </CardContent>
@@ -778,13 +757,7 @@ export default function CourseEditorPage() {
                                             >
                                                 Recursos Adicionales
                                             </TabsTrigger>
-                                            <TabsTrigger
-                                                value="quiz"
-                                                disabled={!activeLessonId}
-                                                className="h-12 rounded-none border-b-2 border-transparent data-[state=active]:border-[#5D5CDE] data-[state=active]:bg-transparent data-[state=active]:shadow-none px-0 text-gray-400 data-[state=active]:text-white font-medium bg-transparent disabled:opacity-30"
-                                            >
-                                                Cuestionario (Quiz)
-                                            </TabsTrigger>
+
                                         </TabsList>
                                     </div>
 
@@ -865,10 +838,29 @@ export default function CourseEditorPage() {
                                         <TabsContent value="resources" className="p-6 space-y-6">
                                             {/* Add Resource Form */}
                                             <div className="bg-[#1a1f2e]/50 p-4 rounded-xl border border-gray-800 space-y-4">
-                                                <h4 className="text-sm font-medium text-white flex items-center gap-2">
-                                                    <LinkIcon size={14} className="text-[#5D5CDE]" />
-                                                    Agregar Nuevo Recurso
-                                                </h4>
+                                                <div className="flex items-center justify-between">
+                                                    <h4 className="text-sm font-medium text-white flex items-center gap-2">
+                                                        <LinkIcon size={14} className="text-[#5D5CDE]" />
+                                                        Agregar Nuevo Recurso
+                                                    </h4>
+                                                    <div className="flex bg-[#0b0e14] p-1 rounded-lg border border-gray-800">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setResourceType("LINK")}
+                                                            className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${resourceType === "LINK" ? "bg-[#5D5CDE] text-white" : "text-gray-400 hover:text-white"}`}
+                                                        >
+                                                            Enlace
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setResourceType("FILE")}
+                                                            className={`px-3 py-1 text-xs font-medium rounded-md transition-all ${resourceType === "FILE" ? "bg-[#5D5CDE] text-white" : "text-gray-400 hover:text-white"}`}
+                                                        >
+                                                            Archivo
+                                                        </button>
+                                                    </div>
+                                                </div>
+
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     <div className="space-y-2">
                                                         <Label className="text-xs text-gray-400">Título del Recurso</Label>
@@ -876,28 +868,82 @@ export default function CourseEditorPage() {
                                                             value={resourceTitle}
                                                             onChange={(e) => setResourceTitle(e.target.value)}
                                                             className="bg-[#0b0e14] border-gray-800 text-sm"
-                                                            placeholder="Ej: Guía PDF"
+                                                            placeholder={resourceType === "LINK" ? "Ej: Guía de Estudio" : "Ej: Documento PDF"}
                                                         />
                                                     </div>
+
                                                     <div className="space-y-2">
-                                                        <Label className="text-xs text-gray-400">URL del Recurso</Label>
-                                                        <div className="flex gap-2">
-                                                            <Input
-                                                                value={resourceUrl}
-                                                                onChange={(e) => setResourceUrl(e.target.value)}
-                                                                className="bg-[#0b0e14] border-gray-800 text-sm"
-                                                                placeholder="https://..."
-                                                            />
-                                                            <Button
-                                                                type="button"
-                                                                onClick={handleAddResource}
-                                                                disabled={isAddingResource || !resourceTitle || !resourceUrl}
-                                                                size="icon"
-                                                                className="bg-[#5D5CDE] hover:bg-[#4B4AC0] shrink-0"
-                                                            >
-                                                                {isAddingResource ? <Loader2 className="animate-spin h-4 w-4" /> : <Plus size={18} />}
-                                                            </Button>
-                                                        </div>
+                                                        <Label className="text-xs text-gray-400">
+                                                            {resourceType === "LINK" ? "URL del Recurso" : "Subir Archivo"}
+                                                        </Label>
+
+                                                        {resourceType === "LINK" ? (
+                                                            <div className="flex gap-2">
+                                                                <Input
+                                                                    value={resourceUrl}
+                                                                    onChange={(e) => setResourceUrl(e.target.value)}
+                                                                    className="bg-[#0b0e14] border-gray-800 text-sm"
+                                                                    placeholder="https://..."
+                                                                />
+                                                                <Button
+                                                                    type="button"
+                                                                    onClick={handleAddResource}
+                                                                    disabled={isAddingResource || !resourceTitle || !resourceUrl}
+                                                                    size="icon"
+                                                                    className="bg-[#5D5CDE] hover:bg-[#4B4AC0] shrink-0"
+                                                                >
+                                                                    {isAddingResource ? <Loader2 className="animate-spin h-4 w-4" /> : <Plus size={18} />}
+                                                                </Button>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="flex gap-2 items-center">
+                                                                {resourceUrl ? (
+                                                                    <div className="flex-1 flex items-center gap-2 bg-[#0b0e14] border border-gray-800 rounded-md px-3 h-10 text-sm text-gray-300 overflow-hidden">
+                                                                        <CheckCircle size={14} className="text-emerald-500 shrink-0" />
+                                                                        <span className="truncate">{resourceUrl}</span>
+                                                                        <button type="button" onClick={() => setResourceUrl("")} className="ml-auto text-gray-500 hover:text-white">
+                                                                            <X size={14} />
+                                                                        </button>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="flex-1">
+                                                                        <UploadButton
+                                                                            endpoint="courseAttachment"
+                                                                            onClientUploadComplete={(res) => {
+                                                                                if (res?.[0]) {
+                                                                                    setResourceUrl(res[0].url);
+                                                                                    if (!resourceTitle) setResourceTitle(res[0].name);
+                                                                                    toast.success("Archivo subido correctamente");
+                                                                                }
+                                                                            }}
+                                                                            onUploadError={(error: Error) => {
+                                                                                toast.error(`Error: ${error.message}`);
+                                                                            }}
+                                                                            appearance={{
+                                                                                button: "bg-[#2D3748] text-white hover:bg-[#374151] w-full text-xs h-10",
+                                                                                allowedContent: "hidden"
+                                                                            }}
+                                                                            content={{
+                                                                                button({ ready }) {
+                                                                                    if (ready) return <span className="flex items-center gap-2"><UploadCloud size={14} /> Seleccionar Archivo</span>;
+                                                                                    return "Cargando...";
+                                                                                }
+                                                                            }}
+                                                                        />
+                                                                    </div>
+                                                                )}
+
+                                                                <Button
+                                                                    type="button"
+                                                                    onClick={handleAddResource}
+                                                                    disabled={isAddingResource || !resourceTitle || !resourceUrl}
+                                                                    size="icon"
+                                                                    className="bg-[#5D5CDE] hover:bg-[#4B4AC0] shrink-0"
+                                                                >
+                                                                    {isAddingResource ? <Loader2 className="animate-spin h-4 w-4" /> : <Plus size={18} />}
+                                                                </Button>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -916,7 +962,7 @@ export default function CourseEditorPage() {
                                                             <div key={resource.id} className="flex items-center justify-between p-3 bg-[#1a1f2e]/50 border border-gray-800 rounded-lg group">
                                                                 <div className="flex items-center gap-3">
                                                                     <div className="h-8 w-8 rounded bg-[#5D5CDE]/10 flex items-center justify-center text-[#5D5CDE]">
-                                                                        <FileText size={16} />
+                                                                        {resource.type === "FILE" || resource.url.endsWith(".pdf") ? <FileIcon size={16} /> : <LinkIcon size={16} />}
                                                                     </div>
                                                                     <div>
                                                                         <p className="text-sm text-white font-medium">{resource.title}</p>
@@ -938,85 +984,6 @@ export default function CourseEditorPage() {
                                                         ))}
                                                     </div>
                                                 )}
-                                            </div>
-                                        </TabsContent>
-                                        <TabsContent value="quiz" className="p-6 space-y-6">
-                                            <div className="flex items-center justify-between">
-                                                <div className="space-y-1">
-                                                    <h3 className="text-base font-medium text-white">Cuestionario de Evaluación</h3>
-                                                    <p className="text-xs text-gray-400">Agrega una pregunta simple para validar el conocimiento.</p>
-                                                </div>
-                                                {/* Check if quiz exists */}
-                                                {(activeLessonId && course.modules.flatMap(m => m.lessons).find(l => l.id === activeLessonId)?.quiz) && (
-                                                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 flex gap-1">
-                                                        <CheckCircle size={10} /> Activo
-                                                    </Badge>
-                                                )}
-                                            </div>
-
-                                            <div className="space-y-4 bg-[#1a1f2e]/30 p-5 rounded-xl border border-gray-800">
-                                                <div className="space-y-2">
-                                                    <Label className="text-xs text-gray-300">Pregunta</Label>
-                                                    <Input
-                                                        value={quizQuestion}
-                                                        onChange={(e) => setQuizQuestion(e.target.value)}
-                                                        className="bg-[#0b0e14] border-gray-800 text-sm"
-                                                        placeholder="¿Cuál es el patrón de vela más alcista?"
-                                                    />
-                                                </div>
-
-                                                <div className="space-y-3">
-                                                    <Label className="text-xs text-gray-300">Opciones de Respuesta</Label>
-                                                    <div className="grid grid-cols-1 gap-3">
-                                                        {quizOptions.map((option, idx) => (
-                                                            <div key={idx} className="flex items-center gap-3">
-                                                                <div className="flex items-center h-5">
-                                                                    <div
-                                                                        className={`w-4 h-4 rounded-full border cursor-pointer flex items-center justify-center ${quizCorrectOption === idx ? 'border-[#5D5CDE] bg-[#5D5CDE]' : 'border-gray-600'}`}
-                                                                        onClick={() => setQuizCorrectOption(idx)}
-                                                                    >
-                                                                        {quizCorrectOption === idx && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                                                                    </div>
-                                                                </div>
-                                                                <Input
-                                                                    value={option}
-                                                                    onChange={(e) => {
-                                                                        const newOptions = [...quizOptions];
-                                                                        newOptions[idx] = e.target.value;
-                                                                        setQuizOptions(newOptions);
-                                                                    }}
-                                                                    className={`bg-[#0b0e14] border-gray-800 text-sm flex-1 ${quizCorrectOption === idx ? 'border-[#5D5CDE]/50 ring-1 ring-[#5D5CDE]/20' : ''}`}
-                                                                    placeholder={`Opción ${idx + 1}`}
-                                                                />
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-center justify-end gap-3 pt-2 border-t border-gray-800">
-                                                {/* Logic to show delete button if quiz exists */}
-                                                {(activeLessonId && course.modules.flatMap(m => m.lessons).find(l => l.id === activeLessonId)?.quiz) && (
-                                                    <Button
-                                                        type="button"
-                                                        variant="ghost"
-                                                        onClick={handleDeleteQuiz}
-                                                        disabled={isDeletingQuiz}
-                                                        className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
-                                                    >
-                                                        {isDeletingQuiz ? <Loader2 className="animate-spin h-4 w-4" /> : "Eliminar Cuestionario"}
-                                                    </Button>
-                                                )}
-
-                                                <Button
-                                                    type="button"
-                                                    onClick={handleSaveQuiz}
-                                                    disabled={isSubmittingQuiz || !quizQuestion || quizOptions.some(o => !o)}
-                                                    className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white"
-                                                >
-                                                    {isSubmittingQuiz ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : <Save className="h-4 w-4 mr-2" />}
-                                                    Guardar Cuestionario
-                                                </Button>
                                             </div>
                                         </TabsContent>
 

@@ -105,6 +105,7 @@ model Course {
   imageUrl         String?
   category         String     @default("General")
   level            String     @default("Todos los niveles")
+  type             String     @default("COURSE") // COURSE, MENTORSHIP, MICRO_COURSE
   published        Boolean    @default(false)
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
