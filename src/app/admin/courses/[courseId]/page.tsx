@@ -410,7 +410,7 @@ export default function CourseEditorPage() {
             // Check if quiz exists via course data or try to update if it does
             // Simplified: Upsert logic usually in API
             const res = await fetch(`/api/lessons/${activeLessonId}/quiz`, {
-                method: "POST", // Assumes API handles UPSERT
+                method: "PUT", // Assumes API handles UPSERT
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     question: quizQuestion,
