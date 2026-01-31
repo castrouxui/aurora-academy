@@ -124,6 +124,29 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                     </div>
                 )}
 
+                {/* Content Type Tabs - Primary Filter */}
+                <div className="flex flex-wrap justify-center gap-2 mb-8">
+                    {['Todos', 'Mentoría', 'Curso', 'Micro Curso'].map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => {
+                                if (tab === 'Todos') {
+                                    setActiveFilters(prev => ({ ...prev, types: [] }));
+                                } else {
+                                    setActiveFilters(prev => ({ ...prev, types: [tab] }));
+                                }
+                            }}
+                            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all border ${(tab === 'Todos' && (!activeFilters.types || activeFilters.types.length === 0)) ||
+                                    (activeFilters.types?.includes(tab))
+                                    ? 'bg-[#5D5CDE] text-white border-[#5D5CDE] shadow-lg shadow-[#5D5CDE]/20'
+                                    : 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10 hover:text-white'
+                                }`}
+                        >
+                            {tab}
+                        </button>
+                    ))}
+                </div>
+
                 {/* Controls Bar */}
                 <div className="flex flex-col md:flex-row gap-4 mb-8">
                     <button
@@ -132,9 +155,9 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                     >
                         <SlidersHorizontal size={20} />
                         <span className="font-bold">Filtros</span>
-                        {(activeFilters.categories.length + activeFilters.levels.length + (activeFilters.types?.length || 0) + (activeFilters.price ? 1 : 0)) > 0 && (
+                        {(activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)) > 0 && (
                             <span className="ml-2 bg-[#5D5CDE] text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">
-                                {activeFilters.categories.length + activeFilters.levels.length + (activeFilters.types?.length || 0) + (activeFilters.price ? 1 : 0)}
+                                {activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)}
                             </span>
                         )}
                     </button>

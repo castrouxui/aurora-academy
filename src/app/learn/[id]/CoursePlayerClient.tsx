@@ -25,11 +25,7 @@ interface Lesson {
     locked?: boolean;
     videoUrl?: string;
     resources?: { id: string; title: string; url: string; type: string }[];
-    quiz?: {
-        question: string;
-        options: string[];
-        correctOption: number;
-    } | null;
+
 }
 
 interface Module {
@@ -84,39 +80,10 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
 
     const completionDate = new Date().toLocaleDateString();
 
-    // Quiz State
-    const [quizOpen, setQuizOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<number | null>(null);
-    const [quizError, setQuizError] = useState(false);
+    // Quiz State Removed
+    // const [quizOpen, setQuizOpen] = useState(false);
+    // ...
 
-    const handleQuizSubmit = () => {
-        if (!activeLesson?.quiz || selectedOption === null) return;
-
-        if (selectedOption === activeLesson.quiz.correctOption) {
-            toast.success("¡Respuesta correcta! Clase completada.");
-            setQuizOpen(false);
-            setQuizError(false);
-            setSelectedOption(null);
-            // Mark as complete logic - reusing the existing function but bypassing the check
-            const lessonId = activeLesson.id;
-
-            // Optimistic update
-            setLocalModules(prev => prev.map(m => ({
-                ...m,
-                lessons: m.lessons.map(l => l.id === lessonId ? { ...l, completed: true } : l)
-            })));
-
-            fetch("/api/progress", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ lessonId, completed: true })
-            }).catch(err => console.error(err));
-
-        } else {
-            setQuizError(true);
-            toast.error("Respuesta incorrecta. Inténtalo de nuevo.");
-        }
-    };
 
     // Local state for modules/lessons to handle optimistic updates
     const [localModules, setLocalModules] = useState(course.modules);
@@ -127,11 +94,8 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
     const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
     const handleToggleComplete = async (lessonId: string, currentStatus: boolean) => {
-        // Intercept if setting to completed AND has quiz
-        if (!currentStatus && activeLesson?.id === lessonId && activeLesson.quiz && !activeLesson.completed) {
-            setQuizOpen(true);
-            return;
-        }
+        // Quiz check removed
+
 
         // Optimistic update
         setLocalModules(prev => prev.map(m => ({
@@ -279,9 +243,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                         }
                                     }}
                                     onComplete={() => {
-                                        if (activeLesson && activeLesson.quiz && !activeLesson.completed) {
-                                            setQuizOpen(true);
-                                        } else if (activeLesson && !activeLesson.completed) {
+                                        if (activeLesson && !activeLesson.completed) {
                                             handleToggleComplete(activeLesson.id, false);
                                         }
                                     }}
@@ -348,21 +310,15 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                                         : "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white border-transparent shadow-lg shadow-indigo-500/20"
                                                 )}
                                             >
-                                                {activeLesson.completed ? (
-                                                    <>
-                                                        <CheckCircle size={20} className="fill-current" />
-                                                        Completada
-                                                    </>
-                                                ) : activeLesson.quiz ? (
-                                                    <>
-                                                        <BrainCircuit size={20} />
-                                                        Responder Quiz
-                                                    </>
+                                                <>
+                                                    <CheckCircle size={20} className="fill-current" />
+                                                    Completada
+                                                </>
                                                 ) : (
-                                                    <>
-                                                        <CheckCircle size={20} />
-                                                        Marcar como Vista
-                                                    </>
+                                                <>
+                                                    <CheckCircle size={20} />
+                                                    Marcar como Vista
+                                                </>
                                                 )}
                                             </Button>
                                         </div>
@@ -553,81 +509,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                 date={completionDate}
             />
 
-            {/* Quiz Modal */}
-            <Dialog open={quizOpen} onOpenChange={(open) => {
-                if (!open) setQuizOpen(false);
-            }}>
-                <DialogContent className="bg-[#0f111a] border border-gray-800 text-white sm:max-w-[500px]">
-                    <DialogHeader>
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="h-10 w-10 rounded-full bg-[#5D5CDE]/20 flex items-center justify-center text-[#5D5CDE]">
-                                <BrainCircuit size={20} />
-                            </div>
-                            <div>
-                                <DialogTitle className="text-xl">Pregunta de Repaso</DialogTitle>
-                                <DialogDescription className="text-gray-400">
-                                    Responde correctamente para completar la clase.
-                                </DialogDescription>
-                            </div>
-                        </div>
-                    </DialogHeader>
 
-                    <div className="py-4 space-y-6">
-                        <div className="bg-[#1a1f2e] p-4 rounded-xl border border-gray-800">
-                            <p className="font-medium text-lg text-white">
-                                {activeLesson?.quiz?.question}
-                            </p>
-                        </div>
-
-                        <div className="space-y-3">
-                            <Label className="text-xs text-gray-500 uppercase tracking-wider font-bold">Opciones</Label>
-                            <div className="grid gap-3">
-                                {activeLesson?.quiz?.options.map((option, idx) => (
-                                    <div
-                                        key={idx}
-                                        onClick={() => {
-                                            setSelectedOption(idx);
-                                            setQuizError(false);
-                                        }}
-                                        className={cn(
-                                            "p-4 rounded-xl border cursor-pointer transition-all flex items-center gap-3",
-                                            selectedOption === idx
-                                                ? "bg-[#5D5CDE]/10 border-[#5D5CDE] ring-1 ring-[#5D5CDE]"
-                                                : "bg-[#0b0e14] border-gray-800 hover:border-gray-600 hover:bg-[#1a1f2e]"
-                                        )}
-                                    >
-                                        <div className={cn(
-                                            "w-5 h-5 rounded-full border flex items-center justify-center shrink-0",
-                                            selectedOption === idx ? "border-[#5D5CDE] bg-[#5D5CDE]" : "border-gray-500"
-                                        )}>
-                                            {selectedOption === idx && <div className="w-2 h-2 rounded-full bg-white" />}
-                                        </div>
-                                        <span className={cn(
-                                            "text-sm font-medium",
-                                            selectedOption === idx ? "text-white" : "text-gray-300"
-                                        )}>
-                                            {option}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-
-                    <DialogFooter className="sm:justify-between items-center gap-4 border-t border-gray-800 pt-4">
-                        <p className="text-xs text-red-400 font-medium h-5">
-                            {quizError && "Respuesta incorrecta. Inténtalo de nuevo."}
-                        </p>
-                        <Button
-                            onClick={handleQuizSubmit}
-                            disabled={selectedOption === null}
-                            className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white"
-                        >
-                            Confirmar Respuesta
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </div >
     );
 }

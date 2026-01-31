@@ -19,7 +19,6 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
                         orderBy: { position: 'asc' },
                         include: {
                             resources: true,
-                            quiz: true
                         }
                     }
                 }
@@ -57,6 +56,9 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
                     ]
                 }
             });
+
+            console.log(`[ACCESS_CHECK] User: ${session.user.id}, Course: ${id}, Role: ${session.user.role}, Purchase: ${purchase ? 'FOUND' : 'NOT FOUND'}`);
+
             if (purchase) {
                 isAccess = true;
             }
@@ -97,28 +99,26 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
                 current: false,
                 // SECURITY: Only send video URL and resources if user has access
                 videoUrl: isAccess ? (lesson.videoUrl || "") : "",
+                // SECURITY: Only send video URL and resources if user has access
+                videoUrl: isAccess ? (lesson.videoUrl || "") : "",
                 resources: isAccess ? (lesson.resources || []) : [],
-                quiz: lesson.quiz ? {
-                    question: lesson.quiz.question,
-                    options: lesson.quiz.options,
-                    correctOption: lesson.quiz.correctOption
-                } : null
             }))
         }))
-    };
+    }))
+};
 
-    // 4. Determine Back Link
-    const userRole = session?.user?.role;
-    const backLink = (userRole === "ADMIN" || userRole === "INSTRUCTOR")
-        ? "/admin/courses"
-        : "/dashboard/cursos";
+// 4. Determine Back Link
+const userRole = session?.user?.role;
+const backLink = (userRole === "ADMIN" || userRole === "INSTRUCTOR")
+    ? "/admin/courses"
+    : "/dashboard/cursos";
 
-    return (
-        <CoursePlayerClient
-            course={clientCourse}
-            isAccess={isAccess}
-            studentName={session?.user?.name || "Invitado"}
-            backLink={backLink}
-        />
-    );
+return (
+    <CoursePlayerClient
+        course={clientCourse}
+        isAccess={isAccess}
+        studentName={session?.user?.name || "Invitado"}
+        backLink={backLink}
+    />
+);
 }
