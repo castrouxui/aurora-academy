@@ -196,6 +196,8 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #0B0F19; /* Force dark background for overscroll */
+  overscroll-behavior-y: none; /* Optional: disables bounce if desired, but color match is better */
 }
 
 body {
