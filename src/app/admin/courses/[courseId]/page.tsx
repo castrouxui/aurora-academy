@@ -268,8 +268,25 @@ export default function CourseEditorPage() {
         setLessonDesc(lesson.description || "");
         setLessonDuration(lesson.duration || 0);
 
-        // Reset sub-tabs state if needed, or handle fetching them if they aren't fully loaded
-        // For simple structure they are loaded with course
+        // Initialize Resources
+        // Since we don't have a local state for the list of resources (it comes from the lesson object),
+        // we might rely on the course refresh. However, if we want to add/remove we normally interact with API.
+        // But for the input fields:
+        setResourceTitle("");
+        setResourceUrl("");
+        setIsAddingResource(false);
+
+        // Initialize Quiz
+        if (lesson.quiz) {
+            setQuizQuestion(lesson.quiz.question);
+            setQuizOptions(lesson.quiz.options);
+            setQuizCorrectOption(lesson.quiz.correctOption);
+        } else {
+            setQuizQuestion("");
+            setQuizOptions(["", "", "", ""]);
+            setQuizCorrectOption(0);
+        }
+
         setIsAddLessonOpen(true);
     };
 
@@ -845,14 +862,161 @@ export default function CourseEditorPage() {
                                         </TabsContent>
 
                                         {/* Simplified Resources and Quiz Tabs content for brevity, functional parity maintained */}
-                                        <TabsContent value="resources" className="p-6">
-                                            <div className="text-center text-gray-500 p-4 border border-dashed border-gray-700 rounded-lg">
-                                                Gestión de recursos disponible al editar la lección.
+                                        <TabsContent value="resources" className="p-6 space-y-6">
+                                            {/* Add Resource Form */}
+                                            <div className="bg-[#1a1f2e]/50 p-4 rounded-xl border border-gray-800 space-y-4">
+                                                <h4 className="text-sm font-medium text-white flex items-center gap-2">
+                                                    <LinkIcon size={14} className="text-[#5D5CDE]" />
+                                                    Agregar Nuevo Recurso
+                                                </h4>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div className="space-y-2">
+                                                        <Label className="text-xs text-gray-400">Título del Recurso</Label>
+                                                        <Input
+                                                            value={resourceTitle}
+                                                            onChange={(e) => setResourceTitle(e.target.value)}
+                                                            className="bg-[#0b0e14] border-gray-800 text-sm"
+                                                            placeholder="Ej: Guía PDF"
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <Label className="text-xs text-gray-400">URL del Recurso</Label>
+                                                        <div className="flex gap-2">
+                                                            <Input
+                                                                value={resourceUrl}
+                                                                onChange={(e) => setResourceUrl(e.target.value)}
+                                                                className="bg-[#0b0e14] border-gray-800 text-sm"
+                                                                placeholder="https://..."
+                                                            />
+                                                            <Button
+                                                                type="button"
+                                                                onClick={handleAddResource}
+                                                                disabled={isAddingResource || !resourceTitle || !resourceUrl}
+                                                                size="icon"
+                                                                className="bg-[#5D5CDE] hover:bg-[#4B4AC0] shrink-0"
+                                                            >
+                                                                {isAddingResource ? <Loader2 className="animate-spin h-4 w-4" /> : <Plus size={18} />}
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Resources List */}
+                                            <div className="space-y-3">
+                                                <Label className="text-sm font-medium text-gray-300">Recursos Existentes</Label>
+                                                {/* Find the active lesson to list its resources */}
+                                                {course.modules.flatMap(m => m.lessons).find(l => l.id === activeLessonId)?.resources?.length === 0 ? (
+                                                    <div className="text-center py-8 bg-[#1a1f2e]/30 rounded-xl border border-dashed border-gray-800 text-gray-500 text-sm">
+                                                        No hay recursos agregados a esta clase.
+                                                    </div>
+                                                ) : (
+                                                    <div className="space-y-2">
+                                                        {course.modules.flatMap(m => m.lessons).find(l => l.id === activeLessonId)?.resources?.map((resource) => (
+                                                            <div key={resource.id} className="flex items-center justify-between p-3 bg-[#1a1f2e]/50 border border-gray-800 rounded-lg group">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="h-8 w-8 rounded bg-[#5D5CDE]/10 flex items-center justify-center text-[#5D5CDE]">
+                                                                        <FileText size={16} />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="text-sm text-white font-medium">{resource.title}</p>
+                                                                        <a href={resource.url} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 hover:text-[#5D5CDE] flex items-center gap-1">
+                                                                            {resource.url} <ExternalLink size={10} />
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <Button
+                                                                    type="button"
+                                                                    variant="ghost"
+                                                                    size="icon"
+                                                                    onClick={() => handleDeleteResource(resource.id)}
+                                                                    className="text-gray-500 hover:text-red-400 hover:bg-red-400/10 opacity-0 group-hover:opacity-100 transition-all"
+                                                                >
+                                                                    <Trash2 size={16} />
+                                                                </Button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
                                             </div>
                                         </TabsContent>
-                                        <TabsContent value="quiz" className="p-6">
-                                            <div className="text-center text-gray-500 p-4 border border-dashed border-gray-700 rounded-lg">
-                                                Gestión de cuestionarios disponible al editar la lección.
+                                        <TabsContent value="quiz" className="p-6 space-y-6">
+                                            <div className="flex items-center justify-between">
+                                                <div className="space-y-1">
+                                                    <h3 className="text-base font-medium text-white">Cuestionario de Evaluación</h3>
+                                                    <p className="text-xs text-gray-400">Agrega una pregunta simple para validar el conocimiento.</p>
+                                                </div>
+                                                {/* Check if quiz exists */}
+                                                {(activeLessonId && course.modules.flatMap(m => m.lessons).find(l => l.id === activeLessonId)?.quiz) && (
+                                                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 flex gap-1">
+                                                        <CheckCircle size={10} /> Activo
+                                                    </Badge>
+                                                )}
+                                            </div>
+
+                                            <div className="space-y-4 bg-[#1a1f2e]/30 p-5 rounded-xl border border-gray-800">
+                                                <div className="space-y-2">
+                                                    <Label className="text-xs text-gray-300">Pregunta</Label>
+                                                    <Input
+                                                        value={quizQuestion}
+                                                        onChange={(e) => setQuizQuestion(e.target.value)}
+                                                        className="bg-[#0b0e14] border-gray-800 text-sm"
+                                                        placeholder="¿Cuál es el patrón de vela más alcista?"
+                                                    />
+                                                </div>
+
+                                                <div className="space-y-3">
+                                                    <Label className="text-xs text-gray-300">Opciones de Respuesta</Label>
+                                                    <div className="grid grid-cols-1 gap-3">
+                                                        {quizOptions.map((option, idx) => (
+                                                            <div key={idx} className="flex items-center gap-3">
+                                                                <div className="flex items-center h-5">
+                                                                    <div
+                                                                        className={`w-4 h-4 rounded-full border cursor-pointer flex items-center justify-center ${quizCorrectOption === idx ? 'border-[#5D5CDE] bg-[#5D5CDE]' : 'border-gray-600'}`}
+                                                                        onClick={() => setQuizCorrectOption(idx)}
+                                                                    >
+                                                                        {quizCorrectOption === idx && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                                                                    </div>
+                                                                </div>
+                                                                <Input
+                                                                    value={option}
+                                                                    onChange={(e) => {
+                                                                        const newOptions = [...quizOptions];
+                                                                        newOptions[idx] = e.target.value;
+                                                                        setQuizOptions(newOptions);
+                                                                    }}
+                                                                    className={`bg-[#0b0e14] border-gray-800 text-sm flex-1 ${quizCorrectOption === idx ? 'border-[#5D5CDE]/50 ring-1 ring-[#5D5CDE]/20' : ''}`}
+                                                                    placeholder={`Opción ${idx + 1}`}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center justify-end gap-3 pt-2 border-t border-gray-800">
+                                                {/* Logic to show delete button if quiz exists */}
+                                                {(activeLessonId && course.modules.flatMap(m => m.lessons).find(l => l.id === activeLessonId)?.quiz) && (
+                                                    <Button
+                                                        type="button"
+                                                        variant="ghost"
+                                                        onClick={handleDeleteQuiz}
+                                                        disabled={isDeletingQuiz}
+                                                        className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                                                    >
+                                                        {isDeletingQuiz ? <Loader2 className="animate-spin h-4 w-4" /> : "Eliminar Cuestionario"}
+                                                    </Button>
+                                                )}
+
+                                                <Button
+                                                    type="button"
+                                                    onClick={handleSaveQuiz}
+                                                    disabled={isSubmittingQuiz || !quizQuestion || quizOptions.some(o => !o)}
+                                                    className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white"
+                                                >
+                                                    {isSubmittingQuiz ? <Loader2 className="animate-spin h-4 w-4 mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                                                    Guardar Cuestionario
+                                                </Button>
                                             </div>
                                         </TabsContent>
 
