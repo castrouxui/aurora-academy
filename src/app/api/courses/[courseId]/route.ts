@@ -69,7 +69,8 @@ export async function PATCH(
                 level: values.level,
                 published: values.published,
                 learningOutcomes: values.learningOutcomes,
-                discount: values.discount, // New field
+                discount: values.discount,
+                type: values.type, // Added type field
             },
         });
 
