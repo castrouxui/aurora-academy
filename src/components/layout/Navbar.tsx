@@ -11,6 +11,7 @@ import { Menu, X, Search, LogOut, BookOpen, User, LayoutDashboard, TrendingUp, C
 import { useSession, signOut } from "next-auth/react";
 // import { cn } from "@/lib/utils"; 
 import { LoginModal } from "@/components/auth/LoginModal";
+import { TopBanner } from "./TopBanner";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,135 +60,138 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 z-[500] w-full border-b border-muted bg-background/80 backdrop-blur-md">
-        <Container className="flex h-16 items-center gap-6 justify-between">
-          {/* Logo */}
-          <div className="flex-shrink-0">
-            <Logo />
-          </div>
-
-          {/* Desktop Navigation - Centered Mega Menu */}
-          <div className="hidden md:flex items-center gap-2">
-
-            {/* 1. Membresías */}
-            <Link href="/membresias" className={getLinkClass("/membresias")}>
-              Membresías
-            </Link>
-
-            {/* 2. Cursos */}
-            <Link href="/cursos" className={getLinkClass("/cursos")}>
-              Cursos
-            </Link>
-
-            {/* 3. Empresas - PROXIMAMENTE */}
-            <div className="relative group cursor-default">
-              <button className="text-sm font-medium text-gray-500 flex items-center gap-2 px-4 py-2 cursor-default hover:text-gray-400 transition-colors">
-                Empresas
-                <span className="text-[10px] uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">Próximamente</span>
-              </button>
+      <div className="fixed top-0 z-[500] w-full flex flex-col">
+        <TopBanner />
+        <nav className="w-full border-b border-muted bg-background/80 backdrop-blur-md">
+          <Container className="flex h-16 items-center gap-6 justify-between">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <Logo />
             </div>
 
-            {/* 4. Nosotros */}
-            <Link href="/nosotros" className={getLinkClass("/nosotros")}>
-              Nosotros
-            </Link>
-          </div>
+            {/* Desktop Navigation - Centered Mega Menu */}
+            <div className="hidden md:flex items-center gap-2">
 
-          {/* Right Actions & Search (Desktop) */}
-          <div className="hidden md:flex items-center gap-6">
-
-            {/* Search Input - Desktop */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const term = (e.currentTarget.elements.namedItem('search') as HTMLInputElement).value;
-                if (term) router.push(`/cursos?search=${encodeURIComponent(term)}`);
-              }}
-              className="hidden lg:flex relative w-[250px]"
-            >
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <Search size={16} />
-              </div>
-              <input
-                name="search"
-                type="text"
-                placeholder="Buscar..."
-                className="w-full bg-[#1e2330] border border-gray-700 text-gray-200 text-sm rounded-full py-2 pl-9 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-              />
-            </form>
-
-            <div className="h-6 w-px bg-gray-800 hidden lg:block"></div>
-
-            {session?.user ? (
-              <div className="relative">
-                <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-3 focus:outline-none hover:bg-white/5 p-1 pr-3 rounded-full transition-colors border border-transparent hover:border-white/5">
-                  <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700 object-cover aspect-square" />
-                  <span className="text-sm font-medium text-gray-300 hidden lg:block max-w-[100px] truncate">{session.user.name?.split(' ')[0] || 'User'}</span>
-                  <ChevronDown size={16} className="text-gray-500 hidden lg:block" />
-                </button>
-
-                {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-3 w-56 bg-[#1F2937] border border-gray-700 rounded-xl shadow-2xl overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
-                    <div className="px-4 py-3 border-b border-gray-700 bg-white/5">
-                      <p className="text-sm text-white font-bold truncate flex items-center gap-1">
-                        {session.user.name}
-                        {session.user.telegramVerified && (
-                          <ShieldCheck size={14} className="text-green-500 fill-green-500/20" />
-                        )}
-                      </p>
-                      <p className="text-sm text-gray-400 truncate">{session.user.email}</p>
-                    </div>
-                    {session.user.role === 'ADMIN' && (
-                      <Link href="/admin" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                        <LayoutDashboard size={16} />
-                        Administración
-                      </Link>
-                    )}
-                    {session && session.user.role !== 'ADMIN' && (
-                      <>
-                        <Link href="/dashboard/cursos" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                          <BookOpen size={16} />
-                          Mis Cursos
-                        </Link>
-                        <Link href="/dashboard/membresias" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
-                          <TrendingUp size={16} />
-                          Membresía
-                        </Link>
-                      </>
-                    )}
-                    <div className="h-px bg-gray-700 my-1"></div>
-                    <button onClick={() => signOut()} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors">
-                      <LogOut size={16} />
-                      Cerrar sesión
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <Button variant="default" onClick={openLoginModal} className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold rounded-xl shadow-lg shiny-hover px-6 h-10 text-sm active:scale-95 transition-all">
-                Acceder
-              </Button>
-            )}
-          </div>
-
-          {/* Mobile Hamburger Button */}
-          <div className="flex items-center md:hidden ml-auto gap-4">
-            {session && (
-              <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/cursos"}>
-                <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700 object-cover aspect-square" />
+              {/* 1. Membresías */}
+              <Link href="/membresias" className={getLinkClass("/membresias")}>
+                Membresías
               </Link>
-            )}
-            <button
-              onClick={toggleMenu}
-              className="text-gray-300 hover:text-white focus:outline-none p-2 rounded-full hover:bg-white/5"
-              aria-label="Toggle menu"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </Container>
 
-      </nav >
+              {/* 2. Cursos */}
+              <Link href="/cursos" className={getLinkClass("/cursos")}>
+                Cursos
+              </Link>
+
+              {/* 3. Empresas - PROXIMAMENTE */}
+              <div className="relative group cursor-default">
+                <button className="text-sm font-medium text-gray-500 flex items-center gap-2 px-4 py-2 cursor-default hover:text-gray-400 transition-colors">
+                  Empresas
+                  <span className="text-[10px] uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">Próximamente</span>
+                </button>
+              </div>
+
+              {/* 4. Nosotros */}
+              <Link href="/nosotros" className={getLinkClass("/nosotros")}>
+                Nosotros
+              </Link>
+            </div>
+
+            {/* Right Actions & Search (Desktop) */}
+            <div className="hidden md:flex items-center gap-6">
+
+              {/* Search Input - Desktop */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const term = (e.currentTarget.elements.namedItem('search') as HTMLInputElement).value;
+                  if (term) router.push(`/cursos?search=${encodeURIComponent(term)}`);
+                }}
+                className="hidden lg:flex relative w-[250px]"
+              >
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <Search size={16} />
+                </div>
+                <input
+                  name="search"
+                  type="text"
+                  placeholder="Buscar..."
+                  className="w-full bg-[#1e2330] border border-gray-700 text-gray-200 text-sm rounded-full py-2 pl-9 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                />
+              </form>
+
+              <div className="h-6 w-px bg-gray-800 hidden lg:block"></div>
+
+              {session?.user ? (
+                <div className="relative">
+                  <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-3 focus:outline-none hover:bg-white/5 p-1 pr-3 rounded-full transition-colors border border-transparent hover:border-white/5">
+                    <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700 object-cover aspect-square" />
+                    <span className="text-sm font-medium text-gray-300 hidden lg:block max-w-[100px] truncate">{session.user.name?.split(' ')[0] || 'User'}</span>
+                    <ChevronDown size={16} className="text-gray-500 hidden lg:block" />
+                  </button>
+
+                  {isUserMenuOpen && (
+                    <div className="absolute right-0 mt-3 w-56 bg-[#1F2937] border border-gray-700 rounded-xl shadow-2xl overflow-hidden py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
+                      <div className="px-4 py-3 border-b border-gray-700 bg-white/5">
+                        <p className="text-sm text-white font-bold truncate flex items-center gap-1">
+                          {session.user.name}
+                          {session.user.telegramVerified && (
+                            <ShieldCheck size={14} className="text-green-500 fill-green-500/20" />
+                          )}
+                        </p>
+                        <p className="text-sm text-gray-400 truncate">{session.user.email}</p>
+                      </div>
+                      {session.user.role === 'ADMIN' && (
+                        <Link href="/admin" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                          <LayoutDashboard size={16} />
+                          Administración
+                        </Link>
+                      )}
+                      {session && session.user.role !== 'ADMIN' && (
+                        <>
+                          <Link href="/dashboard/cursos" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                            <BookOpen size={16} />
+                            Mis Cursos
+                          </Link>
+                          <Link href="/dashboard/membresias" className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors" onClick={() => setIsUserMenuOpen(false)}>
+                            <TrendingUp size={16} />
+                            Membresía
+                          </Link>
+                        </>
+                      )}
+                      <div className="h-px bg-gray-700 my-1"></div>
+                      <button onClick={() => signOut()} className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 transition-colors">
+                        <LogOut size={16} />
+                        Cerrar sesión
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Button variant="default" onClick={openLoginModal} className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold rounded-xl shadow-lg shiny-hover px-6 h-10 text-sm active:scale-95 transition-all">
+                  Acceder
+                </Button>
+              )}
+            </div>
+
+            {/* Mobile Hamburger Button */}
+            <div className="flex items-center md:hidden ml-auto gap-4">
+              {session && (
+                <Link href={session.user.role === 'ADMIN' ? "/admin" : "/dashboard/cursos"}>
+                  <Image src={session.user.image || `https://ui-avatars.com/api/?name=${session.user.name}&background=random`} alt="User" width={32} height={32} className="rounded-full border border-gray-700 object-cover aspect-square" />
+                </Link>
+              )}
+              <button
+                onClick={toggleMenu}
+                className="text-gray-300 hover:text-white focus:outline-none p-2 rounded-full hover:bg-white/5"
+                aria-label="Toggle menu"
+              >
+                {isOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+          </Container>
+
+        </nav >
+      </div>
 
       {/* Mobile Menu Overlay */}
       {isOpen && (

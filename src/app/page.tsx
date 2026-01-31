@@ -17,7 +17,7 @@ export default function Home() {
         <HeroBanner />
 
         <Categories />
-        <div id="courses" className="scroll-mt-24">
+        <div id="courses" className="scroll-mt-32">
           <CourseList />
         </div>
 
