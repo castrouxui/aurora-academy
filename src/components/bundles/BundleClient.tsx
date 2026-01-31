@@ -34,7 +34,7 @@ export function BundleClient({ bundle }: BundleClientProps) {
         return (
             <div className="min-h-screen bg-[#0B0F19] text-white flex flex-col items-center justify-center gap-4">
                 <p>Paquete no encontrado</p>
-                <Link href="/courses">
+                <Link href="/cursos">
                     <Button variant="outline">Volver al catálogo</Button>
                 </Link>
             </div>
@@ -72,7 +72,7 @@ export function BundleClient({ bundle }: BundleClientProps) {
                                 <h2 className="text-2xl font-bold text-white mb-6">Qué incluye este pack</h2>
                                 <div className="grid gap-4">
                                     {bundle.courses?.map((course: any) => (
-                                        <Link key={course.id} href={`/courses/${course.id}`} className="block group">
+                                        <Link key={course.id} href={`/cursos/${course.id}`} className="block group">
                                             <div className="flex items-start gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-transparent hover:border-white/10">
                                                 <div className="w-12 h-12 rounded-lg bg-[#5D5CDE]/20 flex items-center justify-center shrink-0">
                                                     <MonitorPlay size={20} className="text-[#5D5CDE]" />

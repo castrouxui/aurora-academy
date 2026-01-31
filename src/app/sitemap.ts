@@ -51,7 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
     const courseRoutes = courses.map((course) => ({
-        url: `${baseUrl}/courses/${course.id}`,
+        url: `${baseUrl}/cursos/${course.id}`,
         lastModified: course.updatedAt,
         changeFrequency: 'weekly' as const,
         priority: 0.8,
