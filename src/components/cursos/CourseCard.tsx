@@ -19,7 +19,6 @@ interface CourseProps {
     basePath?: string;
     videoUrl?: string; // New prop for video URL
     rawPrice?: number;
-    rawPrice?: number;
     type?: string;
 }
 
