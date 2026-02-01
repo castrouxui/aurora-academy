@@ -11,6 +11,9 @@ export async function GET() {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
+        // DEBUG: Trace user access
+        console.log(`[DASHBOARD_DEBUG] User: ${session.user.email} (${session.user.id}) requesting courses.`);
+
         const purchases = await prisma.purchase.findMany({
             where: {
                 userId: session.user.id,
