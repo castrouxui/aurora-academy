@@ -98,27 +98,25 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
                 type: "video" as const,
                 current: false,
                 // SECURITY: Only send video URL and resources if user has access
-                videoUrl: isAccess ? (lesson.videoUrl || "") : "",
                 // SECURITY: Only send video URL and resources if user has access
                 videoUrl: isAccess ? (lesson.videoUrl || "") : "",
                 resources: isAccess ? (lesson.resources || []) : [],
-            }))
-        }))
-    }))
-};
+            })) // Close lessons.map
+        })) // Close modules.map
+    }; // Close clientCourse object
 
-// 4. Determine Back Link
-const userRole = session?.user?.role;
-const backLink = (userRole === "ADMIN" || userRole === "INSTRUCTOR")
-    ? "/admin/courses"
-    : "/dashboard/cursos";
+    // 4. Determine Back Link
+    const userRole = session?.user?.role;
+    const backLink = (userRole === "ADMIN" || userRole === "INSTRUCTOR")
+        ? "/admin/courses"
+        : "/dashboard/cursos";
 
-return (
-    <CoursePlayerClient
-        course={clientCourse}
-        isAccess={isAccess}
-        studentName={session?.user?.name || "Invitado"}
-        backLink={backLink}
-    />
-);
+    return (
+        <CoursePlayerClient
+            course={clientCourse}
+            isAccess={isAccess}
+            studentName={session?.user?.name || "Invitado"}
+            backLink={backLink}
+        />
+    );
 }
