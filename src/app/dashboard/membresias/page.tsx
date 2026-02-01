@@ -264,8 +264,78 @@ export default function MyMembershipsPage() {
                         const otherBundles = subscription?.otherBundles || [];
                         const bundleFromDb = otherBundles.find((b: any) => b.title.toLowerCase() === plan.title.toLowerCase());
 
-                        // If it's the active plan, we might show "Plan Actual" or hide it.
-                        // Based on the user request, they want parity, so we show them all.
+                        // Price comparison logic
+                        let isUpgrade = false;
+                        let isDowngrade = false;
+
+                        if (subscription?.active && !isActive) {
+                            const currentDict = PLANS.find(p => p.title === subscription.bundleTitle);
+                            const currentPrice = Number(currentDict?.price.replace(/[^0-9]/g, '') || 0);
+                            const planPrice = Number(plan.price.replace(/[^0-9]/g, ''));
+
+                            if (planPrice > currentPrice) isUpgrade = true;
+                            if (planPrice < currentPrice) isDowngrade = true;
+                        }
+
+                        const handlePlanAction = async () => {
+                            if (isActive) return;
+
+                            const bundleId = bundleFromDb?.id || plan.title.toLowerCase().replace(/ /g, '-');
+                            const planPriceRaw = plan.price.replace(/[^0-9]/g, '');
+
+                            if (isUpgrade) {
+                                // UPGRADE FLOW
+                                setActionLoading(true);
+                                try {
+                                    const res = await fetch("/api/subscription/upgrade-calc", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({ targetBundleId: bundleId, targetPrice: planPriceRaw })
+                                    });
+
+                                    const data = await res.json();
+                                    if (res.ok) {
+                                        // Open payment modal BUT with preregistered preference for the upgrade fee
+                                        // We need a way to tell PaymentModal to use THIS preference directly
+                                        // Or we utilize window.location for now as MVP? 
+                                        // Let's redirect directly to MP Init Point for simplicity and reliability of the "One Shot" payment
+                                        window.location.href = data.initPoint;
+                                    } else {
+                                        toast.error(data.error || "Error calculando upgrade");
+                                    }
+                                } catch (e) {
+                                    toast.error("Error de conexión");
+                                } finally {
+                                    setActionLoading(false);
+                                }
+
+                            } else if (isDowngrade) {
+                                // DOWNGRADE FLOW
+                                if (confirm(`¿Estás seguro de cambiar al plan ${plan.title}? El cambio de precio se aplicará en tu próxima factura.`)) {
+                                    setActionLoading(true);
+                                    try {
+                                        const res = await fetch("/api/subscription/downgrade", {
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({ targetBundleId: bundleId, targetPrice: planPriceRaw })
+                                        });
+                                        if (res.ok) {
+                                            toast.success("Plan actualizado. Se reflejará en el próximo ciclo.");
+                                            window.location.reload();
+                                        } else {
+                                            toast.error("Error al cambiar plan");
+                                        }
+                                    } catch (e) {
+                                        toast.error("Error de conexión");
+                                    } finally {
+                                        setActionLoading(false);
+                                    }
+                                }
+                            } else {
+                                // New Subscription (Standard)
+                                handlePurchase(plan.title, plan.price.replace(".", "").replace("$", "").trim(), bundleId);
+                            }
+                        };
 
                         return (
                             <PricingCard
@@ -282,13 +352,8 @@ export default function MyMembershipsPage() {
                                 }
                                 features={plan.features}
                                 excludedFeatures={plan.excludedFeatures}
-                                buttonText={isActive ? "Plan Actual" : "Suscribirme Ahora"}
-                                onAction={() => {
-                                    if (isActive) return;
-                                    // If we have a DB bundle, use its ID for checkout
-                                    const bundleId = bundleFromDb?.id || plan.title.toLowerCase().replace(/ /g, '-');
-                                    handlePurchase(plan.title, plan.price.replace(".", "").replace("$", "").trim(), bundleId);
-                                }}
+                                buttonText={isActive ? "Plan Actual" : isUpgrade ? "Mejorar Plan (Upgrade)" : isDowngrade ? "Cambiar Plan" : "Suscribirme Ahora"}
+                                onAction={handlePlanAction}
                                 className={isActive ? "opacity-60 grayscale-[0.5] pointer-events-none border-emerald-500/20" : ""}
                             />
                         );

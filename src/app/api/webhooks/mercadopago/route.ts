@@ -83,6 +83,56 @@ export async function POST(request: Request) {
 
                     console.log(`[WEBHOOK] Purchase saved for User ${user_id} - ${bundle_id ? `Bundle ${bundle_id}` : `Course ${course_id}`}`);
                 }
+                // SPECIAL CASE: UPGRADE FEE
+                else if (paymentData.metadata?.type === 'upgrade_fee') {
+                    const { subscription_id, new_bundle_id, new_amount, user_id } = paymentData.metadata;
+                    console.log(`[WEBHOOK] Processing UPGRADE for Subscription ${subscription_id}`);
+
+                    try {
+                        // 1. Update MercadoPago Subscription Amount for NEXT cycles
+                        const client = getClient();
+                        const preApproval = new PreApproval(client);
+
+                        // We need the ACTUAL MP ID from our DB
+                        const sub = await prisma.subscription.findUnique({ where: { id: subscription_id } });
+                        if (sub && sub.mercadoPagoId) {
+                            await preApproval.update({
+                                id: sub.mercadoPagoId,
+                                body: {
+                                    auto_recurring: {
+                                        transaction_amount: Number(new_amount),
+                                        currency_id: 'ARS'
+                                    }
+                                }
+                            });
+                            console.log(`[WEBHOOK] Updated MP PreApproval ${sub.mercadoPagoId} amount to ${new_amount}`);
+                        }
+
+                        // 2. Update DB Bundle Link
+                        await prisma.subscription.update({
+                            where: { id: subscription_id },
+                            data: {
+                                bundleId: new_bundle_id
+                            }
+                        });
+
+                        // 3. Notify User
+                        const user = await prisma.user.findUnique({ where: { id: user_id } });
+                        if (user?.email) {
+                            await sendEmail(
+                                user.email,
+                                "¡Upgrade Exitoso! - Aurora Academy",
+                                `<p>Hola <strong>${user.name}</strong>,</p>
+                                <p>Tu membresía ha sido mejorada exitosamente.</p>
+                                <p>A partir de tu próximo ciclo, el valor de renovación se actualizará automáticamente.</p>`,
+                                "Mejora de plan confirmada."
+                            );
+                        }
+
+                    } catch (err) {
+                        console.error("[WEBHOOK] Upgrade Error:", err);
+                    }
+                }
             }
         } else if ((topic === "preapproval" || topic === "subscription_preapproval") && id) {
             // SUBSCRIPTION STATUS UPDATE
