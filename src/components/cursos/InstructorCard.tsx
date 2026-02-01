@@ -1,7 +1,7 @@
 import { Star, Users, PlayCircle, Instagram, Send, Twitter, BadgeCheck } from "lucide-react";
 // import Image from "next/image";
 
-export function InstructorCard() {
+export function InstructorCard({ totalCourses = 5 }: { totalCourses?: number }) {
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-black text-white font-headings">Tu Instructor</h2>
@@ -42,7 +42,7 @@ export function InstructorCard() {
                         </div>
                         <div className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-full border border-white/5">
                             <PlayCircle size={14} className="text-[#5D5CDE]" />
-                            <span className="text-white font-bold">5</span>
+                            <span className="text-white font-bold">{totalCourses}</span>
                             <span>Cursos</span>
                         </div>
                     </div>

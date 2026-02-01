@@ -20,6 +20,7 @@ interface CourseDetailContentProps {
     breadcrumbs?: { label: string; href: string }[];
     reviews?: any[];
     canReview?: boolean;
+    totalCourses?: number;
 }
 
 export function CourseDetailContent({
@@ -30,7 +31,8 @@ export function CourseDetailContent({
 
     breadcrumbs,
     reviews,
-    canReview
+    canReview,
+    totalCourses
 }: CourseDetailContentProps) {
     return (
         <div className="bg-[#0B0F19] min-h-screen">
@@ -66,7 +68,7 @@ export function CourseDetailContent({
 
                         {/* Instructor Section */}
                         <div id="instructor" className="pt-12 border-t border-white/5">
-                            <InstructorCard />
+                            <InstructorCard totalCourses={totalCourses} />
                         </div>
 
                         {/* FAQ Section */}

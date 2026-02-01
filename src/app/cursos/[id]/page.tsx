@@ -201,6 +201,11 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         rawPrice: finalPrice
     };
 
+    // Count ALL published content (Courses + Mentorships + Micro)
+    const totalPublishedCourses = await prisma.course.count({
+        where: { published: true }
+    });
+
     return (
         <main className="min-h-screen bg-[#0B0F19]">
             <Navbar />
@@ -211,6 +216,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 totalModules={totalModules}
                 reviews={reviews}
                 canReview={canReview}
+                totalCourses={totalPublishedCourses}
             />
         </main>
     );
