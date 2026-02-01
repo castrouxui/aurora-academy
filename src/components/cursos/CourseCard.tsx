@@ -19,7 +19,8 @@ interface CourseProps {
     basePath?: string;
     videoUrl?: string; // New prop for video URL
     rawPrice?: number;
-    type?: 'course' | 'bundle';
+    rawPrice?: number;
+    type?: string;
 }
 
 export function CourseCard({ course, isOwned = false }: { course: CourseProps, isOwned?: boolean }) {
@@ -102,6 +103,18 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
                         <div className="bg-[#5D5CDE]/10 text-[#5D5CDE] text-sm font-bold px-2 py-1 rounded uppercase tracking-wide border border-[#5D5CDE]/20">
                             {course.tag}
                         </div>
+
+                        {/* Course Type Badge */}
+                        {course.type && course.type !== 'bundle' && (
+                            <div className={cn(
+                                "text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide border ml-2",
+                                course.type === 'Mentoría' ? "bg-amber-500/10 text-amber-500 border-amber-500/20" :
+                                    course.type === 'Micro Curso' ? "bg-cyan-500/10 text-cyan-500 border-cyan-500/20" :
+                                        "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                            )}>
+                                {course.type}
+                            </div>
+                        )}
                         <div className="flex items-center gap-1 text-yellow-400 ml-auto mr-0">
                             <Star size={14} fill="currentColor" className="stroke-none" />
                             <span className="text-gray-400 text-sm font-medium ml-1">({course.reviews})</span>
