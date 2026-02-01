@@ -25,7 +25,6 @@ interface Lesson {
     locked?: boolean;
     videoUrl?: string;
     resources?: { id: string; title: string; url: string; type: string }[];
-
 }
 
 interface Module {
@@ -310,15 +309,16 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                                                         : "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white border-transparent shadow-lg shadow-indigo-500/20"
                                                 )}
                                             >
-                                                <>
-                                                    <CheckCircle size={20} className="fill-current" />
-                                                    Completada
-                                                </>
+                                                {activeLesson.completed ? (
+                                                    <>
+                                                        <CheckCircle size={20} className="fill-current" />
+                                                        Completada
+                                                    </>
                                                 ) : (
-                                                <>
-                                                    <CheckCircle size={20} />
-                                                    Marcar como Vista
-                                                </>
+                                                    <>
+                                                        <CheckCircle size={20} />
+                                                        Marcar como Vista
+                                                    </>
                                                 )}
                                             </Button>
                                         </div>
