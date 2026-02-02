@@ -40,7 +40,8 @@ export async function GET(req: Request) {
             include: {
                 user: { select: { name: true, email: true } },
                 course: { select: { title: true } },
-                bundle: { select: { title: true } }
+                bundle: { select: { title: true } },
+                productName: true
             }
         });
 

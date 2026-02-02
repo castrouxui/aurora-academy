@@ -232,6 +232,7 @@ model Purchase {
   updatedAt    DateTime @updatedAt
   bundleId     String?
   couponId     String?
+  productName  String?  // Snapshot of item name at purchase time (or fallback)
   bundle       Bundle?  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
   coupon       Coupon?  @relation(fields: [couponId], references: [id])
   course       Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)

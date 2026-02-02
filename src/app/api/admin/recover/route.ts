@@ -55,15 +55,7 @@ export async function POST() {
                 }
             }
 
-            // Check if purchase exists
-            const exists = await prisma.purchase.findFirst({
-                where: { paymentId: paymentId }
-            });
-
-            if (exists) {
-                logs.push(`[SKIP] Payment ${paymentId} already recorded.`);
-                continue;
-            }
+            // (Existence check moved down to allow updates)
 
             // Resolve User
             if (!userId) {
@@ -141,6 +133,39 @@ export async function POST() {
                 }
             }
 
+            // Determine Product Name (Snapshot)
+            let snapTitle = "Ítem desconocido";
+            if (finalBundleId) {
+                // We checked existence above, so if finalBundleId is not null, it exists.
+                // But we don't have the title variable handy unless we fetch it or trust metadata.
+                // Let's rely on metadata/description which is usually correct from MP.
+                snapTitle = description || title || "Bundle";
+            } else if (finalCourseId) {
+                snapTitle = description || title || "Curso";
+            } else {
+                // Fallback for unlinked items
+                snapTitle = description || title || "Ítem eliminado";
+            }
+
+            // Check if purchase exists
+            const existingPurchase = await prisma.purchase.findFirst({
+                where: { paymentId: paymentId }
+            });
+
+            if (existingPurchase) {
+                // IF existed but has no product name (legacy issue), update it!
+                if (!existingPurchase.productName && snapTitle !== "Ítem desconocido") {
+                    await prisma.purchase.update({
+                        where: { id: existingPurchase.id },
+                        data: { productName: snapTitle }
+                    });
+                    logs.push(`[UPDATE] Backfilled name "${snapTitle}" for existing purchase ${paymentId}`);
+                } else {
+                    logs.push(`[SKIP] Payment ${paymentId} already recorded.`);
+                }
+                continue;
+            }
+
             if (userId && (finalCourseId || finalBundleId || amount > 0)) {
                 const anyP = p as any;
                 await prisma.purchase.create({
@@ -149,13 +174,14 @@ export async function POST() {
                         userId,
                         courseId: finalCourseId,
                         bundleId: finalBundleId,
+                        productName: snapTitle,
                         amount,
                         status: 'approved',
                         preferenceId: anyP.order?.id?.toString() || "",
                     }
                 });
                 recoveredCount++;
-                logs.push(`[SUCCESS] Recovered purchase ${paymentId} ($${amount}) for ${email}`);
+                logs.push(`[SUCCESS] Recovered purchase ${paymentId} ($${amount}) - "${snapTitle}" for ${email}`);
             }
         }
 

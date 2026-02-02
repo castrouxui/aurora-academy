@@ -29,7 +29,8 @@ export async function GET() {
                 include: {
                     user: { select: { email: true, name: true, image: true } }, // Minimal user data
                     course: { select: { title: true } },
-                    bundle: { select: { title: true } }
+                    bundle: { select: { title: true } },
+                    productName: true
                 }
             }),
             // Users Count
@@ -68,7 +69,7 @@ export async function GET() {
         });
 
         for (const sale of correctedSales) {
-            const itemId = sale.course?.title || sale.bundle?.title || "unknown";
+            const itemId = sale.course?.title || sale.bundle?.title || sale.productName || "unknown";
             const key = `${sale.user.email}-${itemId}-${sale.amount}`;
 
             // Check if we already have this key in our unique list "recently"
