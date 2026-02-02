@@ -121,14 +121,34 @@ export async function POST() {
                 }
             }
 
-            if (userId && (courseId || metadata.bundle_id)) {
+            // Verify Bundle/Course Existence (Crucial to avoid FK errors if item was deleted)
+            let finalBundleId = metadata.bundle_id;
+            let finalCourseId = courseId;
+
+            if (finalBundleId) {
+                const bundleExists = await prisma.bundle.findUnique({ where: { id: finalBundleId } });
+                if (!bundleExists) {
+                    logs.push(`[WARN] Bundle ID ${finalBundleId} from metadata not found in DB. Unlinking.`);
+                    finalBundleId = null;
+                }
+            }
+
+            if (finalCourseId) {
+                const courseExists = await prisma.course.findUnique({ where: { id: finalCourseId } });
+                if (!courseExists) {
+                    logs.push(`[WARN] Course ID ${finalCourseId} not found in DB. Unlinking.`);
+                    finalCourseId = null;
+                }
+            }
+
+            if (userId && (finalCourseId || finalBundleId || amount > 0)) {
                 const anyP = p as any;
                 await prisma.purchase.create({
                     data: {
                         paymentId,
                         userId,
-                        courseId,
-                        bundleId: metadata.bundle_id, // Add bundleId support
+                        courseId: finalCourseId,
+                        bundleId: finalBundleId,
                         amount,
                         status: 'approved',
                         preferenceId: anyP.order?.id?.toString() || "",
