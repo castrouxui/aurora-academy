@@ -233,7 +233,8 @@ export async function POST() {
                 const existingSub = await prisma.subscription.findFirst({
                     where: {
                         userId: userId,
-                        bundleId: p.bundleId!
+                        bundleId: p.bundleId!,
+                        status: 'authorized'
                     }
                 });
 
