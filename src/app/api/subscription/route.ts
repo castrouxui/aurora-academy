@@ -37,6 +37,25 @@ export async function GET() {
             return NextResponse.json({ active: false, otherBundles: allBundles });
         }
 
+        // Check for LEGACY expiration (Self-Healing)
+        if (subscription && subscription.mercadoPagoId && subscription.mercadoPagoId.startsWith('LEGACY-')) {
+            const createdAt = new Date(subscription.createdAt);
+            const now = new Date();
+            const diffTime = Math.abs(now.getTime() - createdAt.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays > 30) {
+                console.log(`[SUBSCRIPTION] Legacy subscription ${subscription.id} expired (${diffDays} days). Auto-cancelling.`);
+                // Update to cancelled
+                await prisma.subscription.update({
+                    where: { id: subscription.id },
+                    data: { status: 'cancelled' }
+                });
+                // Recurse or just return inactive
+                return NextResponse.json({ active: false, otherBundles: await prisma.bundle.findMany({ where: { published: true }, orderBy: { price: 'asc' } }) });
+            }
+        }
+
         const isActive = subscription.status === 'authorized';
         const otherBundles = await prisma.bundle.findMany({
             where: {

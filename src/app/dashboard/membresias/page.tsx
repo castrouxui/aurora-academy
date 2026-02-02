@@ -273,8 +273,12 @@ export default function MyMembershipsPage() {
                             const currentPrice = Number(currentDict?.price.replace(/[^0-9]/g, '') || 0);
                             const planPrice = Number(plan.price.replace(/[^0-9]/g, ''));
 
-                            if (planPrice > currentPrice) isUpgrade = true;
-                            if (planPrice < currentPrice) isDowngrade = true;
+                            if (planPrice > currentPrice) {
+                                isUpgrade = true;
+                            }
+                            if (planPrice < currentPrice) {
+                                isDowngrade = true;
+                            }
                         }
 
                         const handlePlanAction = async () => {

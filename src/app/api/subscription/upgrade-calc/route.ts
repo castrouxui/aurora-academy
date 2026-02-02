@@ -28,10 +28,27 @@ export async function POST(req: Request) {
         // 2. Fetch MP Status to get next_payment_date
         const client = getMercadoPagoClient();
         const preApproval = new PreApproval(client);
-        const subData = await preApproval.get({ id: currentSub.mercadoPagoId });
+        let subData: any = {};
+        try {
+            subData = await preApproval.get({ id: currentSub.mercadoPagoId });
+        } catch (e) {
+            console.warn("MP Get failed, checking for mock...");
+            if (currentSub.mercadoPagoId.startsWith('PreApproval-Test')) {
+                subData = { next_payment_date: null }; // Will be handled by next block
+            } else {
+                throw e;
+            }
+        }
 
         if (!subData.next_payment_date) {
-            return NextResponse.json({ error: "Cannot determine next payment date" }, { status: 400 });
+            // MOCK FOR DEV: If ID is test, generate a fake next date
+            if (currentSub.mercadoPagoId.startsWith('PreApproval-Test')) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 15); // 15 days remaining mock
+                subData.next_payment_date = tomorrow.toISOString();
+            } else {
+                return NextResponse.json({ error: "Cannot determine next payment date" }, { status: 400 });
+            }
         }
 
         const nextPayment = new Date(subData.next_payment_date);
@@ -69,42 +86,55 @@ export async function POST(req: Request) {
         const finalAmount = Math.max(proratedAmount, 100);
 
         // 5. Create Preference for "Upgrade Fee"
-        const preference = new Preference(client);
-        const pref = await preference.create({
-            body: {
-                items: [
-                    {
-                        id: `UPGRADE-${currentSub.id}-${targetBundleId}`,
-                        title: `Upgrade a ${targetBundleId} (Prorrateo)`,
-                        quantity: 1,
-                        unit_price: finalAmount,
-                        currency_id: "ARS"
-                    }
-                ],
-                metadata: {
-                    type: "upgrade_fee",
-                    user_id: session.user.id,
-                    subscription_id: currentSub.id,
-                    new_bundle_id: targetBundleId,
-                    new_amount: newPrice, // The FULL new recurring price
-                    old_bundle_id: currentSub.bundleId
-                },
-                back_urls: {
-                    success: `${process.env.NEXTAUTH_URL}/dashboard/membresias?status=upgraded`,
-                    failure: `${process.env.NEXTAUTH_URL}/dashboard/membresias?status=failure`,
-                    pending: `${process.env.NEXTAUTH_URL}/dashboard/membresias?status=pending`
-                },
-                auto_return: "approved"
-            }
-        });
+        let preferenceId = "mock_pref_id";
+        let initPoint = "https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=mock";
+
+        if (!currentSub.mercadoPagoId.startsWith('PreApproval-Test')) {
+            const preference = new Preference(client);
+            const pref = await preference.create({
+                body: {
+                    items: [
+                        {
+                            id: `UPGRADE-${currentSub.id}-${targetBundleId}`,
+                            title: `Upgrade a ${targetBundleId} (Prorrateo)`,
+                            quantity: 1,
+                            unit_price: finalAmount,
+                            currency_id: "ARS"
+                        }
+                    ],
+                    metadata: {
+                        type: "upgrade_fee",
+                        user_id: session.user.id,
+                        subscription_id: currentSub.id,
+                        new_bundle_id: targetBundleId,
+                        new_amount: newPrice, // The FULL new recurring price
+                        old_bundle_id: currentSub.bundleId
+                    },
+                    back_urls: {
+                        success: `${process.env.NEXTAUTH_URL}/dashboard/membresias?status=upgraded`,
+                        failure: `${process.env.NEXTAUTH_URL}/dashboard/membresias?status=failure`,
+                        pending: `${process.env.NEXTAUTH_URL}/dashboard/membresias?status=pending`
+                    },
+                    auto_return: "approved"
+                }
+            });
+            preferenceId = pref.id!;
+            initPoint = pref.init_point!;
+        } else {
+            // Return a link that redirects back to dashboard with success param to simulate payment?
+            // Or just a dummy link.
+            // Let's use a special localhost link that simulates the webhook?
+            // For now just standard mock.
+            initPoint = "#MOCK_PAYMENT_WINDOW";
+        }
 
         return NextResponse.json({
             daysRemaining: daysToCal,
             priceDifference: priceDiff,
             proratedAmount: finalAmount,
             nextPaymentDate: nextPayment,
-            preferenceId: pref.id,
-            initPoint: pref.init_point
+            preferenceId: preferenceId,
+            initPoint: initPoint
         });
 
     } catch (error: any) {

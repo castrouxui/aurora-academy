@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
         const bundleId = searchParams.get('bundleId');
 
         if (userId && (courseId || bundleId)) {
+            // 1. Check Purchases
             const whereClause: any = { userId, status: 'approved' };
             if (courseId) whereClause.courseId = courseId;
             if (bundleId) whereClause.bundleId = bundleId;
@@ -38,6 +39,20 @@ export async function GET(req: NextRequest) {
             });
             if (purchaseByContext) {
                 return NextResponse.json({ status: 'approved', purchaseId: purchaseByContext.id });
+            }
+
+            // 2. Check Subscriptions (if bundleId)
+            if (bundleId) {
+                const subscription = await prisma.subscription.findFirst({
+                    where: {
+                        userId,
+                        bundleId,
+                        status: 'authorized'
+                    }
+                });
+                if (subscription) {
+                    return NextResponse.json({ status: 'approved', subscriptionId: subscription.id });
+                }
             }
         }
 

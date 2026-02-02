@@ -145,6 +145,7 @@ export default function AdminDashboard() {
                     </div>
                 </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <FixLegacySubsButton />
                     <RecoveryButton onRefresh={refreshDashboard} />
                 </div>
             </div>
@@ -307,6 +308,49 @@ function RecoveryButton({ onRefresh }: { onRefresh: () => void }) {
                     <RefreshCw className="w-4 h-4 mr-2" />
                 )}
                 Actualizar datos
+            </Button>
+        </div>
+    );
+}
+
+
+function FixLegacySubsButton() {
+    const [loading, setLoading] = useState(false);
+    const [result, setResult] = useState<null | { message: string }>(null);
+
+    const handleFix = async () => {
+        if (!confirm("Esto buscará compras de membresías antiguas sin acceso y les creará una suscripción manual por 30 días. ¿Continuar?")) return;
+
+        setLoading(true);
+        setResult(null);
+        try {
+            const res = await fetch('/api/maintenance/fix-legacy-subs', { method: 'POST' });
+            const data = await res.json();
+            if (res.ok) {
+                setResult({ message: `Resultado: ${data.message}` });
+            } else {
+                setResult({ message: `Error: ${data.error || "Fallo del servidor"}` });
+            }
+        } catch (error) {
+            setResult({ message: "Error de conexión" });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {result && (
+                <span className={`text-sm font-medium ${result.message.includes("Error") ? "text-red-400" : "text-amber-400"} animate-in fade-in`}>
+                    {result.message}
+                </span>
+            )}
+            <Button
+                onClick={handleFix}
+                disabled={loading}
+                className="bg-amber-600/20 hover:bg-amber-600/40 text-amber-500 border border-amber-500/20"
+            >
+                {loading ? "Procesando..." : "🛠️ Arreglar Subs Legadas"}
             </Button>
         </div>
     );

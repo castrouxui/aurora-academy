@@ -35,20 +35,22 @@ export async function POST(req: Request) {
         }
 
         // 3. Update PreApproval in MercadoPago
-        // We set the auto_recurring amount to the NEW lower price. 
-        // This generally takes effect on the NEXT debit.
-        const client = getMercadoPagoClient();
-        const preApproval = new PreApproval(client);
+        if (!currentSub.mercadoPagoId.startsWith('PreApproval-Test')) {
+            const client = getMercadoPagoClient();
+            const preApproval = new PreApproval(client);
 
-        await preApproval.update({
-            id: currentSub.mercadoPagoId,
-            body: {
-                auto_recurring: {
-                    transaction_amount: newPrice,
-                    currency_id: 'ARS'
+            await preApproval.update({
+                id: currentSub.mercadoPagoId,
+                body: {
+                    auto_recurring: {
+                        transaction_amount: newPrice,
+                        currency_id: 'ARS'
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            console.log("Mock Downgrade: MP Update Skipped for Test ID");
+        }
 
         // 4. Update Local DB
         // We switch the bundleId immediately effectively giving them the "lower" tier content? 
