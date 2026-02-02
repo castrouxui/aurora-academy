@@ -54,7 +54,7 @@ export async function POST(req: Request) {
 
                 results.push({
                     email: p.user.email,
-                    bundle: p.bundle.title,
+                    bundle: p.bundle?.title || "Unknown Bundle",
                     action: "Created Subscription",
                     subId: newSub.id
                 });
