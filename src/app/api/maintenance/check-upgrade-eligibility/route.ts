@@ -35,6 +35,11 @@ export async function GET(request: Request) {
                     where: { status: { in: ['authorized', 'pending', 'paused', 'cancelled'] } },
                     include: { bundle: true },
                     orderBy: { createdAt: 'desc' }
+                },
+                purchases: {
+                    where: { status: 'approved' },
+                    include: { bundle: true, course: true },
+                    orderBy: { createdAt: 'desc' }
                 }
             }
         });
