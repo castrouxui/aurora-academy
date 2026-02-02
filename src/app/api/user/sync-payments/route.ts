@@ -65,8 +65,9 @@ export async function POST() {
                     let bundleId = metadata.bundle_id;
 
                     // Fallback: Try to match by Title if metadata is missing (manual payment)
+                    const title = p.description || p.additional_info?.items?.[0]?.title || "";
+
                     if (!courseId && !bundleId) {
-                        const title = p.description || p.additional_info?.items?.[0]?.title || "";
                         if (title) {
                             const course = await prisma.course.findFirst({ where: { title: { contains: title, mode: 'insensitive' } } });
                             if (course) courseId = course.id;
@@ -85,6 +86,7 @@ export async function POST() {
                                 userId: userId,
                                 courseId,
                                 bundleId,
+                                productName: title, // Save snapshot name
                                 amount: p.transaction_amount || 0,
                                 status: 'approved',
                                 preferenceId: anyP.order?.id?.toString() || ""
@@ -93,6 +95,22 @@ export async function POST() {
                         results.purchases++;
                         syncCount++;
                         console.log(`[SYNC] Synced Purchase ${paymentId}`);
+                    }
+                } else {
+                    // REPAIR: If purchase exists but has NO relations (due to deleted bundle), try to relink
+                    if (!exists.bundleId && !exists.courseId) {
+                        const title = p.description || p.additional_info?.items?.[0]?.title || "";
+                        if (title) {
+                            const bundle = await prisma.bundle.findFirst({ where: { title: { contains: title, mode: 'insensitive' } } });
+                            if (bundle) {
+                                await prisma.purchase.update({
+                                    where: { id: exists.id },
+                                    data: { bundleId: bundle.id, productName: title }
+                                });
+                                console.log(`[SYNC] Repaired Purchase ${exists.id} linking to Bundle ${bundle.title}`);
+                                syncCount++; // Count as activity so toast shows success
+                            }
+                        }
                     }
                 }
             }
@@ -196,6 +214,48 @@ export async function POST() {
             }
         } catch (sError) {
             console.error("[SYNC] Subscription search failed:", sError);
+        }
+
+        // 3. LEGACY SUBSCRIPTION CHECK (For One-Time Bundle Purchases)
+        try {
+            // Find all Approved Bundle Purchases for this user
+            const bundlePurchases = await prisma.purchase.findMany({
+                where: {
+                    userId: userId,
+                    bundleId: { not: null },
+                    status: 'approved'
+                },
+                include: { bundle: true }
+            });
+
+            for (const p of bundlePurchases) {
+                // Check if Subscription exists
+                const existingSub = await prisma.subscription.findFirst({
+                    where: {
+                        userId: userId,
+                        bundleId: p.bundleId!
+                    }
+                });
+
+                if (!existingSub) {
+                    // Create Legacy Subscription
+                    const newSub = await prisma.subscription.create({
+                        data: {
+                            userId: userId,
+                            bundleId: p.bundleId!,
+                            mercadoPagoId: `LEGACY-${p.paymentId || p.id}`,
+                            status: 'authorized',
+                            createdAt: p.createdAt, // Preserve original purchase date
+                            updatedAt: new Date()
+                        }
+                    });
+                    results.subscriptions++;
+                    syncCount++;
+                    console.log(`[SYNC] Auto-created Legacy Subscription for Purchase ${p.id}`);
+                }
+            }
+        } catch (legacyError) {
+            console.error("[SYNC] Legacy check failed:", legacyError);
         }
 
         return NextResponse.json({
