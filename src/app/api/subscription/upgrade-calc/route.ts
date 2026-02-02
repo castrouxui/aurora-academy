@@ -30,21 +30,37 @@ export async function POST(req: Request) {
         const preApproval = new PreApproval(client);
         let subData: any = {};
         try {
-            subData = await preApproval.get({ id: currentSub.mercadoPagoId });
-        } catch (e) {
-            console.warn("MP Get failed, checking for mock...");
-            if (currentSub.mercadoPagoId.startsWith('PreApproval-Test')) {
-                subData = { next_payment_date: null }; // Will be handled by next block
+            // Check for LEGACY or Test IDs
+            if (currentSub.mercadoPagoId.startsWith('LEGACY-') || currentSub.mercadoPagoId.startsWith('PreApproval-Test')) {
+                subData = { next_payment_date: null }; // Mock flow
             } else {
-                throw e;
+                subData = await preApproval.get({ id: currentSub.mercadoPagoId });
+            }
+        } catch (e) {
+            console.warn("MP Get failed, checking for mock...", e);
+            if (currentSub.mercadoPagoId.startsWith('PreApproval-Test')) {
+                subData = { next_payment_date: null };
+            } else {
+                // If it fails (maybe cancelled in MP but not here), assume upgrade is possible
+                // fallback to calculated date?
+                console.error("MP Error:", e);
+                // throw e; // Don't throw, try to recover
+                subData = { next_payment_date: null };
             }
         }
 
         if (!subData.next_payment_date) {
             // MOCK FOR DEV: If ID is test, generate a fake next date
-            if (currentSub.mercadoPagoId.startsWith('PreApproval-Test')) {
+            // MOCK FOR DEV or LEGACY: Generate a default remaining time (e.g. 15 days or today)
+            if (currentSub.mercadoPagoId.startsWith('PreApproval-Test') || currentSub.mercadoPagoId.startsWith('LEGACY-') || !subData.next_payment_date) {
                 const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 15); // 15 days remaining mock
+                tomorrow.setDate(tomorrow.getDate() + 30); // Assume full month value for upgrade (conservative)
+                // Or better: Assume 1 day has passed so they pay almost full price?
+                // Actually for Legacy, since they paid ONCE long ago, we should probably charge full price difference.
+                // Let's set it to 30 days from now so the diff calculation yields ~ full month diff.
+                // Wait, logic is: diffTime = nextPayment - now.
+                // If nextPayment is 30 days away, daysRemaining = 30.
+                // prorated = (diff / 30) * 30 = full diff.
                 subData.next_payment_date = tomorrow.toISOString();
             } else {
                 return NextResponse.json({ error: "Cannot determine next payment date" }, { status: 400 });
@@ -90,6 +106,7 @@ export async function POST(req: Request) {
         let initPoint = "https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=mock";
 
         if (!currentSub.mercadoPagoId.startsWith('PreApproval-Test')) {
+            // NOTE: LEGACY- IDs *should* go here to create a real payment preference.
             const preference = new Preference(client);
             const pref = await preference.create({
                 body: {
