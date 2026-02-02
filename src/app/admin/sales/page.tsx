@@ -167,7 +167,10 @@ export default function AdminSalesPage() {
 
     const totalRevenue = sales.filter(s => s.status === 'approved').reduce((acc, s) => acc + Number(s.amount), 0);
     const totalTransactions = sales.filter(s => s.status === 'approved').length;
-    const avgTicket = totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
+
+    // Exclude free items (amount 0) from average ticket calculation
+    const paidTransactions = sales.filter(s => s.status === 'approved' && Number(s.amount) > 0).length;
+    const avgTicket = paidTransactions > 0 ? totalRevenue / paidTransactions : 0;
 
 
     const formatCurrency = (amount: string | number) => {
