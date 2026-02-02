@@ -100,6 +100,14 @@ export async function GET(request: Request) {
                 status: s.status,
                 createdAt: s.createdAt
             })),
+            purchases: user.purchases.map(p => ({
+                id: p.id,
+                amount: p.amount,
+                status: p.status,
+                bundle: p.bundle?.title,
+                course: p.course?.title,
+                createdAt: p.createdAt
+            })),
             logs
         });
 
