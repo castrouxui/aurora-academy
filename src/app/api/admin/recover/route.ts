@@ -81,10 +81,11 @@ export async function POST() {
                 }
             }
 
+            const description = p.description || "";
+            const title = p.additional_info?.items?.[0]?.title || description;
+
             // Resolve Course or Bundle
             if (!courseId && !metadata.bundle_id) {
-                const description = p.description || "";
-                const title = p.additional_info?.items?.[0]?.title || description;
 
                 if (!title || title.trim() === "") {
                     logs.push(`[SKIP] No title for payment ${paymentId}`);

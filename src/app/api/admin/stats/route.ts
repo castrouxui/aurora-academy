@@ -29,8 +29,7 @@ export async function GET() {
                 include: {
                     user: { select: { email: true, name: true, image: true } }, // Minimal user data
                     course: { select: { title: true } },
-                    bundle: { select: { title: true } },
-                    productName: true
+                    bundle: { select: { title: true } }
                 }
             }),
             // Users Count
