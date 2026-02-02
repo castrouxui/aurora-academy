@@ -83,12 +83,18 @@ export async function GET(request: Request) {
 
         return NextResponse.json({
             user: { email: user.email, name: user.name },
-            activeSub: {
+            selectedSub: {
                 id: activeSub.id,
                 status: activeSub.status,
                 bundle: activeSub.bundle.title,
                 mercadoPagoId: activeSub.mercadoPagoId
             },
+            allSubscriptions: subscriptions.map(s => ({
+                id: s.id,
+                title: s.bundle.title,
+                status: s.status,
+                createdAt: s.createdAt
+            })),
             logs
         });
 
