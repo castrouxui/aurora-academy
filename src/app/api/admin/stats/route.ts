@@ -45,7 +45,7 @@ export async function GET() {
                 where: { role: 'ESTUDIANTE' },
                 take: 5,
                 orderBy: { id: 'desc' },
-                select: { name: true, email: true, image: true }
+                select: { name: true, email: true, image: true, createdAt: true }
             })
         ]);
 

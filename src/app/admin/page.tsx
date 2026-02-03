@@ -244,8 +244,14 @@ export default function AdminDashboard() {
                                             <p className="text-sm font-bold text-white">{student.name}</p>
                                             <p className="text-xs text-gray-400 font-medium">{student.email}</p>
                                         </div>
-                                        <div className="ml-auto text-xs text-gray-500">
-                                            Hace un momento
+                                        <div className="ml-auto text-xs text-gray-500 whitespace-nowrap">
+                                            {new Date(student.createdAt).toLocaleDateString("es-AR", {
+                                                day: "2-digit",
+                                                month: "2-digit",
+                                                year: "2-digit",
+                                                hour: "2-digit",
+                                                minute: "2-digit"
+                                            })}
                                         </div>
                                     </div>
                                 ))}
