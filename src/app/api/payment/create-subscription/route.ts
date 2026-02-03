@@ -14,7 +14,8 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { title, price, userId, bundleId, email, couponCode } = body;
+        const { title, price, userId, email, couponCode } = body;
+        let { bundleId } = body;
         let finalPrice = price;
 
         // Import Prisma needed for Bundle price check AND Coupon validation
@@ -26,6 +27,17 @@ export async function POST(req: NextRequest) {
             });
             if (bundle) {
                 // Use server-side price
+                // @ts-ignore
+                finalPrice = Number(bundle.price);
+            }
+        } else if (title) {
+            // Fallback: Find bundle by title
+            const bundle = await prisma.bundle.findFirst({
+                where: { title: title }
+            });
+            if (bundle) {
+                // @ts-ignore
+                bundleId = bundle.id; // Update variable to be used in metadata
                 // @ts-ignore
                 finalPrice = Number(bundle.price);
             }

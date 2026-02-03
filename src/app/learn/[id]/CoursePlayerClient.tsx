@@ -7,6 +7,7 @@ import { Play, CheckCircle, Lock, MonitorPlay, FileText, MessageSquare, Download
 import { cn, formatDuration } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CertificateModal } from "@/components/certificates/CertificateModal";
+import { RatingModal } from "@/components/reviews/RatingModal";
 import { VideoPlayer } from "@/components/player/VideoPlayer";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -43,12 +44,15 @@ interface CoursePlayerProps {
     isAccess: boolean; // Does user own this course?
     studentName: string;
     backLink: string;
+    hasReviewed: boolean;
 }
 
-export function CoursePlayerClient({ course, isAccess, studentName, backLink }: CoursePlayerProps) {
+export function CoursePlayerClient({ course, isAccess, studentName, backLink, hasReviewed }: CoursePlayerProps) {
     const [activeTab, setActiveTab] = useState("description");
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [isCertificateOpen, setIsCertificateOpen] = useState(false);
+    const [isRatingOpen, setIsRatingOpen] = useState(false);
+    const [hasUserReviewed, setHasUserReviewed] = useState(hasReviewed);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     // Determine initial active lesson
@@ -408,7 +412,13 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                         {progress === 100 && (
                             <div className="mt-2">
                                 <Button
-                                    onClick={() => setIsCertificateOpen(true)}
+                                    onClick={() => {
+                                        if (!hasUserReviewed) {
+                                            setIsRatingOpen(true);
+                                        } else {
+                                            setIsCertificateOpen(true);
+                                        }
+                                    }}
                                     className="w-full bg-[#D4AF37] hover:bg-[#b5952f] text-black font-bold gap-2 shadow-lg shadow-[#D4AF37]/20"
                                 >
                                     <Trophy size={16} />
@@ -499,6 +509,19 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink }: 
                     </div>
                 </div>
             </div >
+
+            {/* Rating Modal */}
+            <RatingModal
+                isOpen={isRatingOpen}
+                onClose={() => setIsRatingOpen(false)}
+                onSuccess={() => {
+                    setHasUserReviewed(true);
+                    setIsRatingOpen(false);
+                    setIsCertificateOpen(true);
+                }}
+                courseId={course.id}
+                courseName={course.title}
+            />
 
             {/* Certificate Modal */}
             <CertificateModal

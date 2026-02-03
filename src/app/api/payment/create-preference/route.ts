@@ -21,14 +21,28 @@ export async function POST(req: NextRequest) {
 
         // 1. Resolve Base Price (Course or Bundle)
         let dbItem;
+        let foundBundleId = bundleId;
+        let foundCourseId = courseId;
+
         if (!courseId && !bundleId && title) {
             // Fallback: Find course by title
             dbItem = await prisma.course.findFirst({
                 where: { title: title }
             });
             if (dbItem) {
+                foundCourseId = dbItem.id;
                 // @ts-ignore
                 finalPrice = Number(dbItem.price);
+            } else {
+                // Try finding bundle if course not found
+                const dbBundle = await prisma.bundle.findFirst({
+                    where: { title: title }
+                });
+                if (dbBundle) {
+                    foundBundleId = dbBundle.id;
+                    // @ts-ignore
+                    finalPrice = Number(dbBundle.price);
+                }
             }
         } else if (courseId) {
             const course = await prisma.course.findUnique({ where: { id: courseId } });
@@ -67,7 +81,7 @@ export async function POST(req: NextRequest) {
 
                 // STRICT CHECK: Coupons are ONLY valid for Bundles (Memberships)
                 // If there is no bundleId, we ignore the coupon.
-                if (!bundleId) {
+                if (!foundBundleId) {
                     console.warn(`Coupon ${couponCode} rejected: Not a membership purchase.`);
                 } else if (!isExpired && !isExhausted) {
                     appliedCouponId = coupon.id;
@@ -109,8 +123,8 @@ export async function POST(req: NextRequest) {
             // auto_return removed to fix creation error
             metadata: {
                 user_id: userId,
-                course_id: courseId || (dbItem && !bundleId ? dbItem.id : undefined),
-                bundle_id: bundleId,
+                course_id: foundCourseId,
+                bundle_id: foundBundleId,
                 coupon_id: appliedCouponId,
             },
             notification_url: `${baseUrl}/api/webhooks/mercadopago`,

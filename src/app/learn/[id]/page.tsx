@@ -77,6 +77,14 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
         }
     }) : [];
 
+    // 4. Fetch User Review
+    const userReview = session?.user?.id ? await prisma.review.findFirst({
+        where: {
+            userId: session.user.id,
+            courseId: id
+        }
+    }) : null;
+
     const progressMap = new Map(userProgress.map((p: any) => [p.lessonId, p]));
 
     // Transform for client component
@@ -117,6 +125,7 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
             isAccess={isAccess}
             studentName={session?.user?.name || "Invitado"}
             backLink={backLink}
+            hasReviewed={!!userReview}
         />
     );
 }
