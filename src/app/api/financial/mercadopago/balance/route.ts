@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { MercadoPagoConfig } from "mercadopago";
 
 export async function GET(req: Request) {
     try {
@@ -11,14 +12,11 @@ export async function GET(req: Request) {
 
         const accessToken = process.env.MP_ACCESS_TOKEN;
         if (!accessToken) {
+            console.error("[MP] Access Token missing in Env");
             return NextResponse.json({ error: "MP Access Token not configured" }, { status: 500 });
         }
 
-        // Try to fetch user ID first if we don't know it, or just try to hit the balance endpoint if possible.
-        // The endpoint is /users/{user_id}/mercadopago_account/balance
-        // Valid endpoint usually requires user_id.
-        // Let's first fetch "me" to get user_id.
-
+        // Fetch user profile to get UserId
         const meResponse = await fetch("https://api.mercadopago.com/users/me", {
             headers: {
                 "Authorization": `Bearer ${accessToken}`
@@ -26,8 +24,13 @@ export async function GET(req: Request) {
         });
 
         if (!meResponse.ok) {
-            console.error("Failed to fetch MP user:", await meResponse.text());
-            return NextResponse.json({ total_amount: 0, unavailable_total_amount: 0, available_amount: 0 }); // Fallback
+            const errorDetails = await meResponse.text();
+            console.error("[MP] Me API Fail:", errorDetails);
+            return NextResponse.json({
+                available_amount: 0,
+                unavailable_total_amount: 0,
+                error: "Invalid Token or MP API down"
+            });
         }
 
         const meData = await meResponse.json();
@@ -41,17 +44,22 @@ export async function GET(req: Request) {
         });
 
         if (!balanceResponse.ok) {
-            console.warn("Failed to fetch MP balance (likely scope issue):", await balanceResponse.text());
-            // Return 0 or null to indicate unable to fetch
-            return NextResponse.json({ total_amount: 0, available_amount: 0, currency_id: "ARS" });
+            const errorDetails = await balanceResponse.text();
+            console.warn("[MP] Balance API Forbidden or Error:", errorDetails);
+
+            // If we get Forbidden, it means the token lacks scope
+            return NextResponse.json({
+                available_amount: 0,
+                unavailable_total_amount: 0,
+                error: errorDetails.includes("forbidden") ? "Scope missing: Balance" : "API Error"
+            });
         }
 
         const balanceData = await balanceResponse.json();
-
         return NextResponse.json(balanceData);
 
     } catch (error) {
-        console.error("Error fetching MP balance:", error);
+        console.error("[MP] Balance Route Crash:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

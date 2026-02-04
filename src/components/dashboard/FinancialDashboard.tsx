@@ -22,7 +22,7 @@ export default function FinancialDashboard() {
         initialBalance: 0,
         currentBalance: 0,
     });
-    const [mpData, setMpData] = useState<{ available: number; pending: number } | null>(null);
+    const [mpData, setMpData] = useState<{ available: number; pending: number; error?: string } | null>(null);
     const [loading, setLoading] = useState(false);
 
     // Derive Date Range
@@ -51,12 +51,17 @@ export default function FinancialDashboard() {
     const fetchMPBalance = async () => {
         try {
             const res = await fetch("/api/financial/mercadopago/balance");
-            if (!res.ok) return;
             const data = await res.json();
+
             setMpData({
                 available: data.available_amount ?? 0,
                 pending: data.unavailable_total_amount ?? 0,
+                error: data.error
             });
+
+            if (data.error && data.error.includes("Scope")) {
+                console.warn("Mercado Pago: Missing Balance scope in Access Token.");
+            }
         } catch (error) {
             console.error("MP Fetch Error:", error);
         }
@@ -174,7 +179,7 @@ export default function FinancialDashboard() {
                     icon={Wallet}
                     className="border-l-4 border-l-blue-500"
                     valueClassName="text-blue-600"
-                    subtext="Efectivo en Mercado Pago"
+                    subtext={mpData?.error ? `⚠️ ${mpData.error}` : "Efectivo en Mercado Pago"}
                 />
 
                 {/* 2. REAL Pending Balance (MP) */}
@@ -184,7 +189,7 @@ export default function FinancialDashboard() {
                     icon={Calendar}
                     className="border-l-4 border-l-yellow-500"
                     valueClassName="text-yellow-600"
-                    subtext="Procesando por Mercado Pago"
+                    subtext={mpData?.error ? "Acceso denegado (API)" : "Procesando por Mercado Pago"}
                 />
 
                 {/* 3. Resultado del Periodo (Accounting) */}

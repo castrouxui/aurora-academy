@@ -166,40 +166,59 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                         )}
                     </div>
                 ) : (
-                    <ReactPlayer
-                        key={`${playableUrl}-${isMobile}`}
-                        ref={playerRef}
-                        url={playableUrl}
-                        width="100%"
-                        height="100%"
-                        playing={isPlaying}
-                        volume={volume}
-                        muted={muted}
-                        playbackRate={playbackRate}
-                        controls={isMobile} // System controls for reliability
-                        onProgress={handleProgress}
-                        onDuration={(d: number) => {
-                            setDuration(d);
-                            setIsLoading(false);
-                            if (onDuration) onDuration(d);
-                        }}
-                        onPlay={() => setIsPlaying(true)}
-                        onPause={() => setIsPlaying(false)}
-                        config={{
-                            youtube: {
-                                playerVars: { showinfo: 0, rel: 0, modestbranding: 1 }
-                            }
-                        }}
-                        playsinline={true}
-                        onReady={() => setIsLoading(false)}
-                        onStart={() => setIsLoading(false)}
-                        onEnded={onComplete}
-                        onError={(e: any) => {
-                            console.error("Player Error:", e);
-                            setIsLoading(false);
-                            setHasError(true);
-                        }}
-                    />
+                    <>
+                        {/* TOP SHIELD - Blocks tapping the YouTube Title/Share on mobile */}
+                        {isMobile && (
+                            <div
+                                className="absolute top-0 left-0 w-full h-[60px] z-20 pointer-events-auto bg-transparent"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                }}
+                            />
+                        )}
+                        <ReactPlayer
+                            key={`${playableUrl}-${isMobile}`}
+                            ref={playerRef}
+                            url={playableUrl}
+                            width="100%"
+                            height="100%"
+                            playing={isPlaying}
+                            volume={volume}
+                            muted={muted}
+                            playbackRate={playbackRate}
+                            controls={isMobile} // System controls for reliability
+                            onProgress={handleProgress}
+                            onDuration={(d: number) => {
+                                setDuration(d);
+                                setIsLoading(false);
+                                if (onDuration) onDuration(d);
+                            }}
+                            onPlay={() => setIsPlaying(true)}
+                            onPause={() => setIsPlaying(false)}
+                            config={{
+                                youtube: {
+                                    playerVars: {
+                                        showinfo: 0,
+                                        rel: 0,
+                                        modestbranding: 1,
+                                        iv_load_policy: 3,
+                                        fs: 1,
+                                        disablekb: 1
+                                    }
+                                }
+                            }}
+                            playsinline={true}
+                            onReady={() => setIsLoading(false)}
+                            onStart={() => setIsLoading(false)}
+                            onEnded={onComplete}
+                            onError={(e: any) => {
+                                console.error("Player Error:", e);
+                                setIsLoading(false);
+                                setHasError(true);
+                            }}
+                        />
+                    </>
                 )}
             </div>
 
