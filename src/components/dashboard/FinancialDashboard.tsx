@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { DollarSign, TrendingUp, Wallet, ChevronLeft, ChevronRight, Calendar, Activity } from "lucide-react";
 import { KPICard } from "./KPICard";
-import { LiquidityWidget } from "./LiquidityWidget";
 import { RevenueChart } from "./RevenueChart";
 import { ExpenseTable } from "./ExpenseTable";
 import { toast } from "sonner";
@@ -23,6 +22,7 @@ export default function FinancialDashboard() {
         initialBalance: 0,
         currentBalance: 0,
     });
+    const [mpData, setMpData] = useState<{ available: number; pending: number } | null>(null);
     const [loading, setLoading] = useState(false);
 
     // Derive Date Range
@@ -48,9 +48,29 @@ export default function FinancialDashboard() {
         }
     };
 
+    const fetchMPBalance = async () => {
+        try {
+            const res = await fetch("/api/financial/mercadopago/balance");
+            if (!res.ok) return;
+            const data = await res.json();
+            setMpData({
+                available: data.available_amount ?? 0,
+                pending: data.unavailable_total_amount ?? 0,
+            });
+        } catch (error) {
+            console.error("MP Fetch Error:", error);
+        }
+    };
+
     useEffect(() => {
         fetchSummary();
-    }, [startDate.toISOString(), endDate.toISOString()]); // Dependency on the calculated range strings
+    }, [startDate.toISOString(), endDate.toISOString()]);
+
+    useEffect(() => {
+        fetchMPBalance();
+        const interval = setInterval(fetchMPBalance, 30000); // 30s polling
+        return () => clearInterval(interval);
+    }, []);
 
     const handlePrevious = () => {
         if (period === 'historical') return;
@@ -147,31 +167,33 @@ export default function FinancialDashboard() {
 
             {/* KPI Cards Row */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {/* 1. Saldo Inicial (Cash Carry Over) */}
+                {/* 1. REAL Available Balance (MP) */}
                 <KPICard
-                    title="Saldo Inicial"
-                    value={formatCurrency(summary.initialBalance)}
+                    title="Saldo Disponible (MP)"
+                    value={mpData ? formatCurrency(mpData.available) : "---"}
                     icon={Wallet}
                     className="border-l-4 border-l-blue-500"
                     valueClassName="text-blue-600"
+                    subtext="Efectivo en Mercado Pago"
                 />
 
-                {/* 2. Resultado del Periodo (Ex-Net Margin) */}
+                {/* 2. REAL Pending Balance (MP) */}
+                <KPICard
+                    title="Dinero a Liquidar"
+                    value={mpData ? formatCurrency(mpData.pending) : "---"}
+                    icon={Calendar}
+                    className="border-l-4 border-l-yellow-500"
+                    valueClassName="text-yellow-600"
+                    subtext="Procesando por Mercado Pago"
+                />
+
+                {/* 3. Resultado del Periodo (Accounting) */}
                 <KPICard
                     title="Resultado Periodo"
                     value={formatCurrency(summary.netMargin)}
                     icon={TrendingUp}
                     className={`border-l-4 ${summary.netMargin >= 0 ? "border-l-green-500" : "border-l-red-500"}`}
                     valueClassName={summary.netMargin >= 0 ? "text-green-600" : "text-red-600"}
-                />
-
-                {/* 3. Saldo Disponible (Cash Position) */}
-                <KPICard
-                    title="Saldo Disponible"
-                    value={formatCurrency(summary.currentBalance)}
-                    icon={DollarSign}
-                    className={`border-l-4 ${summary.currentBalance >= 0 ? "border-l-green-500" : "border-l-red-500"}`}
-                    valueClassName={summary.currentBalance >= 0 ? "text-green-600" : "text-red-600"}
                 />
 
                 {/* 4. ROI (Efficiency) */}
@@ -190,7 +212,6 @@ export default function FinancialDashboard() {
                 </div>
                 <div className="lg:col-span-3">
                     <div className="grid gap-4">
-                        <LiquidityWidget />
                         <div className="bg-muted/20 p-4 rounded-lg">
                             <h4 className="font-semibold mb-2 flex items-center gap-2">Resumen del Periodo</h4>
                             <div className="space-y-2 text-sm">
