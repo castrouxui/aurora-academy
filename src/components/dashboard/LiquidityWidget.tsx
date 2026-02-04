@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Wallet } from "lucide-react";
 
@@ -32,6 +32,8 @@ export function LiquidityWidget() {
 
     useEffect(() => {
         fetchBalance();
+        const interval = setInterval(fetchBalance, 30000); // Poll every 30 seconds
+        return () => clearInterval(interval);
     }, []);
 
     const formatCurrency = (value: number) => {
@@ -40,12 +42,6 @@ export function LiquidityWidget() {
 
     return (
         <Card className="bg-[#111827] border-[#1F2937] text-white shadow-lg overflow-hidden">
-            <CardHeader className="pb-2 border-b border-[#1F2937]/50">
-                <div className="flex items-center gap-6">
-                    <button className="text-sm font-semibold border-b-2 border-white pb-1">Saldo</button>
-                    <button className="text-sm font-medium text-gray-500 hover:text-gray-300 pb-1">Reservas</button>
-                </div>
-            </CardHeader>
             <CardContent className="pt-6 relative">
                 <Button
                     variant="ghost"
@@ -66,23 +62,12 @@ export function LiquidityWidget() {
                             <div className="flex items-baseline gap-2 mb-1">
                                 <span className="text-xs font-medium text-green-400 uppercase tracking-wider">Rinde ▲ 25,7%</span>
                             </div>
-                            <div className="text-4xl font-bold tracking-tight">
+                            <div className="text-4xl font-bold tracking-tight text-white flex items-center gap-3">
                                 {data ? formatCurrency(data.available_amount) : "---"}
+                                <div className="text-blue-500 cursor-pointer hover:text-blue-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg>
+                                </div>
                             </div>
-                        </div>
-
-                        {/* Actions */}
-                        <div className="flex gap-3">
-                            <Button
-                                variant="outline"
-                                className="flex-1 bg-transparent border-[#1F2937] text-blue-400 hover:text-blue-300 hover:bg-[#1F2937]"
-                                onClick={() => window.open('https://www.mercadopago.com.ar/home', '_blank')}
-                            >
-                                Ir a Tu dinero
-                            </Button>
-                            <Button className="flex-1 bg-[#009EE3] hover:bg-[#0081B9] text-white font-medium">
-                                Transferir
-                            </Button>
                         </div>
 
                         {/* Divider */}
