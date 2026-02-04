@@ -174,22 +174,23 @@ export default function FinancialDashboard() {
             {/* KPI Cards Row */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {/* 1. REAL Available Balance (MP) */}
+                {/* 1. REAL Available Balance (MP) */}
                 <KPICard
-                    title="Saldo Disponible (MP)"
+                    title="Dinero disponible hoy"
                     value={mpData ? formatCurrency(mpData.available) : "---"}
                     icon={Wallet}
-                    className="border-l-4 border-l-blue-500"
-                    valueClassName="text-blue-600"
+                    className="border-l-4 border-l-green-500 bg-white/5"
+                    valueClassName="text-white text-3xl font-bold"
                     subtext={mpData?.isEstimated ? "⚠️ Estimado (basado en ventas)" : mpData?.error ? `⚠️ ${mpData.error}` : "Efectivo en Mercado Pago"}
                 />
 
                 {/* 2. REAL Pending Balance (MP) */}
                 <KPICard
-                    title="Dinero a Liquidar"
+                    title="Dinero a liquidar"
                     value={mpData ? formatCurrency(mpData.pending) : "---"}
                     icon={Calendar}
-                    className="border-l-4 border-l-yellow-500"
-                    valueClassName="text-yellow-600"
+                    className="border-l-4 border-l-blue-400 bg-white/5"
+                    valueClassName="text-gray-200"
                     subtext={mpData?.isEstimated ? "⚠️ Estimado (procesando)" : mpData?.error ? "Acceso denegado (API)" : "Procesando por Mercado Pago"}
                 />
 

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { Play, Lock } from "lucide-react";
 import { createPortal } from "react-dom";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { getYouTubeId } from '@/lib/utils';
 import { CustomControls } from "./CustomControls";
@@ -194,19 +195,21 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
     };
 
     const isFull = isFullscreen || (isMobile && isManualFullscreen);
+    const shouldRotate = isMobile && isManualFullscreen && !isMobileLandscape;
 
     // Calculate classes
-    const containerClasses = `relative w-full bg-black rounded-lg overflow-hidden border border-gray-800 ${(isMobileLandscape || (isMobile && isManualFullscreen))
-        ? 'fixed inset-0 z-[9999] h-[100dvh] w-screen border-none rounded-none flex items-center justify-center'
-        : 'aspect-video'
-        }`;
+    const containerClasses = cn(
+        "relative bg-black rounded-lg overflow-hidden border border-gray-800 transition-all duration-300",
+        isFull ? "fixed inset-0 z-[9999] w-screen h-[100dvh] border-none rounded-none flex items-center justify-center" : "w-full aspect-video",
+        shouldRotate && "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100dvh] h-[100dvw] rotate-90"
+    );
 
     // Hydration Placeholder
     if (!hasMounted) {
         return <div className="aspect-video w-full bg-black rounded-lg" />;
     }
 
-    return (
+    const playerContent = (
         <div ref={containerRef} className={containerClasses}>
             {/* Click to Play Overlay - Always enabled for custom controls */}
             {!isLocked && (
@@ -329,4 +332,10 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
             )}
         </div>
     );
+
+    if (isManualFullscreen && typeof document !== "undefined") {
+        return createPortal(playerContent, document.body);
+    }
+
+    return playerContent;
 }
