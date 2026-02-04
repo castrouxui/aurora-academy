@@ -373,16 +373,19 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
             ref={containerRef}
             className={containerClasses}
             onContextMenu={(e) => e.preventDefault()}
-            onMouseMove={handleShowControls}
-            onMouseLeave={handleMouseLeave}
-            onTouchStart={handleShowControls} // Mobile tap
-            onClick={handleShowControls} // Ensure click also triggers
+            onMouseMove={!isMobile ? handleShowControls : undefined}
+            onMouseLeave={!isMobile ? handleMouseLeave : undefined}
+            onTouchStart={!isMobile ? handleShowControls : undefined} // Custom controls only
+            onClick={!isMobile ? handleShowControls : undefined}
         >
-            <div
-                className="absolute inset-0 z-10 cursor-pointer"
-                onClick={handlePlayPause}
-                onDoubleClick={handleToggleFullscreen} // Double tap to fullscreen is nice
-            />
+            {/* Click to Play Overlay - Desktop Only */}
+            {!isMobile && (
+                <div
+                    className="absolute inset-0 z-10 cursor-pointer"
+                    onClick={handlePlayPause}
+                    onDoubleClick={handleToggleFullscreen}
+                />
+            )}
 
             <div className="absolute inset-0 z-0">
                 {isLocked ? (
