@@ -190,6 +190,7 @@ export default function FinancialDashboard() {
                 </div>
                 <div className="lg:col-span-3">
                     <div className="grid gap-4">
+                        <LiquidityWidget />
                         <div className="bg-muted/20 p-4 rounded-lg">
                             <h4 className="font-semibold mb-2 flex items-center gap-2">Resumen del Periodo</h4>
                             <div className="space-y-2 text-sm">
