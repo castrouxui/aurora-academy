@@ -6,8 +6,8 @@ import { redirect } from "next/navigation";
 export default async function FinancialPage() {
     const session = await getServerSession(authOptions);
 
-    if (!session || !session.user || (session.user.role !== "ADMIN" && !session.user.isCompanyAdmin)) {
-        redirect("/dashboard");
+    if (!session || !session.user || session.user.role !== "ADMIN") {
+        redirect("/");
     }
 
     return (

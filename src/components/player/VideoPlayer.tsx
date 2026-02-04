@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { Play, Lock } from "lucide-react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { getYouTubeId } from '@/lib/utils';
 import { CustomControls } from "./CustomControls";
@@ -196,8 +197,8 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
 
     // Calculate classes
     const containerClasses = `relative w-full bg-black rounded-lg overflow-hidden border border-gray-800 ${(isMobileLandscape || (isMobile && isManualFullscreen))
-            ? 'fixed inset-0 z-[9999] h-[100dvh] w-screen border-none rounded-none flex items-center justify-center'
-            : 'aspect-video'
+        ? 'fixed inset-0 z-[9999] h-[100dvh] w-screen border-none rounded-none flex items-center justify-center'
+        : 'aspect-video'
         }`;
 
     // Hydration Placeholder

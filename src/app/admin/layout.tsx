@@ -47,7 +47,7 @@ export default function AdminLayout({
         { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
         { name: "Ventas", href: "/admin/sales", icon: ShoppingCart },
         { name: "Cursos", href: "/admin/courses", icon: BookOpen },
-        { name: "Panel Financiero", href: "/dashboard/financial", icon: DollarSign },
+        { name: "Panel Financiero", href: "/admin/financial", icon: DollarSign },
         // { name: "Telegram", href: "/admin/telegram", icon: Send }, // DISABLED
         { name: "Paquetes", href: "/admin/bundles", icon: Package },
         { name: "Cupones", href: "/admin/coupons", icon: Tag },
