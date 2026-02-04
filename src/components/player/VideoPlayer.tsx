@@ -145,8 +145,8 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
 
     return (
         <div ref={containerRef} className={containerClasses}>
-            {/* NO OVERLAYS ON MOBILE - ENSURE VIDEO IS TOUCHABLE */}
-            {!isMobile && !isLocked && (
+            {/* Click to Play Overlay - Always enabled for custom controls */}
+            {!isLocked && (
                 <div
                     className="absolute inset-0 z-10 cursor-pointer"
                     onClick={handlePlayPause}
@@ -167,7 +167,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     </div>
                 ) : (
                     <>
-                        {/* TOP SHIELD - Blocks tapping the YouTube Title/Share on mobile */}
+                        {/* TOP SHIELD - Blocks tapping the YouTube Title/Share on mobile if they somehow leak */}
                         {isMobile && (
                             <div
                                 className="absolute top-0 left-0 w-full h-[60px] z-20 pointer-events-auto bg-transparent"
@@ -187,7 +187,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                             volume={volume}
                             muted={muted}
                             playbackRate={playbackRate}
-                            controls={isMobile} // System controls for reliability
+                            controls={false} // ALWAYS use custom controls to hide YouTube branding
                             onProgress={handleProgress}
                             onDuration={(d: number) => {
                                 setDuration(d);
@@ -204,7 +204,8 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                                         modestbranding: 1,
                                         iv_load_policy: 3,
                                         fs: 1,
-                                        disablekb: 1
+                                        disablekb: 1,
+                                        controls: 0 // Explicitly hide YT controls
                                     }
                                 }
                             }}
@@ -222,8 +223,8 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                 )}
             </div>
 
-            {/* Desktop Only Controls */}
-            {!isMobile && !isLocked && (
+            {/* Custom Controls - Now for both Mobile and Desktop */}
+            {!isLocked && (
                 <CustomControls
                     isPlaying={isPlaying}
                     onPlayPause={handlePlayPause}
@@ -246,6 +247,15 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     onPlaybackRateChange={(r) => setPlaybackRate(r)}
                     isVisible={showControls || !isPlaying}
                 />
+            )}
+
+            {/* Big Play Button - Now for both Mobile and Desktop */}
+            {!isPlaying && !isLoading && !isLocked && (
+                <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                    <div className="w-20 h-20 rounded-full bg-[#5D5CDE]/90 flex items-center justify-center text-white shadow-[0_0_30px_rgba(93,92,222,0.5)] backdrop-blur-sm transition-transform group-hover:scale-110">
+                        <Play fill="currentColor" className="w-8 h-8 ml-1" />
+                    </div>
+                </div>
             )}
 
             {/* ERROR / LOADING - ONLY ON DESKTOP - MOBILE SHOULD BE BARE BONES */}
