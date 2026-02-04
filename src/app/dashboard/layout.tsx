@@ -63,10 +63,6 @@ export default function DashboardLayout({
 
     if (isCompanyAdmin) {
         studentNav.splice(1, 0, { name: "Mi Empresa", href: "/dashboard/company", icon: Building2 });
-        // If they are company admin but not main admin, give them access to finance too
-        if (!isMainAdmin) {
-            studentNav.push({ name: "Panel Financiero", href: "/dashboard/financial", icon: DollarSign });
-        }
     }
 
     const navigation = isMainAdmin ? adminNav : studentNav;
