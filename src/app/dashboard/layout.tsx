@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookOpen, Package, ShoppingCart, Compass, GraduationCap, ShieldCheck, Building2, FileText, Users, DollarSign } from "lucide-react";
+import { LayoutDashboard, BookOpen, Package, ShoppingCart, Compass, GraduationCap, ShieldCheck, Building2, FileText, Users } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 import { useSession, signOut } from "next-auth/react";
 import { Loader2 } from "lucide-react";
@@ -47,9 +47,8 @@ export default function DashboardLayout({
         { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
         { name: "Ventas", href: "/admin/sales", icon: FileText },
         { name: "Cursos", href: "/admin/courses", icon: BookOpen },
-        { name: "Membresías", href: "/admin/bundles", icon: Package },
+        { name: "Paquetes", href: "/admin/bundles", icon: Package },
         { name: "Usuarios", href: "/admin/users", icon: Users },
-        { name: "Panel Financiero", href: "/dashboard/financial", icon: DollarSign },
     ];
 
     const studentNav = [
