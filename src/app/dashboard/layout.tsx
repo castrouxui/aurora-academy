@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookOpen, Package, ShoppingCart, Compass, GraduationCap, ShieldCheck, Building2, FileText, Users } from "lucide-react";
+import { LayoutDashboard, BookOpen, Package, ShoppingCart, Compass, GraduationCap, ShieldCheck, Building2, FileText, Users, DollarSign } from "lucide-react";
 import { Logo } from "@/components/layout/Logo";
 import { useSession, signOut } from "next-auth/react";
 import { Loader2 } from "lucide-react";
@@ -43,10 +43,14 @@ export default function DashboardLayout({
     // Navigation Config
     const adminNav = [
         { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-        { name: "Ventas", href: "/admin/sales", icon: FileText }, // Updated to /admin/sales to match verification
+        { name: "Ventas", href: "/admin/sales", icon: FileText },
         { name: "Cursos", href: "/admin/courses", icon: BookOpen },
         { name: "Membresías", href: "/admin/bundles", icon: Package },
         { name: "Usuarios", href: "/admin/users", icon: Users },
+    ];
+
+    const financeNav = [
+        { name: "Panel Financiero", href: "/dashboard/financial", icon: DollarSign },
     ];
 
     const studentNav = [
@@ -73,6 +77,7 @@ export default function DashboardLayout({
             {/* Desktop Sidebar - Now generic */}
             <Sidebar
                 items={navigation}
+                financeItems={isAdmin ? financeNav : undefined}
                 user={session.user}
                 roleLabel={isAdmin ? "Administración" : "Mi Aprendizaje"}
             />
@@ -81,6 +86,7 @@ export default function DashboardLayout({
             <div className="fixed top-0 left-0 right-0 h-16 bg-[#111827] border-b border-[#1F2937] z-20 flex items-center px-4 md:hidden">
                 <MobileSidebar
                     items={navigation.map(n => ({ ...n, icon: n.icon }))}
+                    financeItems={isAdmin ? financeNav.map(n => ({ ...n, icon: n.icon })) : undefined}
                     role={isAdmin ? "ADMIN" : "ESTUDIANTE"}
                     user={session.user}
                 />

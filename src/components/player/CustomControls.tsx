@@ -85,15 +85,24 @@ export function CustomControls({
                 <div className="flex items-center gap-4">
                     {/* Play/Pause */}
                     <button
-                        onClick={onPlayPause}
-                        className="text-white hover:text-[#5D5CDE] transition-colors"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onPlayPause();
+                        }}
+                        className="text-white hover:text-[#5D5CDE] transition-colors p-2 -ml-2 hover:bg-white/10 rounded-full"
                     >
                         {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" />}
                     </button>
 
                     {/* Volume */}
                     <div className="flex items-center gap-2 group/volume relative">
-                        <button onClick={onToggleMute} className="text-white hover:text-[#5D5CDE] transition-colors">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onToggleMute();
+                            }}
+                            className="text-white hover:text-[#5D5CDE] transition-colors p-2 hover:bg-white/10 rounded-full"
+                        >
                             {muted || volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
                         </button>
                         <div className="w-0 overflow-hidden group-hover/volume:w-24 transition-all duration-300">
@@ -115,14 +124,38 @@ export function CustomControls({
                 <div className="flex items-center gap-4">
                     {/* Playback Rate */}
                     <div className="relative group/speed scale-90 sm:scale-100">
-                        <button className="text-white hover:text-[#5D5CDE] text-xs font-bold transition-colors w-8">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                const menu = e.currentTarget.nextElementSibling;
+                                if (menu) {
+                                    menu.classList.toggle('hidden');
+                                    menu.classList.toggle('flex');
+                                }
+                            }}
+                            className="text-white hover:text-[#5D5CDE] text-xs font-bold transition-colors w-8"
+                        >
                             {playbackRate}x
                         </button>
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/speed:flex flex-col bg-[#0B0F19] border border-gray-800 rounded-lg overflow-hidden shadow-xl p-1">
+                        <div
+                            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden flex-col bg-[#0B0F19] border border-gray-800 rounded-lg overflow-hidden shadow-xl p-1 z-50"
+                            onMouseLeave={(e) => {
+                                e.currentTarget.classList.add('hidden');
+                                e.currentTarget.classList.remove('flex');
+                            }}
+                        >
                             {[0.5, 1.0, 1.5, 2.0].map((rate) => (
                                 <button
                                     key={rate}
-                                    onClick={() => onPlaybackRateChange(rate)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onPlaybackRateChange(rate);
+                                        const menu = e.currentTarget.parentElement;
+                                        if (menu) {
+                                            menu.classList.add('hidden');
+                                            menu.classList.remove('flex');
+                                        }
+                                    }}
                                     className={cn(
                                         "px-3 py-1.5 text-xs font-medium hover:bg-white/10 transition-colors rounded text-center min-w-[50px]",
                                         playbackRate === rate ? "text-[#5D5CDE] bg-[#5D5CDE]/10" : "text-gray-300"
@@ -135,7 +168,20 @@ export function CustomControls({
                     </div>
 
                     {/* Fullscreen */}
-                    <button onClick={onToggleFullscreen} className="text-white hover:text-[#5D5CDE] transition-colors">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onToggleFullscreen();
+                        }}
+                        onTouchEnd={(e) => {
+                            // TouchEnd is often more reliable than click on mobile web
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onToggleFullscreen();
+                        }}
+                        className="text-white hover:text-[#5D5CDE] transition-colors p-2 -mr-2 hover:bg-white/10 rounded-full"
+                        aria-label={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
+                    >
                         {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
                     </button>
                 </div>

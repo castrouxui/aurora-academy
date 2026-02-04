@@ -296,6 +296,7 @@ model Review {
   @@index([userId])
 }
 
+
 model SalesGoal {
   id           String   @id @default(cuid())
   targetAmount Decimal  @default(5000000)
@@ -303,4 +304,13 @@ model SalesGoal {
   startDate    DateTime @default(now())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model Expense {
+  id        String   @id @default(cuid())
+  label     String
+  amount    Decimal
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

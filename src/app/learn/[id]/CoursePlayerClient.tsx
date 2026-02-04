@@ -221,6 +221,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                                     previewMode={isPreviewMode}
                                     courseId={course.id}
                                     onProgressUpdate={handleProgressUpdate}
+                                    initialProgress={activeLesson.lastPlayedTime}
                                     onDuration={(d: number) => {
                                         // Auto-update duration if it's currently 0 (00:00)
                                         if (activeLesson.duration === "00:00" && d > 0) {

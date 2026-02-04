@@ -17,6 +17,7 @@ interface NavItem {
 
 interface MobileSidebarProps {
     items: NavItem[];
+    financeItems?: NavItem[];
     role: "ADMIN" | "ESTUDIANTE";
     user?: {
         name?: string | null;
@@ -26,7 +27,7 @@ interface MobileSidebarProps {
     };
 }
 
-export function MobileSidebar({ items, role, user }: MobileSidebarProps) {
+export function MobileSidebar({ items, financeItems, role, user }: MobileSidebarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const pathname = usePathname();
 
@@ -87,6 +88,33 @@ export function MobileSidebar({ items, role, user }: MobileSidebarProps) {
                             );
                         })}
                     </nav>
+
+                    {financeItems && financeItems.length > 0 && (
+                        <div className="mt-6 border-t border-[#1F2937] pt-4">
+                            <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                                Finanzas
+                            </p>
+                            <nav className="space-y-1">
+                                {financeItems.map((item) => {
+                                    const isActive = pathname === item.href;
+                                    return (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            onClick={() => setIsOpen(false)}
+                                            className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive
+                                                ? "bg-[#5D5CDE]/10 text-[#5D5CDE]"
+                                                : "text-gray-400 hover:bg-[#1F2937] hover:text-white"
+                                                }`}
+                                        >
+                                            <item.icon size={20} />
+                                            {item.name}
+                                        </Link>
+                                    );
+                                })}
+                            </nav>
+                        </div>
+                    )}
 
                     {user && (
                         <div className="mt-auto border-t border-[#1F2937] pt-4">

@@ -18,6 +18,7 @@ interface NavItem {
 
 interface SidebarProps {
     items: NavItem[];
+    financeItems?: NavItem[];
     user: {
         name?: string | null;
         email?: string | null;
@@ -27,7 +28,7 @@ interface SidebarProps {
     roleLabel: string;
 }
 
-export function Sidebar({ items, user, roleLabel }: SidebarProps) {
+export function Sidebar({ items, financeItems, user, roleLabel }: SidebarProps) {
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -88,6 +89,39 @@ export function Sidebar({ items, user, roleLabel }: SidebarProps) {
                         );
                     })}
                 </nav>
+
+                {financeItems && financeItems.length > 0 && (
+                    <div className="mt-8">
+                        {!isCollapsed && (
+                            <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 animate-in fade-in duration-300">
+                                Finanzas
+                            </p>
+                        )}
+                        <nav className="space-y-1">
+                            {financeItems.map((item) => {
+                                const isActive = pathname === item.href;
+                                return (
+                                    <Link
+                                        key={item.name}
+                                        href={item.href}
+                                        title={isCollapsed ? item.name : undefined}
+                                        className={cn(
+                                            "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group relative overflow-hidden",
+                                            isActive
+                                                ? "bg-primary/10 text-primary shadow-[0_0_15px_rgba(93,92,222,0.15)]"
+                                                : "text-gray-400 hover:bg-white/5 hover:text-white",
+                                            isCollapsed && "justify-center px-2"
+                                        )}
+                                    >
+                                        {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full" />}
+                                        <item.icon size={20} className={cn("shrink-0 transition-transform duration-300", isActive && "scale-110")} />
+                                        {!isCollapsed && <span className="truncate">{item.name}</span>}
+                                    </Link>
+                                );
+                            })}
+                        </nav>
+                    </div>
+                )}
 
                 <div className="mt-8">
                     {!isCollapsed && (

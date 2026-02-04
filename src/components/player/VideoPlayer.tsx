@@ -23,9 +23,10 @@ interface VideoPlayerProps {
     onPurchase?: () => void;
     onDuration?: (duration: number) => void;
     onProgressUpdate?: (seconds: number, total: number) => void;
+    initialProgress?: number; // Add this prop
 }
 
-export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, courseId, onComplete, onPurchase, onDuration, onProgressUpdate }: VideoPlayerProps) {
+export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, courseId, onComplete, onPurchase, onDuration, onProgressUpdate, initialProgress }: VideoPlayerProps) {
     const playerRef = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [hasWindow, setHasWindow] = useState(false);
@@ -43,7 +44,48 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [playbackRate, setPlaybackRate] = useState(1.0); // Default 1x
     const [showControls, setShowControls] = useState(false);
+    const [isReady, setIsReady] = useState(false);
     const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Mobile Landscape Detection for CSS Fullscreen
+    const [isMobileLandscape, setIsMobileLandscape] = useState(false);
+
+    useEffect(() => {
+        const checkOrientation = () => {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+            // Only trigger "Fake Fullscreen" on mobile devices in landscape
+            setIsMobileLandscape(isMobile && isLandscape);
+        };
+
+        // Check initially
+        checkOrientation();
+
+        // Listen for resize/orientation changes
+        window.addEventListener('resize', checkOrientation);
+        window.addEventListener('orientationchange', checkOrientation);
+
+        return () => {
+            window.removeEventListener('resize', checkOrientation);
+            window.removeEventListener('orientationchange', checkOrientation);
+        };
+    }, []);
+
+
+    // Handle initial seek
+    useEffect(() => {
+        if (isReady && initialProgress && initialProgress > 0 && playedSeconds === 0) {
+            // Only seek if we have initial progress and haven't started playing yet
+            // Add a small delay to ensure player is truly ready to seek
+            const timeout = setTimeout(() => {
+                if (playerRef.current) {
+                    playerRef.current.seekTo(initialProgress);
+                    setPlayedSeconds(initialProgress);
+                }
+            }, 500);
+            return () => clearTimeout(timeout);
+        }
+    }, [isReady, initialProgress]);
 
     // Handle Control Visibility
     const handleShowControls = () => {
@@ -75,14 +117,88 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
         setPlaybackRate(rate);
     };
 
-    // Fullscreen change listener
+    // Helper to safely lock orientation
+    const lockOrientation = async () => {
+        try {
+            if (screen.orientation && (screen.orientation as any).lock) {
+                await (screen.orientation as any).lock('landscape');
+            } else if ((screen as any).lockOrientation) {
+                (screen as any).lockOrientation('landscape');
+            } else if ((screen as any).mozLockOrientation) {
+                (screen as any).mozLockOrientation('landscape');
+            } else if ((screen as any).msLockOrientation) {
+                (screen as any).msLockOrientation('landscape');
+            }
+        } catch (error) {
+            console.log("Orientation lock failed (expected on some devices):", error);
+        }
+    };
+
+    // Helper to safely unlock orientation
+    const unlockOrientation = () => {
+        try {
+            if (screen.orientation && (screen.orientation as any).unlock) {
+                (screen.orientation as any).unlock();
+            } else if ((screen as any).unlockOrientation) {
+                (screen as any).unlockOrientation();
+            } else if ((screen as any).mozUnlockOrientation) {
+                (screen as any).mozUnlockOrientation();
+            } else if ((screen as any).msUnlockOrientation) {
+                (screen as any).msUnlockOrientation();
+            }
+        } catch (error) {
+            console.log("Orientation unlock failed:", error);
+        }
+    };
+
+    // Fullscreen change listener with vendor prefixes
     useEffect(() => {
         const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
+            const videoDOM = containerRef.current?.querySelector('video');
+
+            // Check standard, prefixed, AND native video fullscreen states
+            const isFull = !!(document.fullscreenElement ||
+                (document as any).webkitFullscreenElement ||
+                (document as any).mozFullScreenElement ||
+                (document as any).msFullscreenElement ||
+                (videoDOM && ((videoDOM as any).webkitDisplayingFullscreen || document.fullscreenElement === videoDOM)));
+
+            setIsFullscreen(isFull);
+
+            // Auto-Unlock on exit (handled here to catch ESC key, back button, etc.)
+            if (!isFull) {
+                unlockOrientation();
+            } else {
+                // Try to lock if we detect we are full (double check)
+                lockOrientation();
+            }
         };
+
+        // Standard & Vendor Events
         document.addEventListener('fullscreenchange', handleFullscreenChange);
-        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-    }, []);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+        // Native Video Events (crucial for iOS/Android native player)
+        const videoElement = containerRef.current?.querySelector('video');
+        if (videoElement) {
+            videoElement.addEventListener('webkitbeginfullscreen', handleFullscreenChange);
+            videoElement.addEventListener('webkitendfullscreen', handleFullscreenChange); // iOS exit
+        }
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+
+            if (videoElement) {
+                videoElement.removeEventListener('webkitbeginfullscreen', handleFullscreenChange);
+                videoElement.removeEventListener('webkitendfullscreen', handleFullscreenChange);
+            }
+        };
+    }, [isLoading]); // Re-bind when loading finishes (video element might be fresh)
 
     const handlePlayPause = () => {
         // Force synchronous play for YouTube to satisfy browser autoplay policies
@@ -120,26 +236,70 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
     };
 
     const handleToggleFullscreen = () => {
-        if (!containerRef.current) return;
+        const container = containerRef.current;
+        const videoDOM = containerRef.current?.querySelector('video');
 
-        // Try standard fullscreen API first
-        if (!document.fullscreenElement && !(document as any).webkitFullscreenElement) {
-            if (containerRef.current.requestFullscreen) {
-                containerRef.current.requestFullscreen();
-            } else if ((containerRef.current as any).webkitRequestFullscreen) {
-                (containerRef.current as any).webkitRequestFullscreen();
-            } else if (playerRef.current) {
-                // Fallback for iOS video element specific
-                const video = playerRef.current.getInternalPlayer();
-                if (video && video.webkitEnterFullscreen) {
-                    video.webkitEnterFullscreen();
-                }
-            }
-        } else {
-            if (document.exitFullscreen) {
+        // Universal Mobile Detection (Android + iOS)
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        // Check if currently in fullscreen
+        const isFull = !!(document.fullscreenElement ||
+            (document as any).webkitFullscreenElement ||
+            (document as any).mozFullScreenElement ||
+            (document as any).msFullscreenElement ||
+            (videoDOM && ((videoDOM as any).webkitDisplayingFullscreen || document.fullscreenElement === videoDOM)));
+
+        // --- EXIT FULLSCREEN ---
+        if (isFull) {
+            unlockOrientation(); // Unlock explicitly when button is clicked
+
+            if (isMobile && videoDOM && (videoDOM as any).webkitExitFullscreen) {
+                // Try native exit first on mobile
+                (videoDOM as any).webkitExitFullscreen();
+            } else if (document.exitFullscreen) {
                 document.exitFullscreen();
             } else if ((document as any).webkitExitFullscreen) {
                 (document as any).webkitExitFullscreen();
+            } else if ((document as any).mozCancelFullScreen) {
+                (document as any).mozCancelFullScreen();
+            } else if ((document as any).msExitFullscreen) {
+                (document as any).msExitFullscreen();
+            }
+            return;
+        }
+
+        // --- ENTER FULLSCREEN ---
+
+        // Attempt to lock orientation immediately (might fail if not yet full, but good to try)
+        lockOrientation();
+
+        // Mobile: Prioritize Native Video Player
+        // This gives the "YouTube-like" experience on Android/iOS
+        if (isMobile && videoDOM) {
+            if ((videoDOM as any).webkitEnterFullscreen) {
+                (videoDOM as any).webkitEnterFullscreen(); // iOS / Safari
+                return;
+            } else if (videoDOM.requestFullscreen) {
+                videoDOM.requestFullscreen(); // Android Standard
+                return;
+            } else if ((videoDOM as any).webkitRequestFullscreen) {
+                (videoDOM as any).webkitRequestFullscreen(); // Old Android / WebKit
+                return;
+            }
+        }
+
+        // Desktop: Default to Container Fullscreen (Keeps custom controls)
+        if (container) {
+            if (container.requestFullscreen) {
+                container.requestFullscreen();
+            } else if ((container as any).webkitRequestFullscreen) {
+                (container as any).webkitRequestFullscreen();
+            } else if ((container as any).mozRequestFullScreen) {
+                (container as any).mozRequestFullScreen();
+            } else if ((container as any).msRequestFullscreen) {
+                (container as any).msRequestFullscreen();
+            } else if (videoDOM && (videoDOM as any).webkitEnterFullscreen) {
+                (videoDOM as any).webkitEnterFullscreen();
             }
         }
     };
@@ -204,10 +364,14 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
         }
     };
 
+    // Calculate classes for CSS Fullscreen
+    const containerClasses = `relative bg-black rounded-lg overflow-hidden group border border-gray-800 select-none ${isMobileLandscape ? 'fixed inset-0 z-[9999] h-[100dvh] w-screen border-none rounded-none flex items-center justify-center bg-black' : 'aspect-video'
+        }`;
+
     return (
         <div
             ref={containerRef}
-            className="relative aspect-video bg-black rounded-lg overflow-hidden group border border-gray-800 select-none"
+            className={containerClasses}
             onContextMenu={(e) => e.preventDefault()}
             onMouseMove={handleShowControls}
             onMouseLeave={handleMouseLeave}
@@ -268,7 +432,10 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                         }}
                         playsinline={true}
                         onError={handleError}
-                        onReady={() => setIsLoading(false)}
+                        onReady={() => {
+                            setIsLoading(false);
+                            setIsReady(true);
+                        }}
                         onStart={() => setIsLoading(false)}
                         onEnded={onComplete}
                     />
