@@ -38,7 +38,9 @@ export default function DashboardLayout({
 
     if (!session) return null;
 
-    const isAdmin = session.user.role === "ADMIN";
+    const isMainAdmin = session.user.role === "ADMIN";
+    const isCompanyAdmin = !!session.user.isCompanyAdmin;
+    const canSeeAdmin = isMainAdmin;
 
     // Navigation Config
     const adminNav = [
@@ -47,9 +49,6 @@ export default function DashboardLayout({
         { name: "Cursos", href: "/admin/courses", icon: BookOpen },
         { name: "Membresías", href: "/admin/bundles", icon: Package },
         { name: "Usuarios", href: "/admin/users", icon: Users },
-    ];
-
-    const financeNav = [
         { name: "Panel Financiero", href: "/dashboard/financial", icon: DollarSign },
     ];
 
@@ -62,11 +61,15 @@ export default function DashboardLayout({
         { name: "Certificados", href: "/dashboard/certificados", icon: GraduationCap },
     ];
 
-    if (session.user.isCompanyAdmin) {
+    if (isCompanyAdmin) {
         studentNav.splice(1, 0, { name: "Mi Empresa", href: "/dashboard/company", icon: Building2 });
+        // If they are company admin but not main admin, give them access to finance too
+        if (!isMainAdmin) {
+            studentNav.push({ name: "Panel Financiero", href: "/dashboard/financial", icon: DollarSign });
+        }
     }
 
-    const navigation = isAdmin ? adminNav : studentNav;
+    const navigation = isMainAdmin ? adminNav : studentNav;
 
     const isStudent = session.user.role === "ESTUDIANTE";
     const needsTelegram = false; // DISABLED GLOBAL FOR NOW
@@ -77,17 +80,15 @@ export default function DashboardLayout({
             {/* Desktop Sidebar - Now generic */}
             <Sidebar
                 items={navigation}
-                financeItems={isAdmin ? financeNav : undefined}
                 user={session.user}
-                roleLabel={isAdmin ? "Administración" : "Mi Aprendizaje"}
+                roleLabel={isMainAdmin ? "Administración" : "Mi Aprendizaje"}
             />
 
             {/* Mobile Header & Sidebar */}
             <div className="fixed top-0 left-0 right-0 h-16 bg-[#111827] border-b border-[#1F2937] z-20 flex items-center px-4 md:hidden">
                 <MobileSidebar
                     items={navigation.map(n => ({ ...n, icon: n.icon }))}
-                    financeItems={isAdmin ? financeNav.map(n => ({ ...n, icon: n.icon })) : undefined}
-                    role={isAdmin ? "ADMIN" : "ESTUDIANTE"}
+                    role={isMainAdmin ? "ADMIN" : "ESTUDIANTE"}
                     user={session.user}
                 />
                 <div className="ml-4">

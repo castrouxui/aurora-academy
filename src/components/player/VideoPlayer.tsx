@@ -99,13 +99,71 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
         setIsPlaying(!isPlaying);
     };
 
-    const handleToggleFullscreen = () => {
+    // Helper to safely lock orientation
+    const lockOrientation = async () => {
+        try {
+            if (screen.orientation && (screen.orientation as any).lock) {
+                await (screen.orientation as any).lock('landscape');
+            } else if ((screen as any).lockOrientation) {
+                (screen as any).lockOrientation('landscape');
+            }
+        } catch (error) {
+            console.log("Orientation lock failed:", error);
+        }
+    };
+
+    // Helper to safely unlock orientation
+    const unlockOrientation = () => {
+        try {
+            if (screen.orientation && (screen.orientation as any).unlock) {
+                (screen.orientation as any).unlock();
+            } else if ((screen as any).unlockOrientation) {
+                (screen as any).unlockOrientation();
+            }
+        } catch (error) {
+            console.log("Orientation unlock failed:", error);
+        }
+    };
+
+    const [isManualFullscreen, setIsManualFullscreen] = useState(false);
+
+    // ... (rest of states)
+
+    const handleToggleFullscreen = async () => {
         const container = containerRef.current;
+        const videoDOM = containerRef.current?.querySelector('video');
+
+        // Toggle Manual Fullscreen on Mobile
+        if (isMobile) {
+            const nextState = !isManualFullscreen;
+            setIsManualFullscreen(nextState);
+
+            if (nextState) {
+                await lockOrientation();
+                // Attempt native as well, but don't rely on it
+                if (videoDOM && (videoDOM as any).webkitEnterFullscreen) {
+                    (videoDOM as any).webkitEnterFullscreen();
+                }
+            } else {
+                unlockOrientation();
+            }
+            return;
+        }
+
+        // Desktop: Native API
         if (container) {
-            if (container.requestFullscreen) {
-                container.requestFullscreen();
-            } else if ((container as any).webkitRequestFullscreen) {
-                (container as any).webkitRequestFullscreen();
+            if (!isFullscreen) {
+                if (container.requestFullscreen) {
+                    await container.requestFullscreen();
+                } else if ((container as any).webkitRequestFullscreen) {
+                    (container as any).webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    await document.exitFullscreen();
+                } else if ((document as any).webkitExitFullscreen) {
+                    (document as any).webkitExitFullscreen();
+                }
             }
         }
     };
@@ -134,8 +192,12 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
         }
     };
 
+    const isFull = isFullscreen || (isMobile && isManualFullscreen);
+
     // Calculate classes
-    const containerClasses = `relative w-full bg-black rounded-lg overflow-hidden border border-gray-800 ${isMobileLandscape ? 'fixed inset-0 z-[9999] h-[100dvh] w-screen border-none rounded-none' : 'aspect-video'
+    const containerClasses = `relative w-full bg-black rounded-lg overflow-hidden border border-gray-800 ${(isMobileLandscape || (isMobile && isManualFullscreen))
+            ? 'fixed inset-0 z-[9999] h-[100dvh] w-screen border-none rounded-none flex items-center justify-center'
+            : 'aspect-video'
         }`;
 
     // Hydration Placeholder
@@ -241,7 +303,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     }}
                     duration={duration}
                     playedSeconds={playedSeconds}
-                    isFullscreen={isFullscreen}
+                    isFullscreen={isFull}
                     onToggleFullscreen={handleToggleFullscreen}
                     playbackRate={playbackRate}
                     onPlaybackRateChange={(r) => setPlaybackRate(r)}
