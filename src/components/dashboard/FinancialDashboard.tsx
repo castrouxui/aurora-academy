@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DollarSign, TrendingUp, Wallet, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { DollarSign, TrendingUp, Wallet, ChevronLeft, ChevronRight, Calendar, Activity } from "lucide-react";
 import { KPICard } from "./KPICard";
 import { LiquidityWidget } from "./LiquidityWidget";
 import { RevenueChart } from "./RevenueChart";
@@ -20,6 +20,8 @@ export default function FinancialDashboard() {
         expenses: 0,
         netMargin: 0,
         roi: 0,
+        initialBalance: 0,
+        currentBalance: 0,
     });
     const [loading, setLoading] = useState(false);
 
@@ -145,28 +147,40 @@ export default function FinancialDashboard() {
 
             {/* KPI Cards Row */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {/* 1. Saldo Inicial (Cash Carry Over) */}
                 <KPICard
-                    title="Ingresos"
-                    value={formatCurrency(summary.revenue)}
-                    icon={DollarSign}
-                    className="border-l-4 border-l-green-500"
-                />
-                <KPICard
-                    title="Margen Neto"
-                    value={formatCurrency(summary.netMargin)}
+                    title="Saldo Inicial"
+                    value={formatCurrency(summary.initialBalance)}
                     icon={Wallet}
+                    className="border-l-4 border-l-blue-500"
+                    valueClassName="text-blue-600"
+                />
+
+                {/* 2. Resultado del Periodo (Ex-Net Margin) */}
+                <KPICard
+                    title="Resultado Periodo"
+                    value={formatCurrency(summary.netMargin)}
+                    icon={TrendingUp}
                     className={`border-l-4 ${summary.netMargin >= 0 ? "border-l-green-500" : "border-l-red-500"}`}
                     valueClassName={summary.netMargin >= 0 ? "text-green-600" : "text-red-600"}
                 />
+
+                {/* 3. Saldo Disponible (Cash Position) */}
                 <KPICard
-                    title="ROI"
+                    title="Saldo Disponible"
+                    value={formatCurrency(summary.currentBalance)}
+                    icon={DollarSign}
+                    className={`border-l-4 ${summary.currentBalance >= 0 ? "border-l-green-500" : "border-l-red-500"}`}
+                    valueClassName={summary.currentBalance >= 0 ? "text-green-600" : "text-red-600"}
+                />
+
+                {/* 4. ROI (Efficiency) */}
+                <KPICard
+                    title="ROI Periodo"
                     value={`${summary.roi.toFixed(1)}%`}
-                    icon={TrendingUp}
+                    icon={Activity}
                     className={`border-l-4 ${summary.roi >= 20 ? "border-l-green-500" : summary.roi > 0 ? "border-l-yellow-500" : "border-l-red-500"}`}
                 />
-                <div className="md:col-span-1">
-                    <LiquidityWidget />
-                </div>
             </div>
 
             {/* Main Content Grid */}

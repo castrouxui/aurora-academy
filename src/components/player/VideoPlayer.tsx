@@ -47,27 +47,27 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
     const [isReady, setIsReady] = useState(false);
     const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Mobile Landscape Detection for CSS Fullscreen
+    // Mobile Detection
+    const [isMobile, setIsMobile] = useState(false);
+    // Mobile Landscape Detection for CSS Fullscreen (still useful for layout)
     const [isMobileLandscape, setIsMobileLandscape] = useState(false);
 
     useEffect(() => {
-        const checkOrientation = () => {
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-            // Only trigger "Fake Fullscreen" on mobile devices in landscape
-            setIsMobileLandscape(isMobile && isLandscape);
+        const checkDevice = () => {
+            const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            setIsMobile(mobile);
+
+            const landscape = window.matchMedia("(orientation: landscape)").matches;
+            setIsMobileLandscape(mobile && landscape);
         };
 
-        // Check initially
-        checkOrientation();
-
-        // Listen for resize/orientation changes
-        window.addEventListener('resize', checkOrientation);
-        window.addEventListener('orientationchange', checkOrientation);
+        checkDevice();
+        window.addEventListener('resize', checkDevice);
+        window.addEventListener('orientationchange', checkDevice);
 
         return () => {
-            window.removeEventListener('resize', checkOrientation);
-            window.removeEventListener('orientationchange', checkOrientation);
+            window.removeEventListener('resize', checkDevice);
+            window.removeEventListener('orientationchange', checkDevice);
         };
     }, []);
 
@@ -411,6 +411,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                         volume={volume}
                         muted={muted}
                         playbackRate={playbackRate}
+                        controls={isMobile} // Enable Native Controls on Mobile
                         onProgress={(state: any) => {
                             handleProgress(state);
                             // eslint-disable-next-line
@@ -430,7 +431,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                                 playerVars: { showinfo: 0, rel: 0, modestbranding: 1 }
                             }
                         }}
-                        playsinline={true}
+                        playsinline={true} // Still needed for inline playback before fullscreen
                         onError={handleError}
                         onReady={() => {
                             setIsLoading(false);
@@ -442,30 +443,34 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                 )}
             </div>
 
-            {/* Custom Controls */}
-            <CustomControls
-                isPlaying={isPlaying}
-                onPlayPause={handlePlayPause}
-                volume={volume}
-                onVolumeChange={handleVolumeChange}
-                muted={muted}
-                onToggleMute={handleToggleMute}
-                played={played}
-                onSeek={handleSeekChange}
-                onSeekMouseDown={handleSeekMouseDown}
-                onSeekMouseUp={handleSeekMouseUp}
-                duration={duration}
-                playedSeconds={playedSeconds}
-                isFullscreen={isFullscreen}
-                onToggleFullscreen={handleToggleFullscreen}
-                playbackRate={playbackRate}
-                onPlaybackRateChange={handlePlaybackRateChange}
-                isVisible={showControls || !isPlaying} // Always show when paused
-            />
-
-            {/* Big Play Button (Initial State or Paused) */}
+            {/* Custom Controls - ONLY Show on Desktop */}
             {
-                !isPlaying && !isLoading && (
+                !isMobile && (
+                    <CustomControls
+                        isPlaying={isPlaying}
+                        onPlayPause={handlePlayPause}
+                        volume={volume}
+                        onVolumeChange={handleVolumeChange}
+                        muted={muted}
+                        onToggleMute={handleToggleMute}
+                        played={played}
+                        onSeek={handleSeekChange}
+                        onSeekMouseDown={handleSeekMouseDown}
+                        onSeekMouseUp={handleSeekMouseUp}
+                        duration={duration}
+                        playedSeconds={playedSeconds}
+                        isFullscreen={isFullscreen}
+                        onToggleFullscreen={handleToggleFullscreen}
+                        playbackRate={playbackRate}
+                        onPlaybackRateChange={handlePlaybackRateChange}
+                        isVisible={showControls || !isPlaying} // Always show when paused
+                    />
+                )
+            }
+
+            {/* Big Play Button (Initial State or Paused) - Only on Desktop to avoid Native Control overlay issues */}
+            {
+                !isMobile && !isPlaying && !isLoading && (
                     <div
                         className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
                     >
