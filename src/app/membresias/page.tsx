@@ -123,7 +123,7 @@ export default function PricingPage() {
                                         ? "bg-emerald-500 text-white shadow-lg"
                                         : "bg-white/10 text-gray-400"
                                 )}>
-                                    Ahorrá 23%
+                                    Ahorrá 17%
                                 </span>
                                 {billingCycle === "annual" && (
                                     <div className="absolute inset-0 bg-white rounded-xl -z-10 animate-in fade-in zoom-in-95 duration-200" />
@@ -263,7 +263,7 @@ export default function PricingPage() {
                                             isRecommended={isRecommended}
                                             isAnnual={billingCycle === "annual"}
                                             totalPrice={formattedTotal}
-                                            savings={billingCycle === "annual" ? "73%" : undefined} // Using representative percentage as Hostinger does
+                                            savings={billingCycle === "annual" ? `${Math.round(((basePrice * 12 - finalPrice) / (basePrice * 12)) * 100)}%` : undefined}
                                             description={
                                                 staticPlan?.description || bundle.description || "Todo lo que necesitás para empezar"
                                             }
@@ -331,7 +331,7 @@ export default function PricingPage() {
                                         isRecommended={plan.isRecommended}
                                         isAnnual={billingCycle === "annual"}
                                         totalPrice={formattedTotal}
-                                        savings={billingCycle === "annual" ? "73%" : undefined}
+                                        savings={billingCycle === "annual" ? `${Math.round(((basePrice * 12 - finalPrice) / (basePrice * 12)) * 100)}%` : undefined}
                                         description={plan.description}
                                         features={plan.features}
                                         excludedFeatures={plan.excludedFeatures}

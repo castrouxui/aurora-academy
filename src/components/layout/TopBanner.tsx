@@ -41,7 +41,7 @@ export function TopBanner() {
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                     </span>
                     <span className="text-[11px] md:text-sm font-black tracking-wide uppercase">
-                        ¡Oferta de lanzamiento oficial! 23% OFF
+                        ¡Oferta de lanzamiento oficial! 17% OFF
                     </span>
                 </div>
 
@@ -69,10 +69,10 @@ export function TopBanner() {
                     </div>
 
                     <Link
-                        href="/membresias"
+                        href="/cursos/cml05hq7n00025z0eogogsnge"
                         className="hidden md:flex items-center gap-2 bg-white text-[#5D5CDE] px-4 py-1 rounded-full text-xs font-black hover:scale-105 transition-transform shadow-xl"
                     >
-                        Asegurar mi cupo
+                        Ir a la clase gratis
                         <ArrowRight size={14} />
                     </Link>
                 </div>
