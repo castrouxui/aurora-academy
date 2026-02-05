@@ -4,7 +4,7 @@ import { sendEmail } from '@/lib/email';
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { email } = body;
+        const { email, name } = body;
 
         // 1. Validation
         if (!email || typeof email !== 'string') {
@@ -22,14 +22,27 @@ export async function POST(request: Request) {
             );
         }
 
+        // Gender Detection Logic (Heuristic for Spanish names)
+        // If name ends in 'a', assume female (Bienvenida), else male (Bienvenido)
+        let greeting = "¡Bienvenido/a";
+        if (name && typeof name === 'string') {
+            const firstName = name.trim().split(' ')[0].toLowerCase();
+            if (firstName.endsWith('a')) {
+                greeting = "¡Bienvenida";
+            } else {
+                greeting = "¡Bienvenido";
+            }
+        }
+
         // 2. Auto-responder Email Content
         const subject = "🚀 Tu acceso: El camino del inversor";
+        const courseUrl = "https://auroracademy.net/cursos/cml05hq7n00025z0eogogsnge";
 
         // Simple, premium HTML content as requested
         // Using inline styles for email compatibility, though renderEmailTemplate handles structure.
         const htmlContent = `
             <div style="font-family: sans-serif; color: #111827;">
-                <h2 style="color: #5D5CDE; margin-bottom: 24px;">¡Bienvenido/a a Aurora Academy!</h2>
+                <h2 style="color: #5D5CDE; margin-bottom: 24px;">${greeting} a Aurora Academy!</h2>
                 <p style="font-size: 16px; line-height: 1.6; margin-bottom: 16px;">
                     Has tomado una excelente decisión al no irte con las manos vacías.
                 </p>
@@ -38,7 +51,7 @@ export async function POST(request: Request) {
                     Este material está diseñado para transformar tu perspectiva sobre las finanzas y la inversión.
                 </p>
                 <div style="text-align: center; margin: 32px 0;">
-                    <a href="https://auroracademy.net/curso-gratuito" 
+                    <a href="${courseUrl}" 
                        style="background-color: #5D5CDE; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block;">
                         Acceder al Curso Gratuito
                     </a>

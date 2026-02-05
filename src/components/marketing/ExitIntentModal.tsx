@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 export function ExitIntentModal() {
     const [isVisible, setIsVisible] = useState(false);
     const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const [hasTriggered, setHasTriggered] = useState(false);
 
@@ -92,7 +93,7 @@ export function ExitIntentModal() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!email) return;
+        if (!email || !name) return;
 
         setStatus("loading");
 
@@ -100,7 +101,7 @@ export function ExitIntentModal() {
             const res = await fetch("/api/capture-lead", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ email, name }),
             });
 
             if (res.ok) {
@@ -177,7 +178,16 @@ export function ExitIntentModal() {
                                 </div>
 
                                 <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
+                                        <Input
+                                            type="text"
+                                            placeholder="Tu nombre..."
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            required
+                                            disabled={status === "loading"}
+                                            className="h-12 border-white/10 bg-white/5 text-white placeholder:text-gray-500 focus:border-purple-500/50 focus:ring-purple-500/20 text-base"
+                                        />
                                         <Input
                                             type="email"
                                             placeholder="Tu mejor email..."
