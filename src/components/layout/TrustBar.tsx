@@ -28,7 +28,7 @@ export function TrustBar() {
                             <div className="shrink-0 transition-colors">
                                 {item.icon}
                             </div>
-                            <span className="text-xs md:text-sm font-medium text-gray-500 group-hover:text-white transition-colors tracking-tight uppercase">
+                            <span className="text-xs md:text-sm font-medium text-gray-400 group-hover:text-white transition-colors tracking-tight">
                                 [{item.text}]
                             </span>
                             {index < items.length - 1 && (

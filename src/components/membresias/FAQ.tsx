@@ -36,8 +36,8 @@ export function FAQ() {
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-5xl font-black text-white mb-3 font-display uppercase tracking-tight">
-                        Preguntas Frecuentes
+                    <h2 className="text-3xl md:text-5xl font-black text-white mb-3 font-display tracking-tight">
+                        Preguntas frecuentes
                     </h2>
                     <p className="text-sm md:text-base text-gray-400">
                         Todo lo que necesitás saber antes de empezar

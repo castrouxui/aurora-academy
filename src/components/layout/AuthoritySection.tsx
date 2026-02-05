@@ -42,7 +42,7 @@ export function AuthoritySection() {
                             {/* Floating Professional Badge */}
                             <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
                                 <p className="font-display font-bold text-white text-lg">Fran Castro</p>
-                                <p className="text-sm text-gray-400 font-medium tracking-wide uppercase">TradE & Fundador</p>
+                                <p className="text-sm text-gray-400 font-medium tracking-wide">TradE & Fundador</p>
                             </div>
                         </div>
 
@@ -54,7 +54,7 @@ export function AuthoritySection() {
                     {/* Content Column */}
                     <div className="flex-1 space-y-8 md:space-y-12">
                         <div className="space-y-4">
-                            <h2 className="text-3xl md:text-5xl font-black text-white font-display leading-tight tracking-tight uppercase">
+                            <h2 className="text-3xl md:text-5xl font-black text-white font-display leading-tight tracking-tight">
                                 Aprendé con <br />
                                 <span className="text-[#5D5CDE]">
                                     Fran Castro
@@ -72,7 +72,7 @@ export function AuthoritySection() {
                                         {point.icon}
                                     </div>
                                     <div className="space-y-1">
-                                        <h3 className="text-xl font-bold text-white font-display uppercase tracking-wider">
+                                        <h3 className="text-xl font-bold text-white font-display tracking-wider">
                                             {point.title}
                                         </h3>
                                         <p className="text-gray-400 leading-relaxed font-medium">

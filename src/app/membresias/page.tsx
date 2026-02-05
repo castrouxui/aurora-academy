@@ -140,7 +140,7 @@ export default function PricingPage() {
                                         ? "bg-[#5D5CDE] text-white shadow-lg"
                                         : "bg-white/10 text-gray-400"
                                 )}>
-                                    OFERTA: 12 MESES + 3 GRATIS (Ahorrás 23%)
+                                    Oferta: 12 meses + 3 gratis (Ahorrás 23%)
                                 </span>
                             </button>
                         </div>
@@ -279,11 +279,11 @@ export default function PricingPage() {
                                             totalPrice={formattedTotal}
                                             savings={billingCycle === "annual" ? "73%" : undefined} // Using representative percentage as Hostinger does
                                             description={
-                                                staticPlan?.description || bundle.description || "Everything you need to get started"
+                                                staticPlan?.description || bundle.description || "Todo lo que necesitás para empezar"
                                             }
                                             features={displayFeatures}
                                             excludedFeatures={staticPlan?.excludedFeatures || []}
-                                            buttonText="Choose plan"
+                                            buttonText="Elegir plan"
                                             onAction={() => {
                                                 handlePurchase(bundle.title, finalPrice.toString(), undefined, bundle.id, billingCycle === "annual");
                                             }}
@@ -348,7 +348,7 @@ export default function PricingPage() {
                                         description={plan.description}
                                         features={plan.features}
                                         excludedFeatures={plan.excludedFeatures}
-                                        buttonText="Choose plan"
+                                        buttonText="Elegir plan"
                                     />
                                 );
                             })

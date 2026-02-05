@@ -21,7 +21,7 @@ export function HeroBanner() {
                         {/* High-Impact Badge */}
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm animate-in fade-in slide-in-from-top-4 duration-1000">
                             <span className="text-yellow-500 text-sm">⭐</span>
-                            <span className="text-xs md:text-sm font-bold text-gray-300 tracking-wide uppercase">
+                            <span className="text-xs md:text-sm font-bold text-gray-300 tracking-wide">
                                 Comunidad de +1000 alumnos activos
                             </span>
                         </div>
@@ -43,12 +43,12 @@ export function HeroBanner() {
                             <Button
                                 className="h-16 px-10 text-base font-bold w-full sm:w-auto bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-xl shadow-xl shadow-[#5D5CDE]/20 transition-all active:scale-95"
                             >
-                                Ver Planes
+                                Ver planes
                             </Button>
                         </Link>
                         <Link href="https://t.me/Auroradvisors" target="_blank" className="w-full sm:w-auto relative z-20">
                             <Button variant="outline" className="h-16 px-10 text-base font-bold w-full sm:w-auto text-white border border-white/20 bg-white/5 hover:bg-white hover:text-black rounded-xl backdrop-blur-sm transition-all active:scale-95">
-                                Curso Gratis: El Camino del Inversor
+                                Curso gratis: El camino del inversor
                             </Button>
                         </Link>
                     </div>
