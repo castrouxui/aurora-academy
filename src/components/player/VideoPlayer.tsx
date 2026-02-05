@@ -44,6 +44,7 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [playbackRate, setPlaybackRate] = useState(1.0);
     const [showControls, setShowControls] = useState(false);
+    const [quality, setQuality] = useState("Auto");
     const [isReady, setIsReady] = useState(false);
     const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -312,6 +313,8 @@ export function VideoPlayer({ url, thumbnail, title, isLocked, previewMode, cour
                     playbackRate={playbackRate}
                     onPlaybackRateChange={(r) => setPlaybackRate(r)}
                     isVisible={showControls || !isPlaying}
+                    quality={quality}
+                    onQualityChange={setQuality}
                 />
             )}
 

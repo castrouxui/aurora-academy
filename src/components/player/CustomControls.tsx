@@ -23,6 +23,8 @@ interface CustomControlsProps {
     playbackRate: number;
     onPlaybackRateChange: (rate: number) => void;
     isVisible: boolean;
+    quality?: string;
+    onQualityChange?: (quality: string) => void;
 }
 
 function formatDuration(seconds: number) {
@@ -57,7 +59,9 @@ export function CustomControls({
     onToggleFullscreen,
     playbackRate,
     onPlaybackRateChange,
-    isVisible
+    isVisible,
+    quality = "Auto",
+    onQualityChange
 }: CustomControlsProps) {
     return (
         <div className={cn(
@@ -135,7 +139,7 @@ export function CustomControls({
                             }}
                             className="text-white hover:text-[#5D5CDE] text-xs font-bold transition-colors w-8"
                         >
-                            HD
+                            {quality === 'Auto' ? 'HD' : quality}
                         </button>
                         <div
                             className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden flex-col bg-[#0B0F19] border border-gray-800 rounded-lg overflow-hidden shadow-xl p-1 z-50 min-w-[60px]"
@@ -149,6 +153,7 @@ export function CustomControls({
                                     key={q}
                                     onClick={(e) => {
                                         e.stopPropagation();
+                                        if (onQualityChange) onQualityChange(q);
                                         const menu = e.currentTarget.parentElement;
                                         if (menu) {
                                             menu.classList.add('hidden');
@@ -157,7 +162,7 @@ export function CustomControls({
                                     }}
                                     className={cn(
                                         "px-3 py-1.5 text-xs font-medium hover:bg-white/10 transition-colors rounded text-center",
-                                        q === 'Auto' ? "text-[#5D5CDE] bg-[#5D5CDE]/10" : "text-gray-300"
+                                        quality === q ? "text-[#5D5CDE] bg-[#5D5CDE]/10" : "text-gray-300"
                                     )}
                                 >
                                     {q}
