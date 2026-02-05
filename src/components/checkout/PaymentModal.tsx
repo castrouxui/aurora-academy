@@ -116,8 +116,9 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 setIsLoading(true);
                 setInitError(null); // Reset error
                 try {
-                    // Use create-subscription for Bundles (Recurring)
-                    const endpoint = bundleId
+                    // Use create-subscription for Monthly Bundles (Recurring auto-debit)
+                    // Use create-preference for Annual Bundles (Single payment with Installments) or Single Courses
+                    const endpoint = (bundleId && !isAnnual)
                         ? '/api/payment/create-subscription'
                         : '/api/payment/create-preference';
 
