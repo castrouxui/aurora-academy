@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { CertificateModal } from "@/components/certificates/CertificateModal";
 import { RatingModal } from "@/components/reviews/RatingModal";
 import { VideoPlayer } from "@/components/player/VideoPlayer";
+import { RewardModal } from "@/components/rewards/RewardModal";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { toast } from "react-hot-toast";
@@ -54,6 +55,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
     const [isRatingOpen, setIsRatingOpen] = useState(false);
     const [hasUserReviewed, setHasUserReviewed] = useState(hasReviewed);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [rewardModalOpen, setRewardModalOpen] = useState(false);
 
     // Determine initial active lesson
     // If has access, first uncompleted or last played. 
@@ -107,11 +109,18 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
         })));
 
         try {
-            await fetch("/api/progress", {
+            const res = await fetch("/api/progress", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ lessonId, completed: !currentStatus })
             });
+
+            if (res.ok) {
+                const data = await res.json();
+                if (data.rewardGranted) {
+                    setRewardModalOpen(true);
+                }
+            }
         } catch (error) {
             console.error("Failed to update progress", error);
             // Revert on error (could implement if needed, skipping for now for speed)
@@ -161,7 +170,6 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                 if (res.ok) {
                     const data = await res.json();
 
-                    // If backend says it's completed, update local state to reflect that!
                     if (data.completed && !activeLesson.completed) {
                         setLocalModules(prev => prev.map(m => ({
                             ...m,
@@ -172,6 +180,10 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                                 return l;
                             })
                         })));
+                    }
+
+                    if (data.rewardGranted) {
+                        setRewardModalOpen(true);
                     }
                 }
             } catch (error) {
@@ -531,6 +543,13 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                 courseName={course.title}
                 studentName={studentName}
                 date={completionDate}
+            />
+
+            {/* Reward Modal */}
+            <RewardModal
+                isOpen={rewardModalOpen}
+                onClose={() => setRewardModalOpen(false)}
+                couponCode="LANZAMIENTO10"
             />
 
 

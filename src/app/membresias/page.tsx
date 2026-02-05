@@ -51,7 +51,7 @@ export default function PricingPage() {
             label: "Portfolio",
             description: "La experiencia definitiva para profesionales. Networking de alto nivel y visión macro.",
             authorityBadge: true,
-            doubtRemoval: "Todo lo anterior + Consultoría Personalizada"
+            doubtRemoval: undefined
         }
     ];
 
