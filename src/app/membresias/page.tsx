@@ -37,19 +37,19 @@ export default function PricingPage() {
     const PERSONA_DATA = [
         {
             label: "Inicial",
-            description: "Ideal para dar tus primeros pasos",
+            description: "Ideal para dar tus primeros pasos. El escalón de entrada para dominar los conceptos base.",
             authorityBadge: false,
             doubtRemoval: undefined
         },
         {
             label: "Elite",
-            description: "Para traders que buscan consistencia e IA",
+            description: "Para traders que buscan consistencia e IA. Operá activamente con actualización constante.",
             authorityBadge: true,
             doubtRemoval: undefined
         },
         {
             label: "Portfolio",
-            description: "La experiencia definitiva para profesionales",
+            description: "La experiencia definitiva para profesionales. Networking de alto nivel y visión macro.",
             authorityBadge: false,
             doubtRemoval: "Todo lo anterior + Consultoría Personalizada"
         }
@@ -286,7 +286,7 @@ export default function PricingPage() {
                                             totalPrice={formattedTotal}
                                             savings={billingCycle === "annual" ? `${Math.round(((basePrice * 12 - finalPrice) / (basePrice * 12)) * 100)}%` : undefined}
                                             description={
-                                                staticPlan?.description || bundle.description || "Todo lo que necesitás para empezar"
+                                                PERSONA_DATA[index]?.description || staticPlan?.description || bundle.description || "Todo lo que necesitás para empezar"
                                             }
                                             features={displayFeatures}
                                             excludedFeatures={staticPlan?.excludedFeatures || []}
@@ -358,7 +358,7 @@ export default function PricingPage() {
                                         isAnnual={billingCycle === "annual"}
                                         totalPrice={formattedTotal}
                                         savings={billingCycle === "annual" ? `${Math.round(((basePrice * 12 - finalPrice) / (basePrice * 12)) * 100)}%` : undefined}
-                                        description={plan.description}
+                                        description={PERSONA_DATA[index]?.description || plan.description}
                                         features={plan.features}
                                         excludedFeatures={plan.excludedFeatures}
                                         buttonText="Elegir plan"
