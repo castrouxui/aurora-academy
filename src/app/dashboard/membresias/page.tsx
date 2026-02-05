@@ -39,6 +39,7 @@ export default function MyMembershipsPage() {
     });
 
     const [isAnnual, setIsAnnual] = useState(false);
+    const [bundles, setBundles] = useState<any[]>([]);
 
     const plansRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +49,20 @@ export default function MyMembershipsPage() {
 
     useEffect(() => {
         fetchData();
+        fetchBundles();
     }, []);
+
+    const fetchBundles = async () => {
+        try {
+            const res = await fetch("/api/bundles");
+            if (res.ok) {
+                const data = await res.json();
+                setBundles(data.sort((a: any, b: any) => parseFloat(a.price) - parseFloat(b.price)));
+            }
+        } catch (error) {
+            console.error("Failed to fetch bundles:", error);
+        }
+    };
 
     const fetchData = async () => {
         try {
@@ -259,108 +273,197 @@ export default function MyMembershipsPage() {
                     </p>
                 </div>
 
+                {/* Toggle with Enhanced Badge */}
                 <div className="flex justify-center mb-12">
-                    <div className="bg-white/5 p-1 rounded-xl flex items-center relative z-10">
+                    <div className="bg-[#1e2235] p-1.5 rounded-2xl flex items-center shadow-2xl border border-white/5 relative">
                         <button
                             onClick={() => setIsAnnual(false)}
-                            className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${!isAnnual ? 'bg-[#5D5CDE] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                            className={`relative z-10 px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${!isAnnual ? 'text-black' : 'text-gray-400 hover:text-white'
+                                }`}
                         >
                             Mensual
+                            {!isAnnual && (
+                                <div className="absolute inset-0 bg-white rounded-xl -z-10 animate-in fade-in zoom-in-95 duration-200" />
+                            )}
                         </button>
                         <button
                             onClick={() => setIsAnnual(true)}
-                            className={`px-6 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${isAnnual ? 'bg-[#5D5CDE] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                            className={`relative z-10 px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-3 ${isAnnual ? 'text-black' : 'text-gray-400 hover:text-white'
+                                }`}
                         >
                             Anual
-                            <span className="bg-emerald-500 text-white text-[10px] px-1.5 py-0.5 rounded uppercase tracking-wider">25% OFF</span>
+                            <span className={`text-[9px] md:text-[10px] font-black px-2 py-1 rounded-md whitespace-nowrap ${isAnnual ? 'bg-emerald-500 text-white shadow-lg' : 'bg-white/10 text-gray-400'
+                                }`}>
+                                Ahorrá 25%
+                            </span>
+                            {isAnnual && (
+                                <div className="absolute inset-0 bg-white rounded-xl -z-10 animate-in fade-in zoom-in-95 duration-200" />
+                            )}
                         </button>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-                    {PLANS.map((plan, index) => {
-                        // Logic for Pricing Display
-                        const rawMonthly = Number(plan.price.replace(/[^0-9]/g, ''));
-                        const annualPriceRaw = rawMonthly * 12 * 0.75; // 25% OFF
+                    {(bundles.length > 0 ? bundles : PLANS).map((item: any, index: number) => {
+                        // Normalize Item (Bundle from DB or Plan from Static)
+                        const isDynamic = !!item.id; // Only DB bundles have ID
+                        const title = item.title;
 
-                        const displayPrice = isAnnual
-                            ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(annualPriceRaw)
-                            : plan.price;
+                        // Metadata from PLANS (fallback for static info)
+                        const staticPlan = PLANS[index] || PLANS.find(p => p.title === title);
+                        const description = staticPlan?.description || item.description || "Todo lo que necesitás para empezar";
+                        const isRecommended = staticPlan?.isRecommended || index === 1;
+                        const tag = staticPlan?.tag || (index === 1 ? "EL MÁS BUSCADO" : undefined);
+                        const excludedFeatures = staticPlan?.excludedFeatures || [];
 
-                        // Check if this plan is the one currently active
-                        // NOTE: If user has monthly and viewing annual, it is NOT active (different interval)
-                        // But for simplicity, if they have "Trader Elite", we mark it active unless we want to encourage upgrade to annual.
-                        // Let's say: If I have Monthly, and I toggle Annual, I should see "Switch to Annual" (Upgrade).
-                        const isActive = subscription?.active && subscription.bundleTitle === plan.title && !isAnnual;
+                        // PRICE CALCULATION
+                        const rawPriceString = item.price.toString().replace(/[^0-9]/g, '');
+                        const basePrice = parseFloat(rawPriceString); // Monthly Price Numerical
 
-                        const otherBundles = subscription?.otherBundles || [];
-                        const bundleFromDb = otherBundles.find((b: any) => b.title.toLowerCase() === plan.title.toLowerCase());
+                        let finalPrice = basePrice;
+                        let periodicity = "mes";
+                        let installmentsText = undefined;
+                        let totalFormatted = undefined;
+                        let savingsBadge = undefined;
 
-                        // Price comparison logic (Only for Monthly view, for Annual it's always an upgrade/switch)
+                        if (isAnnual) {
+                            finalPrice = basePrice * 9; // 12 months for price of 9 (25% off logic approx)
+                            // OR use the logic: basePrice * 12 * 0.75
+                            // Let's stick to the public page logic closely:
+                            // Public page: if annual, finalPrice = basePrice * 9;
+
+                            periodicity = "año";
+
+                            // Installments logic: 4 cuotas sin interés
+                            const installmentAmount = finalPrice / 4;
+                            const formattedInstallment = new Intl.NumberFormat("es-AR", {
+                                style: "currency",
+                                currency: "ARS",
+                                maximumFractionDigits: 0
+                            }).format(installmentAmount);
+                            installmentsText = `4 cuotas sin interés de ${formattedInstallment}`;
+
+                            totalFormatted = new Intl.NumberFormat("es-AR", {
+                                style: "currency",
+                                currency: "ARS",
+                                maximumFractionDigits: 0
+                            }).format(finalPrice);
+
+                            savingsBadge = "25% OFF";
+                        }
+
+                        // Determine Display Features
+                        let displayFeatures: (string | React.ReactNode)[] = [];
+
+                        if (isDynamic) {
+                            // Dynamic Logic (Copied from Public Page)
+                            if (index >= 1) {
+                                displayFeatures.push(
+                                    <span key={`benefit-15d-${item.id}`} className="inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
+                                        <span>🔥</span> 1 curso nuevo cada 15 días
+                                    </span>
+                                );
+                            }
+
+                            // Courses
+                            const currentCourseTitles = item.courses?.map((c: any) => c.title) || [];
+                            if (index > 0 && bundles.length > 0) {
+                                const prevBundle = bundles[index - 1]; // logic assumes sorted bundles
+                                const prevCourseTitles = prevBundle?.courses?.map((c: any) => c.title) || [];
+                                const hasAllPrevious = prevCourseTitles.length > 0 && prevCourseTitles.every((t: string) => currentCourseTitles.includes(t));
+
+                                if (hasAllPrevious) {
+                                    displayFeatures.push(`Todo lo del Plan ${prevBundle.title}`);
+                                    const newCourses = currentCourseTitles.filter((t: string) => !prevCourseTitles.includes(t));
+                                    displayFeatures.push(...newCourses);
+                                } else {
+                                    displayFeatures.push(...currentCourseTitles);
+                                }
+                            } else {
+                                displayFeatures.push(...currentCourseTitles);
+                            }
+
+                            // Items
+                            if (item.items && item.items.length > 0) {
+                                const items = item.items.map((i: any) => {
+                                    let name = i.name;
+                                    if ((name.toLowerCase().includes("canal") || name.toLowerCase().includes("telegram")) && !name.toLowerCase().startsWith("acceso a")) {
+                                        return `Acceso a ${name}`;
+                                    }
+                                    return name;
+                                });
+                                const existingStrings = displayFeatures.filter(f => typeof f === 'string') as string[];
+                                const newItems = items.filter((str: string) => {
+                                    if (existingStrings.includes(str)) return false;
+                                    if (str.toLowerCase().includes("comunidad de inversores")) return false;
+                                    return true;
+                                });
+                                displayFeatures.push(...newItems);
+                            }
+                        } else {
+                            // Static Features
+                            displayFeatures = staticPlan?.features || [];
+                        }
+
+                        // DASHBOARD LOGIC: Active / Upgrade / Downgrade
+                        // Note: If user has monthly "Trader", and toggles Annual, it IS an upgrade/switch.
+                        const isActive = subscription?.active && subscription.bundleTitle === title && !isAnnual;
+
+                        // Determine if it's an upgrade
                         let isUpgrade = false;
                         let isDowngrade = false;
 
                         if (!isAnnual && subscription?.active && !isActive) {
                             const currentDict = PLANS.find(p => p.title === subscription.bundleTitle);
                             const currentPrice = Number(currentDict?.price.replace(/[^0-9]/g, '') || 0);
-                            const planPrice = Number(plan.price.replace(/[^0-9]/g, ''));
-
-                            if (planPrice > currentPrice) isUpgrade = true;
-                            if (planPrice < currentPrice) isDowngrade = true;
+                            if (basePrice > currentPrice) isUpgrade = true;
+                            if (basePrice < currentPrice) isDowngrade = true;
                         }
 
                         const handlePlanAction = async () => {
                             if (isActive) return;
 
-                            const bundleId = bundleFromDb?.id || plan.title.toLowerCase().replace(/ /g, '-');
-                            const planPriceRawStr = isAnnual ? String(annualPriceRaw) : plan.price.replace(/[^0-9]/g, '');
+                            const bundleId = isDynamic ? item.id : title.toLowerCase().replace(/ /g, '-');
+                            // If Annual, we initiate purchase for Annual price.
+                            // If user upgrades/downgrades monthly, we use special endpoints.
 
-                            // CRITICAL: If Annual, we ALWAYS do a new purchase (One-time or Annual Sub).
-                            // The Webhook will handle cancelling the old monthly one.
-                            // We do NOT use 'upgrade-calc' for Annual because it doesn't handle frequency change well.
                             if (isAnnual) {
-                                handlePurchase(plan.title + " (Anual)", displayPrice, bundleId);
+                                // Annual Purchase
+                                // Pass the Calculated Annual Price (finalPrice)
+                                const displayPriceStr = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(finalPrice);
+                                handlePurchase(title + " (Anual)", displayPriceStr, bundleId);
                                 return;
                             }
 
                             if (isUpgrade) {
-                                // UPGRADE FLOW (Monthly -> Monthly)
                                 setActionLoading(true);
                                 try {
                                     const res = await fetch("/api/subscription/upgrade-calc", {
                                         method: "POST",
                                         headers: { "Content-Type": "application/json" },
-                                        body: JSON.stringify({ targetBundleId: bundleId, targetPrice: planPriceRawStr })
+                                        body: JSON.stringify({ targetBundleId: bundleId, targetPrice: basePrice.toString() })
                                     });
-
                                     const data = await res.json();
-                                    if (res.ok) {
-                                        window.location.href = data.initPoint;
-                                    } else {
-                                        toast.error(data.error || "Error calculando upgrade");
-                                    }
+                                    if (res.ok) window.location.href = data.initPoint;
+                                    else toast.error(data.error || "Error calculando upgrade");
                                 } catch (e) {
                                     toast.error("Error de conexión");
                                 } finally {
                                     setActionLoading(false);
                                 }
-
                             } else if (isDowngrade) {
-                                // DOWNGRADE FLOW
-                                if (confirm(`¿Estás seguro de cambiar al plan ${plan.title}? El cambio de precio se aplicará en tu próxima factura.`)) {
+                                if (confirm(`¿Estás seguro de cambiar al plan ${title}? El cambio de precio se aplicará en tu próxima factura.`)) {
                                     setActionLoading(true);
                                     try {
                                         const res = await fetch("/api/subscription/downgrade", {
                                             method: "POST",
                                             headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify({ targetBundleId: bundleId, targetPrice: planPriceRawStr })
+                                            body: JSON.stringify({ targetBundleId: bundleId, targetPrice: basePrice.toString() })
                                         });
                                         if (res.ok) {
                                             toast.success("Plan actualizado. Se reflejará en el próximo ciclo.");
                                             window.location.reload();
-                                        } else {
-                                            toast.error("Error al cambiar plan");
-                                        }
+                                        } else toast.error("Error al cambiar plan");
                                     } catch (e) {
                                         toast.error("Error de conexión");
                                     } finally {
@@ -368,29 +471,34 @@ export default function MyMembershipsPage() {
                                     }
                                 }
                             } else {
-                                // New Subscription (Monthly Standard)
-                                handlePurchase(plan.title, plan.price.replace(".", "").replace("$", "").trim(), bundleId);
+                                // New Subscription (Standard Monthly)
+                                const displayPriceStr = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice);
+                                handlePurchase(title, displayPriceStr, bundleId);
                             }
                         };
 
                         return (
                             <PricingCard
                                 key={index}
-                                title={plan.title}
-                                price={displayPrice}
-                                periodicity={isAnnual ? "año" : "mes"}
-                                tag={plan.tag || undefined}
-                                isRecommended={plan.isRecommended}
-                                originalMonthlyPrice={isAnnual ? plan.price : undefined}
+                                title={title}
+                                price={finalPrice.toString()}
+                                periodicity={periodicity}
+                                tag={tag}
+                                isRecommended={isRecommended}
+                                isAnnual={isAnnual}
+                                totalPrice={totalFormatted}
+                                savings={isAnnual ? "25%" : undefined}
                                 description={
                                     <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center italic">
-                                        {plan.description}
+                                        {description}
                                     </p>
                                 }
-                                features={plan.features}
-                                excludedFeatures={plan.excludedFeatures}
+                                features={displayFeatures}
+                                excludedFeatures={excludedFeatures}
                                 buttonText={isActive ? "Plan Actual" : isAnnual ? "Pasarme al Anual" : isUpgrade ? "Mejorar Plan" : isDowngrade ? "Cambiar Plan" : "Suscribirme Ahora"}
                                 onAction={handlePlanAction}
+                                installments={installmentsText}
+                                originalMonthlyPrice={basePrice.toString()}
                                 className={isActive ? "opacity-60 grayscale-[0.5] pointer-events-none border-emerald-500/20" : "h-full flex flex-col justify-between"}
                             />
                         );
