@@ -66,6 +66,46 @@ export async function POST(request: Request) {
                         }
                     });
 
+                    // AUTO-CANCELLATION LOGIC (Upgrade Path)
+                    // If this is a new Purchase (Annual/Course), cancel any existing 'authorized' subscriptions (Monthly)
+                    // to prevent double billing.
+                    try {
+                        const activeSubs = await prisma.subscription.findMany({
+                            where: {
+                                userId: user_id,
+                                status: 'authorized'
+                            }
+                        });
+
+                        if (activeSubs.length > 0) {
+                            console.log(`[WEBHOOK] Purchase Approved. Found ${activeSubs.length} active subscriptions to cancel for User ${user_id}`);
+
+                            for (const sub of activeSubs) {
+                                if (sub.mercadoPagoId) {
+                                    // A. Cancel in Mercado Pago
+                                    try {
+                                        await cancelSubscription(sub.mercadoPagoId);
+                                        console.log(`[WEBHOOK] Successfully cancelled MP subscription ${sub.mercadoPagoId}`);
+                                    } catch (mpError) {
+                                        console.error(`[WEBHOOK] Error cancelling MP subscription ${sub.mercadoPagoId}:`, mpError);
+                                    }
+
+                                    // B. Update DB
+                                    await prisma.subscription.update({
+                                        where: { id: sub.id },
+                                        data: {
+                                            status: 'cancelled',
+                                            updatedAt: new Date()
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    } catch (cancelError) {
+                        console.error("[WEBHOOK] Error in auto-cancellation process:", cancelError);
+                        // Non-blocking error, purchase was already successful
+                    }
+
                     // SEND RECEIPT EMAIL
                     const user = await prisma.user.findUnique({ where: { id: user_id } });
                     if (user?.email) {

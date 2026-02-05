@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
 
         // 3. Apply Coupon if provided
         let appliedCouponId = undefined;
-        if (couponCode) {
+        if (couponCode && !isAnnual) {
             const coupon = await prisma.coupon.findUnique({
                 where: { code: couponCode }
             });

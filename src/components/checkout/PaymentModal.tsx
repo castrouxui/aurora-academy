@@ -300,9 +300,9 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                     type="text"
                                     value={couponCode}
                                     onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                                    placeholder="CÓDIGO"
-                                    disabled={!!appliedCoupon}
-                                    className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none disabled:opacity-50 h-10"
+                                    placeholder={isAnnual ? "No aplica para Plan Anual" : "CÓDIGO"}
+                                    disabled={!!appliedCoupon || isAnnual}
+                                    className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none disabled:opacity-50 disabled:cursor-not-allowed h-10"
                                 />
                                 {appliedCoupon ? (
                                     <button
@@ -318,14 +318,20 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                 ) : (
                                     <button
                                         onClick={handleApplyCoupon}
-                                        disabled={!couponCode || isValidatingCoupon}
+                                        disabled={!couponCode || isValidatingCoupon || isAnnual}
                                         className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {isValidatingCoupon ? <Loader2 size={16} className="animate-spin" /> : "Aplicar"}
                                     </button>
                                 )}
                             </div>
-                            {couponError && <p className="text-red-400 text-sm mt-2">{couponError}</p>}
+                            {isAnnual && (
+                                <p className="text-[10px] text-emerald-400 font-medium mt-2 flex items-center gap-1.5">
+                                    <Zap size={10} />
+                                    El Plan Anual ya incluye 3 meses de regalo (25% OFF).
+                                </p>
+                            )}
+                            {!isAnnual && couponError && <p className="text-red-400 text-sm mt-2">{couponError}</p>}
                             {appliedCoupon && (
                                 <p className="text-green-400 text-sm mt-2 flex items-center gap-1">
                                     <CheckCircle2 size={14} /> Cupón {appliedCoupon.code} aplicado (-{appliedCoupon.type === 'PERCENTAGE' ? `${appliedCoupon.discount}%` : `$${appliedCoupon.discount}`})
