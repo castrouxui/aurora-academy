@@ -42,7 +42,7 @@ export function AuthoritySection() {
                             {/* Floating Professional Badge */}
                             <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
                                 <p className="font-display font-bold text-white text-lg">Fran Castro</p>
-                                <p className="text-sm text-gray-400 font-medium tracking-wide">TradE & Fundador</p>
+                                <p className="text-sm text-gray-400 font-medium tracking-wide">CEO de Aurora Advisors y Co-Fundador de Aurora Academy</p>
                             </div>
                         </div>
 
