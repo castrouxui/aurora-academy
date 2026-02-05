@@ -38,6 +38,8 @@ export default function MyMembershipsPage() {
         bundleId: ""
     });
 
+    const [isAnnual, setIsAnnual] = useState(false);
+
     const plansRef = useRef<HTMLDivElement>(null);
 
     const scrollToPlans = () => {
@@ -257,52 +259,82 @@ export default function MyMembershipsPage() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+                <div className="flex justify-center mb-12">
+                    <div className="bg-white/5 p-1 rounded-xl flex items-center relative z-10">
+                        <button
+                            onClick={() => setIsAnnual(false)}
+                            className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${!isAnnual ? 'bg-[#5D5CDE] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                        >
+                            Mensual
+                        </button>
+                        <button
+                            onClick={() => setIsAnnual(true)}
+                            className={`px-6 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${isAnnual ? 'bg-[#5D5CDE] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                        >
+                            Anual
+                            <span className="bg-emerald-500 text-white text-[10px] px-1.5 py-0.5 rounded uppercase tracking-wider">25% OFF</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
                     {PLANS.map((plan, index) => {
+                        // Logic for Pricing Display
+                        const rawMonthly = Number(plan.price.replace(/[^0-9]/g, ''));
+                        const annualPriceRaw = rawMonthly * 12 * 0.75; // 25% OFF
+
+                        const displayPrice = isAnnual
+                            ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(annualPriceRaw)
+                            : plan.price;
+
                         // Check if this plan is the one currently active
-                        const isActive = subscription?.active && subscription.bundleTitle === plan.title;
+                        // NOTE: If user has monthly and viewing annual, it is NOT active (different interval)
+                        // But for simplicity, if they have "Trader Elite", we mark it active unless we want to encourage upgrade to annual.
+                        // Let's say: If I have Monthly, and I toggle Annual, I should see "Switch to Annual" (Upgrade).
+                        const isActive = subscription?.active && subscription.bundleTitle === plan.title && !isAnnual;
+
                         const otherBundles = subscription?.otherBundles || [];
                         const bundleFromDb = otherBundles.find((b: any) => b.title.toLowerCase() === plan.title.toLowerCase());
 
-                        // Price comparison logic
+                        // Price comparison logic (Only for Monthly view, for Annual it's always an upgrade/switch)
                         let isUpgrade = false;
                         let isDowngrade = false;
 
-                        if (subscription?.active && !isActive) {
+                        if (!isAnnual && subscription?.active && !isActive) {
                             const currentDict = PLANS.find(p => p.title === subscription.bundleTitle);
                             const currentPrice = Number(currentDict?.price.replace(/[^0-9]/g, '') || 0);
                             const planPrice = Number(plan.price.replace(/[^0-9]/g, ''));
 
-                            if (planPrice > currentPrice) {
-                                isUpgrade = true;
-                            }
-                            if (planPrice < currentPrice) {
-                                isDowngrade = true;
-                            }
+                            if (planPrice > currentPrice) isUpgrade = true;
+                            if (planPrice < currentPrice) isDowngrade = true;
                         }
 
                         const handlePlanAction = async () => {
                             if (isActive) return;
 
                             const bundleId = bundleFromDb?.id || plan.title.toLowerCase().replace(/ /g, '-');
-                            const planPriceRaw = plan.price.replace(/[^0-9]/g, '');
+                            const planPriceRawStr = isAnnual ? String(annualPriceRaw) : plan.price.replace(/[^0-9]/g, '');
+
+                            // CRITICAL: If Annual, we ALWAYS do a new purchase (One-time or Annual Sub).
+                            // The Webhook will handle cancelling the old monthly one.
+                            // We do NOT use 'upgrade-calc' for Annual because it doesn't handle frequency change well.
+                            if (isAnnual) {
+                                handlePurchase(plan.title + " (Anual)", displayPrice, bundleId);
+                                return;
+                            }
 
                             if (isUpgrade) {
-                                // UPGRADE FLOW
+                                // UPGRADE FLOW (Monthly -> Monthly)
                                 setActionLoading(true);
                                 try {
                                     const res = await fetch("/api/subscription/upgrade-calc", {
                                         method: "POST",
                                         headers: { "Content-Type": "application/json" },
-                                        body: JSON.stringify({ targetBundleId: bundleId, targetPrice: planPriceRaw })
+                                        body: JSON.stringify({ targetBundleId: bundleId, targetPrice: planPriceRawStr })
                                     });
 
                                     const data = await res.json();
                                     if (res.ok) {
-                                        // Open payment modal BUT with preregistered preference for the upgrade fee
-                                        // We need a way to tell PaymentModal to use THIS preference directly
-                                        // Or we utilize window.location for now as MVP? 
-                                        // Let's redirect directly to MP Init Point for simplicity and reliability of the "One Shot" payment
                                         window.location.href = data.initPoint;
                                     } else {
                                         toast.error(data.error || "Error calculando upgrade");
@@ -321,7 +353,7 @@ export default function MyMembershipsPage() {
                                         const res = await fetch("/api/subscription/downgrade", {
                                             method: "POST",
                                             headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify({ targetBundleId: bundleId, targetPrice: planPriceRaw })
+                                            body: JSON.stringify({ targetBundleId: bundleId, targetPrice: planPriceRawStr })
                                         });
                                         if (res.ok) {
                                             toast.success("Plan actualizado. Se reflejará en el próximo ciclo.");
@@ -336,7 +368,7 @@ export default function MyMembershipsPage() {
                                     }
                                 }
                             } else {
-                                // New Subscription (Standard)
+                                // New Subscription (Monthly Standard)
                                 handlePurchase(plan.title, plan.price.replace(".", "").replace("$", "").trim(), bundleId);
                             }
                         };
@@ -345,10 +377,11 @@ export default function MyMembershipsPage() {
                             <PricingCard
                                 key={index}
                                 title={plan.title}
-                                price={plan.price}
-                                periodicity="mes"
+                                price={displayPrice}
+                                periodicity={isAnnual ? "año" : "mes"}
                                 tag={plan.tag || undefined}
                                 isRecommended={plan.isRecommended}
+                                originalMonthlyPrice={isAnnual ? plan.price : undefined}
                                 description={
                                     <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center italic">
                                         {plan.description}
@@ -356,9 +389,9 @@ export default function MyMembershipsPage() {
                                 }
                                 features={plan.features}
                                 excludedFeatures={plan.excludedFeatures}
-                                buttonText={isActive ? "Plan Actual" : isUpgrade ? "Mejorar Plan (Upgrade)" : isDowngrade ? "Cambiar Plan" : "Suscribirme Ahora"}
+                                buttonText={isActive ? "Plan Actual" : isAnnual ? "Pasarme al Anual" : isUpgrade ? "Mejorar Plan" : isDowngrade ? "Cambiar Plan" : "Suscribirme Ahora"}
                                 onAction={handlePlanAction}
-                                className={isActive ? "opacity-60 grayscale-[0.5] pointer-events-none border-emerald-500/20" : ""}
+                                className={isActive ? "opacity-60 grayscale-[0.5] pointer-events-none border-emerald-500/20" : "h-full flex flex-col justify-between"}
                             />
                         );
                     })}
@@ -372,6 +405,7 @@ export default function MyMembershipsPage() {
                 courseTitle={selectedPlan.title}
                 coursePrice={selectedPlan.price}
                 bundleId={selectedPlan.bundleId}
+                isAnnual={isAnnual}
             />
 
             {/* Cancellation Dialog */}

@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
         const subscriptionBody = {
             reason: title || "Suscripción Aurora Academy",
             auto_recurring: {
-                frequency: 1,
+                frequency: isAnnual ? 12 : 1,
                 frequency_type: 'months',
                 transaction_amount: numericPrice,
                 currency_id: 'ARS',
