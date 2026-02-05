@@ -68,50 +68,33 @@ export default function PricingPage() {
         <div className="min-h-screen bg-[#0B0F19] text-white">
             <Navbar />
 
+            {/* Announcement Bar - Minimal Urgency Indicator */}
+            <div className="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-white/10">
+                <Container>
+                    <div className="flex items-center justify-center gap-3 py-2.5 text-center">
+                        <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                        </span>
+                        <span className="text-sm text-gray-300">
+                            Oferta de febrero:
+                            <span className="ml-2 font-bold text-white tabular-nums">
+                                {(() => {
+                                    const now = new Date();
+                                    const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                                    const daysRemaining = Math.ceil((lastDayOfMonth.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                                    return daysRemaining > 0 ? `${daysRemaining} días restantes` : 'Últimas horas';
+                                })()}
+                            </span>
+                        </span>
+                    </div>
+                </Container>
+            </div>
+
             {/* Hero Section */}
-            <section className="relative overflow-hidden pt-36 pb-12">
+            <section className="relative overflow-hidden pt-24 pb-12">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
                 <Container className="relative z-10 text-center">
-                    {/* Urgency Indicator - Enhanced for CRO */}
-                    <div className="inline-flex flex-col md:flex-row items-center gap-2 md:gap-3 bg-gradient-to-r from-red-500/15 via-orange-500/15 to-amber-500/15 border-2 border-orange-500/40 rounded-2xl px-6 py-3 mb-6 shadow-xl shadow-orange-500/20 backdrop-blur-sm">
-                        <div className="flex items-center gap-2">
-                            {/* Animated pulse dot */}
-                            <span className="relative flex h-3 w-3">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                            </span>
-
-                            {/* Timer icon */}
-                            <svg className="w-4 h-4 md:w-5 md:h-5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-
-                        <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2 text-center md:text-left">
-                            <span className="text-xs md:text-sm font-bold text-orange-200 uppercase tracking-wider">
-                                Oferta de febrero:
-                            </span>
-                            <span className="flex items-baseline gap-1.5">
-                                <span className="text-2xl md:text-3xl font-black text-white tabular-nums">
-                                    {(() => {
-                                        const now = new Date();
-                                        const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-                                        const daysRemaining = Math.ceil((lastDayOfMonth.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-                                        return daysRemaining > 0 ? daysRemaining : '0';
-                                    })()}
-                                </span>
-                                <span className="text-sm md:text-base font-bold text-orange-100">
-                                    {(() => {
-                                        const now = new Date();
-                                        const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-                                        const daysRemaining = Math.ceil((lastDayOfMonth.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-                                        return daysRemaining > 1 ? 'días restantes' : daysRemaining === 1 ? 'día restante' : '¡Última oportunidad!';
-                                    })()}
-                                </span>
-                            </span>
-                        </div>
-                    </div>
-
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                         Evolucioná tu capital con el respaldo de expertos
                     </h1>
@@ -431,6 +414,6 @@ export default function PricingPage() {
                 redirectUrl="/membresias"
                 view="purchase"
             />
-        </div>
+        </div >
     );
 }
