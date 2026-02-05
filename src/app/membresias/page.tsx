@@ -75,7 +75,7 @@ export default function PricingPage() {
             {/* Removing the local announcement bar to avoid duplication once TopBanner is updated */}
 
             {/* Hero Section */}
-            <section className="relative overflow-hidden pt-28 md:pt-36 pb-12 md:pb-14">
+            <section className="relative overflow-hidden pt-40 md:pt-48 pb-12 md:pb-14">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
                 <Container className="relative z-10 text-center">
                     <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 font-display tracking-tight">
