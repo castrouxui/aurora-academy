@@ -3,7 +3,7 @@ import { Gift } from "lucide-react";
 
 export function LeadMagnet() {
     return (
-        <div className="w-full max-w-6xl mx-auto mb-12 md:mb-16">
+        <div className="w-full max-w-6xl mx-auto mt-16 md:mt-24 mb-16 md:mb-20">
             <div className="relative rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/50 via-slate-800/30 to-transparent backdrop-blur-sm px-8 py-8 md:py-10 shadow-xl">
                 {/* Subtle accent line */}
                 <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />

@@ -82,7 +82,7 @@ export function PricingCard({
 
             <div className="mb-4 md:mb-6 text-left mt-2">
                 <div className="flex flex-col gap-2 mb-2">
-                    <h3 className="text-2xl font-bold tracking-tight text-white">{title}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white">{title}</h3>
                     {/* Internal Benefit Badge (Solid Emerald) */}
                     {benefitBadge && (
                         <span className="inline-block w-fit rounded-lg bg-emerald-600 border border-emerald-500 px-3 py-1.5 text-[11px] md:text-xs font-bold text-white uppercase tracking-wide shadow-lg shadow-emerald-900/30">
@@ -98,8 +98,8 @@ export function PricingCard({
                         <div className="flex items-baseline gap-2">
                             <CreditCard className="w-5 h-5 md:w-6 md:h-6 text-emerald-400 shrink-0" />
                             <div className="flex flex-col">
-                                <span className="text-xs text-gray-400 font-medium">4 cuotas sin interés de</span>
-                                <span className="text-3xl md:text-4xl font-black tracking-tight text-white leading-none">
+                                <span className="text-xs text-gray-500 font-medium">4 cuotas sin interés de</span>
+                                <span className="text-2xl md:text-3xl font-black tracking-tight text-white leading-tight">
                                     {installments}
                                 </span>
                             </div>

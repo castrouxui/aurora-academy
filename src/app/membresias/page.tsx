@@ -92,18 +92,18 @@ export default function PricingPage() {
             </div>
 
             {/* Hero Section */}
-            <section className="relative overflow-hidden pt-24 pb-12">
+            <section className="relative overflow-hidden pt-32 md:pt-40 pb-16 md:pb-20">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
                 <Container className="relative z-10 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
                         Evolucioná tu capital con el respaldo de expertos
                     </h1>
-                    <p className="text-lg leading-8 text-gray-300 max-w-2xl mx-auto mb-3">
+                    <p className="text-base md:text-lg leading-relaxed text-gray-400 max-w-2xl mx-auto mb-4">
                         Tu hoja de ruta y acompañamiento diario en los mercados.
                         Desde tus primeros pasos hasta operar como un profesional.
                     </p>
                     {/* Social Proof */}
-                    <p className="text-sm text-gray-400 mb-10">
+                    <p className="text-sm text-gray-500 mb-12">
                         Sumate a los más de 1000 alumnos activos que ya están aprendiendo
                     </p>
 
