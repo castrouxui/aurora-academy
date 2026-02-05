@@ -128,7 +128,7 @@ export async function POST(req: NextRequest) {
                 failure: `${baseUrl}/membresias`,
                 pending: `${baseUrl}/membresias`,
             },
-            // auto_return removed to fix creation error
+            auto_return: "approved",
             metadata: {
                 user_id: userId,
                 course_id: foundCourseId,
