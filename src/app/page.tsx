@@ -10,6 +10,7 @@ import { StatsStrip } from "@/components/layout/StatsStrip";
 import { EcosystemSection } from "@/components/layout/EcosystemSection";
 import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 import { AuthoritySection } from "@/components/layout/AuthoritySection";
+import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
 
 export default function Home() {
   return (
@@ -29,6 +30,7 @@ export default function Home() {
         <TestimonialsSection />
         <CTASection />
 
+        <ExitIntentModal />
         <Footer />
       </div>
     </main>
