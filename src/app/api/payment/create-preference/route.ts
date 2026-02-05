@@ -138,10 +138,11 @@ export async function POST(req: NextRequest) {
             notification_url: `${baseUrl}/api/webhooks/mercadopago`,
         };
 
-        // Configure 4 interest-free installments ONLY for annual plans
+        // Configure installments ONLY for annual plans
+        // We allow up to 12, but the user expects 3 interest-free (depends on their MP account config)
         if (isAnnual) {
             preferenceBody.payment_methods = {
-                installments: 4,
+                installments: 12,
                 default_installments: 1
             };
         }

@@ -118,7 +118,7 @@ export function PricingCard({
                         <div className="mt-2 text-left">
                             <p className="text-[13px] text-emerald-400 font-bold flex items-center gap-1.5">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/60 animate-pulse" />
-                                4 cuotas sin interés de {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(Number(price) / 4)}
+                                3 cuotas sin interés de {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(Number(price) / 3)}
                             </p>
                         </div>
                     )}

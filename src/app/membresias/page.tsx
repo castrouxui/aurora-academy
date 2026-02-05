@@ -164,15 +164,15 @@ export default function PricingPage() {
                                         benefitBadge = "¡OFERTA LANZAMIENTO: 12 meses + 3 GRATIS!";
                                         savingsBadge = undefined;
 
-                                        // Installments logic: 4 cuotas sin interés
-                                        const installmentAmount = finalPrice / 4;
+                                        // Installments logic: 3 cuotas sin interés (Standard)
+                                        const installmentAmount = finalPrice / 3;
                                         const formattedInstallment = new Intl.NumberFormat("es-AR", {
                                             style: "currency",
                                             currency: "ARS",
                                             maximumFractionDigits: 0
                                         }).format(installmentAmount);
 
-                                        installmentsText = `4 cuotas sin interés de ${formattedInstallment}`;
+                                        installmentsText = `3 cuotas sin interés de ${formattedInstallment}`;
                                     }
 
                                     // Feature Construction - Use 100% dynamic logic from DB for all plans
@@ -298,14 +298,14 @@ export default function PricingPage() {
                                     benefitBadge = "¡OFERTA LANZAMIENTO: 12 meses + 3 GRATIS!";
                                     savingsBadge = undefined;
 
-                                    const installmentAmount = finalPrice / 4;
+                                    const installmentAmount = finalPrice / 3;
                                     const formattedInstallment = new Intl.NumberFormat("es-AR", {
                                         style: "currency",
                                         currency: "ARS",
                                         maximumFractionDigits: 0
                                     }).format(installmentAmount);
 
-                                    installmentsText = `4 cuotas sin interés de ${formattedInstallment}`;
+                                    installmentsText = `3 cuotas sin interés de ${formattedInstallment}`;
                                 }
 
                                 const monthlyCost = basePrice * 12;
