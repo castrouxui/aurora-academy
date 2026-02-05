@@ -26,9 +26,9 @@ export async function POST(req: NextRequest) {
                 where: { id: bundleId }
             });
             if (bundle) {
-                // Use server-side price
                 // @ts-ignore
-                finalPrice = Number(bundle.price);
+                const basePrice = Number(bundle.price);
+                finalPrice = isAnnual ? basePrice * 12 * 0.75 : basePrice;
             }
         } else if (title) {
             // Fallback: Find bundle by title
@@ -39,9 +39,12 @@ export async function POST(req: NextRequest) {
                 // @ts-ignore
                 bundleId = bundle.id; // Update variable to be used in metadata
                 // @ts-ignore
-                finalPrice = Number(bundle.price);
+                const basePrice = Number(bundle.price);
+                finalPrice = isAnnual ? basePrice * 12 * 0.75 : basePrice;
             }
         }
+
+
 
         // 2. Clean price string (ensure reference price is number)
         let numericPrice = typeof finalPrice === 'number' ? finalPrice : Number(String(finalPrice).replace(/[^0-9]/g, ''));

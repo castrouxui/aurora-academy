@@ -146,7 +146,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                         setInitPoint(data.init_point);
                     } else {
                         console.error('Error fetching preference:', data);
-                        setInitError("Error creando orden de pago. Verifica tu email.");
+                        setInitError(data.details || data.error || "Error creando orden de pago. Verifica tu email.");
                     }
                 } catch (error) {
                     console.error('Error:', error);
@@ -173,7 +173,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 Mobile: Maximize width but keep margin. 
                 Desktop: Slightly smaller height, properly centered.
             */}
-            <div className="bg-card w-full max-w-4xl max-h-[90vh] md:h-auto md:max-h-[800px] rounded-2xl shadow-2xl overflow-y-auto md:overflow-hidden border border-border flex flex-col md:flex-row relative">
+            <div className="bg-card w-full max-w-3xl max-h-[90vh] md:h-auto md:max-h-[600px] rounded-2xl shadow-2xl overflow-y-auto md:overflow-hidden border border-border flex flex-col md:flex-row relative">
 
                 {/* Close Button (Absolute) - Fixed position on mobile to be always visible */}
                 <button
@@ -409,6 +409,9 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                         <div className="absolute top-0 -left-full w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-[shimmer_2.5s_infinite]"></div>
                                     </a>
                                 </div>
+                                {paymentStatus === 'rejected' && (
+                                    <p className="text-red-400 text-sm text-center">El pago fue rechazado. Intenta con otro medio.</p>
+                                )}
                             </div>
                         ) : null}
                     </div>
