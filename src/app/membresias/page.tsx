@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import { PricingCard } from "@/components/membresias/PricingCard";
 import { PricingCheckmark } from "@/components/membresias/PricingCheckmark";
 import { LeadMagnet } from "@/components/membresias/LeadMagnet";
+import { Testimonials } from "@/components/membresias/Testimonials";
+import { FAQ } from "@/components/membresias/FAQ";
+import { Footer } from "@/components/membresias/Footer";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
 import { Container } from "@/components/layout/Container";
@@ -149,7 +152,7 @@ export default function PricingPage() {
             <section className="relative z-10 pb-16">
                 <Container>
                     {/* Dynamic Bundle Grid */}
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-12 items-start max-w-7xl mx-auto mt-6">
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-12 items-stretch max-w-7xl mx-auto mt-2">
                         {/* mt-6 added to give space for the new top floating badges */}
                         {bundles.length > 0 ? (
                             // Render based on Dynamic Bundles from DB
@@ -391,6 +394,15 @@ export default function PricingPage() {
                     <LeadMagnet />
                 </Container>
             </section>
+
+            {/* Testimonials Section */}
+            <Testimonials />
+
+            {/* FAQ Section */}
+            <FAQ />
+
+            {/* Footer */}
+            <Footer />
 
             {/* Payment Modal */}
             {

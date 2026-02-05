@@ -93,13 +93,13 @@ export function PricingCard({
 
                 {/* Pricing Display - Different hierarchy for Annual */}
                 {isAnnual && installments ? (
-                    <div className="mt-4">
+                    <div className="mt-3">
                         {/* Primary: Installments (Largest) */}
                         <div className="flex items-baseline gap-2">
-                            <CreditCard className="w-5 h-5 md:w-6 md:h-6 text-emerald-400 shrink-0" />
-                            <div className="flex flex-col">
-                                <span className="text-xs text-gray-500 font-medium">4 cuotas sin interés de</span>
-                                <span className="text-2xl md:text-3xl font-black tracking-tight text-white leading-tight">
+                            <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-emerald-400 shrink-0" />
+                            <div className="flex flex-col gap-0.5">
+                                <span className="text-sm text-gray-500 font-normal">4 cuotas sin interés de</span>
+                                <span className="text-2xl md:text-3xl font-semibold tracking-tight text-white leading-none">
                                     {installments}
                                 </span>
                             </div>
