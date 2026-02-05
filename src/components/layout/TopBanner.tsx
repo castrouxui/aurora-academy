@@ -6,49 +6,76 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export function TopBanner() {
-    // Logic to hide banner if user owns the course
-    const { data: session } = useSession();
-    const [isVisible, setIsVisible] = useState(true);
-    const COURSE_ID = "cml05hq7n00025z0eogogsnge"; // El camino del inversor
+    const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const TARGET_DATE = new Date("2026-03-02T00:00:00").getTime();
 
     useEffect(() => {
-        async function checkOwnership() {
-            if (!session?.user) return;
+        const timer = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = TARGET_DATE - now;
 
-            try {
-                // Determine if we should hide it.
-                // We can't easily check 'purchases' without an API call.
-                // Using /api/my-courses which returns the list of owned courses.
-                const res = await fetch("/api/my-courses");
-                if (res.ok) {
-                    const courses = await res.json();
-                    const hasCourse = courses.some((c: any) => c.id === COURSE_ID);
-                    if (hasCourse) {
-                        setIsVisible(false);
-                    }
-                }
-            } catch (error) {
-                console.error("Failed to check banner visibility", error);
+            if (distance < 0) {
+                clearInterval(timer);
+                return;
             }
-        }
 
-        checkOwnership();
-    }, [session]);
+            setTimeLeft({
+                days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+                seconds: Math.floor((distance % (1000 * 60)) / 1000)
+            });
+        }, 1000);
 
-    if (!isVisible) return null;
+        return () => clearInterval(timer);
+    }, []);
 
     return (
-        <div className="w-full bg-[#5D5CDE] text-white py-2 px-4 relative z-[501]">
-            <div className="container mx-auto flex items-center justify-center gap-2 text-center text-xs md:text-sm font-bold tracking-wide">
-                <Link
-                    href={`/cursos/${COURSE_ID}`}
-                    className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                >
-                    <span>
-                        Registrate en &apos;El camino del inversor&apos; totalmente GRATIS (100% OFF)
+        <div className="w-full bg-[#5D5CDE] text-white py-2.5 px-4 relative z-[501] shadow-lg overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#5D5CDE] via-[#6e6df0] to-[#5D5CDE] animate-shimmer bg-[length:200%_100%] opacity-50" />
+
+            <div className="container mx-auto relative z-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-center">
+                <div className="flex items-center gap-2">
+                    <span className="flex h-2 w-2 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                     </span>
-                    <ArrowRight size={14} className="animate-pulse" />
-                </Link>
+                    <span className="text-[11px] md:text-sm font-black tracking-wide uppercase">
+                        ¡Oferta de lanzamiento oficial! 23% OFF
+                    </span>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-1.5 font-display tabular-nums">
+                        <div className="flex flex-col items-center">
+                            <span className="text-sm md:text-base font-black">{String(timeLeft.days).padStart(2, '0')}</span>
+                            <span className="text-[8px] uppercase font-bold opacity-70">Días</span>
+                        </div>
+                        <span className="text-sm md:text-base font-black opacity-50">:</span>
+                        <div className="flex flex-col items-center">
+                            <span className="text-sm md:text-base font-black">{String(timeLeft.hours).padStart(2, '0')}</span>
+                            <span className="text-[8px] uppercase font-bold opacity-70">Hrs</span>
+                        </div>
+                        <span className="text-sm md:text-base font-black opacity-50">:</span>
+                        <div className="flex flex-col items-center">
+                            <span className="text-sm md:text-base font-black">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                            <span className="text-[8px] uppercase font-bold opacity-70">Min</span>
+                        </div>
+                        <span className="text-sm md:text-base font-black opacity-50">:</span>
+                        <div className="flex flex-col items-center">
+                            <span className="text-sm md:text-base font-black">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                            <span className="text-[8px] uppercase font-bold opacity-70">Seg</span>
+                        </div>
+                    </div>
+
+                    <Link
+                        href="/membresias"
+                        className="hidden md:flex items-center gap-2 bg-white text-[#5D5CDE] px-4 py-1 rounded-full text-xs font-black hover:scale-105 transition-transform shadow-xl"
+                    >
+                        Asegurar mi cupo
+                        <ArrowRight size={14} />
+                    </Link>
+                </div>
             </div>
         </div>
     );

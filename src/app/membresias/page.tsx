@@ -71,34 +71,14 @@ export default function PricingPage() {
         <div className="min-h-screen bg-[#0B0F19] text-white">
             <Navbar />
 
-            {/* Announcement Bar - Minimal Urgency Indicator */}
-            <div className="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-white/10">
-                <Container>
-                    <div className="flex items-center justify-center gap-3 py-2.5 text-center">
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                        </span>
-                        <span className="text-sm text-gray-300">
-                            Oferta de febrero:
-                            <span className="ml-2 font-bold text-white tabular-nums">
-                                {(() => {
-                                    const now = new Date();
-                                    const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-                                    const daysRemaining = Math.ceil((lastDayOfMonth.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-                                    return daysRemaining > 0 ? `${daysRemaining} días restantes` : 'Últimas horas';
-                                })()}
-                            </span>
-                        </span>
-                    </div>
-                </Container>
-            </div>
+            {/* Announcement Bar - Controlled by TopBanner for consistency, but if needed here, we'll make it cleaner */}
+            {/* Removing the local announcement bar to avoid duplication once TopBanner is updated */}
 
             {/* Hero Section */}
-            <section className="relative overflow-hidden pt-32 md:pt-40 pb-12 md:pb-14">
+            <section className="relative overflow-hidden pt-28 md:pt-36 pb-12 md:pb-14">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
                 <Container className="relative z-10 text-center">
-                    <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 font-display uppercase tracking-tight">
+                    <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 font-display tracking-tight">
                         Evolucioná tu capital con el respaldo de expertos
                     </h1>
                     <p className="text-base md:text-lg leading-relaxed text-gray-400 max-w-2xl mx-auto mb-4">
@@ -112,24 +92,27 @@ export default function PricingPage() {
 
                     {/* Toggle with Enhanced Badge */}
                     <div className="flex justify-center mt-8 mb-12">
-                        <div className="bg-[#1e2235] p-1 rounded-full flex items-center shadow-xl border border-white/5">
+                        <div className="bg-[#1e2235] p-1.5 rounded-2xl flex items-center shadow-2xl border border-white/5 relative">
                             <button
                                 onClick={() => setBillingCycle("monthly")}
                                 className={cn(
-                                    "px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300",
+                                    "relative z-10 px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300",
                                     billingCycle === "monthly"
-                                        ? "bg-white text-black shadow-lg"
+                                        ? "text-black"
                                         : "text-gray-400 hover:text-white"
                                 )}
                             >
                                 Mensual
+                                {billingCycle === "monthly" && (
+                                    <div className="absolute inset-0 bg-white rounded-xl -z-10 animate-in fade-in zoom-in-95 duration-200" />
+                                )}
                             </button>
                             <button
                                 onClick={() => setBillingCycle("annual")}
                                 className={cn(
-                                    "px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2",
+                                    "relative z-10 px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-3",
                                     billingCycle === "annual"
-                                        ? "bg-white text-black shadow-lg"
+                                        ? "text-black"
                                         : "text-gray-400 hover:text-white"
                                 )}
                             >
@@ -137,11 +120,14 @@ export default function PricingPage() {
                                 <span className={cn(
                                     "text-[9px] md:text-[10px] font-black px-2 py-1 rounded-md whitespace-nowrap",
                                     billingCycle === "annual"
-                                        ? "bg-[#5D5CDE] text-white shadow-lg"
+                                        ? "bg-emerald-500 text-white shadow-lg"
                                         : "bg-white/10 text-gray-400"
                                 )}>
-                                    Oferta: 12 meses + 3 gratis (Ahorrás 23%)
+                                    Ahorrá 23%
                                 </span>
+                                {billingCycle === "annual" && (
+                                    <div className="absolute inset-0 bg-white rounded-xl -z-10 animate-in fade-in zoom-in-95 duration-200" />
+                                )}
                             </button>
                         </div>
                     </div>

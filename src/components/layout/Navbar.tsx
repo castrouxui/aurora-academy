@@ -86,7 +86,7 @@ export function Navbar() {
               <div className="relative group cursor-default">
                 <button className="text-sm font-medium text-gray-500 flex items-center gap-2 px-4 py-2 cursor-default hover:text-gray-400 transition-colors">
                   Empresas
-                  <span className="text-[10px] uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full">Próximamente</span>
+                  <span className="text-[10px] font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full whitespace-nowrap">Próximamente</span>
                 </button>
               </div>
 
@@ -238,7 +238,7 @@ export function Navbar() {
             <div className="space-y-8">
               {/* Primary (Academical) */}
               <div className="space-y-3">
-                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] ml-4 mb-2">Academia</p>
+                <p className="text-[10px] font-bold text-gray-500 tracking-[0.2em] ml-4 mb-2">Academia</p>
 
                 {/* Ir a mis cursos - Styled consistently but highlighted */}
                 {/* Main Action - Dynamic based on Role */}
@@ -285,12 +285,12 @@ export function Navbar() {
 
               {/* Secondary (Institutional) */}
               <div className="space-y-2">
-                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] ml-4 mb-2">Institucional</p>
+                <p className="text-[10px] font-bold text-gray-500 tracking-[0.2em] ml-4 mb-2">Institucional</p>
 
                 <div className="flex items-center w-full px-5 py-3 text-gray-500 opacity-60">
                   <Building2 className="mr-4" size={20} />
                   <span className="text-lg font-semibold">Empresas</span>
-                  <span className="ml-auto text-[10px] uppercase font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-1 rounded-full">
+                  <span className="ml-auto text-[10px] font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-1 rounded-full whitespace-nowrap">
                     Próximamente
                   </span>
                 </div>

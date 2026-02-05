@@ -65,14 +65,14 @@ export function PricingCard({
             {/* Tag - Mayúscula a minúscula */}
             {(isRecommended || tag) && (
                 <div className="absolute top-0 left-0 right-0 h-4 rounded-t-[24px] bg-[#5D5CDE] flex items-center justify-center">
-                    <span className="text-[10px] font-black text-white tracking-[0.2em]">Más Popular</span>
+                    <span className="text-[10px] font-black text-white tracking-[0.2em] uppercase">MÁS POPULAR</span>
                 </div>
             )}
 
             {/* Savings Badge - Translated */}
             {savings && (
                 <div className="absolute top-8 right-8">
-                    <span className="bg-[#D1FF00] text-black text-[11px] font-black px-3 py-1.5 rounded-full">
+                    <span className="bg-[#10b981] text-white text-[11px] font-black px-3 py-1.5 rounded-full shadow-lg shadow-emerald-500/20">
                         {savings} de ahorro
                     </span>
                 </div>

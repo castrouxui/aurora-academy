@@ -85,6 +85,6 @@ export function AuthoritySection() {
                     </div>
                 </div>
             </Container>
-        </section>
+        </section >
     );
 }
