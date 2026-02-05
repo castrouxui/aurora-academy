@@ -11,7 +11,7 @@ export function TrustBar() {
         },
         {
             icon: <CreditCard size={16} strokeWidth={1} className="text-gray-400" />,
-            text: "4 Cuotas Fijas Sin Interés"
+            text: "3 Cuotas Fijas Sin Interés"
         },
         {
             icon: <ShieldCheck size={16} strokeWidth={1} className="text-gray-400" />,

@@ -12,7 +12,7 @@ interface FAQItem {
 const FAQ_ITEMS: FAQItem[] = [
     {
         question: "¿Cómo funcionan las cuotas con Mercado Pago?",
-        answer: "Podés pagar en 4 cuotas fijas sin interés. Es importante que el cupo disponible de tu tarjeta de crédito cubra el monto total de la inversión al momento de la compra.",
+        answer: "Podés pagar en 3 cuotas fijas sin interés. Es importante que el cupo disponible de tu tarjeta de crédito cubra el monto total de la inversión al momento de la compra.",
     },
     {
         question: "¿Tengo garantía si no estoy conforme?",
