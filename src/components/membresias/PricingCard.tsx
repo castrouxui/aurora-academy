@@ -104,8 +104,8 @@ export function PricingCard({
 
                     {/* Main Price */}
                     <div className="flex items-baseline gap-1">
-                        <span className="text-2xl md:text-3xl font-bold text-white">$</span>
-                        <span className="text-5xl md:text-6xl font-black tracking-tighter text-white font-display">
+                        <span className="text-xl md:text-2xl font-bold text-white">$</span>
+                        <span className="text-4xl md:text-5xl font-black tracking-tighter text-white font-display">
                             {new Intl.NumberFormat("es-AR", {
                                 minimumFractionDigits: 0,
                                 maximumFractionDigits: 0
