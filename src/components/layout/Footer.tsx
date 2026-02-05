@@ -29,7 +29,7 @@ export function Footer() {
                                 <span className="text-white text-xs md:text-sm font-medium">Comunidad Aurora</span>
                             </div>
 
-                            <h2 className="text-3xl md:text-6xl font-black text-white leading-[0.95] tracking-tighter font-display uppercase italic">
+                            <h2 className="text-3xl md:text-6xl font-black text-white leading-[0.95] tracking-tighter font-display">
                                 Unite a la comunidad Aurora
                             </h2>
 

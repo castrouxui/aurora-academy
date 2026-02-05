@@ -52,39 +52,32 @@ export function FAQ() {
                         return (
                             <div
                                 key={index}
-                                className="border-b border-white/5 bg-transparent overflow-hidden transition-all duration-300 hover:bg-white/[0.02]"
+                                className="border border-white/10 rounded-2xl bg-white/5 overflow-hidden transition-all duration-300 hover:border-white/20"
                             >
                                 {/* Question Button */}
                                 <button
                                     onClick={() => setOpenIndex(isOpen ? null : index)}
-                                    className="w-full flex items-center justify-between gap-4 p-5 md:p-6 text-left transition-colors"
+                                    className="w-full flex items-center justify-between gap-4 p-6 text-left transition-colors"
                                 >
-                                    <span className="text-sm md:text-base font-semibold text-white">
+                                    <span className="font-bold text-lg text-white">
                                         {item.question}
                                     </span>
-                                    <ChevronDown
-                                        className={cn(
-                                            "w-5 h-5 text-gray-400 shrink-0 transition-transform duration-300",
-                                            isOpen && "rotate-180 text-emerald-400"
-                                        )}
-                                    />
+                                    {isOpen ? (
+                                        <ChevronDown className="text-[#5D5CDE] shrink-0 rotate-180 transition-transform duration-300 w-5 h-5" />
+                                    ) : (
+                                        <ChevronDown className="text-gray-400 shrink-0 transition-transform duration-300 w-5 h-5" />
+                                    )}
                                 </button>
 
                                 {/* Answer */}
                                 <div
                                     className={cn(
-                                        "grid transition-all duration-300 ease-in-out",
-                                        isOpen
-                                            ? "grid-rows-[1fr] opacity-100"
-                                            : "grid-rows-[0fr] opacity-0"
+                                        "overflow-hidden transition-all duration-300 ease-in-out",
+                                        isOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
                                     )}
                                 >
-                                    <div className="overflow-hidden">
-                                        <div className="px-5 md:px-6 pb-5 md:pb-6 pt-0">
-                                            <p className="text-sm md:text-base text-gray-400 leading-relaxed">
-                                                {item.answer}
-                                            </p>
-                                        </div>
+                                    <div className="px-6 pb-6 pt-0 text-gray-400 leading-relaxed">
+                                        {item.answer}
                                     </div>
                                 </div>
                             </div>

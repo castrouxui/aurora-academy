@@ -15,7 +15,7 @@ export function HeroBanner() {
     return (
 
         <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-            <Container className="relative z-10 w-full flex flex-col items-center justify-center pt-20">
+            <Container className="relative z-10 w-full flex flex-col items-center justify-center pt-32 md:pt-40">
                 <div className="flex flex-col items-center space-y-6 md:space-y-8 text-center px-4 md:px-0">
                     <div className="space-y-4 md:space-y-6 max-w-[900px]">
                         {/* High-Impact Badge */}
@@ -46,7 +46,7 @@ export function HeroBanner() {
                                 Ver planes
                             </Button>
                         </Link>
-                        <Link href="https://t.me/Auroradvisors" target="_blank" className="w-full sm:w-auto relative z-20">
+                        <Link href="/cursos/cml05hq7n00025z0eogogsnge" className="w-full sm:w-auto relative z-20">
                             <Button variant="outline" className="h-16 px-10 text-base font-bold w-full sm:w-auto text-white border border-white/20 bg-white/5 hover:bg-white hover:text-black rounded-xl backdrop-blur-sm transition-all active:scale-95">
                                 Curso gratis: El camino del inversor
                             </Button>
