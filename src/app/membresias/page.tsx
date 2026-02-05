@@ -98,7 +98,7 @@ export default function PricingPage() {
             <section className="relative overflow-hidden pt-32 md:pt-40 pb-12 md:pb-14">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
                 <Container className="relative z-10 text-center">
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+                    <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 font-display uppercase tracking-tight">
                         Evolucioná tu capital con el respaldo de expertos
                     </h1>
                     <p className="text-base md:text-lg leading-relaxed text-gray-400 max-w-2xl mx-auto mb-4">

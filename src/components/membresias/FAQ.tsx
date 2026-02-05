@@ -11,20 +11,20 @@ interface FAQItem {
 
 const FAQ_ITEMS: FAQItem[] = [
     {
-        question: "¿Qué incluye cada membresía?",
-        answer: "Todas las membresías incluyen acceso al Canal de Aurora Academy con análisis diarios, videos educativos, y soporte de la comunidad. Los planes superiores añaden cursos nuevos cada 15 días, mentoría técnica, y networking profesional.",
+        question: "¿Cómo funcionan las 4 cuotas sin interés?",
+        answer: "Al elegir el plan anual, podés pagar en 4 cuotas fijas sin interés a través de Mercado Pago con cualquier tarjeta de crédito. El monto total se divide exactamente por 4.",
     },
     {
-        question: "¿Cómo funcionan las cuotas sin interés?",
-        answer: "Los planes anuales se pueden dividir en 4 cuotas fijas sin interés a través de Mercado Pago. Solo pagas el total anual dividido en 4 pagos mensuales, sin costos adicionales.",
+        question: "¿Tengo garantía si no me gusta?",
+        answer: "Sí, contamos con una garantía de satisfacción total de 24 horas. Si el contenido no cumple con tus expectativas, te devolvemos el 100% de tu inversión sin preguntas.",
     },
     {
-        question: "¿Puedo cambiar de plan después?",
-        answer: "Sí, puedes hacer upgrade a un plan superior en cualquier momento. Se te cobrará la diferencia de manera inmediata y mantendrás todos los beneficios del nuevo plan al instante. El downgrade solo está disponible al momento de renovación.",
+        question: "¿El contenido es grabado o en vivo?",
+        answer: "Todo el contenido formativo es 100% on-demand para que aprendas a tu ritmo. Además, sumamos análisis de mercado periódicos en la comunidad para mantener la práctica actualizada.",
     },
     {
-        question: "¿Cuál es la política de reembolso?",
-        answer: "Ofrecemos garantía de satisfacción de 24 horas. Si no estás conforme con el contenido, te devolvemos el 100% de tu dinero dentro de las primeras 24 horas desde la compra.",
+        question: "¿Cómo accedo a la comunidad de alumnos?",
+        answer: "Una vez realizada la suscripción, recibirás un acceso inmediato a nuestro canal premium de Telegram donde se centraliza todo el soporte y networking.",
     },
 ];
 
@@ -36,7 +36,7 @@ export function FAQ() {
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-12">
-                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                    <h2 className="text-3xl md:text-5xl font-black text-white mb-3 font-display uppercase tracking-tight">
                         Preguntas Frecuentes
                     </h2>
                     <p className="text-sm md:text-base text-gray-400">

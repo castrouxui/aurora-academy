@@ -29,8 +29,8 @@ export function Footer() {
                                 <span className="text-white text-xs md:text-sm font-medium">Comunidad Aurora</span>
                             </div>
 
-                            <h2 className="text-3xl md:text-5xl font-black text-white leading-tight tracking-tight">
-                                Estudia con traders de toda la región y crea vínculos para toda la vida
+                            <h2 className="text-3xl md:text-6xl font-black text-white leading-[0.95] tracking-tighter font-display uppercase italic">
+                                Unite a la comunidad Aurora
                             </h2>
 
                             <Link href="/membresias">

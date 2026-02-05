@@ -11,24 +11,24 @@ interface Testimonial {
 
 const TESTIMONIALS: Testimonial[] = [
     {
-        name: "Martín Rodriguez",
-        role: "Inversor Inicial",
-        quote: "En 3 meses pasé de no entender nada a hacer mi primer inversión con confianza. El acompañamiento es clave.",
-        avatar: "/testimonials/martin.jpg",
+        name: "Marcos L.",
+        role: "Trader de Divisas",
+        quote: "Metodología directa y sin vueltas. En poco tiempo logré estructurar mi operativa con un criterio profesional real.",
+        avatar: "/testimonials/marcos.jpg",
         rating: 5,
     },
     {
-        name: "Carolina Vega",
-        role: "Trader de Elite",
-        quote: "Los cursos nuevos cada 15 días mantienen mi conocimiento actualizado. La inversión se pagó sola.",
-        avatar: "/testimonials/carolina.jpg",
+        name: "Sofía R.",
+        role: "Inversora Institucional",
+        quote: "El soporte de la comunidad es lo que hace la diferencia. No estás solo ante el gráfico, el análisis compartido es invaluable.",
+        avatar: "/testimonials/sofia.jpg",
         rating: 5,
     },
     {
-        name: "Lucas Fernández",
-        role: "Portfolio Manager",
-        quote: "El networking con otros alumnos y las sesiones en vivo son invaluables. Mejor decisión del año.",
-        avatar: "/testimonials/lucas.jpg",
+        name: "Javier G.",
+        role: "Especialista en IA",
+        quote: "La IA aplicada a inversiones que enseñan en la academia me abrió un mundo de posibilidades estadísticas totalmente nuevas.",
+        avatar: "/testimonials/javier.jpg",
         rating: 5,
     },
 ];
@@ -39,7 +39,7 @@ export function Testimonials() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-12">
-                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                    <h2 className="text-3xl md:text-5xl font-black text-white mb-3 font-display uppercase tracking-tight">
                         Lo que dicen nuestros alumnos
                     </h2>
                     <p className="text-sm md:text-base text-gray-400 max-w-2xl mx-auto">

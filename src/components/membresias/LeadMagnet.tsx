@@ -11,7 +11,7 @@ export function LeadMagnet() {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                     {/* Text Content - Left Aligned */}
                     <div className="flex-1 text-left space-y-1">
-                        <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white">
+                        <h3 className="text-2xl md:text-4xl font-black tracking-tight text-white font-display uppercase italic">
                             ¿Todavía no estás listo?
                         </h3>
                         <p className="text-base text-gray-400 font-normal">

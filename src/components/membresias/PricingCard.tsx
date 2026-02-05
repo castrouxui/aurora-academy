@@ -81,43 +81,46 @@ export function PricingCard({
             )}
 
             <div className="mb-4 md:mb-6 text-left mt-2">
-                <div className="flex flex-col gap-2 mb-2">
-                    <h3 className="text-xl md:text-2xl font-bold tracking-tight text-white">{title}</h3>
+                <div className="flex flex-col gap-2 mb-4">
+                    <h3 className="text-2xl md:text-3xl font-black tracking-tight text-white font-display uppercase">{title}</h3>
                     {/* Internal Benefit Badge (Solid Emerald) */}
                     {benefitBadge && (
                         <span className="inline-block w-fit rounded-lg bg-emerald-600 border border-emerald-500 px-3 py-1.5 text-[11px] md:text-xs font-bold text-white uppercase tracking-wide shadow-lg shadow-emerald-900/30">
-                            {benefitBadge}
+                            Lanzamiento: 12 meses + 3 GRATIS
                         </span>
                     )}
                 </div>
 
                 {/* Pricing Display - Different hierarchy for Annual */}
                 {isAnnual && installments ? (
-                    <div className="mt-2">
+                    <div className="mt-4 p-4 rounded-xl bg-white/5 border border-white/10 group-hover:border-[#5D5CDE]/30 transition-all">
                         {/* Installments - Clean Single Line */}
-                        <div className="flex items-center gap-2">
-                            <CreditCard className="w-4 h-4 md:w-5 md:h-5 text-emerald-400 shrink-0" />
-                            <div className="flex flex-wrap items-baseline gap-1">
-                                <span className="text-xs md:text-sm text-gray-500 font-normal">4 cuotas fijas de</span>
-                                <span className="text-xl md:text-2xl font-medium tracking-tight text-white">
+                        <div className="flex flex-col gap-1">
+                            <span className="text-xs md:text-sm text-gray-500 font-bold uppercase tracking-widest">4 cuotas fijas de</span>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-3xl md:text-4xl font-black tracking-tighter text-white font-display">
                                     {installments}
                                 </span>
-                                <span className="text-xs md:text-sm text-gray-500 font-normal">sin interés</span>
+                                <span className="text-xs md:text-sm text-emerald-400 font-bold uppercase">Sin interés</span>
                             </div>
                         </div>
                         {/* Secondary: Total + Savings (Smaller) */}
-                        <div className="mt-2 text-xs text-gray-500 font-medium">
-                            Total: <span className="text-gray-300 font-semibold">{totalPrice}</span> anual
+                        <div className="mt-4 pt-4 border-t border-white/5 flex flex-col gap-1">
+                            <div className="flex items-center justify-between text-[11px] md:text-xs">
+                                <span className="text-gray-500 font-medium">Pago total anual:</span>
+                                <span className="text-gray-300 font-bold">{totalPrice}</span>
+                            </div>
                             {savings && (
-                                <span className="ml-2 text-emerald-400 font-bold">
-                                    (Ahorrás {savings})
-                                </span>
+                                <div className="flex items-center justify-between text-[11px] md:text-xs text-emerald-400 font-black">
+                                    <span>Ahorrás:</span>
+                                    <span>{savings}</span>
+                                </div>
                             )}
                         </div>
                     </div>
                 ) : (
                     <div className="flex items-baseline gap-1 mt-2">
-                        <span className="text-3xl font-black tracking-tighter text-white">
+                        <span className="text-4xl md:text-5xl font-black tracking-tighter text-white font-display">
                             {new Intl.NumberFormat("es-AR", {
                                 style: "currency",
                                 currency: "ARS",
@@ -125,7 +128,7 @@ export function PricingCard({
                                 maximumFractionDigits: 0
                             }).format(Number(price.replace(/[^0-9]/g, "")))}
                         </span>
-                        <span className="text-sm font-medium text-gray-400">
+                        <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">
                             / {periodicity}
                         </span>
                     </div>
