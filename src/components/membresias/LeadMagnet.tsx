@@ -23,7 +23,7 @@ export function LeadMagnet() {
                     <Button
                         onClick={() => {
                             // TODO: Configure redirect URL or modal
-                            window.location.href = "/cursos/el-camino-del-inversor";
+                            window.location.href = "/cursos/cml05hq7n00025z0eogogsnge";
                         }}
                         className="w-full md:w-auto shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-6 md:py-3 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/30 border border-emerald-500/30 hover:border-emerald-500/50"
                     >

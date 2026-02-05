@@ -115,13 +115,12 @@ export function PricingCard({
                     {/* Annual Billing Context & Installments Highlight */}
                     {isAnnual && (
                         <div className="mt-2 flex flex-col items-start gap-1">
-                            <span className="text-xs text-gray-400 font-medium">
-                                Se factura como un pago único de <span className="text-white font-bold">{totalPrice}</span>
-                            </span>
                             {installments && (
-                                <span className="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20 mt-1">
-                                    {installments}
-                                </span>
+                                <div className="flex flex-col items-start">
+                                    <span className="text-sm font-bold text-emerald-400">
+                                        4 cuotas sin interés de {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(Number(price) / 4)}
+                                    </span>
+                                </div>
                             )}
                         </div>
                     )}
