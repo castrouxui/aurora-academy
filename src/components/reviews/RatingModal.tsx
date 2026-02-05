@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Button } from "@/components/ui/button";
 import { Star, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 
 interface RatingModalProps {
     isOpen: boolean;
