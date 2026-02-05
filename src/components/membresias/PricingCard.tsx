@@ -26,6 +26,12 @@ interface PricingCardProps {
     totalPrice?: string;
     savings?: string;
     originalMonthlyPrice?: string;
+    persona?: {
+        label: string;
+        description: string;
+    };
+    authorityBadge?: boolean | string;
+    doubtRemoval?: string;
 }
 
 export function PricingCard({
@@ -48,6 +54,9 @@ export function PricingCard({
     totalPrice,
     savings,
     originalMonthlyPrice,
+    persona,
+    authorityBadge,
+    doubtRemoval,
 }: PricingCardProps) {
     const [showAllFeatures, setShowAllFeatures] = useState(false);
     const MOBILE_VISIBLE_FEATURES = 3;
@@ -65,13 +74,35 @@ export function PricingCard({
             )}
         >
             {/* Tag - Mayúscula a minúscula */}
-            {(isRecommended || tag) && (
+            {(isRecommended || tag) && !persona && (
                 <div className="absolute top-0 left-0 right-0 h-4 rounded-t-[24px] bg-[#5D5CDE] flex items-center justify-center">
                     <span className="text-[10px] font-black text-white tracking-[0.2em] uppercase">MÁS POPULAR</span>
                 </div>
             )}
 
-
+            {/* Persona Header */}
+            {persona && (
+                <div className="mb-6">
+                    <div className="inline-flex items-center gap-2 mb-2">
+                        <span className={cn(
+                            "text-[10px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-md",
+                            isRecommended ? "bg-[#5D5CDE] text-white" : "bg-white/10 text-gray-400"
+                        )}>
+                            {persona.label}
+                        </span>
+                        {/* Authority Badge */}
+                        {authorityBadge && (
+                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[9px] font-bold text-amber-400 tracking-wide uppercase">
+                                <span className="text-xs">👑</span>
+                                {typeof authorityBadge === 'string' ? authorityBadge : "Sugerencia de Fran Castro"}
+                            </span>
+                        )}
+                    </div>
+                    <p className="text-sm font-medium text-gray-400 leading-snug">
+                        {persona.description}
+                    </p>
+                </div>
+            )}
 
             <div className="flex-1 flex flex-col">
                 <div className="mb-8 text-left">
@@ -148,6 +179,15 @@ export function PricingCard({
                         <div className="text-[11px] text-gray-500 font-medium space-y-1">
                             <p>
                                 Suscripción de 12 meses. Pagás solo 9 meses. <br className="hidden md:block" />Precio total: <span className="text-gray-300 font-bold">{totalPrice}</span>.
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Doubt Removal */}
+                    {doubtRemoval && (
+                        <div className="mt-3 pt-3 border-t border-white/5">
+                            <p className="text-[11px] text-gray-400 font-medium text-center italic">
+                                "{doubtRemoval}"
                             </p>
                         </div>
                     )}

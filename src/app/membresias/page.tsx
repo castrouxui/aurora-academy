@@ -34,6 +34,27 @@ export default function PricingPage() {
     const [loading, setLoading] = useState(true);
     const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
 
+    const PERSONA_DATA = [
+        {
+            label: "Inicial",
+            description: "Ideal para dar tus primeros pasos",
+            authorityBadge: false,
+            doubtRemoval: undefined
+        },
+        {
+            label: "Elite",
+            description: "Para traders que buscan consistencia e IA",
+            authorityBadge: true,
+            doubtRemoval: undefined
+        },
+        {
+            label: "Portfolio",
+            description: "La experiencia definitiva para profesionales",
+            authorityBadge: false,
+            doubtRemoval: "Todo lo anterior + Consultoría Personalizada"
+        }
+    ];
+
     useEffect(() => {
         async function fetchBundles() {
             try {
@@ -272,6 +293,10 @@ export default function PricingPage() {
                                             buttonText="Elegir plan"
                                             installments={installmentsText}
                                             originalMonthlyPrice={basePrice.toString()}
+                                            // Persona Props
+                                            persona={PERSONA_DATA[index]}
+                                            authorityBadge={PERSONA_DATA[index]?.authorityBadge}
+                                            doubtRemoval={PERSONA_DATA[index]?.doubtRemoval}
                                             onAction={() => {
                                                 handlePurchase(bundle.title, finalPrice.toString(), undefined, bundle.id, billingCycle === "annual");
                                             }}
@@ -339,6 +364,10 @@ export default function PricingPage() {
                                         buttonText="Elegir plan"
                                         installments={installmentsText}
                                         originalMonthlyPrice={basePrice.toString()}
+                                        // Persona Props
+                                        persona={PERSONA_DATA[index]}
+                                        authorityBadge={PERSONA_DATA[index]?.authorityBadge}
+                                        doubtRemoval={PERSONA_DATA[index]?.doubtRemoval}
                                     />
                                 );
                             })
