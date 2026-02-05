@@ -25,6 +25,7 @@ interface PricingCardProps {
     isAnnual?: boolean;
     totalPrice?: string;
     savings?: string;
+    originalMonthlyPrice?: string;
 }
 
 export function PricingCard({
@@ -46,6 +47,7 @@ export function PricingCard({
     isAnnual = false,
     totalPrice,
     savings,
+    originalMonthlyPrice,
 }: PricingCardProps) {
     const [showAllFeatures, setShowAllFeatures] = useState(false);
     const MOBILE_VISIBLE_FEATURES = 3;
@@ -93,10 +95,10 @@ export function PricingCard({
                     <div className="flex items-center gap-1.5 text-gray-500 mb-1">
                         <span className="text-sm font-medium">$</span>
                         <span className="text-lg font-bold line-through tracking-tight">
-                            {new Intl.NumberFormat("es-AR", {
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0
-                            }).format(Number(price) * 1.3 / (isAnnual ? 12 : 1))}
+                            {isAnnual && originalMonthlyPrice
+                                ? new Intl.NumberFormat("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Number(originalMonthlyPrice))
+                                : new Intl.NumberFormat("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Number(price) * 1.3 / (isAnnual ? 12 : 1))
+                            }
                         </span>
                     </div>
 
@@ -112,12 +114,13 @@ export function PricingCard({
                         <span className="text-lg md:text-xl font-bold text-gray-400">/mes</span>
                     </div>
 
-                    {/* Annual Billing Context & Installments Highlight */}
+                    {/* Annual Billing Context & Installments Highlight - Rearranged for clarity */}
                     {isAnnual && (
-                        <div className="mt-2 flex flex-col items-start gap-1">
+                        <div className="mt-4 w-full p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col gap-1">
                             {installments && (
                                 <div className="flex flex-col items-start">
-                                    <span className="text-sm font-bold text-emerald-400">
+                                    <span className="text-xs text-emerald-300 font-bold uppercase tracking-wider mb-0.5">Financiación exclusiva</span>
+                                    <span className="text-sm md:text-base font-black text-emerald-400">
                                         4 cuotas sin interés de {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(Number(price) / 4)}
                                     </span>
                                 </div>

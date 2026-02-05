@@ -138,7 +138,7 @@ export default function PricingPage() {
             <section className="relative z-10 pb-16">
                 <Container>
                     {/* Dynamic Bundle Grid */}
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-12 items-stretch max-w-7xl mx-auto mt-0">
+                    <div id="precios" className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-12 items-stretch max-w-7xl mx-auto mt-0 scroll-mt-32">
                         {/* mt-6 added to give space for the new top floating badges */}
                         {bundles.length > 0 ? (
                             // Render based on Dynamic Bundles from DB
@@ -271,6 +271,7 @@ export default function PricingPage() {
                                             excludedFeatures={staticPlan?.excludedFeatures || []}
                                             buttonText="Elegir plan"
                                             installments={installmentsText}
+                                            originalMonthlyPrice={basePrice.toString()}
                                             onAction={() => {
                                                 handlePurchase(bundle.title, finalPrice.toString(), undefined, bundle.id, billingCycle === "annual");
                                             }}
@@ -337,6 +338,7 @@ export default function PricingPage() {
                                         excludedFeatures={plan.excludedFeatures}
                                         buttonText="Elegir plan"
                                         installments={installmentsText}
+                                        originalMonthlyPrice={basePrice.toString()}
                                     />
                                 );
                             })
