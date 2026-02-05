@@ -60,7 +60,14 @@ export async function POST(req: NextRequest) {
                 // Use server-side price
                 // bundle.price is Decimal from Prisma, ensure we convert to number
                 // @ts-ignore
-                finalPrice = Number(bundle.price);
+                const dbPrice = Number(bundle.price);
+
+                if (isAnnual) {
+                    // Annual Plan Logic: 12 months for the price of 9
+                    finalPrice = dbPrice * 9;
+                } else {
+                    finalPrice = dbPrice;
+                }
             }
         }
 
