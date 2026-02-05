@@ -173,7 +173,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 Mobile: Maximize width but keep margin. 
                 Desktop: Slightly smaller height, properly centered.
             */}
-            <div className="bg-card w-full max-w-3xl max-h-[90vh] md:h-auto md:max-h-[600px] rounded-2xl shadow-2xl overflow-y-auto md:overflow-hidden border border-border flex flex-col md:flex-row relative">
+            <div className="bg-card w-full max-w-3xl max-h-[90vh] md:h-auto md:max-h-[650px] rounded-2xl shadow-2xl overflow-y-auto md:overflow-hidden border border-border flex flex-col md:flex-row relative">
 
                 {/* Close Button (Absolute) - Fixed position on mobile to be always visible */}
                 <button
@@ -359,9 +359,9 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                         </h3>
 
                         {initError && (
-                            <div className="mb-6 p-4 bg-red-900/10 border border-red-900/30 rounded-lg flex items-center gap-3 text-red-300 text-sm">
-                                <X className="shrink-0 text-red-400" size={18} />
-                                {initError}
+                            <div className="mb-6 p-4 bg-red-900/10 border border-red-900/30 rounded-lg flex items-start gap-3 text-red-300 text-sm">
+                                <X className="shrink-0 text-red-400 mt-0.5" size={18} />
+                                <span className="break-all md:break-words whitespace-normal">{initError}</span>
                             </div>
                         )}
 

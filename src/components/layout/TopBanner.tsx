@@ -5,9 +5,14 @@ import { ArrowRight } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
+import { usePathname } from "next/navigation";
+
 export function TopBanner() {
+    const pathname = usePathname();
     const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     const TARGET_DATE = new Date("2026-03-02T00:00:00").getTime();
+
+    if (pathname === "/membresias") return null;
 
     useEffect(() => {
         const timer = setInterval(() => {
