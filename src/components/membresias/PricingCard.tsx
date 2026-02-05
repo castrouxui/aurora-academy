@@ -74,8 +74,8 @@ export function PricingCard({
             {/* Savings Badge - Translated */}
             {savings && (
                 <div className="absolute top-8 right-8">
-                    <span className="bg-[#10b981] text-white text-[11px] font-black px-3 py-1.5 rounded-full shadow-lg shadow-emerald-500/20">
-                        {savings} de ahorro
+                    <span className="bg-[#10b981] text-white text-[10px] sm:text-[11px] font-black px-3 py-1.5 rounded-full shadow-lg shadow-emerald-500/20 uppercase tracking-wide">
+                        3 MESES DE REGALO
                     </span>
                 </div>
             )}
@@ -148,7 +148,7 @@ export function PricingCard({
                     {isAnnual && (
                         <div className="text-[11px] text-gray-500 font-medium space-y-1">
                             <p>
-                                Suscripción de 12 meses por <span className="text-gray-300 font-bold">{totalPrice}</span> (precio regular <span className="line-through">{new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(Number(price) * 1.3)}</span>).
+                                Suscripción de 12 meses. Pagás solo 9 meses. <br className="hidden md:block" />Precio total: <span className="text-gray-300 font-bold">{totalPrice}</span>.
                             </p>
                         </div>
                     )}
