@@ -52,6 +52,22 @@ export async function POST(req: Request) {
             // Better: frontend passes `context: 'course'`
         }
 
+        // SPECIAL RULE: "LANZAMIENTO10" only for Monthly Plans
+        if (code.toUpperCase() === "LANZAMIENTO10") {
+            // We need to check if the bundle is monthly.
+            // If bundleId is present, fetch it to check price/characteristics or rely on frontend sending "isAnnual" flag?
+            // The validation endpoint payload doesn't currently include "isAnnual".
+            // We should fetch the bundle to be sure.
+            if (bundleId) {
+                const bundle = await prisma.bundle.findUnique({ where: { id: bundleId }, select: { title: true, price: true } });
+                // Heuristic: If title contains "Anual", reject. Or compare price.
+                // Ideally we have a better flag, but let's check title.
+                if (bundle && bundle.title.toLowerCase().includes("anual")) {
+                    return new NextResponse("Este cupón es exclusivo para planes mensuales (el plan anual ya tiene una oferta superior).", { status: 400 });
+                }
+            }
+        }
+
         return NextResponse.json(coupon);
     } catch (error) {
         console.error("[COUPON_VALIDATE]", error);

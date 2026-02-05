@@ -44,13 +44,13 @@ export default function PricingPage() {
         {
             label: "Elite",
             description: "Para traders que buscan consistencia e IA. Operá activamente con actualización constante.",
-            authorityBadge: true,
+            authorityBadge: false,
             doubtRemoval: undefined
         },
         {
             label: "Portfolio",
             description: "La experiencia definitiva para profesionales. Networking de alto nivel y visión macro.",
-            authorityBadge: false,
+            authorityBadge: true,
             doubtRemoval: "Todo lo anterior + Consultoría Personalizada"
         }
     ];
@@ -203,7 +203,7 @@ export default function PricingPage() {
                                     // Specifically for Trader & Portfolio: "1 curso nuevo cada 15 días"
                                     if (index >= 1) {
                                         displayFeatures.push(
-                                            <span key={`benefit-15d-${bundle.id}`} className="inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
+                                            <span key={`benefit-15d-${bundle.id}`} className="inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-lg border border-emerald-400/20">
                                                 <span>🔥</span> 1 curso nuevo cada 15 días
                                             </span>
                                         );

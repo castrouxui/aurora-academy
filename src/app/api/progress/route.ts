@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { checkAndgrantCourseReward } from "@/lib/rewards";
 
 export async function POST(req: Request) {
     try {
@@ -46,7 +47,22 @@ export async function POST(req: Request) {
             }
         });
 
-        return NextResponse.json(progress);
+
+
+        // Check for Reward Trigger
+        // We need the courseId. Since lesson -> module -> course, we fetch it.
+        const lesson = await prisma.lesson.findUnique({
+            where: { id: lessonId },
+            include: { module: { select: { courseId: true } } }
+        });
+
+        let rewardGranted = false;
+        if (lesson && lesson.module && isCompleted) {
+            const rewardResult = await checkAndgrantCourseReward(session.user.id, lesson.module.courseId);
+            rewardGranted = rewardResult.granted || false;
+        }
+
+        return NextResponse.json({ ...progress, rewardGranted });
     } catch (error) {
         console.error("[PROGRESS_POST]", error);
         return new NextResponse("Internal Error", { status: 500 });

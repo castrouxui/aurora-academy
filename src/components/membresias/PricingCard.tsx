@@ -85,7 +85,7 @@ export function PricingCard({
                 <div className="mb-6">
                     <div className="inline-flex items-center gap-2">
                         <span className={cn(
-                            "text-[10px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-md",
+                            "text-[10px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-lg",
                             isRecommended ? "bg-[#5D5CDE] text-white" : "bg-white/10 text-gray-400"
                         )}>
                             {persona.label}

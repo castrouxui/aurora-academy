@@ -55,7 +55,21 @@ model User {
   notificationPrefs Json?        @default("{\"telegram\": true, \"inApp\": true}")
   company        Company?       @relation(fields: [companyId], references: [id])
   progress       UserProgress[]
+  rewards        UserReward[]
   reviews        Review[]
+}
+
+model UserReward {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  rewardType String  // e.g. "COURSE_COMPLETION"
+  rewardId  String   // e.g. "LANZAMIENTO10"
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@unique([userId, courseId, rewardType])
 }
 
 model Notification {
