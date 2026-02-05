@@ -38,9 +38,21 @@ const MOCK_COURSES = [
 export default function MyCoursesPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
+    const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+    const initialTab = (searchParams?.get("tab") as 'not-started' | 'in-progress' | 'completed') || 'in-progress';
     const [courses, setCourses] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<'not-started' | 'in-progress' | 'completed'>('in-progress');
+    const [activeTab, setActiveTab] = useState<'not-started' | 'in-progress' | 'completed'>('in-progress'); // Will be updated by useEffect on client
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            const tab = params.get("tab");
+            if (tab === 'not-started' || tab === 'in-progress' || tab === 'completed') {
+                setActiveTab(tab);
+            }
+        }
+    }, []);
 
     // ... (keep useEffects same) ...
     useEffect(() => {
@@ -220,7 +232,7 @@ export default function MyCoursesPage() {
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                     />
                                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px]">
-                                        <Link href={`/learn/${course.id}`}>
+                                        <Link href={`/learn/${course.id}?from=${activeTab}`}>
                                             <Button className="rounded-full w-14 h-14 p-0 items-center justify-center bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/50 text-white">
                                                 <PlayCircle size={28} fill="currentColor" className="text-white" />
                                             </Button>
@@ -276,7 +288,7 @@ export default function MyCoursesPage() {
                                 </CardContent>
 
                                 <CardFooter className="pt-4 border-t border-gray-800/50 mt-auto">
-                                    <Link href={`/learn/${course.id}`} className="w-full">
+                                    <Link href={`/learn/${course.id}?from=${activeTab}`} className="w-full">
                                         <Button className="w-full gap-2 bg-[#1F2937] hover:bg-[#374151] text-white border border-gray-700">
                                             <PlayCircle size={16} />
                                             {activeTab === 'completed' ? "Repasar Curso" : activeTab === 'not-started' ? "Empezar Curso" : "Continuar Viendo"}

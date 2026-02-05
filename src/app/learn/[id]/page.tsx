@@ -5,8 +5,13 @@ import { getServerSession } from "next-auth";
 import { CoursePlayerClient } from "./CoursePlayerClient";
 import { authOptions } from "@/lib/auth";
 
-export default async function CoursePlayerPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function CoursePlayerPage({ params, searchParams }: { params: Promise<{ id: string }>, searchParams?: Promise<{ [key: string]: string | string[] | undefined }> }) {
     const { id } = await params;
+    const resolvedSearchParams = await searchParams;
+
+    // ... (rest of logic) ...
+
+
 
     // 1. Fetch Course Data
     const course = await prisma.course.findUnique({
@@ -115,9 +120,17 @@ export default async function CoursePlayerPage({ params }: { params: Promise<{ i
 
     // 4. Determine Back Link
     const userRole = session?.user?.role;
-    const backLink = (userRole === "ADMIN" || userRole === "INSTRUCTOR")
-        ? "/admin/courses"
-        : "/dashboard/cursos";
+    let backLink = "/dashboard/cursos";
+
+    if (userRole === "ADMIN" || userRole === "INSTRUCTOR") {
+        backLink = "/admin/courses";
+    } else if (resolvedSearchParams?.from) {
+        // Smart breadcrumb based on origin tab
+        const fromTab = resolvedSearchParams.from as string;
+        if (['not-started', 'in-progress', 'completed'].includes(fromTab)) {
+            backLink = `/dashboard/cursos?tab=${fromTab}`;
+        }
+    }
 
     return (
         <CoursePlayerClient

@@ -122,6 +122,50 @@ export function CustomControls({
                 </div>
 
                 <div className="flex items-center gap-4">
+                    {/* Quality Selection (Mock UI) */}
+                    <div className="relative group/quality scale-90 sm:scale-100 hidden sm:block">
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                const menu = e.currentTarget.nextElementSibling;
+                                if (menu) {
+                                    menu.classList.toggle('hidden');
+                                    menu.classList.toggle('flex');
+                                }
+                            }}
+                            className="text-white hover:text-[#5D5CDE] text-xs font-bold transition-colors w-8"
+                        >
+                            HD
+                        </button>
+                        <div
+                            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden flex-col bg-[#0B0F19] border border-gray-800 rounded-lg overflow-hidden shadow-xl p-1 z-50 min-w-[60px]"
+                            onMouseLeave={(e) => {
+                                e.currentTarget.classList.add('hidden');
+                                e.currentTarget.classList.remove('flex');
+                            }}
+                        >
+                            {['1080p', '720p', 'Auto'].map((q) => (
+                                <button
+                                    key={q}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        const menu = e.currentTarget.parentElement;
+                                        if (menu) {
+                                            menu.classList.add('hidden');
+                                            menu.classList.remove('flex');
+                                        }
+                                    }}
+                                    className={cn(
+                                        "px-3 py-1.5 text-xs font-medium hover:bg-white/10 transition-colors rounded text-center",
+                                        q === 'Auto' ? "text-[#5D5CDE] bg-[#5D5CDE]/10" : "text-gray-300"
+                                    )}
+                                >
+                                    {q}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     {/* Playback Rate */}
                     <div className="relative group/speed scale-90 sm:scale-100">
                         <button

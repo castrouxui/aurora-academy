@@ -130,37 +130,37 @@ Aprende a invertir tú también en: ${window.location.origin}`;
     // Typographic & Layout Configuration
     const styles = {
         landscape: {
-            padding: "p-16",
-            logoScale: "scale-[1.3] mb-8",
-            titleSize: "text-5xl",
-            labelSize: "text-2xl",
-            studentSize: "text-5xl",
-            courseSize: "text-3xl",
-            signatureSize: "text-3xl",
+            padding: "p-8 md:p-16",
+            logoScale: "scale-[1.0] md:scale-[1.3] mb-6 md:mb-8",
+            titleSize: "text-3xl md:text-5xl",
+            labelSize: "text-lg md:text-2xl",
+            studentSize: "text-3xl md:text-5xl",
+            courseSize: "text-xl md:text-3xl",
+            signatureSize: "text-xl md:text-3xl",
             footerMargin: "mb-4",
-            footerPadding: "px-8 pt-6",
+            footerPadding: "px-4 md:px-8 pt-6",
             watermarkSize: "w-[70%] h-[70%]"
         },
         portrait: {
-            padding: "p-12",
-            logoScale: "scale-[1.1] mb-6",
-            titleSize: "text-4xl",
-            labelSize: "text-xl",
-            studentSize: "text-4xl",
-            courseSize: "text-2xl",
-            signatureSize: "text-2xl",
+            padding: "p-8 md:p-12",
+            logoScale: "scale-[0.9] md:scale-[1.1] mb-6",
+            titleSize: "text-3xl md:text-4xl",
+            labelSize: "text-lg md:text-xl",
+            studentSize: "text-3xl md:text-4xl",
+            courseSize: "text-xl md:text-2xl",
+            signatureSize: "text-xl md:text-2xl",
             footerMargin: "mb-8",
             footerPadding: "px-4 pt-12",
             watermarkSize: "w-[90%] h-[90%]"
         },
         social: {
-            padding: "p-10",
-            logoScale: "scale-[1.0] mb-4",
-            titleSize: "text-3xl",
-            labelSize: "text-lg",
-            studentSize: "text-3xl",
-            courseSize: "text-xl",
-            signatureSize: "text-xl",
+            padding: "p-6 md:p-10",
+            logoScale: "scale-[0.8] md:scale-[1.0] mb-4",
+            titleSize: "text-2xl md:text-3xl",
+            labelSize: "text-base md:text-lg",
+            studentSize: "text-2xl md:text-3xl",
+            courseSize: "text-lg md:text-xl",
+            signatureSize: "text-base md:text-xl",
             footerMargin: "mb-4",
             footerPadding: "px-2 pt-8",
             watermarkSize: "w-[85%] h-[85%]"
@@ -168,7 +168,8 @@ Aprende a invertir tú también en: ${window.location.origin}`;
     };
 
     const s = styles[format];
-    const previewScaleClass = "scale-[0.32] min-[400px]:scale-[0.4] sm:scale-[0.55] md:scale-[0.7] lg:scale-[0.85] xl:scale-[0.8]";
+    // Improved responsive scaling logic to better fit mobile screens without excessive shrinking
+    const previewScaleClass = "scale-[0.35] min-[380px]:scale-[0.45] min-[450px]:scale-[0.55] sm:scale-[0.55] md:scale-[0.7] lg:scale-[0.85] xl:scale-[0.8]";
 
     return (
         <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/95 backdrop-blur-sm animate-in fade-in duration-200 font-sans overflow-hidden">
