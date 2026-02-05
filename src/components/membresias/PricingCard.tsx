@@ -71,19 +71,19 @@ export function PricingCard({
                 </div>
             )}
 
-            {/* Savings Badge - Translated */}
-            {savings && (
-                <div className="absolute top-8 right-8">
-                    <span className="bg-[#10b981] text-white text-[10px] sm:text-[11px] font-black px-3 py-1.5 rounded-full shadow-lg shadow-emerald-500/20 uppercase tracking-wide">
-                        3 MESES DE REGALO
-                    </span>
-                </div>
-            )}
+
 
             <div className="flex-1 flex flex-col">
                 {/* Header Section */}
                 <div className="mb-8 text-left">
-                    <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
+                    <div className="flex justify-between items-start gap-4 mb-3">
+                        <h3 className="text-2xl font-bold text-white">{title}</h3>
+                        {savings && (
+                            <span className="shrink-0 bg-[#10b981] text-white text-[9px] sm:text-[10px] font-black px-2.5 py-1 rounded-full shadow-lg shadow-emerald-500/20 uppercase tracking-wide transform translate-y-1">
+                                3 MESES DE REGALO
+                            </span>
+                        )}
+                    </div>
                     <div className="text-sm text-gray-400 font-medium leading-relaxed max-w-[90%] normal-case">
                         {description}
                     </div>
