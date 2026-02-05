@@ -26,8 +26,8 @@ const TESTIMONIALS: Testimonial[] = [
     },
     {
         name: "Javier G.",
-        role: "Especialista en IA",
-        quote: "La IA aplicada a inversiones que enseñan en la academia me abrió un mundo de posibilidades estadísticas totalmente nuevas.",
+        role: "Especialista en Mercados",
+        quote: "La metodología práctica de Fran me permitió proteger mi capital en momentos de alta volatilidad. Es trading real.",
         avatar: "/testimonials/javier.jpg",
         rating: 5,
     },

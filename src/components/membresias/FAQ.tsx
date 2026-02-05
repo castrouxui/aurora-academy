@@ -11,20 +11,20 @@ interface FAQItem {
 
 const FAQ_ITEMS: FAQItem[] = [
     {
-        question: "¿Cómo funcionan las 4 cuotas sin interés?",
-        answer: "Al elegir el plan anual, podés pagar en 4 cuotas fijas sin interés a través de Mercado Pago con cualquier tarjeta de crédito. El monto total se divide exactamente por 4.",
+        question: "¿Cómo funcionan las cuotas con Mercado Pago?",
+        answer: "Podés pagar en 4 cuotas fijas sin interés. Es importante que el cupo disponible de tu tarjeta de crédito cubra el monto total de la inversión al momento de la compra.",
     },
     {
-        question: "¿Tengo garantía si no me gusta?",
-        answer: "Sí, contamos con una garantía de satisfacción total de 24 horas. Si el contenido no cumple con tus expectativas, te devolvemos el 100% de tu inversión sin preguntas.",
+        question: "¿Tengo garantía si no estoy conforme?",
+        answer: "Sí, confiamos 100% en nuestra metodología. Por eso tenés una garantía de satisfacción de 24hs. Si el contenido no es para vos, te devolvemos el total sin vueltas.",
     },
     {
-        question: "¿El contenido es grabado o en vivo?",
-        answer: "Todo el contenido formativo es 100% on-demand para que aprendas a tu ritmo. Además, sumamos análisis de mercado periódicos en la comunidad para mantener la práctica actualizada.",
+        question: "¿Tengo horarios fijos para las clases?",
+        answer: "No. Todo el contenido es 100% on-demand. Podés acceder en cualquier momento y aprender a tu propio ritmo, desde cualquier dispositivo.",
     },
     {
-        question: "¿Cómo accedo a la comunidad de alumnos?",
-        answer: "Una vez realizada la suscripción, recibirás un acceso inmediato a nuestro canal premium de Telegram donde se centraliza todo el soporte y networking.",
+        question: "¿Cómo accedo a la comunidad de soporte?",
+        answer: "Inmediatamente después del pago, recibirás el acceso al canal premium de Telegram donde Fran y el equipo comparten análisis y responden dudas a diario.",
     },
 ];
 
@@ -52,7 +52,7 @@ export function FAQ() {
                         return (
                             <div
                                 key={index}
-                                className="rounded-xl border border-white/10 bg-gradient-to-br from-slate-900/30 via-slate-800/20 to-transparent backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-white/20"
+                                className="border-b border-white/5 bg-transparent overflow-hidden transition-all duration-300 hover:bg-white/[0.02]"
                             >
                                 {/* Question Button */}
                                 <button

@@ -8,18 +8,18 @@ export function AuthoritySection() {
     const points = [
         {
             icon: <CheckCircle2 className="w-6 h-6 text-[#5D5CDE]" />,
-            title: "Método probado",
-            description: "Estrategias que él mismo usa a diario en los mercados reales."
+            title: "Estrategias reales",
+            description: "Aprendé la metodología que Fran Castro usa a diario en los mercados reales."
         },
         {
             icon: <PlayCircle className="w-6 h-6 text-[#5D5CDE]" />,
-            title: "Sin relleno",
-            description: "Contenido 100% on-demand para que aprendas a tu ritmo, sin vueltas."
+            title: "100% On-demand",
+            description: "Contenido práctico para que aprendas a tu ritmo, sin horarios fijos ni vueltas."
         },
         {
             icon: <Users className="w-6 h-6 text-[#5D5CDE]" />,
-            title: "Comunidad",
-            description: "Soporte constante y análisis compartido entre alumnos y mentores."
+            title: "Comunidad de soporte",
+            description: "No estás solo. Accedé al canal premium para análisis compartido y soporte constante."
         }
     ];
 
@@ -35,13 +35,14 @@ export function AuthoritySection() {
                                 alt="Fran Castro - Fundador de Aurora Academy"
                                 fill
                                 className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                                priority
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent opacity-60" />
 
                             {/* Floating Professional Badge */}
                             <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
                                 <p className="font-display font-bold text-white text-lg">Fran Castro</p>
-                                <p className="text-sm text-gray-400 font-medium">Head Trader & Fundador</p>
+                                <p className="text-sm text-gray-400 font-medium tracking-wide uppercase">TradE & Fundador</p>
                             </div>
                         </div>
 
@@ -53,14 +54,14 @@ export function AuthoritySection() {
                     {/* Content Column */}
                     <div className="flex-1 space-y-8 md:space-y-12">
                         <div className="space-y-4">
-                            <h2 className="text-3xl md:text-5xl font-black text-white font-display leading-tight tracking-tight">
+                            <h2 className="text-3xl md:text-5xl font-black text-white font-display leading-tight tracking-tight uppercase">
                                 Aprendé con <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5D5CDE] to-indigo-400">
-                                    quien opera de verdad.
+                                <span className="text-[#5D5CDE]">
+                                    Fran Castro
                                 </span>
                             </h2>
                             <p className="text-gray-400 text-lg md:text-xl leading-relaxed">
-                                No busques teoría vacía. Formate con una metodología diseñada para proteger tu capital y maximizar tus resultados.
+                                Dejá de buscar teoría vacía. Formate con la metodología diseñada por quien opera de verdad en los mercados.
                             </p>
                         </div>
 

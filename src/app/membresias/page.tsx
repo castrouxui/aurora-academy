@@ -137,10 +137,10 @@ export default function PricingPage() {
                                 <span className={cn(
                                     "text-[9px] md:text-[10px] font-black px-2 py-1 rounded-md whitespace-nowrap",
                                     billingCycle === "annual"
-                                        ? "bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg"
+                                        ? "bg-[#5D5CDE] text-white shadow-lg"
                                         : "bg-white/10 text-gray-400"
                                 )}>
-                                    12 meses + 3 GRATIS
+                                    OFERTA: 12 MESES + 3 GRATIS (Ahorrás 23%)
                                 </span>
                             </button>
                         </div>
@@ -275,22 +275,15 @@ export default function PricingPage() {
                                             periodicity={periodicity}
                                             tag={tag}
                                             isRecommended={isRecommended}
-                                            benefitBadge={benefitBadge}
-                                            savingsBadge={savingsBadge}
-                                            installments={installmentsText}
                                             isAnnual={billingCycle === "annual"}
-                                            totalPrice={billingCycle === "annual" ? formattedTotal : undefined}
-                                            savings={billingCycle === "annual" ? formattedSavings : undefined}
-                                            // Use static special feature (Community Block) if available
+                                            totalPrice={formattedTotal}
+                                            savings={billingCycle === "annual" ? "73%" : undefined} // Using representative percentage as Hostinger does
                                             description={
-                                                <p className="text-gray-400 text-sm min-h-[40px] flex items-center text-left">
-                                                    {/* Prioritize STATIC description for better copy */}
-                                                    {staticPlan?.description || bundle.description || "Acceso completo"}
-                                                </p>
+                                                staticPlan?.description || bundle.description || "Everything you need to get started"
                                             }
                                             features={displayFeatures}
                                             excludedFeatures={staticPlan?.excludedFeatures || []}
-                                            buttonText="Suscribirme"
+                                            buttonText="Choose plan"
                                             onAction={() => {
                                                 handlePurchase(bundle.title, finalPrice.toString(), undefined, bundle.id, billingCycle === "annual");
                                             }}
@@ -349,20 +342,13 @@ export default function PricingPage() {
                                         periodicity={periodicity}
                                         tag={plan.tag || undefined}
                                         isRecommended={plan.isRecommended}
-                                        benefitBadge={benefitBadge}
-                                        savingsBadge={savingsBadge}
-                                        installments={installmentsText}
                                         isAnnual={billingCycle === "annual"}
-                                        totalPrice={billingCycle === "annual" ? formattedTotal : undefined}
-                                        savings={billingCycle === "annual" ? formattedSavings : undefined}
-                                        description={
-                                            <p className="text-gray-400 text-sm min-h-[40px] flex items-center text-left">
-                                                {plan.description}
-                                            </p>
-                                        }
+                                        totalPrice={formattedTotal}
+                                        savings={billingCycle === "annual" ? "73%" : undefined}
+                                        description={plan.description}
                                         features={plan.features}
                                         excludedFeatures={plan.excludedFeatures}
-                                        buttonText="No disponible"
+                                        buttonText="Choose plan"
                                     />
                                 );
                             })

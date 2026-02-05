@@ -28,13 +28,13 @@ export function HeroBanner() {
 
                         <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white drop-shadow-2xl mb-4 md:mb-6 font-display leading-[0.95]">
                             Dejá de ahorrar,<br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5D5CDE] to-indigo-400">
+                            <span className="text-[#5D5CDE]">
                                 empezá a invertir.
                             </span>
                         </h1>
 
                         <p className="mx-auto max-w-[750px] text-gray-300 text-base sm:text-lg md:text-xl font-medium leading-relaxed mb-6 md:mb-8 md:px-6">
-                            Aprendé estrategias reales con la metodología de <span className="text-white font-bold">Fran Castro</span>. Contenido práctico y al grano, diseñado para proteger tu capital. Unite a la academia elegida por más de 1.000 inversores.
+                            Aprendé con la metodología práctica de <span className="text-white font-bold">Fran Castro</span>. Contenido 100% on-demand para proteger tu capital y dominar el mercado. Sin vueltas.
                         </p>
                     </div>
 
