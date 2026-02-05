@@ -34,7 +34,7 @@ export function TopBanner() {
         <div className="w-full bg-[#5D5CDE] text-white py-2.5 px-4 relative z-[501] shadow-lg overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-r from-[#5D5CDE] via-[#6e6df0] to-[#5D5CDE] animate-shimmer bg-[length:200%_100%] opacity-50" />
 
-            <div className="container mx-auto relative z-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-center">
+            <div className="container mx-auto relative z-10 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-center">
                 <div className="flex items-center gap-2">
                     <span className="flex h-2 w-2 relative">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
@@ -48,23 +48,23 @@ export function TopBanner() {
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1.5 font-display tabular-nums">
                         <div className="flex flex-col items-center">
-                            <span className="text-sm md:text-base font-black">{String(timeLeft.days).padStart(2, '0')}</span>
-                            <span className="text-[8px] uppercase font-bold opacity-70">Días</span>
+                            <span className="text-xs md:text-base font-black">{String(timeLeft.days).padStart(2, '0')}</span>
+                            <span className="text-[7px] md:text-[8px] uppercase font-bold opacity-70">Días</span>
                         </div>
-                        <span className="text-sm md:text-base font-black opacity-50">:</span>
+                        <span className="text-xs md:text-base font-black opacity-50">:</span>
                         <div className="flex flex-col items-center">
-                            <span className="text-sm md:text-base font-black">{String(timeLeft.hours).padStart(2, '0')}</span>
-                            <span className="text-[8px] uppercase font-bold opacity-70">Hrs</span>
+                            <span className="text-xs md:text-base font-black">{String(timeLeft.hours).padStart(2, '0')}</span>
+                            <span className="text-[7px] md:text-[8px] uppercase font-bold opacity-70">Hrs</span>
                         </div>
-                        <span className="text-sm md:text-base font-black opacity-50">:</span>
+                        <span className="text-xs md:text-base font-black opacity-50">:</span>
                         <div className="flex flex-col items-center">
-                            <span className="text-sm md:text-base font-black">{String(timeLeft.minutes).padStart(2, '0')}</span>
-                            <span className="text-[8px] uppercase font-bold opacity-70">Min</span>
+                            <span className="text-xs md:text-base font-black">{String(timeLeft.minutes).padStart(2, '0')}</span>
+                            <span className="text-[7px] md:text-[8px] uppercase font-bold opacity-70">Min</span>
                         </div>
-                        <span className="text-sm md:text-base font-black opacity-50">:</span>
+                        <span className="text-xs md:text-base font-black opacity-50">:</span>
                         <div className="flex flex-col items-center">
-                            <span className="text-sm md:text-base font-black">{String(timeLeft.seconds).padStart(2, '0')}</span>
-                            <span className="text-[8px] uppercase font-bold opacity-70">Seg</span>
+                            <span className="text-xs md:text-base font-black">{String(timeLeft.seconds).padStart(2, '0')}</span>
+                            <span className="text-[7px] md:text-[8px] uppercase font-bold opacity-70">Seg</span>
                         </div>
                     </div>
 

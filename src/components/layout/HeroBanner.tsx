@@ -15,7 +15,7 @@ export function HeroBanner() {
     return (
 
         <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-            <Container className="relative z-10 w-full flex flex-col items-center justify-center pt-32 md:pt-40">
+            <Container className="relative z-10 w-full flex flex-col items-center justify-center pt-24 md:pt-40">
                 <div className="flex flex-col items-center space-y-6 md:space-y-8 text-center px-4 md:px-0">
                     <div className="space-y-4 md:space-y-6 max-w-[900px]">
                         {/* High-Impact Badge */}

@@ -270,6 +270,7 @@ export default function PricingPage() {
                                             features={displayFeatures}
                                             excludedFeatures={staticPlan?.excludedFeatures || []}
                                             buttonText="Elegir plan"
+                                            installments={installmentsText}
                                             onAction={() => {
                                                 handlePurchase(bundle.title, finalPrice.toString(), undefined, bundle.id, billingCycle === "annual");
                                             }}
@@ -335,6 +336,7 @@ export default function PricingPage() {
                                         features={plan.features}
                                         excludedFeatures={plan.excludedFeatures}
                                         buttonText="Elegir plan"
+                                        installments={installmentsText}
                                     />
                                 );
                             })
