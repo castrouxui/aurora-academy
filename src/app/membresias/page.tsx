@@ -123,7 +123,7 @@ export default function PricingPage() {
                                         ? "bg-emerald-500 text-white shadow-lg"
                                         : "bg-white/10 text-gray-400"
                                 )}>
-                                    Ahorrá 17%
+                                    Ahorrá 25%
                                 </span>
                                 {billingCycle === "annual" && (
                                     <div className="absolute inset-0 bg-white rounded-xl -z-10 animate-in fade-in zoom-in-95 duration-200" />
@@ -159,7 +159,7 @@ export default function PricingPage() {
                                     let savingsBadge = undefined;
 
                                     if (billingCycle === "annual") {
-                                        finalPrice = basePrice * 10;
+                                        finalPrice = basePrice * 9;
                                         periodicity = "año";
                                         benefitBadge = "¡OFERTA LANZAMIENTO: 12 meses + 3 GRATIS!";
                                         savingsBadge = undefined;
@@ -292,7 +292,7 @@ export default function PricingPage() {
                                 let savingsBadge = undefined;
 
                                 if (billingCycle === "annual") {
-                                    finalPrice = basePrice * 10;
+                                    finalPrice = basePrice * 9;
                                     periodicity = "año";
                                     benefitBadge = "¡OFERTA LANZAMIENTO: 12 meses + 3 GRATIS!";
                                     savingsBadge = undefined;

@@ -41,7 +41,7 @@ export function TopBanner() {
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                     </span>
                     <span className="text-[11px] md:text-sm font-black tracking-wide uppercase">
-                        ¡Oferta de lanzamiento oficial! 17% OFF
+                        ¡Oferta de lanzamiento oficial! 25% OFF
                     </span>
                 </div>
 
