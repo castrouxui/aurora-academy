@@ -114,17 +114,13 @@ export function PricingCard({
                         <span className="text-lg md:text-xl font-bold text-gray-400">/mes</span>
                     </div>
 
-                    {/* Annual Billing Context & Installments Highlight - Rearranged for clarity */}
-                    {isAnnual && (
-                        <div className="mt-4 w-full p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex flex-col gap-1">
-                            {installments && (
-                                <div className="flex flex-col items-start">
-                                    <span className="text-xs text-emerald-300 font-bold uppercase tracking-wider mb-0.5">Financiación exclusiva</span>
-                                    <span className="text-sm md:text-base font-black text-emerald-400">
-                                        4 cuotas sin interés de {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(Number(price) / 4)}
-                                    </span>
-                                </div>
-                            )}
+                    {/* Annual Billing Context & Installments Highlight - Minimalist */}
+                    {isAnnual && installments && (
+                        <div className="mt-2 text-left">
+                            <p className="text-[13px] text-emerald-400 font-bold flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/60 animate-pulse" />
+                                4 cuotas sin interés de {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(Number(price) / 4)}
+                            </p>
                         </div>
                     )}
                 </div>
@@ -165,18 +161,7 @@ export function PricingCard({
                 <div className="space-y-10">
                     {/* Main Features */}
                     <div className="space-y-4">
-                        {/* 4 CUOTAS FIX - Key item for annual */}
-                        {isAnnual && installments && (
-                            <div className="flex items-start gap-4 group">
-                                <div className="mt-1 shrink-0">
-                                    <PricingCheckmark />
-                                </div>
-                                <div className="text-sm font-bold text-emerald-400 leading-snug">
-                                    4 cuotas sin interés de {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(Number(price) / 4)}
-                                </div>
-                            </div>
-                        )}
-
+                        {/* Features List */}
                         {features.map((feature, index) => (
                             <div key={index} className="flex items-start gap-4 group">
                                 <div className="mt-1 shrink-0">
