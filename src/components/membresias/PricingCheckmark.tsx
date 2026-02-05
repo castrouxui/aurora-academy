@@ -1,6 +1,6 @@
 export const PricingCheckmark = () => (
     <svg
-        className="h-5 w-5 text-emerald-400 shrink-0"
+        className="h-5 w-5 text-emerald-500 shrink-0 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]"
         fill="none"
         height="24"
         stroke="currentColor"

@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { title, price, userId, email, couponCode } = body;
+        const { title, price, userId, email, couponCode, isAnnual } = body;
         let { bundleId } = body;
         let finalPrice = price;
 

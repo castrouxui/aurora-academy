@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { title, price, quantity, userId, courseId, bundleId, couponCode } = body;
+        const { title, price, quantity, userId, courseId, bundleId, couponCode, isAnnual } = body;
         let finalPrice = price;
 
         const { prisma } = await import("@/lib/prisma");
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
 
         const preference = new Preference(client);
 
-        const preferenceBody = {
+        const preferenceBody: any = {
             items: [
                 {
                     id: bundleId || courseId || 'unknown',
@@ -129,6 +129,14 @@ export async function POST(req: NextRequest) {
             },
             notification_url: `${baseUrl}/api/webhooks/mercadopago`,
         };
+
+        // Configure 4 interest-free installments ONLY for annual plans
+        if (isAnnual) {
+            preferenceBody.payment_methods = {
+                installments: 4,
+                default_installments: 1
+            };
+        }
 
         const result = await preference.create({
             body: preferenceBody

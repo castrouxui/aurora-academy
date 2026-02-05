@@ -14,9 +14,10 @@ interface PaymentModalProps {
     courseId?: string;
     bundleId?: string;
     userId?: string;
+    isAnnual?: boolean; // Flag for annual subscriptions to enable installments
 }
 
-export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, courseId, bundleId, userId }: PaymentModalProps) {
+export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, courseId, bundleId, userId, isAnnual = false }: PaymentModalProps) {
     useBodyScrollLock(isOpen);
     const { data: session } = useSession();
     const router = useRouter();
@@ -133,7 +134,8 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             bundleId: bundleId,
                             userId: effectiveUserId,
                             email: mpEmail, // Send editable MP Email
-                            couponCode: appliedCoupon?.code // Send coupon code if applied
+                            couponCode: appliedCoupon?.code, // Send coupon code if applied
+                            isAnnual: isAnnual // Flag for installments configuration
                         }),
                     });
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { PricingCard } from "@/components/membresias/PricingCard";
 import { PricingCheckmark } from "@/components/membresias/PricingCheckmark";
+import { LeadMagnet } from "@/components/membresias/LeadMagnet";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
 import { Container } from "@/components/layout/Container";
@@ -11,6 +12,7 @@ import { CardsIcons } from "@/components/ui/CardsIcons";
 import { useSession } from "next-auth/react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { PLANS } from "@/constants/pricing";
+import { cn } from "@/lib/utils";
 
 export default function PricingPage() {
     const { data: session } = useSession();
@@ -20,7 +22,8 @@ export default function PricingPage() {
         title: "",
         price: "",
         courseId: undefined as string | undefined,
-        bundleId: undefined as string | undefined
+        bundleId: undefined as string | undefined,
+        isAnnual: false
     });
 
     // Dynamic State
@@ -45,7 +48,7 @@ export default function PricingPage() {
         fetchBundles();
     }, []);
 
-    const handlePurchase = (title: string, price: string, courseId?: string, bundleId?: string) => {
+    const handlePurchase = (title: string, price: string, courseId?: string, bundleId?: string, isAnnual?: boolean) => {
         if (!session) {
             setIsLoginModalOpen(true);
             return;
@@ -55,7 +58,8 @@ export default function PricingPage() {
             title,
             price,
             courseId,
-            bundleId
+            bundleId,
+            isAnnual: isAnnual || false
         });
         setIsPaymentModalOpen(true);
     };
@@ -68,15 +72,93 @@ export default function PricingPage() {
             <section className="relative overflow-hidden pt-36 pb-12">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
                 <Container className="relative z-10 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                    {/* Urgency Indicator - Enhanced for CRO */}
+                    <div className="inline-flex flex-col md:flex-row items-center gap-2 md:gap-3 bg-gradient-to-r from-red-500/15 via-orange-500/15 to-amber-500/15 border-2 border-orange-500/40 rounded-2xl px-6 py-3 mb-6 shadow-xl shadow-orange-500/20 backdrop-blur-sm">
+                        <div className="flex items-center gap-2">
+                            {/* Animated pulse dot */}
+                            <span className="relative flex h-3 w-3">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                            </span>
+
+                            {/* Timer icon */}
+                            <svg className="w-4 h-4 md:w-5 md:h-5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+
+                        <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2 text-center md:text-left">
+                            <span className="text-xs md:text-sm font-bold text-orange-200 uppercase tracking-wider">
+                                Oferta de febrero:
+                            </span>
+                            <span className="flex items-baseline gap-1.5">
+                                <span className="text-2xl md:text-3xl font-black text-white tabular-nums">
+                                    {(() => {
+                                        const now = new Date();
+                                        const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                                        const daysRemaining = Math.ceil((lastDayOfMonth.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                                        return daysRemaining > 0 ? daysRemaining : '0';
+                                    })()}
+                                </span>
+                                <span className="text-sm md:text-base font-bold text-orange-100">
+                                    {(() => {
+                                        const now = new Date();
+                                        const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                                        const daysRemaining = Math.ceil((lastDayOfMonth.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                                        return daysRemaining > 1 ? 'días restantes' : daysRemaining === 1 ? 'día restante' : '¡Última oportunidad!';
+                                    })()}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                         Evolucioná tu capital con el respaldo de expertos
                     </h1>
-                    <p className="text-lg leading-8 text-gray-300 max-w-2xl mx-auto mb-10">
+                    <p className="text-lg leading-8 text-gray-300 max-w-2xl mx-auto mb-3">
                         Tu hoja de ruta y acompañamiento diario en los mercados.
                         Desde tus primeros pasos hasta operar como un profesional.
                     </p>
+                    {/* Social Proof */}
+                    <p className="text-sm text-gray-400 mb-10">
+                        Sumate a los más de 1000 alumnos activos que ya están aprendiendo
+                    </p>
 
-                    {/* Billing Cycle Switch Hidden for Launch */}
+                    {/* Toggle with Enhanced Badge */}
+                    <div className="flex justify-center mt-8 mb-12">
+                        <div className="bg-[#1e2235] p-1 rounded-full flex items-center shadow-xl border border-white/5">
+                            <button
+                                onClick={() => setBillingCycle("monthly")}
+                                className={cn(
+                                    "px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300",
+                                    billingCycle === "monthly"
+                                        ? "bg-white text-black shadow-lg"
+                                        : "text-gray-400 hover:text-white"
+                                )}
+                            >
+                                Mensual
+                            </button>
+                            <button
+                                onClick={() => setBillingCycle("annual")}
+                                className={cn(
+                                    "px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2",
+                                    billingCycle === "annual"
+                                        ? "bg-white text-black shadow-lg"
+                                        : "text-gray-400 hover:text-white"
+                                )}
+                            >
+                                Anual
+                                <span className={cn(
+                                    "text-[9px] md:text-[10px] font-black px-2 py-1 rounded-md whitespace-nowrap",
+                                    billingCycle === "annual"
+                                        ? "bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg"
+                                        : "bg-white/10 text-gray-400"
+                                )}>
+                                    12 meses + 3 GRATIS
+                                </span>
+                            </button>
+                        </div>
+                    </div>
                 </Container>
             </section>
 
@@ -107,8 +189,8 @@ export default function PricingPage() {
                                     if (billingCycle === "annual") {
                                         finalPrice = basePrice * 10;
                                         periodicity = "año";
-                                        // benefitBadge removed to clean up visual clutter
-                                        savingsBadge = "AHORRÁS 3 MESES";
+                                        benefitBadge = "¡OFERTA LANZAMIENTO: 12 meses + 3 GRATIS!";
+                                        savingsBadge = undefined;
 
                                         // Installments logic: 4 cuotas sin interés
                                         const installmentAmount = finalPrice / 4;
@@ -121,7 +203,7 @@ export default function PricingPage() {
                                         installmentsText = `4 cuotas sin interés de ${formattedInstallment}`;
                                     }
 
-                                    // Feature Construction
+                                    // Feature Construction - Use 100% dynamic logic from DB for all plans
                                     let displayFeatures: (string | React.ReactNode)[] = [];
 
                                     // 1. INJECT FIXED BENEFITS (The "Marketing" ones)
@@ -184,8 +266,20 @@ export default function PricingPage() {
                                         displayFeatures.push(...newItems);
                                     }
 
-                                    // 4. APPEND STATIC EXCLUSIVE FEATURES (that might have been deduplicated)
-                                    // Removed 'Acceso a Comunidad de Inversores' per user request
+                                    // Calculate savings for display
+                                    const monthlyCost = basePrice * 12;
+                                    const savings = monthlyCost - finalPrice;
+                                    const formattedSavings = new Intl.NumberFormat("es-AR", {
+                                        style: "currency",
+                                        currency: "ARS",
+                                        maximumFractionDigits: 0
+                                    }).format(savings);
+
+                                    const formattedTotal = new Intl.NumberFormat("es-AR", {
+                                        style: "currency",
+                                        currency: "ARS",
+                                        maximumFractionDigits: 0
+                                    }).format(finalPrice);
 
                                     return (
                                         <PricingCard
@@ -198,6 +292,9 @@ export default function PricingPage() {
                                             benefitBadge={benefitBadge}
                                             savingsBadge={savingsBadge}
                                             installments={installmentsText}
+                                            isAnnual={billingCycle === "annual"}
+                                            totalPrice={billingCycle === "annual" ? formattedTotal : undefined}
+                                            savings={billingCycle === "annual" ? formattedSavings : undefined}
                                             // Use static special feature (Community Block) if available
                                             description={
                                                 <p className="text-gray-400 text-sm min-h-[40px] flex items-center text-left">
@@ -209,7 +306,7 @@ export default function PricingPage() {
                                             excludedFeatures={staticPlan?.excludedFeatures || []}
                                             buttonText="Suscribirme"
                                             onAction={() => {
-                                                handlePurchase(bundle.title, finalPrice.toString(), undefined, bundle.id);
+                                                handlePurchase(bundle.title, finalPrice.toString(), undefined, bundle.id, billingCycle === "annual");
                                             }}
                                         />
                                     );
@@ -231,8 +328,8 @@ export default function PricingPage() {
                                 if (billingCycle === "annual") {
                                     finalPrice = basePrice * 10;
                                     periodicity = "año";
-                                    // benefitBadge removed to clean up visual clutter
-                                    savingsBadge = "AHORRÁS 3 MESES";
+                                    benefitBadge = "¡OFERTA LANZAMIENTO: 12 meses + 3 GRATIS!";
+                                    savingsBadge = undefined;
 
                                     const installmentAmount = finalPrice / 4;
                                     const formattedInstallment = new Intl.NumberFormat("es-AR", {
@@ -243,6 +340,20 @@ export default function PricingPage() {
 
                                     installmentsText = `4 cuotas sin interés de ${formattedInstallment}`;
                                 }
+
+                                const monthlyCost = basePrice * 12;
+                                const savings = monthlyCost - finalPrice;
+                                const formattedSavings = new Intl.NumberFormat("es-AR", {
+                                    style: "currency",
+                                    currency: "ARS",
+                                    maximumFractionDigits: 0
+                                }).format(savings);
+
+                                const formattedTotal = new Intl.NumberFormat("es-AR", {
+                                    style: "currency",
+                                    currency: "ARS",
+                                    maximumFractionDigits: 0
+                                }).format(finalPrice);
 
                                 return (
                                     <PricingCard
@@ -255,6 +366,9 @@ export default function PricingPage() {
                                         benefitBadge={benefitBadge}
                                         savingsBadge={savingsBadge}
                                         installments={installmentsText}
+                                        isAnnual={billingCycle === "annual"}
+                                        totalPrice={billingCycle === "annual" ? formattedTotal : undefined}
+                                        savings={billingCycle === "annual" ? formattedSavings : undefined}
                                         description={
                                             <p className="text-gray-400 text-sm min-h-[40px] flex items-center text-left">
                                                 {plan.description}
@@ -289,6 +403,9 @@ export default function PricingPage() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Lead Magnet Section - Moved to Bottom as Safety Net */}
+                    <LeadMagnet />
                 </Container>
             </section>
 
@@ -302,6 +419,7 @@ export default function PricingPage() {
                         coursePrice={selectedCourse.price}
                         courseId={selectedCourse.courseId}
                         bundleId={selectedCourse.bundleId}
+                        isAnnual={selectedCourse.isAnnual}
                     />
                 )
             }

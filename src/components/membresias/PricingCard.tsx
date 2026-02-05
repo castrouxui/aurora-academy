@@ -1,7 +1,10 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PricingCheckmark } from "./PricingCheckmark";
-import { Lock, CreditCard } from "lucide-react";
+import { Lock, CreditCard, ChevronDown } from "lucide-react";
+import { useState } from "react";
 
 interface PricingCardProps {
     title: string;
@@ -14,8 +17,14 @@ interface PricingCardProps {
     tag?: string;
     buttonText?: string;
     onAction?: () => void;
-    className?: string; // Allow custom classes
+    className?: string;
     specialFeature?: { title: string; description: string };
+    benefitBadge?: string;
+    savingsBadge?: string;
+    installments?: string;
+    isAnnual?: boolean;
+    totalPrice?: string;
+    savings?: string;
 }
 
 export function PricingCard({
@@ -31,15 +40,22 @@ export function PricingCard({
     onAction,
     className,
     specialFeature,
-    benefitBadge, // Internal badge: "13 meses al precio de 10" (Green Solid)
-    savingsBadge, // External floating badge: "AHORRÁS 3 MESES" (Dark Gray)
-    installments, // "4 cuotas sin interés..."
-}: PricingCardProps & { benefitBadge?: string; savingsBadge?: string; installments?: string }) {
+    benefitBadge,
+    savingsBadge,
+    installments,
+    isAnnual = false,
+    totalPrice,
+    savings,
+}: PricingCardProps) {
+    const [showAllFeatures, setShowAllFeatures] = useState(false);
+    const MOBILE_VISIBLE_FEATURES = 3;
 
     return (
         <div
             className={cn(
-                "relative flex flex-col rounded-[20px] md:rounded-[24px] border p-4 md:p-6 shadow-xl transition-all duration-300 hover:scale-[1.01] h-full",
+                "relative flex flex-col rounded-[20px] md:rounded-[24px] border shadow-xl transition-all duration-300 hover:scale-[1.01] h-full",
+                // Reduced mobile padding for above-the-fold optimization
+                "p-4 pb-5 md:p-6",
                 isRecommended
                     ? "border-white/20 bg-[#10141d]"
                     : "border-white/10 bg-[#10141d] hover:border-white/20",
@@ -58,50 +74,96 @@ export function PricingCard({
             {/* Recommended Tag (Top Right) */}
             {(isRecommended || tag) && (
                 <div className="absolute top-4 right-4 md:top-5 md:right-5">
-                    <span className="rounded-full bg-gradient-to-r from-[#5D5CDE] to-[#9233EA] px-2.5 py-0.5 md:px-3 md:py-1 text-[9px] md:text-[10px] font-bold text-white uppercase tracking-wider shadow-lg border border-white/10">
+                    <span className="rounded-full bg-gradient-to-r from-[#5D5CDE] to-[#9233EA] px-3 py-1.5 md:px-4 md:py-2 text-[10px] md:text-[11px] font-bold text-white uppercase tracking-wider shadow-lg shadow-purple-900/50 border border-white/20 animate-pulse">
                         {tag || "Recomendado"}
                     </span>
                 </div>
             )}
 
-            <div className="mb-4 text-left mt-2">
+            <div className="mb-3 md:mb-4 text-left mt-2">
                 <div className="flex flex-col gap-1 mb-1">
                     <h3 className="text-xl font-bold text-white">{title}</h3>
                     {/* Internal Benefit Badge (Solid Emerald) */}
                     {benefitBadge && (
-                        <span className="inline-block w-fit rounded-lg bg-emerald-600 border border-emerald-500 px-3 py-1 text-xs font-bold text-white uppercase tracking-wide shadow-lg shadow-emerald-900/20">
+                        <span className="inline-block w-fit rounded-lg bg-emerald-600 border border-emerald-500 px-3 py-1.5 text-[11px] md:text-xs font-bold text-white uppercase tracking-wide shadow-lg shadow-emerald-900/30">
                             {benefitBadge}
                         </span>
                     )}
                 </div>
 
-                <div className="flex items-baseline gap-1 mt-2">
-                    <span className="text-3xl font-black tracking-tighter text-white">
-                        {new Intl.NumberFormat("es-AR", {
-                            style: "currency",
-                            currency: "ARS",
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0
-                        }).format(Number(price.replace(/[^0-9]/g, "")))}
-                    </span>
-                    <span className="text-sm font-medium text-gray-400">
-                        / {periodicity}
-                    </span>
-                </div>
+                {/* Pricing Display - Different hierarchy for Annual */}
+                {isAnnual && installments ? (
+                    <div className="mt-3">
+                        {/* Primary: Installments (Largest) */}
+                        <div className="flex items-baseline gap-2">
+                            <CreditCard className="w-5 h-5 md:w-6 md:h-6 text-emerald-400 shrink-0" />
+                            <span className="text-2xl md:text-3xl font-black tracking-tight text-white leading-none">
+                                {installments}
+                            </span>
+                        </div>
+                        {/* Secondary: Total + Savings (Smaller) */}
+                        <div className="mt-2 text-xs md:text-sm text-gray-400 font-medium">
+                            Total: <span className="text-white font-bold">{totalPrice}</span> anual
+                            {savings && (
+                                <span className="ml-2 text-emerald-400 font-bold">
+                                    (Ahorrás {savings})
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex items-baseline gap-1 mt-2">
+                        <span className="text-3xl font-black tracking-tighter text-white">
+                            {new Intl.NumberFormat("es-AR", {
+                                style: "currency",
+                                currency: "ARS",
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            }).format(Number(price.replace(/[^0-9]/g, "")))}
+                        </span>
+                        <span className="text-sm font-medium text-gray-400">
+                            / {periodicity}
+                        </span>
+                    </div>
+                )}
                 <div className="mt-3 text-sm text-gray-400 font-medium border-t border-white/5 pt-3 leading-snug">
                     {description}
                 </div>
             </div>
 
             <ul className="mb-auto space-y-3 flex-1">
-                {features.map((feature, index) => (
-                    <li key={`inc-${index}`} className="flex items-start gap-3">
-                        <PricingCheckmark />
-                        <span className="text-sm font-medium text-gray-100 leading-tight w-full">
-                            {feature}
-                        </span>
+                {features.map((feature, index) => {
+                    // On mobile, show only first 3 features unless expanded
+                    const isHiddenOnMobile = index >= MOBILE_VISIBLE_FEATURES && !showAllFeatures;
+
+                    return (
+                        <li
+                            key={`inc-${index}`}
+                            className={cn(
+                                "flex items-start gap-3",
+                                isHiddenOnMobile && "hidden md:flex"
+                            )}
+                        >
+                            <PricingCheckmark />
+                            <span className="text-sm font-medium text-gray-100 leading-tight w-full">
+                                {feature}
+                            </span>
+                        </li>
+                    );
+                })}
+
+                {/* Mobile "Show All" Button */}
+                {features.length > MOBILE_VISIBLE_FEATURES && !showAllFeatures && (
+                    <li className="md:hidden">
+                        <button
+                            onClick={() => setShowAllFeatures(true)}
+                            className="text-xs text-gray-400 hover:text-white transition-colors flex items-center gap-1 font-medium"
+                        >
+                            Ver todos los beneficios ({features.length - MOBILE_VISIBLE_FEATURES} más)
+                            <ChevronDown className="w-3 h-3" />
+                        </button>
                     </li>
-                ))}
+                )}
 
                 {excludedFeatures.map((feature, index) => (
                     <li key={`exc-${index}`} className="flex items-start gap-3 opacity-40">
@@ -127,26 +189,18 @@ export function PricingCard({
                 </div>
             )}
 
-            <div className="mt-6">
+            <div className="mt-4 md:mt-6">
                 <Button
                     onClick={onAction}
                     className={cn(
-                        "w-full h-14 text-sm font-bold transition-all duration-300 rounded-xl",
+                        "w-full h-12 md:h-14 text-sm font-bold transition-all duration-300 rounded-xl relative overflow-hidden",
                         isRecommended
-                            ? "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
-                            : "bg-transparent border border-white/20 hover:bg-white hover:text-black text-white"
+                            ? "bg-gradient-to-r from-[#5D5CDE] via-[#7B68EE] to-[#9233EA] hover:from-[#4B4AC0] hover:via-[#6B58DE] hover:to-[#8123DA] text-white shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 hover:scale-[1.02] animate-shimmer"
+                            : "bg-transparent border-2 border-white/40 hover:border-white hover:bg-white/5 text-white hover:scale-[1.01] shadow-sm hover:shadow-md"
                     )}
                 >
                     {buttonText}
                 </Button>
-                {installments && (
-                    <div className="mt-3 flex items-center justify-center gap-2 text-gray-300/90 font-medium">
-                        <CreditCard className="w-3.5 h-3.5" />
-                        <p className="text-xs">
-                            {installments}
-                        </p>
-                    </div>
-                )}
             </div>
         </div>
     );
