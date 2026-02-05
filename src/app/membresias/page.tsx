@@ -6,7 +6,7 @@ import { PricingCheckmark } from "@/components/membresias/PricingCheckmark";
 import { LeadMagnet } from "@/components/membresias/LeadMagnet";
 import { Testimonials } from "@/components/membresias/Testimonials";
 import { FAQ } from "@/components/membresias/FAQ";
-import { Footer } from "@/components/membresias/Footer";
+import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
 import { Container } from "@/components/layout/Container";
@@ -95,7 +95,7 @@ export default function PricingPage() {
             </div>
 
             {/* Hero Section */}
-            <section className="relative overflow-hidden pt-32 md:pt-40 pb-16 md:pb-20">
+            <section className="relative overflow-hidden pt-32 md:pt-40 pb-12 md:pb-14">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
                 <Container className="relative z-10 text-center">
                     <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
@@ -152,7 +152,7 @@ export default function PricingPage() {
             <section className="relative z-10 pb-16">
                 <Container>
                     {/* Dynamic Bundle Grid */}
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-12 items-stretch max-w-7xl mx-auto mt-2">
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-12 items-stretch max-w-7xl mx-auto mt-0">
                         {/* mt-6 added to give space for the new top floating badges */}
                         {bundles.length > 0 ? (
                             // Render based on Dynamic Bundles from DB

@@ -16,15 +16,15 @@ const FAQ_ITEMS: FAQItem[] = [
     },
     {
         question: "¿Cómo funcionan las cuotas sin interés?",
-        answer: "Los planes anuales se pueden dividir en 4 cuotas sin interés a través de Mercado Pago. Solo pagas el total anual dividido en 4 pagos mensuales, sin costos adicionales.",
+        answer: "Los planes anuales se pueden dividir en 4 cuotas fijas sin interés a través de Mercado Pago. Solo pagas el total anual dividido en 4 pagos mensuales, sin costos adicionales.",
     },
     {
         question: "¿Puedo cambiar de plan después?",
-        answer: "Sí, puedes hacer upgrade a un plan superior en cualquier momento. Se te cobrará la diferencia proporcional y mantendrás todos los beneficios del nuevo plan inmediatamente.",
+        answer: "Sí, puedes hacer upgrade a un plan superior en cualquier momento. Se te cobrará la diferencia de manera inmediata y mantendrás todos los beneficios del nuevo plan al instante. El downgrade solo está disponible al momento de renovación.",
     },
     {
-        question: "¿Hay garantía de devolución?",
-        answer: "Ofrecemos garantía de satisfacción de 7 días. Si no estás conforme con el contenido, te devolvemos el 100% de tu dinero sin preguntas.",
+        question: "¿Cuál es la política de reembolso?",
+        answer: "Ofrecemos garantía de satisfacción de 24 horas. Si no estás conforme con el contenido, te devolvemos el 100% de tu dinero dentro de las primeras 24 horas desde la compra.",
     },
 ];
 

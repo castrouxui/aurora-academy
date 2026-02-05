@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from "next/font/google";
+import { Manrope, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/auth/Providers";
 import { Toaster } from "sonner";
@@ -8,6 +8,11 @@ import { Analytics } from "@vercel/analytics/react";
 const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
 });
 
 export const viewport: Viewport = {
@@ -64,7 +69,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${manrope.variable} font-sans antialiased`}
+        className={`${manrope.variable} ${spaceGrotesk.variable} font-sans antialiased`}
       >
         <Providers>
           {children}

@@ -260,7 +260,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
                                     <ShieldCheck size={16} className="text-green-400" />
                                 </div>
-                                <span className="text-sm">Garantía de satisfacción de 24 hs.</span>
+                                <span className="text-sm">Garantía de reembolso estricta de 24 hs.</span>
                             </div>
                             <div className="flex items-start gap-3 text-gray-300">
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
