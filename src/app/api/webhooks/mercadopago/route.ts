@@ -10,7 +10,7 @@ const getClient = () => {
     if (!process.env.MP_ACCESS_TOKEN) {
         throw new Error("MP_ACCESS_TOKEN is missing");
     }
-    return new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+    return new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN.trim().replace(/^Bearer\s+/i, '') });
 };
 
 export async function POST(request: Request) {

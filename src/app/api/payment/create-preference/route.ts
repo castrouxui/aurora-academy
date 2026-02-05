@@ -2,8 +2,9 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Initialize the client
+const token = (process.env.MP_ACCESS_TOKEN || '').trim().replace(/^Bearer\s+/i, '');
 const client = new MercadoPagoConfig({
-    accessToken: process.env.MP_ACCESS_TOKEN || ''
+    accessToken: token
 });
 
 export async function POST(req: NextRequest) {

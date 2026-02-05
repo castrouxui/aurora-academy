@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { isEligibleForRefund } from "@/lib/refund";
 
 const client = new MercadoPagoConfig({
-    accessToken: process.env.MP_ACCESS_TOKEN || ""
+    accessToken: (process.env.MP_ACCESS_TOKEN || "").trim().replace(/^Bearer\s+/i, '')
 });
 
 export async function POST(req: NextRequest) {

@@ -16,7 +16,7 @@ export async function POST() {
     }
 
     try {
-        const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+        const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN.trim().replace(/^Bearer\s+/i, '') });
         const payment = new Payment(client);
         const preApproval = new PreApproval(client);
         const email = session.user.email.toLowerCase().trim();
