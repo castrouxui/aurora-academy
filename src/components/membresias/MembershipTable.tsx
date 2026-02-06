@@ -171,7 +171,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
 
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch max-w-7xl mx-auto scoll-mt-32">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start max-w-7xl mx-auto scoll-mt-32">
             {displayItems.map((plan, idx) => {
                 // Determine styling based on hierarchy
                 // Portfolio logic: Hero
@@ -181,7 +181,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                     <div
                         key={idx}
                         className={cn(
-                            "relative flex flex-col rounded-3xl p-8 transition-all duration-300 h-full",
+                            "relative flex flex-col rounded-3xl p-8 transition-all duration-300",
                             // Mobile reordering: Portfolio first
                             isPortfolio ? "order-first md:order-none" : "order-last md:order-none",
                             // Styles
@@ -286,8 +286,8 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                 // 1. Section Title
                                 if (typeof feature === 'string' && feature.startsWith("Todo lo del Plan")) {
                                     return (
-                                        <div key={i} className="mt-2 mb-6 pb-2 border-b border-white/5">
-                                            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
+                                        <div key={i} className="mt-2 mb-4">
+                                            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-widest leading-none">
                                                 {feature}
                                             </p>
                                         </div>
@@ -297,7 +297,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                 // 2. React Node (Pill) - Render directly without checkmark
                                 if (typeof feature !== 'string' || React.isValidElement(feature)) {
                                     return (
-                                        <div key={i} className="mb-6 last:mb-0">
+                                        <div key={i} className="mb-4 last:mb-0">
                                             {feature}
                                         </div>
                                     );
@@ -305,7 +305,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
 
                                 // 3. Standard Feature
                                 return (
-                                    <div key={i} className="flex items-start gap-3 group mb-6 last:mb-0">
+                                    <div key={i} className="flex items-start gap-3 group mb-4 last:mb-0">
                                         <div className="mt-0.5 shrink-0">
                                             <PricingCheckmark />
                                         </div>
@@ -317,7 +317,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                             })}
 
                             {plan.excludedFeatures && plan.excludedFeatures.length > 0 && (
-                                <div className="mt-8 space-y-6 pt-8 border-t border-white/5 opacity-40 hover:opacity-100 transition-opacity duration-300">
+                                <div className="mt-6 space-y-4 pt-6 border-t border-white/5 opacity-40 hover:opacity-100 transition-opacity duration-300">
                                     {plan.excludedFeatures.map((feature: any, i: number) => (
                                         <div key={`ex-${i}`} className="flex items-start gap-3 text-gray-500">
                                             <div className="mt-0.5 shrink-0">
