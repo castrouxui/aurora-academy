@@ -17,11 +17,14 @@ interface LoginModalProps {
     onClose: () => void;
     redirectUrl?: string; // Optional URL to redirect after login
     view?: 'default' | 'purchase'; // Customize text context
+    initialMode?: 'login' | 'register';
 }
 
-export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default' }: LoginModalProps) {
+export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default', initialMode = 'login' }: LoginModalProps) {
     useBodyScrollLock(isOpen);
-    const [mode, setMode] = useState<'login' | 'register'>(view === 'purchase' ? 'register' : 'login');
+    const [mode, setMode] = useState<'login' | 'register'>(
+        initialMode ? initialMode : (view === 'purchase' ? 'register' : 'login')
+    );
     const [providers, setProviders] = useState<Record<LiteralUnion<string>, ClientSafeProvider> | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 

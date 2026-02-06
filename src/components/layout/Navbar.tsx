@@ -16,6 +16,7 @@ import { TopBanner } from "./TopBanner";
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   // Mega Menu State
@@ -72,25 +73,17 @@ export function Navbar() {
             {/* Desktop Navigation - Centered Mega Menu */}
             <div className="hidden md:flex items-center gap-2">
 
-              {/* 1. Membresías */}
-              <Link href="/membresias" className={getLinkClass("/membresias")}>
-                Membresías
-              </Link>
-
-              {/* 2. Cursos */}
+              {/* 1. Cursos */}
               <Link href="/cursos" className={getLinkClass("/cursos")}>
                 Cursos
               </Link>
 
-              {/* 3. Empresas - PROXIMAMENTE */}
-              <div className="relative group cursor-default">
-                <button className="text-sm font-medium text-gray-500 flex items-center gap-2 px-4 py-2 cursor-default hover:text-gray-400 transition-colors">
-                  Empresas
-                  <span className="text-[10px] font-bold bg-white/5 text-gray-400 border border-white/10 px-2 py-0.5 rounded-full whitespace-nowrap">Próximamente</span>
-                </button>
-              </div>
+              {/* 2. Membresías */}
+              <Link href="/membresias" className={getLinkClass("/membresias")}>
+                Membresías
+              </Link>
 
-              {/* 4. Nosotros */}
+              {/* 3. Nosotros */}
               <Link href="/nosotros" className={getLinkClass("/nosotros")}>
                 Nosotros
               </Link>
@@ -167,9 +160,27 @@ export function Navbar() {
                   )}
                 </div>
               ) : (
-                <Button variant="default" onClick={openLoginModal} className="bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold rounded-xl shadow-lg shiny-hover px-6 h-10 text-sm active:scale-95 transition-all">
-                  Acceder
-                </Button>
+                <div className="flex items-center rounded-xl border border-emerald-500/50 bg-transparent overflow-hidden h-10 transition-all hover:border-emerald-400">
+                  <button
+                    onClick={() => {
+                      setAuthMode('login');
+                      setIsLoginModalOpen(true);
+                    }}
+                    className="px-4 h-full text-xs font-bold text-white hover:bg-emerald-500/10 transition-colors"
+                  >
+                    Iniciar sesión
+                  </button>
+                  <div className="h-4 w-px bg-emerald-500/30"></div>
+                  <button
+                    onClick={() => {
+                      setAuthMode('register');
+                      setIsLoginModalOpen(true);
+                    }}
+                    className="px-4 h-full text-xs font-bold text-white hover:bg-emerald-500/10 transition-colors"
+                  >
+                    Registrarse
+                  </button>
+                </div>
               )}
             </div>
 
@@ -377,7 +388,7 @@ export function Navbar() {
 
 
       {/* Login Modal */}
-      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} initialMode={authMode} />
     </>
   );
 }

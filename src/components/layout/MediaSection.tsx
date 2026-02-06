@@ -108,9 +108,9 @@ export function MediaSection() {
                                     <Image
                                         src={item.imageUrl}
                                         alt={item.name}
-                                        className={`object-contain transition-opacity ${item.keepOriginal
-                                            ? "opacity-100"
-                                            : "filter brightness-0 invert opacity-70 group-hover:opacity-100"
+                                        className={`object-contain transition-all duration-300 ${item.keepOriginal
+                                            ? "opacity-40 group-hover:opacity-100"
+                                            : "filter brightness-0 invert opacity-40 group-hover:opacity-100"
                                             }`}
                                         fill
                                         sizes="(max-width: 768px) 50vw, 25vw"

@@ -81,7 +81,7 @@ const TESTIMONIALS: Testimonial[] = [
 
 function ReviewCard({ review }: { review: Testimonial }) {
     return (
-        <figure className="relative w-full cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-[#131722] p-8 transition-all duration-300 hover:border-white/20 hover:bg-[#1A1F2E]">
+        <figure className="relative w-full cursor-pointer overflow-hidden rounded-3xl border border-white/5 bg-[#0D0D0D] p-8 transition-all duration-300 hover:border-white/10 hover:bg-[#151515]">
             <div className="flex flex-row items-center gap-4 mb-6">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/10">
                     <Image
@@ -99,7 +99,7 @@ function ReviewCard({ review }: { review: Testimonial }) {
                     {/* <p className="text-xs font-medium text-white/40">{review.role}</p> */}
                 </div>
             </div>
-            <blockquote className="text-base leading-relaxed text-gray-400">
+            <blockquote className="text-base leading-relaxed text-gray-400 font-light">
                 {review.text}
             </blockquote>
         </figure>
@@ -134,13 +134,35 @@ export function TestimonialsSection() {
     return (
         <section className="py-24 bg-[#0B0F19] relative overflow-hidden">
             <Container className="relative z-10">
-                <div className="text-center mb-12 md:mb-20 max-w-3xl mx-auto">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">
+                <div className="text-center mb-16 md:mb-24 max-w-3xl mx-auto">
+                    <h2 className="text-3xl md:text-5xl font-black font-display text-white mb-6 tracking-tight">
                         ¿Qué dicen nuestros <span className="text-[#5D5CDE]">alumnos</span>?
                     </h2>
-                    <p className="text-lg md:text-xl text-gray-400">
+                    <p className="text-lg md:text-xl text-gray-400 font-light leading-relaxed">
                         La comunidad de Aurora Academy crece día a día. Descubre por qué miles de estudiantes eligen nuestra plataforma.
                     </p>
+
+                    {/* Social Proof Block */}
+                    <div className="mt-8 flex flex-col items-center justify-center gap-3">
+                        <div className="flex items-center -space-x-3">
+                            {[...Array(5)].map((_, i) => (
+                                <div key={i} className="w-10 h-10 rounded-full border-2 border-[#0B0F19] bg-gray-800 overflow-hidden relative">
+                                    <Image
+                                        src={`https://ui-avatars.com/api/?name=User+${i}&background=random`}
+                                        alt="User"
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                            ))}
+                            <div className="w-10 h-10 rounded-full border-2 border-[#0B0F19] bg-[#5D5CDE] flex items-center justify-center text-[10px] font-bold text-white">
+                                +1k
+                            </div>
+                        </div>
+                        <p className="text-sm font-bold text-white tracking-wide">
+                            Unite a <span className="text-[#5D5CDE]">+1.000 alumnos activos</span>
+                        </p>
+                    </div>
                 </div>
 
                 <div className="relative h-[800px] max-h-[80vh] overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">

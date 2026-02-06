@@ -180,7 +180,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                         key={idx}
                         className={cn(
                             "relative flex flex-col h-full rounded-3xl p-8 transition-all duration-300",
-                            isPortfolio ? "order-first md:order-none" : "order-last md:order-none",
+                            // Removed order-first/last to respect natural sorted order (Inicial -> Elite -> Portfolio)
                             isPortfolio
                                 ? "bg-[#0F1115] border-[1.5px] border-[#5D5CDE]/50 shadow-2xl shadow-indigo-500/10 z-10 pb-10"
                                 : "bg-[#0A0A0A]/50 border border-white/5 hover:border-white/10 opacity-90 hover:opacity-100 pb-10"
@@ -264,7 +264,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                         return (
                                             <div key={i} className="mt-2 mb-3">
                                                 <p className={cn(
-                                                    "text-[10px] font-bold text-white uppercase tracking-widest leading-relaxed",
+                                                    "text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-relaxed",
                                                     isPortfolio ? "max-w-[90%]" : ""
                                                 )}>
                                                     {displayParams}

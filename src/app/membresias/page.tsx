@@ -31,7 +31,7 @@ export default function PricingPage() {
     // Dynamic State
     const [bundles, setBundles] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
+    const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
 
     useEffect(() => {
         async function fetchBundles() {
