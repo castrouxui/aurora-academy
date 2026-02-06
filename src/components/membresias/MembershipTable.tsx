@@ -278,8 +278,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                             </div>
                         </div>
 
-                        {/* Divider */}
-                        <div className="h-px w-full bg-white/5 mb-8" />
+
 
                         {/* Features */}
                         <div className="flex-1 flex flex-col justify-start">
