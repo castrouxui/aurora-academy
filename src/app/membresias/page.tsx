@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { PricingCard } from "@/components/membresias/PricingCard";
-import { PricingCheckmark } from "@/components/membresias/PricingCheckmark";
+import { MembershipTable } from "@/components/membresias/MembershipTable";
 import { LeadMagnet } from "@/components/membresias/LeadMagnet";
 import { Testimonials } from "@/components/membresias/Testimonials";
 import { FAQ } from "@/components/membresias/FAQ";
@@ -33,27 +32,6 @@ export default function PricingPage() {
     const [bundles, setBundles] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
-
-    const PERSONA_DATA = [
-        {
-            label: "Inicial",
-            description: "Ideal para dar tus primeros pasos. El escalón de entrada para dominar los conceptos base.",
-            authorityBadge: false,
-            doubtRemoval: undefined
-        },
-        {
-            label: "Elite",
-            description: "Para traders que buscan consistencia e IA. Operá activamente con actualización constante.",
-            authorityBadge: false,
-            doubtRemoval: undefined
-        },
-        {
-            label: "Portfolio",
-            description: "La experiencia definitiva para profesionales. Networking de alto nivel y visión macro.",
-            authorityBadge: true,
-            doubtRemoval: undefined
-        }
-    ];
 
     useEffect(() => {
         async function fetchBundles() {
@@ -159,219 +137,13 @@ export default function PricingPage() {
             <section className="relative z-10 pb-16">
                 <Container>
                     {/* Dynamic Bundle Grid */}
-                    <div id="precios" className="grid grid-cols-1 gap-5 md:grid-cols-3 mb-12 items-stretch max-w-7xl mx-auto mt-0 scroll-mt-32">
-                        {/* mt-6 added to give space for the new top floating badges */}
-                        {bundles.length > 0 ? (
-                            // Render based on Dynamic Bundles from DB
-                            bundles
-                                .sort((a, b) => parseFloat(a.price) - parseFloat(b.price))
-                                .map((bundle, index, sortedArr) => {
-                                    // Try to match with metadata from PLANS
-                                    const staticPlan = PLANS[index];
-                                    const isRecommended = staticPlan?.isRecommended || index === 1;
-                                    const tag = staticPlan?.tag || (index === 1 ? "EL MÁS BUSCADO" : undefined);
-
-                                    // Price Logic (Simulation for Localhost)
-                                    const basePrice = parseFloat(bundle.price);
-                                    let finalPrice = basePrice;
-                                    let periodicity = "mes";
-                                    let installmentsText = undefined;
-                                    let benefitBadge = undefined;
-                                    let savingsBadge = undefined;
-
-                                    if (billingCycle === "annual") {
-                                        finalPrice = basePrice * 9;
-                                        periodicity = "año";
-                                        benefitBadge = "¡OFERTA LANZAMIENTO: 12 meses + 3 GRATIS!";
-                                        savingsBadge = undefined;
-
-                                        // Installments logic: 3 cuotas sin interés (Standard)
-                                        const installmentAmount = finalPrice / 3;
-                                        const formattedInstallment = new Intl.NumberFormat("es-AR", {
-                                            style: "currency",
-                                            currency: "ARS",
-                                            maximumFractionDigits: 0
-                                        }).format(installmentAmount);
-
-                                        installmentsText = `3 cuotas sin interés de ${formattedInstallment}`;
-                                    }
-
-                                    // Feature Construction - Use 100% dynamic logic from DB for all plans
-                                    let displayFeatures: (string | React.ReactNode)[] = [];
-
-                                    // 1. INJECT FIXED BENEFITS (The "Marketing" ones)
-                                    // Specifically for Trader & Portfolio: "1 curso nuevo cada 15 días"
-                                    if (index >= 1) {
-                                        displayFeatures.push(
-                                            <span key={`benefit-15d-${bundle.id}`} className="inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-lg border border-emerald-400/20">
-                                                <span>🔥</span> 1 curso nuevo cada 15 días
-                                            </span>
-                                        );
-                                    }
-
-                                    // 2. DYNAMIC COURSES (The "Real" content)
-                                    // Logic for "Everything in previous plan"
-                                    const currentCourseTitles = bundle.courses.map((c: any) => c.title);
-
-                                    if (index > 0) {
-                                        const prevBundle = sortedArr[index - 1];
-                                        const prevCourseTitles = prevBundle.courses.map((c: any) => c.title);
-
-                                        // Check if current bundle has all courses of previous bundle
-                                        const hasAllPrevious = prevCourseTitles.length > 0 &&
-                                            prevCourseTitles.every((t: string) => currentCourseTitles.includes(t));
-
-                                        if (hasAllPrevious) {
-                                            displayFeatures.push(`Todo lo del Plan ${prevBundle.title}`);
-                                            // Add only the NEW courses
-                                            const newCourses = currentCourseTitles.filter((t: string) => !prevCourseTitles.includes(t));
-                                            displayFeatures.push(...newCourses);
-                                        } else {
-                                            // No full overlap, just list everything
-                                            displayFeatures.push(...currentCourseTitles);
-                                        }
-                                    } else {
-                                        // First plan, list all
-                                        displayFeatures.push(...currentCourseTitles);
-                                    }
-
-                                    // 3. DYNAMIC ITEMS (Other benefits from DB)
-                                    if (bundle.items && bundle.items.length > 0) {
-                                        const items = bundle.items.map((i: any) => {
-                                            let name = i.name;
-                                            // Format "Canal" or "Telegram" items
-                                            if ((name.toLowerCase().includes("canal") || name.toLowerCase().includes("telegram")) && !name.toLowerCase().startsWith("acceso a")) {
-                                                return `Acceso a ${name}`;
-                                            }
-                                            return name;
-                                        });
-
-                                        // Simple deduplication logic
-                                        const existingStrings = displayFeatures.filter(f => typeof f === 'string') as string[];
-                                        // Filter dynamic items that are already in the list OR are "Acceso a Comunidad de Inversores"
-                                        const newItems = items.filter((item: string) => {
-                                            if (existingStrings.includes(item)) return false;
-                                            // Specific check for Comunidad to ensure it stays LAST as per user request (it's in static features)
-                                            if (item.toLowerCase().includes("comunidad de inversores")) return false;
-                                            return true;
-                                        });
-
-                                        displayFeatures.push(...newItems);
-                                    }
-
-                                    // Calculate savings for display
-                                    const monthlyCost = basePrice * 12;
-                                    const savings = monthlyCost - finalPrice;
-                                    const formattedSavings = new Intl.NumberFormat("es-AR", {
-                                        style: "currency",
-                                        currency: "ARS",
-                                        maximumFractionDigits: 0
-                                    }).format(savings);
-
-                                    const formattedTotal = new Intl.NumberFormat("es-AR", {
-                                        style: "currency",
-                                        currency: "ARS",
-                                        maximumFractionDigits: 0
-                                    }).format(finalPrice);
-
-                                    return (
-                                        <PricingCard
-                                            key={bundle.id}
-                                            title={bundle.title}
-                                            price={finalPrice.toString()}
-                                            periodicity={periodicity}
-                                            tag={tag}
-                                            isRecommended={isRecommended}
-                                            isAnnual={billingCycle === "annual"}
-                                            totalPrice={formattedTotal}
-                                            savings={billingCycle === "annual" ? `${Math.round(((basePrice * 12 - finalPrice) / (basePrice * 12)) * 100)}%` : undefined}
-                                            description={
-                                                PERSONA_DATA[index]?.description || staticPlan?.description || bundle.description || "Todo lo que necesitás para empezar"
-                                            }
-                                            features={displayFeatures}
-                                            excludedFeatures={staticPlan?.excludedFeatures || []}
-                                            buttonText="Elegir plan"
-                                            installments={installmentsText}
-                                            originalMonthlyPrice={basePrice.toString()}
-                                            // Persona Props
-                                            persona={PERSONA_DATA[index]}
-                                            authorityBadge={PERSONA_DATA[index]?.authorityBadge}
-                                            doubtRemoval={PERSONA_DATA[index]?.doubtRemoval}
-                                            onAction={() => {
-                                                handlePurchase(bundle.title, finalPrice.toString(), undefined, bundle.id, billingCycle === "annual");
-                                            }}
-                                        />
-                                    );
-                                })
-                        ) : (
-                            // Fallback to PLANS (This renders when bundles is empty, e.g. localhost without data)
-                            PLANS.map((plan, index) => {
-                                // Fallback Logic for Price - Need to strip "$" and "." to parse number
-                                // e.g. "$54.900" -> 54900
-                                const rawPriceString = plan.price.replace(/[^0-9]/g, '');
-                                const basePrice = parseFloat(rawPriceString);
-
-                                let finalPrice = basePrice;
-                                let periodicity = "mes";
-                                let installmentsText = undefined;
-                                let benefitBadge = undefined;
-                                let savingsBadge = undefined;
-
-                                if (billingCycle === "annual") {
-                                    finalPrice = basePrice * 9;
-                                    periodicity = "año";
-                                    benefitBadge = "¡OFERTA LANZAMIENTO: 12 meses + 3 GRATIS!";
-                                    savingsBadge = undefined;
-
-                                    const installmentAmount = finalPrice / 3;
-                                    const formattedInstallment = new Intl.NumberFormat("es-AR", {
-                                        style: "currency",
-                                        currency: "ARS",
-                                        maximumFractionDigits: 0
-                                    }).format(installmentAmount);
-
-                                    installmentsText = `3 cuotas sin interés de ${formattedInstallment}`;
-                                }
-
-                                const monthlyCost = basePrice * 12;
-                                const savings = monthlyCost - finalPrice;
-                                const formattedSavings = new Intl.NumberFormat("es-AR", {
-                                    style: "currency",
-                                    currency: "ARS",
-                                    maximumFractionDigits: 0
-                                }).format(savings);
-
-                                const formattedTotal = new Intl.NumberFormat("es-AR", {
-                                    style: "currency",
-                                    currency: "ARS",
-                                    maximumFractionDigits: 0
-                                }).format(finalPrice);
-
-                                return (
-                                    <PricingCard
-                                        key={index}
-                                        title={plan.title}
-                                        price={finalPrice.toString()}
-                                        periodicity={periodicity}
-                                        tag={plan.tag || undefined}
-                                        isRecommended={plan.isRecommended}
-                                        isAnnual={billingCycle === "annual"}
-                                        totalPrice={formattedTotal}
-                                        savings={billingCycle === "annual" ? `${Math.round(((basePrice * 12 - finalPrice) / (basePrice * 12)) * 100)}%` : undefined}
-                                        description={PERSONA_DATA[index]?.description || plan.description}
-                                        features={plan.features}
-                                        excludedFeatures={plan.excludedFeatures}
-                                        buttonText="Elegir plan"
-                                        installments={installmentsText}
-                                        originalMonthlyPrice={basePrice.toString()}
-                                        // Persona Props
-                                        persona={PERSONA_DATA[index]}
-                                        authorityBadge={PERSONA_DATA[index]?.authorityBadge}
-                                        doubtRemoval={PERSONA_DATA[index]?.doubtRemoval}
-                                    />
-                                );
-                            })
-                        )}
+                    {/* Pricing Table Component */}
+                    <div id="precios" className="mb-20 scroll-mt-32">
+                        <MembershipTable
+                            bundles={bundles}
+                            billingCycle={billingCycle}
+                            onPurchase={handlePurchase}
+                        />
                     </div>
 
                     {/* Pricing Footer Info Centered matches Platzi */}
