@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Users, BookOpen, TrendingUp, ArrowRight, ShoppingCart, RefreshCw } from "lucide-react";
+import { DollarSign, Users, BookOpen, TrendingUp, ArrowRight, ShoppingCart, RefreshCw, Wrench, Plus } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function AdminDashboard() {
     const [stats, setStats] = useState<any>({
@@ -136,16 +137,25 @@ export default function AdminDashboard() {
 
     return (
         <div className="space-y-8">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 pb-2">
                 <div>
-                    <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-                    <div className="text-gray-400 mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
-                        <span>Bienvenido al panel de control de Aurora Academy.</span>
-                        {lastUpdated && <span className="text-xs bg-white/10 px-2 py-0.5 rounded text-emerald-400 border border-emerald-500/20 w-fit">{timeAgo}</span>}
-                    </div>
+                    <h1 className="text-4xl font-black text-white tracking-tight">Dashboard</h1>
+                    <p className="text-gray-400 mt-2 max-w-2xl">
+                        Bienvenido al panel de control de Aurora Academy. Gestiona registros, ventas y accesos desde un solo lugar.
+                    </p>
                 </div>
-                <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                    {lastUpdated && (
+                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/5 border border-emerald-500/10 text-emerald-400 text-xs font-medium mr-2">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                            {timeAgo}
+                        </div>
+                    )}
                     <FixLegacySubsButton />
+                    <GrantAccessModal onSuccess={refreshDashboard} />
                     <RecoveryButton onRefresh={refreshDashboard} />
                 </div>
             </div>
@@ -266,99 +276,83 @@ export default function AdminDashboard() {
 
 function RecoveryButton({ onRefresh }: { onRefresh: () => void }) {
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<null | { recovered: number, message: string }>(null);
 
     const handleRecover = async () => {
         setLoading(true);
-        setResult(null);
         try {
             const res = await fetch('/api/admin/recover', { method: 'POST' });
             const data = await res.json();
             if (res.ok) {
-                setResult({
-                    recovered: data.recovered,
-                    message: data.recovered > 0
-                        ? `¡Éxito! ${data.recovered} ventas recuperadas.`
-                        : "Todo al día."
-                });
                 if (data.recovered > 0) {
-                    onRefresh(); // Use soft refresh instead of reload
+                    toast.success(`¡Éxito! ${data.recovered} ventas recuperadas.`);
+                    onRefresh();
+                } else {
+                    toast.info("Todo al día. No se encontraron nuevas ventas.");
                 }
             } else {
-                setResult({ recovered: 0, message: `Error: ${data.error || "Fallo del servidor"}` });
+                toast.error(`Error: ${data.error || "Fallo del servidor"}`);
             }
         } catch (error) {
-            setResult({ recovered: 0, message: "Error de conexión" });
+            toast.error("Error de conexión al intentar recuperar datos.");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-            {result && (
-                <span className={`text-sm font-medium ${result.message.includes("Error") ? "text-red-400" : "text-green-400"} animate-in fade-in`}>
-                    {result.message}
-                </span>
+        <Button
+            onClick={handleRecover}
+            disabled={loading}
+            variant="outline"
+            className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white transition-all bg-transparent"
+        >
+            {loading ? (
+                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+                <RefreshCw className="w-4 h-4 mr-2" />
             )}
-            <GrantAccessModal onSuccess={onRefresh} />
-            <Button
-                onClick={handleRecover}
-                disabled={loading}
-                variant="outline"
-                className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-white"
-            >
-                {loading ? (
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-                ) : (
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                )}
-                Actualizar datos
-            </Button>
-        </div>
+            Sincronizar Pagos
+        </Button>
     );
 }
 
 
 function FixLegacySubsButton() {
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<null | { message: string }>(null);
 
     const handleFix = async () => {
         if (!confirm("Esto buscará compras de membresías antiguas sin acceso y les creará una suscripción manual por 30 días. ¿Continuar?")) return;
 
         setLoading(true);
-        setResult(null);
         try {
             const res = await fetch('/api/maintenance/fix-legacy-subs', { method: 'POST' });
             const data = await res.json();
             if (res.ok) {
-                setResult({ message: `Resultado: ${data.message}` });
+                toast.success(`Resultado: ${data.message}`);
             } else {
-                setResult({ message: `Error: ${data.error || "Fallo del servidor"}` });
+                toast.error(`Error: ${data.error || "Fallo del servidor"}`);
             }
         } catch (error) {
-            setResult({ message: "Error de conexión" });
+            toast.error("Error de conexión");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            {result && (
-                <span className={`text-sm font-medium ${result.message.includes("Error") ? "text-red-400" : "text-amber-400"} animate-in fade-in`}>
-                    {result.message}
-                </span>
+        <Button
+            onClick={handleFix}
+            disabled={loading}
+            variant="ghost"
+            className="text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 border border-amber-500/10 transition-all font-medium"
+        >
+            {loading ? (
+                <Wrench className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+                <Wrench className="w-4 h-4 mr-2" />
             )}
-            <Button
-                onClick={handleFix}
-                disabled={loading}
-                className="bg-amber-600/20 hover:bg-amber-600/40 text-amber-500 border border-amber-500/20"
-            >
-                {loading ? "Procesando..." : "🛠️ Arreglar Subs Legadas"}
-            </Button>
-        </div>
+            Reparar Suscripciones
+        </Button>
     );
 }
 
@@ -439,9 +433,9 @@ function GrantAccessModal({ onSuccess }: { onSuccess?: () => void }) {
         <>
             <Button
                 onClick={() => setIsOpen(true)}
-                className="bg-[#5D5CDE] hover:bg-[#4b4ac0] text-white gap-2"
+                className="bg-[#5D5CDE] hover:bg-[#4b4ac0] text-white gap-2 font-bold shadow-lg shadow-[#5D5CDE]/20"
             >
-                <Users size={16} /> Otorgar Acceso
+                <Plus size={16} /> Otorgar Acceso
             </Button>
 
             {isOpen && (
