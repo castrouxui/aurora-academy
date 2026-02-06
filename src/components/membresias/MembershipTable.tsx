@@ -216,10 +216,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                 <div className="flex items-center gap-2">
                                     <div className="flex items-baseline gap-1">
                                         <span className="text-lg font-medium text-gray-400">$</span>
-                                        <span className={cn(
-                                            "font-display font-bold tracking-tighter text-white",
-                                            isPortfolio ? "text-5xl" : "text-4xl"
-                                        )}>
+                                        <span className="font-display font-bold tracking-tighter text-white text-4xl">
                                             {new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 }).format(plan.finalPrice / (billingCycle === 'annual' ? 12 : 1))}
                                         </span>
                                         <span className="text-sm font-medium text-gray-500">/mes</span>
