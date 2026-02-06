@@ -182,7 +182,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                             "relative flex flex-col h-full rounded-3xl p-8 transition-all duration-300",
                             isPortfolio ? "order-first md:order-none" : "order-last md:order-none",
                             isPortfolio
-                                ? "bg-[#0F1115] border-[1.5px] border-[#5D5CDE]/50 shadow-2xl shadow-indigo-500/10 z-10 md:-mt-6 md:-mb-6 md:py-10 pb-12"
+                                ? "bg-[#0F1115] border-[1.5px] border-[#5D5CDE]/50 shadow-2xl shadow-indigo-500/10 z-10 pb-10"
                                 : "bg-[#0A0A0A]/50 border border-white/5 hover:border-white/10 opacity-90 hover:opacity-100 pb-10"
                         )}
                     >
@@ -304,7 +304,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                 })}
 
                                 {plan.excludedFeatures && plan.excludedFeatures.length > 0 && (
-                                    <div className="mt-4 space-y-3 pt-4 border-t border-white/5 opacity-40 hover:opacity-100 transition-opacity duration-300">
+                                    <div className="mt-4 space-y-3 opacity-40 hover:opacity-100 transition-opacity duration-300">
                                         {plan.excludedFeatures.map((feature: any, i: number) => (
                                             <div key={`ex-${i}`} className="flex items-start gap-3 text-gray-500">
                                                 <div className="mt-0.5 shrink-0">
