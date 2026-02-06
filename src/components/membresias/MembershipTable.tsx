@@ -265,9 +265,9 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                             : feature;
 
                                         return (
-                                            <div key={i} className="mt-2 mb-4">
+                                            <div key={i} className="mt-2 mb-3">
                                                 <p className={cn(
-                                                    "text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-relaxed",
+                                                    "text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-relaxed",
                                                     isPortfolio ? "max-w-[90%]" : ""
                                                 )}>
                                                     {displayParams}
@@ -279,7 +279,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                     // 2. React Node (Pill)
                                     if (typeof feature !== 'string' || React.isValidElement(feature)) {
                                         return (
-                                            <div key={i} className="mb-4 last:mb-0">
+                                            <div key={i} className="mb-3 last:mb-0">
                                                 {/* Ensure pill text is always black if it's the specific green pill, though style is likely passed in object. 
                                                     We assume component passed in `feature` has correct styles, but we verified it earlier. */}
                                                 {feature}
@@ -291,7 +291,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                     return (
                                         <div key={i} className={cn(
                                             "flex items-start gap-3 group last:mb-0",
-                                            isPortfolio ? "mb-5" : "mb-4" // More air for Portfolio items
+                                            "mb-3" // Consistent tight spacing for all plans
                                         )}>
                                             <div className="mt-0.5 shrink-0">
                                                 <PricingCheckmark />
@@ -304,7 +304,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                 })}
 
                                 {plan.excludedFeatures && plan.excludedFeatures.length > 0 && (
-                                    <div className="mt-6 space-y-4 pt-6 border-t border-white/5 opacity-40 hover:opacity-100 transition-opacity duration-300">
+                                    <div className="mt-4 space-y-3 pt-4 border-t border-white/5 opacity-40 hover:opacity-100 transition-opacity duration-300">
                                         {plan.excludedFeatures.map((feature: any, i: number) => (
                                             <div key={`ex-${i}`} className="flex items-start gap-3 text-gray-500">
                                                 <div className="mt-0.5 shrink-0">
