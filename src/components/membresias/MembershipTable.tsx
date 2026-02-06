@@ -105,7 +105,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
             if (index > 0) {
                 const prevBundle = arr[index - 1];
                 // Forced header as the very first item
-                displayFeatures.push(`Todo lo del Plan ${prevBundle.title}`);
+                displayFeatures.push(`Todo lo del Plan ${prevBundle.title} y:`);
             }
 
             // 2. HIGHLIGHT: Fixed Extras (Marketing) - "1 curso nuevo..."
@@ -261,7 +261,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                     if (typeof feature === 'string' && feature.startsWith("Todo lo del Plan")) {
                                         // Specific text replacement for Portfolio
                                         const displayParams = isPortfolio
-                                            ? "Toda la potencia del Plan Elite (Análisis, Comunidad, Herramientas) más estos beneficios exclusivos:"
+                                            ? "Todo lo del Plan Elite y:"
                                             : feature;
 
                                         return (
