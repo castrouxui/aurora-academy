@@ -26,25 +26,25 @@ const MEDIA_ITEMS: MediaItem[] = [
         id: 2,
         name: "Clarín",
         url: "https://www.clarin.com/economia/acciones-impulsaran-nuevo-bolsa-ano_0_S1TWMmt7f.html",
-        imageUrl: "https://www.clarin.com/img/Clarin_logotag.png"
+        // imageUrl: "https://www.clarin.com/img/Clarin_logotag.png"
     },
     {
         id: 3,
         name: "Puntal",
         url: "https://www.puntal.com.ar/la-bolsa-cayo-83-arrastrada-las-companias-energeticas-y-los-bancos-n12860",
-        imageUrl: "https://www.puntal.com.ar/assets/img/270/logo.svg"
+        // imageUrl: "https://www.puntal.com.ar/assets/img/270/logo.svg"
     },
     {
         id: 4,
         name: "Ámbito",
         url: "https://www.ambito.com/economia/ypf/los-adrs-argentinos-cotizan-peor-que-antes-del-acuerdo-n5125634",
-        imageUrl: "https://framerusercontent.com/images/ps358zmTTaElane2Q4iCcme0M.png"
+        // imageUrl: "https://framerusercontent.com/images/ps358zmTTaElane2Q4iCcme0M.png"
     },
     {
         id: 5,
         name: "BAE Negocios",
         url: "https://www.baenegocios.com/personas/Francisco-Castro-0",
-        imageUrl: "https://assets.baenegocios.com/__export/1506700689000/sites/cronica/arte/diariobae/logos/LogoBAE.svg"
+        // imageUrl: "https://assets.baenegocios.com/__export/1506700689000/sites/cronica/arte/diariobae/logos/LogoBAE.svg"
     },
     {
         id: 6,

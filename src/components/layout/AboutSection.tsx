@@ -22,7 +22,7 @@ export function AboutSection() {
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5D5CDE]/10 border border-[#5D5CDE]/20 text-[#5D5CDE] text-xs font-bold uppercase tracking-wider mb-6">
                                 <span>La Misión</span>
                             </div>
-                            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-display text-white leading-[0.9] tracking-tighter mb-8">
+                            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black font-display text-white leading-[1.1] tracking-tighter mb-8">
                                 Democratizando el <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5D5CDE] to-indigo-400">Trading Profesional</span>
                             </h1>
