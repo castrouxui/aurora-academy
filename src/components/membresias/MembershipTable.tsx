@@ -267,7 +267,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                         return (
                                             <div key={i} className="mt-2 mb-3">
                                                 <p className={cn(
-                                                    "text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-relaxed",
+                                                    "text-[10px] font-bold text-white uppercase tracking-widest leading-relaxed",
                                                     isPortfolio ? "max-w-[90%]" : ""
                                                 )}>
                                                     {displayParams}
