@@ -6,7 +6,7 @@ import { Instagram, Send } from "lucide-react";
 
 export function AboutSection() {
     return (
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0B0F19] pt-40 md:pt-48 pb-20">
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0B0F19] pt-32 md:pt-40 pb-20">
             {/* Background Effects */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#5D5CDE]/10 rounded-full blur-[120px] -mr-40 -mt-40 mix-blend-screen" />
@@ -22,7 +22,7 @@ export function AboutSection() {
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#5D5CDE]/10 border border-[#5D5CDE]/20 text-[#5D5CDE] text-xs font-bold uppercase tracking-wider mb-6">
                                 <span>La Misión</span>
                             </div>
-                            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black font-display text-white leading-[0.95] tracking-tighter mb-8">
+                            <h1 className="text-5xl md:text-7xl font-black font-display text-white leading-[0.95] tracking-tighter mb-8 max-w-4xl">
                                 Democratizando el <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5D5CDE] to-indigo-400">Trading Profesional</span>
                             </h1>

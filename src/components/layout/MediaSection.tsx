@@ -26,19 +26,19 @@ const MEDIA_ITEMS: MediaItem[] = [
         id: 2,
         name: "Clarín",
         url: "https://www.clarin.com/economia/acciones-impulsaran-nuevo-bolsa-ano_0_S1TWMmt7f.html",
-        imageUrl: "/logos/clarin.png"
+        imageUrl: "/logos/clarin.svg"
     },
     {
         id: 3,
         name: "Puntal",
         url: "https://www.puntal.com.ar/la-bolsa-cayo-83-arrastrada-las-companias-energeticas-y-los-bancos-n12860",
-        // imageUrl: "/logos/puntal.svg"
+        imageUrl: "/logos/puntal.svg"
     },
     {
         id: 4,
         name: "Ámbito",
         url: "https://www.ambito.com/economia/ypf/los-adrs-argentinos-cotizan-peor-que-antes-del-acuerdo-n5125634",
-        imageUrl: "/logos/ambito.png"
+        // imageUrl: "/logos/ambito.png"
     },
     {
         id: 5,
