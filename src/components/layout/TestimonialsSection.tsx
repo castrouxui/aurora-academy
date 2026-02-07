@@ -152,6 +152,7 @@ export function TestimonialsSection() {
                                         alt="User"
                                         fill
                                         className="object-cover"
+                                        unoptimized
                                     />
                                 </div>
                             ))}

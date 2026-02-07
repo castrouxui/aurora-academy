@@ -1,1 +1,9 @@
-File not found: /v1/AUTH_mw/wikipedia-commons-local-public.e0/e/e0/Ambito_financ_logo.svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50">
+  <style>
+    .text { fill: #009fe3; font-family: Arial, sans-serif; font-weight: bold; }
+    .dot { fill: #ffc20e; }
+  </style>
+  <text x="10" y="35" font-size="32" class="text">ámbito</text>
+  <circle cx="120" cy="30" r="3" class="dot" />
+  <text x="126" y="35" font-size="32" class="text">com</text>
+</svg>

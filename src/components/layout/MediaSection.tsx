@@ -38,13 +38,13 @@ const MEDIA_ITEMS: MediaItem[] = [
         id: 4,
         name: "Ámbito",
         url: "https://www.ambito.com/economia/ypf/los-adrs-argentinos-cotizan-peor-que-antes-del-acuerdo-n5125634",
-        // imageUrl: "/logos/ambito.png"
+        imageUrl: "/logos/ambito.svg"
     },
     {
         id: 5,
         name: "BAE Negocios",
         url: "https://www.baenegocios.com/personas/Francisco-Castro-0",
-        // imageUrl: "/logos/bae.svg"
+        imageUrl: "/logos/bae.svg"
     },
     {
         id: 6,
