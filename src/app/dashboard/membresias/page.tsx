@@ -38,7 +38,7 @@ export default function MyMembershipsPage() {
         bundleId: ""
     });
 
-    const [isAnnual, setIsAnnual] = useState(true);
+    const [isAnnual, setIsAnnual] = useState(false);
     const [bundles, setBundles] = useState<any[]>([]);
 
     const plansRef = useRef<HTMLDivElement>(null);

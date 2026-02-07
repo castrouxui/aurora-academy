@@ -198,16 +198,29 @@ export function PricingCard({
                     {/* Main Features */}
                     <div className="space-y-4">
                         {/* Features List */}
-                        {features.map((feature, index) => (
-                            <div key={index} className="flex items-start gap-4 group">
-                                <div className="mt-1 shrink-0">
-                                    <PricingCheckmark />
+                        {features.map((feature, index) => {
+                            // Check for "Bridge Text" (Todo lo del plan...)
+                            if (typeof feature === 'string' && feature.startsWith("Todo lo del Plan")) {
+                                return (
+                                    <div key={index} className="pt-2 pb-1">
+                                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-relaxed">
+                                            {feature}
+                                        </p>
+                                    </div>
+                                );
+                            }
+
+                            return (
+                                <div key={index} className="flex items-start gap-4 group">
+                                    <div className="mt-1 shrink-0">
+                                        <PricingCheckmark />
+                                    </div>
+                                    <div className="text-sm font-medium text-gray-300 leading-snug text-left">
+                                        {feature}
+                                    </div>
                                 </div>
-                                <div className="text-sm font-medium text-gray-300 leading-snug">
-                                    {feature}
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
 
                     {/* Excluded Features */}

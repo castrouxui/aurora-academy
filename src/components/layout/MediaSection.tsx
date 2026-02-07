@@ -26,25 +26,25 @@ const MEDIA_ITEMS: MediaItem[] = [
         id: 2,
         name: "Clarín",
         url: "https://www.clarin.com/economia/acciones-impulsaran-nuevo-bolsa-ano_0_S1TWMmt7f.html",
-        // imageUrl: "https://www.clarin.com/img/Clarin_logotag.png"
+        imageUrl: "/logos/clarin.png"
     },
     {
         id: 3,
         name: "Puntal",
         url: "https://www.puntal.com.ar/la-bolsa-cayo-83-arrastrada-las-companias-energeticas-y-los-bancos-n12860",
-        // imageUrl: "https://www.puntal.com.ar/assets/img/270/logo.svg"
+        // imageUrl: "/logos/puntal.svg"
     },
     {
         id: 4,
         name: "Ámbito",
         url: "https://www.ambito.com/economia/ypf/los-adrs-argentinos-cotizan-peor-que-antes-del-acuerdo-n5125634",
-        // imageUrl: "https://framerusercontent.com/images/ps358zmTTaElane2Q4iCcme0M.png"
+        imageUrl: "/logos/ambito.png"
     },
     {
         id: 5,
         name: "BAE Negocios",
         url: "https://www.baenegocios.com/personas/Francisco-Castro-0",
-        // imageUrl: "https://assets.baenegocios.com/__export/1506700689000/sites/cronica/arte/diariobae/logos/LogoBAE.svg"
+        // imageUrl: "/logos/bae.svg"
     },
     {
         id: 6,
@@ -101,7 +101,7 @@ export function MediaSection() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => handleItemClick(e, item)}
-                            className="group relative flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                            className="group relative flex flex-col items-center justify-center p-8 bg-[#0D0D0D] border border-white/5 rounded-2xl hover:bg-[#151515] hover:border-white/10 transition-all duration-300 hover:-translate-y-1 cursor-pointer shadow-lg hover:shadow-xl"
                         >
                             <div className="h-16 w-full relative flex items-center justify-center mb-4">
                                 {item.imageUrl ? (
