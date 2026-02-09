@@ -53,7 +53,7 @@ export async function GET(req: Request) {
         });
 
         // --- SUBSCRIPTION STATS ---
-        const subscriptions = await prisma.subscription.findMany({
+        const subscriptionsResult = await prisma.subscription.findMany({
             where: startDate ? {
                 updatedAt: { gte: startDate }
             } : {},
@@ -61,6 +61,10 @@ export async function GET(req: Request) {
                 user: { select: { email: true } }
             }
         });
+
+        // Exclude internal/test emails from churn metrics
+        const EXCLUDED_EMAILS = ['castrouxui@gmail.com'];
+        const subscriptions = subscriptionsResult.filter(s => !s.user?.email || !EXCLUDED_EMAILS.includes(s.user.email));
 
         const totalSubs = subscriptions.length;
         const activeSubs = subscriptions.filter(s => s.status === 'authorized').length;
@@ -75,9 +79,10 @@ export async function GET(req: Request) {
                 active: activeSubs,
                 cancelled: cancelledSubs,
                 churnRate: churnRate,
-                cancelledEmails: cancelledSubsList.map(s => s.user.email)
+                cancelledEmails: cancelledSubsList.map(s => s.user?.email)
             }
         });
+
     } catch (error) {
         console.error("[SALES_GET]", error);
         return new NextResponse("Internal Error", { status: 500 });

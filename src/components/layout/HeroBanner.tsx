@@ -2,18 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { Container } from "@/components/layout/Container";
-import { getRegisteredUserCount } from "@/actions/user";
+import { getRegisteredUserCount, getReviewAvatars } from "@/actions/user";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LoginModal } from "@/components/auth/LoginModal";
 
 export function HeroBanner() {
     const [userCount, setUserCount] = useState<number | null>(null);
+    const [avatars, setAvatars] = useState<string[]>([]);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
     useEffect(() => {
         getRegisteredUserCount().then(count => {
             setUserCount(count);
+        });
+        getReviewAvatars().then((imgs: string[]) => {
+            setAvatars(imgs.slice(0, 4));
         });
     }, []);
 
@@ -26,12 +30,21 @@ export function HeroBanner() {
             <Container className="relative z-10 w-full flex flex-col items-center justify-center pt-40 md:pt-48">
                 <div className="flex flex-col items-center space-y-6 md:space-y-8 text-center px-4 md:px-0">
                     <div className="space-y-4 md:space-y-6 max-w-[900px]">
-                        {/* High-Impact Badge */}
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm animate-in fade-in slide-in-from-top-4 duration-1000">
-                            <span className="text-yellow-500 text-sm">⭐</span>
-                            <span className="text-xs md:text-sm font-bold text-gray-300 tracking-wide">
-                                Comunidad de {userCount !== null ? userCount : '...'} alumnos reales
-                            </span>
+                        {/* High-Impact Social Proof Pill */}
+                        <div className="inline-flex items-center gap-4 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-1000">
+                            <div className="flex -space-x-3">
+                                {avatars.length > 0 ? avatars.map((src, i) => (
+                                    <div key={i} className="w-8 h-8 rounded-full border-2 border-[#0B0F19] overflow-hidden bg-gray-800">
+                                        <img src={src} alt="Student" className="w-full h-full object-cover" />
+                                    </div>
+                                )) : (
+                                    <div className="w-8 h-8 rounded-full border-2 border-[#0B0F19] bg-gray-800 animate-pulse" />
+                                )}
+                            </div>
+                            <div className="flex flex-col items-start leading-none">
+                                <span className="text-white font-bold text-sm">+{userCount || '...'}</span>
+                                <span className="text-gray-400 text-[9px] font-bold uppercase tracking-wider">Estudiantes Activos</span>
+                            </div>
                         </div>
 
                         <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white drop-shadow-2xl mb-4 md:mb-6 font-display leading-[0.95]">

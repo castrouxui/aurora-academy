@@ -17,7 +17,7 @@ export function TrustBar() {
     const items = [
         {
             icon: <Users size={16} strokeWidth={1} className="text-gray-400" />,
-            text: `${userCount !== null ? userCount : '...'} Alumnos Reales`
+            text: `+${userCount !== null ? userCount : '...'} Estudiantes Activos`
         },
         {
             icon: <CreditCard size={16} strokeWidth={1} className="text-gray-400" />,

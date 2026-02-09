@@ -322,7 +322,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                         <span className="text-[10px] text-yellow-400">★★★★★</span>
                                     </div>
                                     <p className="text-xs text-gray-400 leading-snug">
-                                        Elegido por <span className="text-white font-bold">{userCount} alumnos</span>
+                                        Elegido por <span className="text-white font-bold">{userCount} Estudiantes Activos</span>
                                     </p>
                                 </div>
                             </div>
