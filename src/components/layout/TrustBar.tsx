@@ -1,21 +1,31 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Container } from "./Container";
 import { Users, CreditCard, ShieldCheck } from "lucide-react";
+import { getRegisteredUserCount } from "@/actions/user";
 
 export function TrustBar() {
+    const [userCount, setUserCount] = useState<number | null>(null);
+
+    useEffect(() => {
+        getRegisteredUserCount().then(count => {
+            setUserCount(count);
+        });
+    }, []);
+
     const items = [
         {
             icon: <Users size={16} strokeWidth={1} className="text-gray-400" />,
-            text: "+1000 Alumnos"
+            text: `+${userCount || '1000'} Alumnos Reales`
         },
         {
             icon: <CreditCard size={16} strokeWidth={1} className="text-gray-400" />,
-            text: "3 Cuotas Fijas Sin Interés"
+            text: "3 Cuotas Sin Interés"
         },
         {
             icon: <ShieldCheck size={16} strokeWidth={1} className="text-gray-400" />,
-            text: "Garantía 24hs"
+            text: "Garantía 7 días"
         }
     ];
 
@@ -29,7 +39,7 @@ export function TrustBar() {
                                 {item.icon}
                             </div>
                             <span className="text-xs md:text-sm font-medium text-gray-400 group-hover:text-white transition-colors tracking-tight">
-                                [{item.text}]
+                                {item.text}
                             </span>
                             {index < items.length - 1 && (
                                 <div className="hidden md:block h-3 w-px bg-white/10 ml-8 lg:ml-12" />

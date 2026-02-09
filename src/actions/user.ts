@@ -1,6 +1,5 @@
-"use server";
-
 import { prisma } from "@/lib/prisma";
+import { TESTIMONIALS } from "@/constants/testimonials";
 
 export async function getRegisteredUserCount() {
     try {
@@ -34,9 +33,18 @@ export async function getReviewAvatars() {
 
         // Extract images and remove duplicates/nulls
         const images = Array.from(new Set(reviews.map(r => r.user.image).filter(Boolean)));
-        return images as string[];
+
+        // If we have enough real DB avatars, use them
+        if (images.length >= 4) {
+            return images as string[];
+        }
+
+        // Otherwise mix with real testimonial images
+        const testimonialImages = TESTIMONIALS.map(t => t.image);
+        return Array.from(new Set([...images, ...testimonialImages])) as string[];
     } catch (error) {
         console.error("Error fetching review avatars:", error);
-        return [];
+        // Fallback to real testimonial images instead of empty array
+        return TESTIMONIALS.map(t => t.image);
     }
 }

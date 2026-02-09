@@ -7,8 +7,8 @@ import { getRegisteredUserCount, getReviewAvatars } from "@/actions/user";
 export async function StatsStrip() {
     const userCount = await getRegisteredUserCount();
     const avatars = await getReviewAvatars();
-    // Ensure we have at least 4 avatars, fill with placeholders if needed
-    const displayAvatars = avatars.length >= 4 ? avatars.slice(0, 4) : [...avatars, ...Array(4 - avatars.length).fill(null)].map((url, i) => url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`);
+    // Use the fetched avatars (which already include testimonials as fallback in the action)
+    const displayAvatars = avatars.slice(0, 4);
 
     return (
         <section className="bg-black border-y border-white/10 py-20 relative z-20 overflow-hidden">

@@ -79,11 +79,11 @@ export function TestimonialsSection() {
                     {/* Social Proof Block */}
                     <div className="mt-8 flex flex-col items-center justify-center gap-3">
                         <div className="flex items-center -space-x-3">
-                            {[...Array(5)].map((_, i) => (
+                            {TESTIMONIALS.slice(0, 5).map((t, i) => (
                                 <div key={i} className="w-10 h-10 rounded-full border-2 border-[#0B0F19] bg-gray-800 overflow-hidden relative">
                                     <Image
-                                        src={`https://ui-avatars.com/api/?name=User+${i}&background=random`}
-                                        alt="User"
+                                        src={t.image}
+                                        alt={t.author}
                                         fill
                                         className="object-cover"
                                         unoptimized

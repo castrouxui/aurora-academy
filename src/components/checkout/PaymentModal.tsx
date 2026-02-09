@@ -309,8 +309,8 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                         <img key={i} className="w-9 h-9 rounded-full border-2 border-[#0D0F13] object-cover" src={img} alt="Student" />
                                     )) : (
                                         <>
-                                            <img className="w-9 h-9 rounded-full border-2 border-[#0D0F13]" src="https://ui-avatars.com/api/?name=Marcos+L&background=random" alt="Student" />
-                                            <img className="w-9 h-9 rounded-full border-2 border-[#0D0F13]" src="https://ui-avatars.com/api/?name=Sofia+R&background=random" alt="Student" />
+                                            <img className="w-9 h-9 rounded-full border-2 border-[#0D0F13] object-cover" src={TESTIMONIALS[0].image} alt="Student" />
+                                            <img className="w-9 h-9 rounded-full border-2 border-[#0D0F13] object-cover" src={TESTIMONIALS[1].image} alt="Student" />
                                         </>
                                     )}
                                     <div className="w-9 h-9 rounded-full border-2 border-[#0D0F13] bg-[#1e2235] flex items-center justify-center text-[10px] font-bold text-white">+1k</div>

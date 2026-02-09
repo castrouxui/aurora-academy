@@ -17,7 +17,7 @@ function XIcon({ className }: { className?: string }) {
 export async function Footer() {
     const userCount = await getRegisteredUserCount();
     const avatars = await getReviewAvatars();
-    const displayAvatars = avatars.length >= 4 ? avatars.slice(0, 4) : [...avatars, ...Array(4 - avatars.length).fill(null)].map((url, i) => url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 15}`);
+    const displayAvatars = avatars.slice(0, 4);
 
     return (
         <footer className="w-full">

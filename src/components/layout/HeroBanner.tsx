@@ -1,13 +1,21 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Container } from "@/components/layout/Container";
-import { useState } from "react";
+import { getRegisteredUserCount } from "@/actions/user";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LoginModal } from "@/components/auth/LoginModal";
 
 export function HeroBanner() {
+    const [userCount, setUserCount] = useState<number | null>(null);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+    useEffect(() => {
+        getRegisteredUserCount().then(count => {
+            setUserCount(count);
+        });
+    }, []);
 
     const openLoginModal = () => setIsLoginModalOpen(true);
     const closeLoginModal = () => setIsLoginModalOpen(false);
@@ -22,7 +30,7 @@ export function HeroBanner() {
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm animate-in fade-in slide-in-from-top-4 duration-1000">
                             <span className="text-yellow-500 text-sm">⭐</span>
                             <span className="text-xs md:text-sm font-bold text-gray-300 tracking-wide">
-                                Comunidad de +1000 alumnos activos
+                                Comunidad de +{userCount || '1000'} alumnos reales
                             </span>
                         </div>
 
