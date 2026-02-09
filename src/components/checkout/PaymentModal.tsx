@@ -204,7 +204,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 - Mobile: Full width/height adaptation, scrollable body
                 - Desktop: Centered, fixed max-height, internal scrolling
             */}
-            <div className="bg-[#13151A] w-full max-w-5xl h-full md:h-auto md:max-h-[85vh] rounded-none md:rounded-2xl shadow-2xl flex flex-col md:flex-row relative overflow-y-auto md:overflow-hidden border-none md:border border-white/20 ring-1 ring-white/5">
+            <div className="bg-[#13151A] w-full max-w-5xl h-[100dvh] md:h-auto md:max-h-[85vh] rounded-none md:rounded-2xl shadow-2xl flex flex-col md:flex-row relative overflow-y-auto md:overflow-hidden border-none md:border border-white/20 ring-1 ring-white/5">
 
                 {/* Close Button - Fixed on mobile to ensure visibility */}
                 <button
