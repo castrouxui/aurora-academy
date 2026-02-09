@@ -18,13 +18,11 @@ export function CareerProgressCard({ userId, careerReferenceId }: CareerProgress
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log(`[DEBUG] CareerProgressCard: Fetching for user ${userId} and career ${careerReferenceId}`);
             try {
                 const result = await getCareerProgress(userId, careerReferenceId);
-                console.log("[DEBUG] CareerProgressCard: Result received", result ? "YES" : "NO");
                 setData(result);
             } catch (error) {
-                console.error("[DEBUG] CareerProgressCard: Error fetching", error);
+                console.error("Error fetching career progress:", error);
             } finally {
                 setLoading(false);
             }
@@ -32,69 +30,64 @@ export function CareerProgressCard({ userId, careerReferenceId }: CareerProgress
 
         if (userId && careerReferenceId) {
             fetchData();
-        } else {
-            console.log("[DEBUG] CareerProgressCard: Missing userId or careerReferenceId", { userId, careerReferenceId });
-            setLoading(false);
         }
     }, [userId, careerReferenceId]);
 
     if (loading) {
         return (
-            <div className="bg-[#13151A] rounded-2xl p-6 border border-white/5 animate-pulse">
-                <p className="text-[10px] text-gray-500 mb-2">Debug: Loading Career Data...</p>
-                <div className="h-4 w-24 bg-white/10 rounded mb-4"></div>
-                <div className="h-8 w-48 bg-white/10 rounded mb-6"></div>
-                <div className="h-2 w-full bg-white/10 rounded"></div>
+            <div className="bg-[#13151A] rounded-[2rem] p-8 border border-white/5 animate-pulse">
+                <div className="h-4 w-24 bg-white/10 rounded-full mb-6"></div>
+                <div className="h-10 w-48 bg-white/10 rounded-xl mb-4"></div>
+                <div className="h-4 w-full bg-white/10 rounded-lg mb-8"></div>
+                <div className="h-12 w-full bg-white/10 rounded-2xl"></div>
             </div>
         );
     }
 
-    if (!data) {
-        return (
-            <div className="bg-[#13151A]/50 rounded-2xl p-4 border border-dashed border-white/10 text-center">
-                <p className="text-xs text-gray-500">Debug: No se pudo cargar la ruta (careerRefernceId: {careerReferenceId})</p>
-            </div>
-        );
-    }
+    if (!data) return null;
 
-    const { progress, careerName, milestones } = data;
+    const { progress, careerName } = data;
 
     // Determine dynamic copy
     let statusCopy = "¡Buen comienzo! Siguiente paso: Los 7 Pilares";
     if (progress === 0) {
-        statusCopy = "¡Comenzá tu ruta hacia el profesionalismo!";
+        statusCopy = "Comenzá tu formación profesional hoy mismo";
     } else if (progress >= 33 && progress < 66) {
-        statusCopy = "¡Buen comienzo! Siguiente paso: Los 7 Pilares";
+        statusCopy = "Llevás buen ritmo. Continuá con Los 7 Pilares";
     } else if (progress >= 66 && progress < 100) {
-        statusCopy = "Casi sos un profesional. Sumate a la Membresía para finalizar";
+        statusCopy = "Casi sos profesional. Sumate a la Membresía para finalizar";
     } else if (progress === 100) {
-        statusCopy = "¡Felicitaciones! Has completado la ruta.";
+        statusCopy = "¡Felicitaciones! Has completado la ruta con éxito";
     }
 
     return (
-        <div className="bg-[#13151A] rounded-3xl p-6 border border-white/10 relative overflow-hidden group hover:border-[#5D5CDE]/30 transition-all duration-300 shadow-xl">
-            {/* Background Gradient */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#5D5CDE]/10 blur-[50px] pointer-events-none group-hover:bg-[#5D5CDE]/20 transition-all"></div>
+        <div className="bg-[#13151A] rounded-[2rem] p-8 border border-white/10 relative overflow-hidden group hover:border-[#5D5CDE]/30 transition-all duration-500 shadow-2xl hover:shadow-[#5D5CDE]/5">
+            {/* Mesh Gradient Background */}
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#5D5CDE]/10 blur-[60px] pointer-events-none group-hover:bg-[#5D5CDE]/20 transition-all duration-700"></div>
 
             <div className="relative z-10">
-                <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-bold text-[#5D5CDE] uppercase tracking-widest bg-[#5D5CDE]/10 px-2 py-1 rounded-md border border-[#5D5CDE]/20">
-                        Ruta de Carrera
+                <div className="flex items-center justify-between mb-6">
+                    <span className="text-[10px] font-black text-[#5D5CDE] uppercase tracking-[0.2em] bg-[#5D5CDE]/10 px-3 py-1.5 rounded-full border border-[#5D5CDE]/20">
+                        Ruta Profesional
                     </span>
-                    <span className="text-white font-bold text-sm">{progress}%</span>
+                    <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-full border border-white/5">
+                        <span className="text-white font-black text-xs">{progress}%</span>
+                    </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-white mb-2">{careerName}</h3>
-                <p className="text-xs text-gray-400 mb-6">{statusCopy}</p>
+                <h3 className="text-2xl font-bold text-white mb-2 tracking-tight group-hover:text-[#5D5CDE] transition-colors">{careerName}</h3>
+                <p className="text-xs font-semibold text-white/50 mb-8 leading-relaxed max-w-[240px]">{statusCopy}</p>
 
-                {/* Segmented Progress Bar */}
-                <div className="flex gap-1 h-2 mb-8">
+                {/* Refined Segmented Progress Bar */}
+                <div className="flex gap-1.5 h-1.5 mb-10">
                     {[33, 67, 100].map((step) => (
                         <div
                             key={step}
                             className={cn(
-                                "flex-1 rounded-full transition-all duration-500",
-                                progress >= step ? "bg-[#5D5CDE]" : "bg-white/10"
+                                "flex-1 rounded-full transition-all duration-700",
+                                progress >= step
+                                    ? "bg-gradient-to-r from-[#5D5CDE] to-[#7B7AEC]"
+                                    : "bg-white/[0.05]"
                             )}
                         />
                     ))}
@@ -102,7 +95,7 @@ export function CareerProgressCard({ userId, careerReferenceId }: CareerProgress
 
                 <Link
                     href={`/dashboard/carrera/${careerReferenceId}`}
-                    className="flex items-center justify-between w-full bg-white/5 hover:bg-[#5D5CDE] text-white px-4 py-3 rounded-xl text-sm font-bold transition-all group-hover:shadow-lg group-hover:shadow-[#5D5CDE]/20"
+                    className="flex items-center justify-between w-full bg-white/[0.03] hover:bg-[#5D5CDE] text-white px-6 py-4 rounded-2xl text-sm font-black transition-all group-hover:shadow-xl group-hover:shadow-[#5D5CDE]/20 border border-white/5 hover:border-[#5D5CDE]/20"
                 >
                     <span>Continuar Carrera</span>
                     <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />
