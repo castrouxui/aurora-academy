@@ -14,21 +14,21 @@ const TESTIMONIALS: Testimonial[] = [
         name: "Marcos L.",
         role: "Trader de Divisas",
         quote: "Metodología directa y sin vueltas. En poco tiempo logré estructurar mi operativa con un criterio profesional real.",
-        avatar: "/testimonials/marcos.jpg",
+        avatar: "https://ui-avatars.com/api/?name=Marcos+L&background=random",
         rating: 5,
     },
     {
         name: "Sofía R.",
         role: "Inversora Institucional",
         quote: "El soporte de la comunidad es lo que hace la diferencia. No estás solo ante el gráfico, el análisis compartido es invaluable.",
-        avatar: "/testimonials/sofia.jpg",
+        avatar: "https://ui-avatars.com/api/?name=Sofia+R&background=random",
         rating: 5,
     },
     {
         name: "Javier G.",
         role: "Especialista en Mercados",
         quote: "La metodología práctica de Fran me permitió proteger mi capital en momentos de alta volatilidad. Es trading real.",
-        avatar: "/testimonials/javier.jpg",
+        avatar: "https://ui-avatars.com/api/?name=Javier+G&background=random",
         rating: 5,
     },
 ];
@@ -74,10 +74,12 @@ export function Testimonials() {
 
                             {/* Author */}
                             <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/5">
-                                <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-emerald-500/20 to-purple-500/20 flex items-center justify-center border border-white/10">
-                                    <span className="text-lg font-bold text-white">
-                                        {testimonial.name.charAt(0)}
-                                    </span>
+                                <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border border-white/10">
+                                    <img
+                                        src={testimonial.avatar}
+                                        alt={testimonial.name}
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
                                 <div>
                                     <p className="text-sm font-semibold text-white">

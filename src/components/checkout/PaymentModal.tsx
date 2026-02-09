@@ -277,8 +277,8 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             <div className="mt-6 pt-6 border-t border-white/5">
                                 <div className="flex items-center gap-3">
                                     <div className="flex -space-x-2">
-                                        <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="/testimonials/marcos.jpg" alt="Student" />
-                                        <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="/testimonials/sofia.jpg" alt="Student" />
+                                        <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="https://ui-avatars.com/api/?name=Marcos+L&background=random" alt="Student" />
+                                        <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="https://ui-avatars.com/api/?name=Sofia+R&background=random" alt="Student" />
                                         <div className="w-8 h-8 rounded-full border-2 border-slate-900 bg-emerald-500/20 flex items-center justify-center text-[10px] font-bold text-emerald-400">+1k</div>
                                     </div>
                                     <p className="text-xs text-gray-400 leading-snug">
