@@ -18,22 +18,30 @@ export function CareerProgressCard({ userId, careerReferenceId }: CareerProgress
 
     useEffect(() => {
         const fetchData = async () => {
+            console.log(`[DEBUG] CareerProgressCard: Fetching for user ${userId} and career ${careerReferenceId}`);
             try {
                 const result = await getCareerProgress(userId, careerReferenceId);
+                console.log("[DEBUG] CareerProgressCard: Result received", result ? "YES" : "NO");
                 setData(result);
             } catch (error) {
-                console.error("Error fetching career progress:", error);
+                console.error("[DEBUG] CareerProgressCard: Error fetching", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchData();
+        if (userId && careerReferenceId) {
+            fetchData();
+        } else {
+            console.log("[DEBUG] CareerProgressCard: Missing userId or careerReferenceId", { userId, careerReferenceId });
+            setLoading(false);
+        }
     }, [userId, careerReferenceId]);
 
     if (loading) {
         return (
             <div className="bg-[#13151A] rounded-2xl p-6 border border-white/5 animate-pulse">
+                <p className="text-[10px] text-gray-500 mb-2">Debug: Loading Career Data...</p>
                 <div className="h-4 w-24 bg-white/10 rounded mb-4"></div>
                 <div className="h-8 w-48 bg-white/10 rounded mb-6"></div>
                 <div className="h-2 w-full bg-white/10 rounded"></div>
@@ -41,7 +49,13 @@ export function CareerProgressCard({ userId, careerReferenceId }: CareerProgress
         );
     }
 
-    if (!data) return null;
+    if (!data) {
+        return (
+            <div className="bg-[#13151A]/50 rounded-2xl p-4 border border-dashed border-white/10 text-center">
+                <p className="text-xs text-gray-500">Debug: No se pudo cargar la ruta (careerRefernceId: {careerReferenceId})</p>
+            </div>
+        );
+    }
 
     const { progress, careerName, milestones } = data;
 
