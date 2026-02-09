@@ -2,8 +2,14 @@ import { Container } from "@/components/layout/Container";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MoveRight, Bitcoin, TrendingUp, DollarSign } from "lucide-react";
+import { getRegisteredUserCount, getReviewAvatars } from "@/actions/user";
 
-export function StatsStrip() {
+export async function StatsStrip() {
+    const userCount = await getRegisteredUserCount();
+    const avatars = await getReviewAvatars();
+    // Ensure we have at least 4 avatars, fill with placeholders if needed
+    const displayAvatars = avatars.length >= 4 ? avatars.slice(0, 4) : [...avatars, ...Array(4 - avatars.length).fill(null)].map((url, i) => url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`);
+
     return (
         <section className="bg-black border-y border-white/10 py-20 relative z-20 overflow-hidden">
             {/* Background Gradient Effect */}
@@ -32,11 +38,10 @@ export function StatsStrip() {
                         {/* Avatar Group */}
                         <div className="flex items-center gap-4">
                             <div className="flex -space-x-4">
-                                {[1, 2, 3, 4].map((i) => (
+                                {displayAvatars.map((src, i) => (
                                     <div key={i} className="w-12 h-12 rounded-full border-2 border-black overflow-hidden relative bg-gray-800">
-                                        {/* Using generic placeholders for demo */}
                                         <Image
-                                            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`}
+                                            src={src}
                                             alt="Student"
                                             fill
                                             className="object-cover"
@@ -45,7 +50,7 @@ export function StatsStrip() {
                                 ))}
                             </div>
                             <div className="flex flex-col">
-                                <span className="text-white font-bold text-lg leading-none">+1.000</span>
+                                <span className="text-white font-bold text-lg leading-none">+{userCount}</span>
                                 <span className="text-gray-400 text-sm font-medium">Estudiantes Activos</span>
                             </div>
                         </div>

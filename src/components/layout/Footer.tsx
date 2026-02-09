@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "./Logo";
 import { Facebook, Instagram, Linkedin, Youtube, MoveRight, Bitcoin, TrendingUp, DollarSign, Send } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { getRegisteredUserCount, getReviewAvatars } from "@/actions/user";
 
 // Custom X Icon (Lucide doesn't have it yet)
 function XIcon({ className }: { className?: string }) {
@@ -13,7 +14,11 @@ function XIcon({ className }: { className?: string }) {
     );
 }
 
-export function Footer() {
+export async function Footer() {
+    const userCount = await getRegisteredUserCount();
+    const avatars = await getReviewAvatars();
+    const displayAvatars = avatars.length >= 4 ? avatars.slice(0, 4) : [...avatars, ...Array(4 - avatars.length).fill(null)].map((url, i) => url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 15}`);
+
     return (
         <footer className="w-full">
             {/* Top Banner (Community Style) */}
@@ -46,11 +51,10 @@ export function Footer() {
                             {/* Avatar Group */}
                             <div className="flex items-center gap-4">
                                 <div className="flex -space-x-4">
-                                    {[1, 2, 3, 4].map((i) => (
+                                    {displayAvatars.map((src, i) => (
                                         <div key={i} className="w-12 h-12 rounded-full border-2 border-black overflow-hidden relative bg-gray-800">
-                                            {/* Using generic placeholders for demo */}
                                             <img
-                                                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 15}`}
+                                                src={src}
                                                 alt="Student"
                                                 className="w-full h-full object-cover"
                                             />
@@ -58,7 +62,7 @@ export function Footer() {
                                     ))}
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-white font-bold text-lg leading-none">+1.000</span>
+                                    <span className="text-white font-bold text-lg leading-none">+{userCount}</span>
                                     <span className="text-gray-400 text-sm font-medium">Estudiantes Activos</span>
                                 </div>
                             </div>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getRegisteredUserCount } from "@/actions/user";
 
 export function ExitIntentModal() {
     const [isVisible, setIsVisible] = useState(false);
@@ -12,10 +13,15 @@ export function ExitIntentModal() {
     const [name, setName] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const [hasTriggered, setHasTriggered] = useState(false);
+    const [userCount, setUserCount] = useState(1000);
 
     // 3 days cooldown
     const COOLDOWN_DAYS = 3;
     const STORAGE_KEY = "aurora_exit_intent_seen";
+
+    useEffect(() => {
+        getRegisteredUserCount().then(setUserCount);
+    }, []);
 
     const checkShouldShow = useCallback(() => {
         // If already open or triggered in this session, don't show again immediatey unless logic allows (here we block re-trigger)
@@ -183,7 +189,7 @@ export function ExitIntentModal() {
                                         ¿Todavía no estás listo para dar el paso?
                                     </h2>
                                     <p className="text-gray-400 text-base leading-relaxed">
-                                        No te vayas con las manos vacías. Unite a los <span className="text-purple-400 font-semibold">+1.000 alumnos</span> que ya están transformando su relación con el dinero.
+                                        No te vayas con las manos vacías. Unite a los <span className="text-purple-400 font-semibold">+{userCount} alumnos</span> que ya están transformando su relación con el dinero.
                                     </p>
                                     <p className="text-white font-medium bg-white/5 p-3 rounded-lg border border-white/5 inline-block w-full text-center sm:text-left">
                                         🎁 Accedé gratis a "El camino del inversor"
@@ -245,3 +251,4 @@ export function ExitIntentModal() {
         </AnimatePresence>
     );
 }
+

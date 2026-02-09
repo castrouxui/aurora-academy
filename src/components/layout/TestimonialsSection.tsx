@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { Container } from "@/components/layout/Container";
-
 import { cn } from "@/lib/utils";
-
 import { TESTIMONIALS, Testimonial } from "@/constants/testimonials";
+import { useEffect, useState } from "react";
+import { getRegisteredUserCount } from "@/actions/user";
 
 function ReviewCard({ review }: { review: Testimonial }) {
     return (
@@ -59,6 +59,12 @@ function ReviewColumn({
 }
 
 export function TestimonialsSection() {
+    const [userCount, setUserCount] = useState(1000);
+
+    useEffect(() => {
+        getRegisteredUserCount().then(setUserCount);
+    }, []);
+
     return (
         <section className="py-24 bg-[#0B0F19] relative overflow-hidden">
             <Container className="relative z-10">
@@ -89,7 +95,7 @@ export function TestimonialsSection() {
                             </div>
                         </div>
                         <p className="text-sm font-bold text-white tracking-wide">
-                            Unite a <span className="text-[#5D5CDE]">+1.000 alumnos activos</span>
+                            Unite a <span className="text-[#5D5CDE]">+{userCount} alumnos activos</span>
                         </p>
                     </div>
                 </div>

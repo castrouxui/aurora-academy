@@ -89,25 +89,15 @@ export function UpsellModal({
         fetchBundles();
     }, [isOpen, numericCoursePrice, courseId]);
 
-    // If loading or no bundle found, we render nothing (or could auto-skip)
-    // For now, render loading spinner or specific state
-    // If no recommended bundle found (e.g. course is not in any bundle), we should ideally skip.
-    if (!isLoading && !recommendedBundle) {
-        // Auto-skip logic could go here, but since we can't trigger state update in render,
-        // we show a "Continuar" dialog or a small error.
-        // Better UX: Show a "Proceeding to checkout..." temporary state and call onContinue via effect?
-        // For now, let's just let the user click "Continuar" to manually bypass.
-        return (
-            <Dialog open={isOpen} onOpenChange={onClose}>
-                <DialogContent className="bg-[#0B0F19] border-white/10 text-white p-0 overflow-hidden max-w-md">
-                    <div className="p-6 text-center">
-                        <p className="text-gray-400 mb-4">Continuando con tu compra...</p>
-                        <Button onClick={onContinue} className="w-full bg-[#5D5CDE]">Continuar al pago</Button>
-                    </div>
-                </DialogContent>
-            </Dialog>
-        );
-    }
+    // Auto-continue if no upsell is available
+    useEffect(() => {
+        if (!isLoading && !recommendedBundle && isOpen) {
+            onContinue();
+        }
+    }, [isLoading, recommendedBundle, isOpen, onContinue]);
+
+    // If loading or no bundle found, we render nothing (waiting for auto-continue)
+    if (!isLoading && !recommendedBundle) return null;
 
     // While loading, show nothing or spinner
     if (isLoading) return null;
