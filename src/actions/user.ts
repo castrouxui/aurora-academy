@@ -7,8 +7,8 @@ export async function getRegisteredUserCount() {
         return count;
     } catch (error) {
         console.error("Error fetching user count:", error);
-        // Fallback to a safe minimum if DB fails, or 0
-        return 1000;
+        // Fallback to 0 if DB fails for honesty
+        return 0;
     }
 }
 

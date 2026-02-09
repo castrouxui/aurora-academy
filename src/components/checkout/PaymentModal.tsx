@@ -204,7 +204,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 - Mobile: Full width/height adaptation, scrollable body
                 - Desktop: Centered, fixed max-height, internal scrolling
             */}
-            <div className="bg-[#13151A] w-full max-w-5xl h-[100dvh] md:h-auto md:max-h-[85vh] rounded-none md:rounded-2xl shadow-2xl flex flex-col md:flex-row relative overflow-y-auto md:overflow-hidden border-none md:border border-white/20 ring-1 ring-white/5">
+            <div className="bg-[#13151A] w-full max-w-5xl h-[100dvh] md:h-auto md:max-h-[85vh] rounded-none md:rounded-2xl shadow-2xl flex flex-col md:flex-row relative overflow-hidden border-none md:border border-white/20 ring-1 ring-white/5">
 
                 {/* Close Button - Fixed on mobile to ensure visibility */}
                 <button
@@ -215,7 +215,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 </button>
 
                 {/* LEFT COLUMN: Order Summary (Visual & Trust) */}
-                <div className="w-full md:w-5/12 bg-[#0D0F13] p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-white/10 relative shrink-0 md:overflow-y-auto custom-scrollbar">
+                <div className="w-full md:w-5/12 bg-[#0D0F13] p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-white/10 relative shrink-0 overflow-y-auto custom-scrollbar">
 
                     {/* Background blob */}
                     <div className="absolute top-0 left-0 w-full h-40 bg-indigo-500/5 blur-3xl pointer-events-none"></div>
@@ -313,7 +313,9 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                             <img className="w-9 h-9 rounded-full border-2 border-[#0D0F13] object-cover" src={TESTIMONIALS[1].image} alt="Student" />
                                         </>
                                     )}
-                                    <div className="w-9 h-9 rounded-full border-2 border-[#0D0F13] bg-[#1e2235] flex items-center justify-center text-[10px] font-bold text-white">+1k</div>
+                                    <div className="w-9 h-9 rounded-full border-2 border-[#0D0F13] bg-[#1e2235] flex items-center justify-center text-[10px] font-bold text-white">
+                                        {userCount > 1000 ? `+${Math.floor(userCount / 1000)}k` : userCount}
+                                    </div>
                                 </div>
                                 <div className="flex flex-col">
                                     <div className="flex items-center gap-1 mb-0.5">
@@ -331,7 +333,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 {/* RIGHT COLUMN: Action Form */}
                 <div className="w-full md:w-7/12 bg-[#13151A] relative flex flex-col h-full overflow-hidden">
 
-                    {/* Scrollable Content */}
+                    {/* Scrollable Form Content */}
                     <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
                         <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                             Finalizar Compra
@@ -428,65 +430,69 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                         </p>
                                     )}
                                 </div>
-
-                                {/* Main Action Button */}
-                                <div className="pt-4">
-                                    {isLoading ? (
-                                        <div className="w-full h-14 bg-white/5 rounded-xl flex items-center justify-center gap-3 text-gray-400 animate-pulse border border-white/5">
-                                            <Loader2 size={20} className="animate-spin" />
-                                            <span className="text-sm font-medium">Preparando pago...</span>
-                                        </div>
-                                    ) : preferenceId ? (
-                                        <a
-                                            href={preferenceId ? initPoint! : "#"}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="group relative w-full h-14 bg-[#009EE3] hover:bg-[#008CC9] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#009EE3]/20 hover:shadow-[#009EE3]/40 flex items-center justify-between px-6 overflow-hidden"
-                                        >
-                                            <div className="flex items-center gap-3 z-10">
-                                                <div className="bg-white/20 p-1.5 rounded-lg flex items-center justify-center">
-                                                    {/* Changed image src to generic MP logo if specific one fails, otherwise relying on brightness removal fix */}
-                                                    <img src="/mercadopago.png" alt="MP" className="h-5 w-auto object-contain brightness-0 invert" />
-                                                </div>
-                                                <span className="text-base tracking-wide">Pagar con Mercado Pago</span>
-                                            </div>
-                                            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform z-10" />
-                                            {/* Shine effect */}
-                                            <div className="absolute top-0 -left-full w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-[shimmer_2.5s_infinite]"></div>
-                                        </a>
-                                    ) : (
-                                        <button
-                                            disabled={true} // Disabled if init failed or still loading (handled by isLoading above)
-                                            className="w-full h-14 bg-white/5 text-gray-500 font-bold rounded-xl border border-white/5 flex items-center justify-center cursor-not-allowed"
-                                        >
-                                            <span>Completa los datos para continuar</span>
-                                        </button>
-                                    )}
-
-                                    {/* Helper Text */}
-                                    <p className="text-center text-[10px] text-gray-500 mt-4 leading-relaxed">
-                                        Al continuar, aceptas iniciar una suscripción recurrente (si corresponde) y nuestros términos y condiciones.
-                                    </p>
-                                </div>
-
                             </div>
                         )}
                     </div>
 
-                    {/* Footer - Fixed at bottom of right col */}
-                    <div className="bg-[#0D0F13] py-4 px-8 border-t border-white/5 flex items-center justify-between shrink-0">
-                        <div className="flex items-center gap-2">
-                            <span className="text-lg">🇦🇷</span>
-                            <span className="text-xs text-gray-400 font-medium">Precios en Pesos.</span>
+                    {/* FIXED ACTION AREA: Button & Footer */}
+                    {paymentStatus !== 'approved' && (
+                        <div className="bg-[#13151A] border-t border-white/5 p-6 md:p-8 space-y-4 shrink-0 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+                            {/* Main Action Button Block */}
+                            <div>
+                                {isLoading ? (
+                                    <div className="w-full h-14 bg-white/5 rounded-xl flex items-center justify-center gap-3 text-gray-400 animate-pulse border border-white/5">
+                                        <Loader2 size={20} className="animate-spin" />
+                                        <span className="text-sm font-medium">Preparando pago...</span>
+                                    </div>
+                                ) : preferenceId ? (
+                                    <a
+                                        href={preferenceId ? initPoint! : "#"}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group relative w-full h-14 bg-[#009EE3] hover:bg-[#008CC9] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#009EE3]/20 hover:shadow-[#009EE3]/40 flex items-center justify-between px-6 overflow-hidden"
+                                    >
+                                        <div className="flex items-center gap-3 z-10">
+                                            <div className="bg-white/20 p-1.5 rounded-lg flex items-center justify-center">
+                                                <img src="/mercadopago.png" alt="MP" className="h-5 w-auto object-contain brightness-0 invert" />
+                                            </div>
+                                            <span className="text-base tracking-wide">Pagar con Mercado Pago</span>
+                                        </div>
+                                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform z-10" />
+                                        {/* Shine effect */}
+                                        <div className="absolute top-0 -left-full w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-[shimmer_2.5s_infinite]"></div>
+                                    </a>
+                                ) : (
+                                    <button
+                                        disabled={true}
+                                        className="w-full h-14 bg-white/5 text-gray-500 font-bold rounded-xl border border-white/5 flex items-center justify-center cursor-not-allowed"
+                                    >
+                                        <span>Completa los datos para continuar</span>
+                                    </button>
+                                )}
+
+                                {/* Helper Text */}
+                                <p className="text-center text-[10px] text-gray-400 mt-4 leading-relaxed font-light">
+                                    Al continuar, aceptas iniciar una suscripción recurrente (si corresponde) y nuestros términos y condiciones.
+                                </p>
+                            </div>
+
+                            {/* Footer - Part of the fixed area now */}
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-lg">🇦🇷</span>
+                                    <span className="text-xs text-gray-500 font-medium">Precios en Pesos.</span>
+                                </div>
+                                <div className="flex items-center gap-2 grayscale opacity-50">
+                                    <span className="text-[10px] text-gray-500 uppercase tracking-widest hidden sm:block">Procesado por</span>
+                                    <img src="/mercadopago.png" alt="Mercado Pago" className="h-4 w-auto object-contain" />
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
-                            <span className="text-[10px] text-gray-500 uppercase tracking-widest hidden sm:block">Procesado por</span>
-                            <img src="/mercadopago.png" alt="Mercado Pago" className="h-4 w-auto object-contain" />
-                        </div>
-                    </div>
+                    )}
 
                 </div>
             </div>
+
         </div>
     );
 }
