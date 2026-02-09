@@ -200,38 +200,41 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
     return (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-0 md:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
             {/* 
-                Mobile: Maximize width but keep margin. 
-                Desktop: Slightly smaller height, properly centered, scaled down for better fit
+                Main Container
+                - Mobile: Full width/height adaptation, scrollable body
+                - Desktop: Centered, fixed max-height, internal scrolling
             */}
-            <div className="bg-card w-full h-full md:h-auto md:max-w-3xl md:max-h-[600px] rounded-none md:rounded-2xl shadow-2xl overflow-y-auto md:overflow-hidden border-none md:border border-border flex flex-col md:flex-row relative transform md:scale-95 origin-center transition-transform">
+            <div className="bg-[#0F1115] w-full max-w-5xl h-full md:h-auto md:max-h-[85vh] rounded-none md:rounded-2xl shadow-2xl flex flex-col md:flex-row relative overflow-y-auto md:overflow-hidden border-none md:border border-white/10">
 
-                {/* Close Button (Absolute) - Fixed position on mobile to be always visible */}
+                {/* Close Button - Fixed on mobile to ensure visibility */}
                 <button
                     onClick={onClose}
-                    className="fixed md:absolute top-4 right-4 z-50 text-muted-foreground hover:text-white bg-black/40 hover:bg-black/60 p-2 rounded-full transition-all backdrop-blur-md"
+                    className="fixed top-4 right-4 md:absolute z-50 text-gray-400 hover:text-white bg-black/40 hover:bg-black/60 p-2 rounded-full transition-all backdrop-blur-md"
                 >
-                    <X size={24} />
+                    <X size={20} />
                 </button>
 
-                {/* LEFT COLUMN: Order Summary (Darker/Card style) */}
-                <div className="w-full md:w-5/12 bg-muted/30 p-5 md:p-8 flex flex-col border-r border-border relative overflow-hidden shrink-0">
+                {/* LEFT COLUMN: Order Summary (Visual & Trust) */}
+                <div className="w-full md:w-5/12 bg-[#0A0A0A] p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-white/5 relative shrink-0 md:overflow-y-auto custom-scrollbar">
 
-                    {/* Background blob for visual interest */}
-                    <div className="absolute top-0 left-0 w-full h-32 bg-primary/5 blur-3xl pointer-events-none"></div>
+                    {/* Background blob */}
+                    <div className="absolute top-0 left-0 w-full h-40 bg-indigo-500/5 blur-3xl pointer-events-none"></div>
 
-                    <div className="relative z-10 flex-1">
-                        <h3 className="text-muted-foreground text-sm font-bold uppercase tracking-widest mb-4 md:mb-6 flex items-center gap-2">
+                    <div className="relative z-10">
+                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6 flex items-center gap-2">
                             Tu Resumen
                         </h3>
 
-                        <div className="mb-4 md:mb-8">
-                            <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2 leading-tight pr-8">
+                        {/* Title & Price */}
+                        <div className="mb-8">
+                            <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">
                                 {courseTitle}
                             </h2>
-                            <div className="flex flex-col mt-3 md:mt-4">
+
+                            <div className="flex flex-col">
                                 {appliedCoupon ? (
                                     <>
-                                        <div className="flex items-center gap-2 text-muted-foreground line-through text-xs font-medium">
+                                        <div className="flex items-center gap-2 text-gray-500 line-through text-sm">
                                             <span>
                                                 {new Intl.NumberFormat("es-AR", {
                                                     style: "currency",
@@ -241,7 +244,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                                 }).format(Number(coursePrice.replace(/[^0-9]/g, '')))}
                                             </span>
                                         </div>
-                                        <div className="flex items-end gap-2 text-green-400">
+                                        <div className="flex items-end gap-2 text-emerald-400">
                                             {(() => {
                                                 const numericParams = Number(coursePrice.replace(/[^0-9]/g, ''));
                                                 let final = numericParams;
@@ -251,7 +254,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                                     final = final - appliedCoupon.discount;
                                                 }
                                                 return (
-                                                    <span className="text-3xl md:text-4xl font-black tracking-tight">
+                                                    <span className="text-4xl font-bold tracking-tight">
                                                         {new Intl.NumberFormat("es-AR", {
                                                             style: "currency",
                                                             currency: "ARS",
@@ -264,226 +267,220 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                         </div>
                                     </>
                                 ) : (
-                                    <div className="flex items-end gap-2">
-                                        <span className="text-3xl md:text-4xl font-black text-white tracking-tight">
-                                            {new Intl.NumberFormat("es-AR", {
-                                                style: "currency",
-                                                currency: "ARS",
-                                                minimumFractionDigits: 0,
-                                                maximumFractionDigits: 0
-                                            }).format(Number(coursePrice.replace(/[^0-9]/g, '')))}
-                                        </span>
-                                    </div>
+                                    <span className="text-4xl font-bold text-white tracking-tight">
+                                        {new Intl.NumberFormat("es-AR", {
+                                            style: "currency",
+                                            currency: "ARS",
+                                            minimumFractionDigits: 0,
+                                            maximumFractionDigits: 0
+                                        }).format(Number(coursePrice.replace(/[^0-9]/g, '')))}
+                                    </span>
                                 )}
                             </div>
                         </div>
 
                         {/* Features List */}
-                        <div className="hidden md:block space-y-4 mb-6 md:mb-8">
-                            <div className="flex items-start gap-3 text-gray-300">
-                                <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
-                                    <Zap size={16} className="text-green-400" />
+                        <div className="space-y-4 mb-8">
+                            <div className="flex items-start gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
+                                <div className="bg-emerald-500/10 p-1.5 rounded-full mt-0.5 shrink-0">
+                                    <Zap size={14} className="text-emerald-400" />
                                 </div>
-                                <span className="text-sm">Acceso inmediato y completo al contenido.</span>
+                                <span className="text-sm text-gray-300">Acceso inmediato y completo al contenido.</span>
                             </div>
-                            <div className="flex items-start gap-3 text-gray-300">
-                                <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
-                                    <ShieldCheck size={16} className="text-green-400" />
+                            <div className="flex items-start gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
+                                <div className="bg-emerald-500/10 p-1.5 rounded-full mt-0.5 shrink-0">
+                                    <ShieldCheck size={14} className="text-emerald-400" />
                                 </div>
-                                <span className="text-sm">Garantía de satisfacción de 7 días.</span>
+                                <span className="text-sm text-gray-300">Garantía de satisfacción de 7 días.</span>
                             </div>
-                            <div className="flex items-start gap-3 text-gray-300">
-                                <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
-                                    <Lock size={16} className="text-green-400" />
+                            <div className="flex items-start gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
+                                <div className="bg-emerald-500/10 p-1.5 rounded-full mt-0.5 shrink-0">
+                                    <Lock size={14} className="text-emerald-400" />
                                 </div>
-                                <span className="text-sm">Pago encriptado y 100% seguro.</span>
+                                <span className="text-sm text-gray-300">Pago encriptado y 100% seguro.</span>
                             </div>
+                        </div>
 
-                            {/* Social Proof Snippet */}
-                            <div className="mt-6 pt-6 border-t border-white/5">
-                                <div className="flex items-center gap-3">
-                                    <div className="flex -space-x-2">
-                                        {randomAvatars.length > 0 ? randomAvatars.map((img, i) => (
-                                            <img key={i} className="w-8 h-8 rounded-full border-2 border-slate-900 object-cover" src={img} alt="Student" />
-                                        )) : (
-                                            <>
-                                                <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="https://ui-avatars.com/api/?name=Marcos+L&background=random" alt="Student" />
-                                                <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="https://ui-avatars.com/api/?name=Sofia+R&background=random" alt="Student" />
-                                            </>
-                                        )}
-                                        <div className="w-8 h-8 rounded-full border-2 border-slate-900 bg-emerald-500/20 flex items-center justify-center text-[10px] font-bold text-emerald-400">+1k</div>
+                        {/* Social Proof */}
+                        <div className="pt-6 border-t border-white/10">
+                            <div className="flex items-center gap-3">
+                                <div className="flex -space-x-3">
+                                    {randomAvatars.length > 0 ? randomAvatars.map((img, i) => (
+                                        <img key={i} className="w-9 h-9 rounded-full border-2 border-[#0A0A0A] object-cover" src={img} alt="Student" />
+                                    )) : (
+                                        <>
+                                            <img className="w-9 h-9 rounded-full border-2 border-[#0A0A0A]" src="https://ui-avatars.com/api/?name=Marcos+L&background=random" alt="Student" />
+                                            <img className="w-9 h-9 rounded-full border-2 border-[#0A0A0A]" src="https://ui-avatars.com/api/?name=Sofia+R&background=random" alt="Student" />
+                                        </>
+                                    )}
+                                    <div className="w-9 h-9 rounded-full border-2 border-[#0A0A0A] bg-[#1e2235] flex items-center justify-center text-[10px] font-bold text-white">+1k</div>
+                                </div>
+                                <div className="flex flex-col">
+                                    <div className="flex items-center gap-1 mb-0.5">
+                                        <span className="text-[10px] text-yellow-400">★★★★★</span>
                                     </div>
                                     <p className="text-xs text-gray-400 leading-snug">
-                                        <span className="text-white font-bold block">Unite a +{userCount} alumnos</span>
-                                        que ya están operando en el mercado.
+                                        Elegido por <span className="text-white font-bold">{userCount} alumnos</span>
                                     </p>
                                 </div>
                             </div>
                         </div>
-
-                        {/* Subscriber Email Input */}
-                        <div className="mb-6">
-                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
-                                Email de Contacto (Mercado Pago)
-                            </label>
-
-                            <div className="flex flex-col gap-2">
-                                <input
-                                    type="email"
-                                    value={mpEmail}
-                                    onChange={(e) => {
-                                        setMpEmail(e.target.value);
-                                        setPreferenceId(null);
-                                    }}
-                                    placeholder="tu@email.com"
-                                    className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none h-10"
-                                />
-                            </div>
-
-                            <p className="text-[10px] text-muted-foreground mt-1 leading-tight">
-                                * A este email llegará el comprobante y el acceso. Puedes cambiarlo si usas otro para pagar.
-                            </p>
-                        </div>
-
-                        {/* Coupon Input */}
-                        <div className="mb-6 md:mb-8">
-                            <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
-                                Código de Descuento
-                            </label>
-                            <div className="flex gap-2">
-                                <input
-                                    type="text"
-                                    value={couponCode}
-                                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                                    placeholder={isAnnual ? "No aplica para Plan Anual" : "CÓDIGO"}
-                                    disabled={!!appliedCoupon || isAnnual}
-                                    className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none disabled:opacity-50 disabled:cursor-not-allowed h-10"
-                                />
-                                {appliedCoupon ? (
-                                    <button
-                                        onClick={() => {
-                                            setAppliedCoupon(null);
-                                            setCouponCode("");
-                                            setPreferenceId(null); // Force re-init avoiding infinite loop
-                                        }}
-                                        className="bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-2 rounded-lg text-sm font-medium hover:bg-red-500/20 transition-colors"
-                                    >
-                                        <X size={16} />
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={handleApplyCoupon}
-                                        disabled={!couponCode || isValidatingCoupon || isAnnual}
-                                        className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        {isValidatingCoupon ? <Loader2 size={16} className="animate-spin" /> : "Aplicar"}
-                                    </button>
-                                )}
-                            </div>
-                            {isAnnual && (
-                                <p className="text-[10px] text-emerald-400 font-medium mt-2 flex items-center gap-1.5">
-                                    <Zap size={10} />
-                                    El Plan Anual ya incluye 3 meses de regalo (25% OFF).
-                                </p>
-                            )}
-                            {!isAnnual && couponError && <p className="text-red-400 text-sm mt-2">{couponError}</p>}
-                            {appliedCoupon && (
-                                <p className="text-green-400 text-sm mt-2 flex items-center gap-1">
-                                    <CheckCircle2 size={14} /> Cupón {appliedCoupon.code} aplicado (-{appliedCoupon.type === 'PERCENTAGE' ? `${appliedCoupon.discount}%` : `$${appliedCoupon.discount}`})
-                                </p>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Trust Footer in Left Col */}
-                    <div className="relative z-10 mt-auto pt-6 border-t border-border/50">
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <span>🛡️</span>
-                            <span>Compra protegida por Mercado Pago</span>
-                        </div>
                     </div>
                 </div>
 
-                {/* RIGHT COLUMN: Payment Actions */}
-                <div className="w-full md:w-7/12 bg-card relative flex flex-col">
+                {/* RIGHT COLUMN: Action Form */}
+                <div className="w-full md:w-7/12 bg-[#0F1115] relative flex flex-col h-full overflow-hidden">
 
-                    {/* Mobile: Padded, Desktop: Internal Scroll */}
-                    <div className="p-6 md:p-8 flex-1 overflow-y-auto md:max-h-[calc(90vh-80px)]">
-                        <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
+                    {/* Scrollable Content */}
+                    <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
+                        <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                             Finalizar Compra
                         </h3>
 
                         {initError && (
-                            <div className="mb-6 p-4 bg-red-900/10 border border-red-900/30 rounded-lg flex items-start gap-3 text-red-300 text-sm">
-                                <X className="shrink-0 text-red-400 mt-0.5" size={18} />
-                                <span className="break-all md:break-words whitespace-normal">{initError}</span>
+                            <div className="mb-6 p-4 bg-red-500/5 border border-red-500/20 rounded-xl flex items-start gap-3 text-red-400 text-sm animate-in fade-in slide-in-from-top-2">
+                                <X className="shrink-0 mt-0.5" size={16} />
+                                <span className="break-words">{initError}</span>
                             </div>
                         )}
 
                         {paymentStatus === 'approved' ? (
-                            <div className="flex flex-col items-center justify-center py-20 animate-in zoom-in duration-300">
-                                <div className="w-24 h-24 bg-green-500/20 rounded-full flex items-center justify-center mb-6 animate-bounce">
-                                    <CheckCircle2 size={48} className="text-green-500" />
+                            <div className="flex flex-col items-center justify-center h-full py-10 animate-in zoom-in duration-300">
+                                <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mb-6 animate-bounce">
+                                    <CheckCircle2 size={40} className="text-emerald-500" />
                                 </div>
-                                <h3 className="text-2xl font-bold text-foreground mb-2">¡Pago Confirmado!</h3>
-                                <p className="text-muted-foreground text-center max-w-xs mb-8">
-                                    Gracias por tu compra. Te estamos redirigiendo a tu curso...
+                                <h3 className="text-2xl font-bold text-white mb-2">¡Pago Confirmado!</h3>
+                                <p className="text-gray-400 text-center max-w-xs mb-8">
+                                    Te estamos redirigiendo a tu curso...
                                 </p>
-                                <div className="w-full max-w-[200px] h-1 bg-border rounded-full overflow-hidden">
-                                    <div className="h-full bg-green-500 animate-[progress_3s_ease-in-out_forwards]"></div>
+                                <div className="w-40 h-1 bg-white/10 rounded-full overflow-hidden">
+                                    <div className="h-full bg-emerald-500 animate-[progress_3s_ease-in-out_forwards]"></div>
                                 </div>
                             </div>
-                        ) : isLoading ? (
-                            <div className="flex flex-col items-center justify-center py-20">
-                                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary mb-4"></div>
-                                <p className="text-muted-foreground animate-pulse text-sm">Conectando con Mercado Pago...</p>
-                            </div>
-                        ) : preferenceId ? (
+                        ) : (
                             <div className="space-y-6">
-                                {/* Payment Button */}
-                                <div>
-                                    <a
-                                        href={preferenceId ? initPoint! : "#"}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={`group relative w-full bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold py-4 px-6 rounded-xl transition-all shadow-lg shadow-indigo-900/20 hover:shadow-indigo-900/40 flex items-center justify-between overflow-hidden ${!preferenceId ? 'pointer-events-none opacity-50' : ''}`}
-                                    >
-                                        <div className="flex items-center gap-3 z-10">
-                                            <div className="bg-white/10 p-2 rounded-lg">
-                                                <img
-                                                    src="/mercadopago.png"
-                                                    alt="Mercado Pago"
-                                                    className="h-5 w-auto brightness-0 invert object-contain"
-                                                />
-                                            </div>
-                                            <span className="text-lg">Pagar ahora</span>
-                                        </div>
-                                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform z-10" />
 
-                                        {/* Shine effect */}
-                                        <div className="absolute top-0 -left-full w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-[shimmer_2.5s_infinite]"></div>
-                                    </a>
+                                {/* Email Input */}
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                                        Email de Contacto
+                                    </label>
+                                    <input
+                                        type="email"
+                                        value={mpEmail}
+                                        onChange={(e) => {
+                                            setMpEmail(e.target.value);
+                                            setPreferenceId(null);
+                                        }}
+                                        placeholder="tu@email.com"
+                                        className="w-full bg-[#1A1D26] border border-white/5 text-white text-sm rounded-xl px-4 py-3 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 outline-none transition-all placeholder:text-gray-600"
+                                    />
+                                    <p className="text-[10px] text-gray-500">
+                                        Aquí recibirás el comprobante y el acceso al curso.
+                                    </p>
                                 </div>
-                                {paymentStatus === 'rejected' && (
-                                    <p className="text-red-400 text-sm text-center">El pago fue rechazado. Intenta con otro medio.</p>
-                                )}
+
+                                {/* Coupon Input */}
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center justify-between">
+                                        <span>Cupón de Descuento</span>
+                                        {isAnnual && (
+                                            <span className="text-[10px] text-emerald-400 normal-case flex items-center gap-1">
+                                                <Zap size={10} /> Incluye 3 meses gratis
+                                            </span>
+                                        )}
+                                    </label>
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            value={couponCode}
+                                            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                                            placeholder={isAnnual ? "Plan anual ya tiene descuento" : "CÓDIGO"}
+                                            disabled={!!appliedCoupon || isAnnual}
+                                            className="flex-1 bg-[#1A1D26] border border-white/5 text-white text-sm rounded-xl px-4 py-3 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 outline-none transition-all placeholder:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        />
+                                        {appliedCoupon ? (
+                                            <button
+                                                onClick={() => {
+                                                    setAppliedCoupon(null);
+                                                    setCouponCode("");
+                                                    setPreferenceId(null);
+                                                }}
+                                                className="bg-red-500/10 text-red-400 border border-red-500/20 px-4 rounded-xl hover:bg-red-500/20 transition-colors"
+                                            >
+                                                <X size={18} />
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={handleApplyCoupon}
+                                                disabled={!couponCode || isValidatingCoupon || isAnnual}
+                                                className="bg-white/5 text-white border border-white/10 px-6 rounded-xl font-medium hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+                                            >
+                                                {isValidatingCoupon ? <Loader2 size={16} className="animate-spin" /> : "Aplicar"}
+                                            </button>
+                                        )}
+                                    </div>
+                                    {!isAnnual && couponError && <p className="text-red-400 text-xs">{couponError}</p>}
+                                    {appliedCoupon && (
+                                        <p className="text-emerald-400 text-xs flex items-center gap-1.5">
+                                            <CheckCircle2 size={12} />
+                                            Cupón {appliedCoupon.code} aplicado
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Main Action Button */}
+                                <div className="pt-4">
+                                    {isLoading ? (
+                                        <div className="w-full h-14 bg-white/5 rounded-xl flex items-center justify-center gap-3 text-gray-400 animate-pulse border border-white/5">
+                                            <Loader2 size={20} className="animate-spin" />
+                                            <span className="text-sm font-medium">Preparando pago...</span>
+                                        </div>
+                                    ) : preferenceId ? (
+                                        <a
+                                            href={preferenceId ? initPoint! : "#"}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="group relative w-full h-14 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-900/20 hover:shadow-indigo-900/40 flex items-center justify-between px-6 overflow-hidden"
+                                        >
+                                            <div className="flex items-center gap-3 z-10">
+                                                <div className="bg-white/20 p-1.5 rounded-lg">
+                                                    <img src="/payment-icons/mercadopago-new.png" alt="MP" className="h-4 w-auto brightness-0 invert" />
+                                                </div>
+                                                <span className="text-base tracking-wide">Ir a Pagar</span>
+                                            </div>
+                                            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform z-10" />
+                                            {/* Shine effect */}
+                                            <div className="absolute top-0 -left-full w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-[-20deg] animate-[shimmer_2.5s_infinite]"></div>
+                                        </a>
+                                    ) : (
+                                        <button
+                                            disabled={true} // Disabled if init failed or still loading (handled by isLoading above)
+                                            className="w-full h-14 bg-white/5 text-gray-500 font-bold rounded-xl border border-white/5 flex items-center justify-center cursor-not-allowed"
+                                        >
+                                            <span>Completa los datos para continuar</span>
+                                        </button>
+                                    )}
+
+                                    {/* Helper Text */}
+                                    <p className="text-center text-[10px] text-gray-500 mt-4 leading-relaxed">
+                                        Al continuar, aceptas iniciar una suscripción recurrente (si corresponde) y nuestros términos y condiciones.
+                                    </p>
+                                </div>
+
                             </div>
-                        ) : null}
+                        )}
                     </div>
 
-                    {/* Right Column Footer (Requested Image info) */}
-                    <div className="bg-muted/50 py-4 px-8 border-t border-border flex items-center justify-between">
+                    {/* Footer - Fixed at bottom of right col */}
+                    <div className="bg-[#0A0A0A] py-4 px-8 border-t border-white/5 flex items-center justify-between shrink-0">
                         <div className="flex items-center gap-2">
                             <span className="text-lg">🇦🇷</span>
-                            <span className="text-xs text-muted-foreground font-medium">Precios en pesos argentinos.</span>
+                            <span className="text-xs text-gray-400 font-medium">Precios en Pesos.</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-xs text-muted-foreground">Pagá con</span>
-                            <img
-                                src="/mercadopago.png"
-                                alt="Mercado Pago"
-                                className="h-4 w-auto"
-                            />
+                        <div className="flex items-center gap-2 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
+                            <span className="text-[10px] text-gray-500 uppercase tracking-widest hidden sm:block">Procesado por</span>
+                            <img src="/payment-icons/mercadopago-new.png" alt="Mercado Pago" className="h-4 w-auto object-contain" />
                         </div>
                     </div>
 
