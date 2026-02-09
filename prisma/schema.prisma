@@ -34,42 +34,43 @@ model Session {
 }
 
 model User {
-  id             String         @id @default(cuid())
-  name           String?
-  email          String?        @unique
-  emailVerified  DateTime?
-  image          String?
-  role           String         @default("ESTUDIANTE")
-  companyId      String?
-  createdAt      DateTime       @default(now())
-  isCompanyAdmin Boolean        @default(false)
-  password       String?
-  telegram       String?
-  telegramVerified Boolean      @default(false)
-  updatedAt      DateTime       @updatedAt
-  accounts       Account[]
-  purchases      Purchase[]
-  sessions       Session[]
-  subscriptions  Subscription[]
-  notifications  Notification[]
-  notificationPrefs Json?        @default("{\"telegram\": true, \"inApp\": true}")
-  company        Company?       @relation(fields: [companyId], references: [id])
-  progress       UserProgress[]
-  rewards        UserReward[]
-  reviews        Review[]
+  id                String         @id @default(cuid())
+  name              String?
+  email             String?        @unique
+  emailVerified     DateTime?
+  image             String?
+  role              String         @default("ESTUDIANTE")
+  companyId         String?
+  createdAt         DateTime       @default(now())
+  isCompanyAdmin    Boolean        @default(false)
+  updatedAt         DateTime       @updatedAt
+  telegram          String?
+  telegramVerified  Boolean        @default(false)
+  password          String?
+  notificationPrefs Json?          @default("{\"inApp\": true, \"telegram\": true}")
+  accounts          Account[]
+  notifications     Notification[]
+  purchases         Purchase[]
+  reviews           Review[]
+  sessions          Session[]
+  subscriptions     Subscription[]
+  company           Company?       @relation(fields: [companyId], references: [id])
+  progress          UserProgress[]
+  rewards           UserReward[]
+  userCareers       UserCareer[]
 }
 
 model UserReward {
-  id        String   @id @default(cuid())
-  userId    String
-  courseId  String
-  rewardType String  // e.g. "COURSE_COMPLETION"
-  rewardId  String   // e.g. "LANZAMIENTO10"
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String
+  rewardType String
+  rewardId   String
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId])
   @@unique([userId, courseId, rewardType])
+  @@index([userId])
 }
 
 model Notification {
@@ -77,7 +78,7 @@ model Notification {
   userId    String
   title     String
   content   String
-  type      String   @default("INFO") // INFO, SUCCESS, WARNING, COURSE
+  type      String   @default("INFO")
   read      Boolean  @default(false)
   url       String?
   createdAt DateTime @default(now())
@@ -115,20 +116,20 @@ model Course {
   title            String
   description      String?
   price            Decimal
-  discount         Int?       @default(0)
   imageUrl         String?
   category         String     @default("General")
   level            String     @default("Todos los niveles")
-  type             String     @default("COURSE") // COURSE, MENTORSHIP, MICRO_COURSE
   published        Boolean    @default(false)
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
   learningOutcomes String?
   shortDescription String?
+  discount         Int?       @default(0)
+  type             String     @default("COURSE")
   modules          Module[]
   purchases        Purchase[]
-  bundles          Bundle[]   @relation("BundleToCourse")
   reviews          Review[]
+  bundles          Bundle[]   @relation("BundleToCourse")
 }
 
 model Bundle {
@@ -200,10 +201,10 @@ model Lesson {
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   module      Module         @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  quiz        Quiz?
   resources   Resource[]
   progress    UserProgress[]
-  quiz        Quiz?
-  
+
   @@index([moduleId])
 }
 
@@ -212,11 +213,10 @@ model Quiz {
   question      String
   options       String[]
   correctOption Int
-  lesson        Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   lessonId      String   @unique
-
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  lesson        Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@index([lessonId])
 }
@@ -246,7 +246,7 @@ model Purchase {
   updatedAt    DateTime @updatedAt
   bundleId     String?
   couponId     String?
-  productName  String?  // Snapshot of item name at purchase time (or fallback)
+  productName  String?
   bundle       Bundle?  @relation(fields: [bundleId], references: [id], onDelete: Cascade)
   coupon       Coupon?  @relation(fields: [couponId], references: [id])
   course       Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -299,17 +299,16 @@ model Lead {
 model Review {
   id        String   @id @default(cuid())
   rating    Int
-  comment   String?  // Removed @db.Text as it might strict validation issues, String is enough for Prisma default
+  comment   String?
   userId    String
   courseId  String
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([courseId])
   @@index([userId])
 }
-
 
 model SalesGoal {
   id           String   @id @default(cuid())
@@ -327,4 +326,43 @@ model Expense {
   date      DateTime @default(now())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Career {
+  id          String   @id @default(cuid())
+  name        String
+  referenceId String   @unique // e.g. "career-trader-100"
+  description String?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  milestones  CareerMilestone[]
+  userCareers UserCareer[]
+}
+
+model CareerMilestone {
+  id        String   @id @default(cuid())
+  careerId  String
+  courseId  String?  // Optional if type is SUBSCRIPTION
+  type      String   // "COURSE", "SUBSCRIPTION"
+  position  Int
+  career    Career   @relation(fields: [careerId], references: [id], onDelete: Cascade)
+
+  @@index([careerId])
+}
+
+model UserCareer {
+  id          String   @id @default(cuid())
+  userId      String
+  careerId    String
+  progress    Int      @default(0) // 0-100
+  status      String   @default("IN_PROGRESS") // IN_PROGRESS, COMPLETED
+  lastSyncAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  career      Career   @relation(fields: [careerId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, careerId])
+  @@index([userId])
 }

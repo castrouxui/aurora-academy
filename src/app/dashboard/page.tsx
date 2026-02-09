@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { TelegramReminder } from "@/components/dashboard/TelegramReminder";
 import { PromotionalBanner } from "@/components/dashboard/PromotionalBanner";
 import { QuoteOfTheWeek } from "@/components/dashboard/QuoteOfTheWeek";
+import { CareerProgressCard } from "@/components/dashboard/CareerProgressCard";
 
 export default function StudentDashboard() {
     const { data: session } = useSession();
@@ -146,6 +147,13 @@ export default function StudentDashboard() {
                     </Card>
                 ))}
             </div>
+
+            {/* Career Progress Card */}
+            {session?.user?.id && (
+                <div className="max-w-md">
+                    <CareerProgressCard userId={session.user.id} careerReferenceId="career-trader-100" />
+                </div>
+            )}
 
             {/* Resources Section - Show only if items exist */}
             {/* Resources Section - Show only if items exist */}
