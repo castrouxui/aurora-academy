@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
         // Check 24-hour refund eligibility
         if (!isEligibleForRefund(purchase.createdAt)) {
             return NextResponse.json({
-                error: "La garantía de reembolso ha expirado (límite de 24 horas)."
+                error: "La garantía de reembolso ha expirado (límite de 7 días)."
             }, { status: 400 });
         }
 

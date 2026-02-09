@@ -91,6 +91,19 @@ export function ExitIntentModal() {
         };
     }, [showModal]);
 
+    // Block scroll when modal is open
+    useEffect(() => {
+        if (isVisible) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+
+        return () => {
+            document.body.style.overflow = "unset";
+        };
+    }, [isVisible]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email || !name) return;

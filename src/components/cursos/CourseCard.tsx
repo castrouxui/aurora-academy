@@ -19,6 +19,7 @@ interface CourseProps {
     basePath?: string;
     videoUrl?: string; // New prop for video URL
     rawPrice?: number;
+    discountPercentage?: number;
     type?: string;
 }
 
@@ -135,18 +136,31 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
                                     <span className="text-[#5D5CDE] font-black text-xl">GRATIS</span>
                                 </div>
                             ) : (
-                                <span className="text-white font-black text-xl">{course.price}</span>
-                            )}
-                        </div>
-                        <div className={cn(
-                            "h-10 w-10 rounded-full flex items-center justify-center text-white transition-all shadow-lg",
-                            isOwned ? "bg-emerald-500/20 text-emerald-500" : "bg-white/10 group-hover:bg-[#5D5CDE] group-hover:scale-110"
-                        )}>
-                            {isOwned ? <CheckCircle size={18} /> : <Video size={18} />}
-                        </div>
+                            ): (
+                                    <div className = "flex flex-col">
+                                    <div className = "flex items-center gap-2">
+                                         <span className = "text-white font-black text-xl">{course.price}</span>
+                        {course.discountPercentage && course.discountPercentage > 0 && (
+                            <span className="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded border border-emerald-400/20">
+                                {course.discountPercentage}% OFF
+                            </span>
+                        )}
                     </div>
+                    {course.oldPrice && (
+                        <span className="text-gray-500 line-through text-xs font-medium">{course.oldPrice}</span>
+                    )}
                 </div>
+                            )}
             </div>
-        </Link>
+            <div className={cn(
+                "h-10 w-10 rounded-full flex items-center justify-center text-white transition-all shadow-lg",
+                isOwned ? "bg-emerald-500/20 text-emerald-500" : "bg-white/10 group-hover:bg-[#5D5CDE] group-hover:scale-110"
+            )}>
+                {isOwned ? <CheckCircle size={18} /> : <Video size={18} />}
+            </div>
+        </div>
+                </div >
+            </div >
+        </Link >
     );
 }

@@ -36,8 +36,8 @@ export async function POST(req: Request) {
         const purchaseDate = new Date(purchase.createdAt);
         const diffHours = (now.getTime() - purchaseDate.getTime()) / (1000 * 60 * 60);
 
-        if (diffHours > 24) {
-            return new NextResponse("Refund period expired (24h limit)", { status: 403 });
+        if (diffHours > 168) {
+            return new NextResponse("Refund period expired (7-day limit)", { status: 403 });
         }
 
         // Verify status

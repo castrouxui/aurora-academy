@@ -10,7 +10,7 @@ export function isEligibleForRefund(purchaseDate: Date | string): boolean {
     const diffInMs = now.getTime() - purchase.getTime();
     const diffInHours = diffInMs / (1000 * 60 * 60);
 
-    return diffInHours <= 24;
+    return diffInHours <= 168; // 7 days * 24 hours
 }
 
 /**

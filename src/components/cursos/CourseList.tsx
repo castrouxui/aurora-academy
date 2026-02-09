@@ -36,16 +36,24 @@ export function CourseList() {
                             .flatMap((m: any) => m.lessons?.sort((a: any, b: any) => a.position - b.position) || [])
                             .find((l: any) => l.videoUrl);
 
+                        const basePrice = Number(course.price);
+                        const discount = course.discount || 0;
+                        const finalPrice = basePrice * (1 - discount / 100);
+
                         return {
                             id: course.id,
                             title: course.title,
                             instructor: "Aurora Academy",
                             rating: 5.0,
                             reviews: "(120)",
-                            price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
+                            price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(finalPrice),
+                            oldPrice: discount > 0
+                                ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice)
+                                : "",
+                            discountPercentage: discount > 0 ? discount : undefined,
                             image: course.imageUrl || "/course-placeholder.jpg",
                             tag: course.category || "General",
-                            rawPrice: course.price,
+                            rawPrice: finalPrice,
                             videoUrl: firstLessonWithVideo?.videoUrl || null
                         };
                     });
