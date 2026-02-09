@@ -35,6 +35,9 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
     const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discount: number, type: string } | null>(null);
 
+    // UI State
+    const [isEditingEmail, setIsEditingEmail] = useState(false);
+
     const handleApplyCoupon = async () => {
         setCouponError("");
         setIsValidatingCoupon(true);
@@ -250,24 +253,39 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                         </div>
 
                         {/* Features List */}
-                        <div className="hidden md:block space-y-3 md:space-y-4 mb-6 md:mb-8">
+                        <div className="hidden md:block space-y-4 mb-6 md:mb-8">
                             <div className="flex items-start gap-3 text-gray-300">
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
                                     <Zap size={16} className="text-green-400" />
                                 </div>
-                                <span className="text-sm">Acceso inmediato y vitalicio al contenido.</span>
+                                <span className="text-sm">Acceso inmediato y completo al contenido.</span>
                             </div>
                             <div className="flex items-start gap-3 text-gray-300">
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
                                     <ShieldCheck size={16} className="text-green-400" />
                                 </div>
-                                <span className="text-sm">Garantía de reembolso estricta de 24 hs.</span>
+                                <span className="text-sm">Garantía de satisfacción de 7 días.</span>
                             </div>
                             <div className="flex items-start gap-3 text-gray-300">
                                 <div className="bg-green-500/10 p-1 rounded-full mt-0.5">
                                     <Lock size={16} className="text-green-400" />
                                 </div>
                                 <span className="text-sm">Pago encriptado y 100% seguro.</span>
+                            </div>
+
+                            {/* Social Proof Snippet */}
+                            <div className="mt-6 pt-6 border-t border-white/5">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex -space-x-2">
+                                        <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="/testimonials/marcos.jpg" alt="Student" />
+                                        <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="/testimonials/sofia.jpg" alt="Student" />
+                                        <div className="w-8 h-8 rounded-full border-2 border-slate-900 bg-emerald-500/20 flex items-center justify-center text-[10px] font-bold text-emerald-400">+1k</div>
+                                    </div>
+                                    <p className="text-xs text-gray-400 leading-snug">
+                                        <span className="text-white font-bold block">Unite a +1.000 alumnos</span>
+                                        que ya están operando en el mercado.
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
@@ -276,18 +294,47 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
                                 Email de tu Cuenta Mercado Pago
                             </label>
-                            <input
-                                type="email"
-                                value={mpEmail}
-                                onChange={(e) => {
-                                    setMpEmail(e.target.value);
-                                    setPreferenceId(null); // Re-trigger preference creation on change
-                                }}
-                                placeholder="tu@email.com"
-                                className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none h-10"
-                            />
+
+                            {/* Optimization: Show as text by default to reduce friction */}
+                            {!isEditingEmail ? (
+                                <div className="flex items-center justify-between bg-muted/40 border border-border rounded-lg px-3 py-2 h-10">
+                                    <span className="text-sm text-foreground truncate">{mpEmail}</span>
+                                    <button
+                                        onClick={() => setIsEditingEmail(true)}
+                                        className="text-xs text-primary hover:text-primary/80 font-bold ml-2 underline"
+                                    >
+                                        Editar
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="email"
+                                            autoFocus
+                                            value={mpEmail}
+                                            onChange={(e) => {
+                                                setMpEmail(e.target.value);
+                                                setPreferenceId(null);
+                                            }}
+                                            onBlur={() => {
+                                                if (mpEmail) setIsEditingEmail(false);
+                                            }}
+                                            placeholder="tu@email.com"
+                                            className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none h-10"
+                                        />
+                                        <button
+                                            onClick={() => setIsEditingEmail(false)}
+                                            className="bg-primary/10 text-primary hover:bg-primary/20 px-3 py-2 rounded-lg text-xs font-bold transition-colors"
+                                        >
+                                            Listo
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
                             <p className="text-[10px] text-muted-foreground mt-1 leading-tight">
-                                * Debe coincidir con el email de tu cuenta de Mercado Pago para evitar errores.
+                                * Por defecto usamos tu email de registro. Editalo solo si tu cuenta de Mercado Pago es diferente.
                             </p>
                         </div>
 

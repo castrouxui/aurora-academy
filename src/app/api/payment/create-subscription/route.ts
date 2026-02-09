@@ -42,7 +42,20 @@ export async function POST(req: NextRequest) {
                 // @ts-ignore
                 const basePrice = Number(bundle.price);
                 finalPrice = isAnnual ? basePrice * 12 * 0.75 : basePrice;
+            } else {
+                return NextResponse.json({ error: "Bundle not found for title" }, { status: 400 });
             }
+        }
+
+        // 1. Validate Bundle Existence (CRITICAL for FK Constraint)
+        if (!bundleId) {
+            return NextResponse.json({ error: "Invalid Request: Missing Bundle ID" }, { status: 400 });
+        }
+
+        // 2. Validate User Existence (CRITICAL for FK Constraint)
+        const userExists = await prisma.user.findUnique({ where: { id: userId } });
+        if (!userExists) {
+            return NextResponse.json({ error: "Invalid Request: User not found" }, { status: 400 });
         }
 
 

@@ -134,14 +134,14 @@ export function CourseSidebar({
                         </div>
                     </div>
 
-                    <p className="text-center text-xs text-gray-400">Garantía de reembolso de 24 hs.</p>
+                    <p className="text-center text-xs text-gray-400">Garantía de satisfacción de 7 días.</p>
 
                     <div className="space-y-4 pt-4 border-t border-gray-700">
                         <h4 className="font-bold text-white text-sm">Este curso incluye:</h4>
                         <ul className="space-y-3 text-sm text-gray-300">
                             <li className="flex items-center gap-3">
                                 <Clock size={18} className="shrink-0 text-primary" />
-                                <span>Acceso de por vida</span>
+                                <span>Acceso completo 24/7</span>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Trophy size={18} className="shrink-0 text-primary" />

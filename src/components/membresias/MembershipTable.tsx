@@ -334,7 +334,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                             <div className="mt-3 flex items-start gap-2 opacity-80 min-h-[32px]">
                                 <span className="text-sm mt-0.5">🛡️</span>
                                 <p className="text-[10px] leading-snug text-gray-400 font-medium text-left">
-                                    <strong className="text-gray-300">Garantía de 24hs:</strong> Probá la academia sin riesgo. Si sentís que no es para vos, te devolvemos el 100%.
+                                    <strong className="text-gray-300">Garantía de 7 días:</strong> Probá la academia sin riesgo. Si no cumple tus expectativas, te devolvemos el 100%.
                                 </p>
                             </div>
                         </div>

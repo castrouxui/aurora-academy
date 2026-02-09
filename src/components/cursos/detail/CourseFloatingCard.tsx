@@ -213,7 +213,7 @@ export function CourseFloatingCard({
                                 Comprar Ahora
                             </Button>
                         )}
-                        <p className="text-center text-xs text-gray-500 font-medium">Garantía de devolución de dinero de 24 hs.</p>
+                        <p className="text-center text-xs text-gray-500 font-medium">Garantía de satisfacción de 7 días.</p>
                     </div>
 
                     {/* Course Include List */}
@@ -238,7 +238,7 @@ export function CourseFloatingCard({
                             </li>
                             <li className="flex items-center gap-3">
                                 <Globe size={18} className="shrink-0 text-[#5D5CDE]" />
-                                <span>Acceso de por vida</span>
+                                <span>Acceso completo 24/7</span>
                             </li>
                         </ul>
                     </div>

@@ -27,7 +27,21 @@ export async function POST(request: Request) {
 
 
             if (paymentData.status === "approved") {
-                const { user_id, course_id, bundle_id, coupon_id } = paymentData.metadata;
+                let { user_id, course_id, bundle_id, coupon_id } = paymentData.metadata || {};
+
+                // FALLBACK: If metadata is missing (sometimes happens with MP Subscription payments),
+                // try to extract from external_reference
+                if (!user_id && paymentData.external_reference) {
+                    try {
+                        const extRef = JSON.parse(paymentData.external_reference);
+                        user_id = extRef.user_id;
+                        bundle_id = extRef.bundle_id;
+                        coupon_id = extRef.coupon_id;
+                        console.log(`[WEBHOOK] Recovered metadata from external_reference for Payment ${id}`);
+                    } catch (e) {
+                        console.warn(`[WEBHOOK] Failed to parse external_reference for Payment ${id}`, e);
+                    }
+                }
 
                 if (user_id && (course_id || bundle_id)) {
                     // Check if purchase already exists

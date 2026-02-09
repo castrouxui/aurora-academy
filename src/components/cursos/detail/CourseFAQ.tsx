@@ -9,8 +9,8 @@ const FREQUENTLY_ASKED_QUESTIONS = [
         answer: "No, este curso está diseñado para guiarte desde los fundamentos básicos hasta conceptos avanzados. Comenzamos desde cero, explicándote qué es el mercado, cómo funciona y cómo puedes participar en él."
     },
     {
-        question: "¿El acceso al curso es de por vida?",
-        answer: "Sí, una vez que adquieres el curso, tienes acceso ilimitado para siempre. Puedes volver a ver las clases tantas veces como necesites y tendrás acceso a todas las actualizaciones futuras del contenido sin costo adicional."
+        question: "¿Por cuánto tiempo tengo acceso?",
+        answer: "Tendrás acceso ilimitado a todo el contenido, actualizaciones y nuevas clases mientras tu membresía se mantenga activa."
     },
     {
         question: "¿Otorgan certificado al finalizar?",
