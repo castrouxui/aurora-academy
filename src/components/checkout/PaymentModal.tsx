@@ -5,6 +5,7 @@ import { X, ArrowRight, ShieldCheck, Lock, Zap, CheckCircle2, Loader2 } from 'lu
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
+import { TESTIMONIALS } from "@/constants/testimonials";
 
 interface PaymentModalProps {
     isOpen: boolean;
@@ -36,7 +37,13 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
     const [appliedCoupon, setAppliedCoupon] = useState<{ code: string, discount: number, type: string } | null>(null);
 
     // UI State
-    const [isEditingEmail, setIsEditingEmail] = useState(false);
+    const [randomAvatars, setRandomAvatars] = useState<string[]>([]);
+
+    useEffect(() => {
+        // Randomly select 3 avatars on mount
+        const shuffled = [...TESTIMONIALS].sort(() => 0.5 - Math.random());
+        setRandomAvatars(shuffled.slice(0, 3).map(t => t.image));
+    }, []);
 
     const handleApplyCoupon = async () => {
         setCouponError("");
@@ -175,9 +182,9 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
             {/* 
                 Mobile: Maximize width but keep margin. 
-                Desktop: Slightly smaller height, properly centered.
+                Desktop: Slightly smaller height, properly centered, scaled down for better fit
             */}
-            <div className="bg-card w-full max-w-3xl max-h-[90vh] md:h-auto md:max-h-[650px] rounded-2xl shadow-2xl overflow-y-auto md:overflow-hidden border border-border flex flex-col md:flex-row relative">
+            <div className="bg-card w-full max-w-3xl max-h-[90vh] md:h-auto md:max-h-[600px] rounded-2xl shadow-2xl overflow-y-auto md:overflow-hidden border border-border flex flex-col md:flex-row relative transform md:scale-95 origin-center transition-transform">
 
                 {/* Close Button (Absolute) - Fixed position on mobile to be always visible */}
                 <button
@@ -277,8 +284,14 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             <div className="mt-6 pt-6 border-t border-white/5">
                                 <div className="flex items-center gap-3">
                                     <div className="flex -space-x-2">
-                                        <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="https://ui-avatars.com/api/?name=Marcos+L&background=random" alt="Student" />
-                                        <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="https://ui-avatars.com/api/?name=Sofia+R&background=random" alt="Student" />
+                                        {randomAvatars.length > 0 ? randomAvatars.map((img, i) => (
+                                            <img key={i} className="w-8 h-8 rounded-full border-2 border-slate-900 object-cover" src={img} alt="Student" />
+                                        )) : (
+                                            <>
+                                                <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="https://ui-avatars.com/api/?name=Marcos+L&background=random" alt="Student" />
+                                                <img className="w-8 h-8 rounded-full border-2 border-slate-900" src="https://ui-avatars.com/api/?name=Sofia+R&background=random" alt="Student" />
+                                            </>
+                                        )}
                                         <div className="w-8 h-8 rounded-full border-2 border-slate-900 bg-emerald-500/20 flex items-center justify-center text-[10px] font-bold text-emerald-400">+1k</div>
                                     </div>
                                     <p className="text-xs text-gray-400 leading-snug">
@@ -292,49 +305,24 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                         {/* Subscriber Email Input */}
                         <div className="mb-6">
                             <label className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2 block">
-                                Email de tu Cuenta Mercado Pago
+                                Email de Contacto (Mercado Pago)
                             </label>
 
-                            {/* Optimization: Show as text by default to reduce friction */}
-                            {!isEditingEmail ? (
-                                <div className="flex items-center justify-between bg-muted/40 border border-border rounded-lg px-3 py-2 h-10">
-                                    <span className="text-sm text-foreground truncate">{mpEmail}</span>
-                                    <button
-                                        onClick={() => setIsEditingEmail(true)}
-                                        className="text-xs text-primary hover:text-primary/80 font-bold ml-2 underline"
-                                    >
-                                        Editar
-                                    </button>
-                                </div>
-                            ) : (
-                                <div className="flex flex-col gap-2">
-                                    <div className="flex gap-2">
-                                        <input
-                                            type="email"
-                                            autoFocus
-                                            value={mpEmail}
-                                            onChange={(e) => {
-                                                setMpEmail(e.target.value);
-                                                setPreferenceId(null);
-                                            }}
-                                            onBlur={() => {
-                                                if (mpEmail) setIsEditingEmail(false);
-                                            }}
-                                            placeholder="tu@email.com"
-                                            className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none h-10"
-                                        />
-                                        <button
-                                            onClick={() => setIsEditingEmail(false)}
-                                            className="bg-primary/10 text-primary hover:bg-primary/20 px-3 py-2 rounded-lg text-xs font-bold transition-colors"
-                                        >
-                                            Listo
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
+                            <div className="flex flex-col gap-2">
+                                <input
+                                    type="email"
+                                    value={mpEmail}
+                                    onChange={(e) => {
+                                        setMpEmail(e.target.value);
+                                        setPreferenceId(null);
+                                    }}
+                                    placeholder="tu@email.com"
+                                    className="bg-background border border-border text-foreground text-sm rounded-lg px-3 py-2 w-full focus:border-primary outline-none h-10"
+                                />
+                            </div>
 
                             <p className="text-[10px] text-muted-foreground mt-1 leading-tight">
-                                * Por defecto usamos tu email de registro. Editalo solo si tu cuenta de Mercado Pago es diferente.
+                                * A este email llegará el comprobante y el acceso. Puedes cambiarlo si usas otro para pagar.
                             </p>
                         </div>
 

@@ -52,8 +52,26 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Invalid Request: Missing Bundle ID" }, { status: 400 });
         }
 
+        // DOUBLE CHECK: Validate that the Bundle ID actually exists in DB to prevent FK Error
+        const bundleExists = await prisma.bundle.findUnique({
+            where: { id: bundleId },
+            select: { id: true } // Minimal select for performance
+        });
+
+        if (!bundleExists) {
+            return NextResponse.json({ error: "Invalid Request: Bundle ID not found in database" }, { status: 400 });
+        }
+
         // 2. Validate User Existence (CRITICAL for FK Constraint)
-        const userExists = await prisma.user.findUnique({ where: { id: userId } });
+        if (!userId) {
+            return NextResponse.json({ error: "Invalid Request: Missing User ID" }, { status: 400 });
+        }
+
+        const userExists = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { id: true }
+        });
+
         if (!userExists) {
             return NextResponse.json({ error: "Invalid Request: User not found" }, { status: 400 });
         }
