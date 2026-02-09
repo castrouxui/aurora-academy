@@ -58,17 +58,30 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                         if (course.type === 'MENTORSHIP') typeLabel = 'Mentoría';
                         if (course.type === 'MICRO_COURSE') typeLabel = 'Micro Curso';
 
+                        // Calculate Price & Discount
+                        const basePrice = Number(course.price);
+                        const discount = course.discount || 0;
+                        let finalPrice = basePrice;
+                        let oldPriceFormatted = null;
+
+                        if (discount > 0) {
+                            finalPrice = basePrice - (basePrice * (discount / 100));
+                            oldPriceFormatted = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice);
+                        }
+
                         return {
                             id: course.id,
                             title: course.title,
                             instructor: "Aurora Academy",
                             rating: 5.0,
                             reviews: "(0)",
-                            price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(Number(course.price)),
+                            price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(finalPrice),
+                            oldPrice: oldPriceFormatted,
+                            discountPercentage: discount > 0 ? discount : null,
                             image: finalImage,
                             tag: course.category || "General",
                             level: course.level || "Todos los niveles",
-                            rawPrice: course.price,
+                            rawPrice: finalPrice,
                             createdAt: course.createdAt,
                             videoUrl: firstLessonWithVideo?.videoUrl || null,
                             type: typeLabel // Use mapped label
@@ -137,9 +150,9 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                                 }
                             }}
                             className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all border ${(tab === 'Todos' && (!activeFilters.types || activeFilters.types.length === 0)) ||
-                                    (activeFilters.types?.includes(tab))
-                                    ? 'bg-[#5D5CDE] text-white border-[#5D5CDE] shadow-lg shadow-[#5D5CDE]/20'
-                                    : 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10 hover:text-white'
+                                (activeFilters.types?.includes(tab))
+                                ? 'bg-[#5D5CDE] text-white border-[#5D5CDE] shadow-lg shadow-[#5D5CDE]/20'
+                                : 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10 hover:text-white'
                                 }`}
                         >
                             {tab}

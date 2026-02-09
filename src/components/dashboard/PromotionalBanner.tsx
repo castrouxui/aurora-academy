@@ -36,7 +36,7 @@ export function PromotionalBanner() {
                         </Button>
                     </Link>
                     <p className="text-center mt-3 text-xs text-muted-foreground">
-                        Garantía de 24 hs. • Acceso inmediato
+                        Garantía de 7 días. • Acceso inmediato
                     </p>
                 </div>
 

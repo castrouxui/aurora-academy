@@ -167,11 +167,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 }
             };
 
-            const timer = setTimeout(() => {
-                createPreference();
-            }, 800); // Debounce input
-
-            return () => clearTimeout(timer);
+            createPreference();
         }
     }, [isOpen, courseTitle, coursePrice, preferenceId, courseId, effectiveUserId, appliedCoupon, bundleId, mpEmail]);
 
@@ -179,19 +175,19 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-0 md:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
             {/* 
                 Mobile: Maximize width but keep margin. 
                 Desktop: Slightly smaller height, properly centered, scaled down for better fit
             */}
-            <div className="bg-card w-full max-w-3xl max-h-[90vh] md:h-auto md:max-h-[600px] rounded-2xl shadow-2xl overflow-y-auto md:overflow-hidden border border-border flex flex-col md:flex-row relative transform md:scale-95 origin-center transition-transform">
+            <div className="bg-card w-full h-full md:h-auto md:max-w-3xl md:max-h-[600px] rounded-none md:rounded-2xl shadow-2xl overflow-y-auto md:overflow-hidden border-none md:border border-border flex flex-col md:flex-row relative transform md:scale-95 origin-center transition-transform">
 
                 {/* Close Button (Absolute) - Fixed position on mobile to be always visible */}
                 <button
                     onClick={onClose}
-                    className="fixed md:absolute top-4 right-4 z-50 text-muted-foreground hover:text-white bg-black/20 hover:bg-black/40 p-2 rounded-full transition-all backdrop-blur-md"
+                    className="fixed md:absolute top-4 right-4 z-50 text-muted-foreground hover:text-white bg-black/40 hover:bg-black/60 p-2 rounded-full transition-all backdrop-blur-md"
                 >
-                    <X size={20} />
+                    <X size={24} />
                 </button>
 
                 {/* LEFT COLUMN: Order Summary (Darker/Card style) */}
@@ -389,7 +385,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 <div className="w-full md:w-7/12 bg-card relative flex flex-col">
 
                     {/* Mobile: Padded, Desktop: Internal Scroll */}
-                    <div className="p-5 md:p-8 flex-1 md:overflow-y-auto md:max-h-[calc(90vh-80px)]">
+                    <div className="p-6 md:p-8 flex-1 overflow-y-auto md:max-h-[calc(90vh-80px)]">
                         <h3 className="text-xl font-semibold text-foreground mb-6 flex items-center gap-2">
                             Finalizar Compra
                         </h3>
