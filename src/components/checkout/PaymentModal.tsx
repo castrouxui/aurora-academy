@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { TESTIMONIALS } from "@/constants/testimonials";
+import { getRegisteredUserCount, getReviewAvatars } from "@/actions/user";
 
 interface PaymentModalProps {
     isOpen: boolean;
@@ -38,11 +39,33 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
 
     // UI State
     const [randomAvatars, setRandomAvatars] = useState<string[]>([]);
+    const [userCount, setUserCount] = useState(1000);
 
     useEffect(() => {
-        // Randomly select 3 avatars on mount
-        const shuffled = [...TESTIMONIALS].sort(() => 0.5 - Math.random());
-        setRandomAvatars(shuffled.slice(0, 3).map(t => t.image));
+        const initSocialProof = async () => {
+            // 1. Get total users count
+            getRegisteredUserCount().then(setUserCount);
+
+            // 2. Try to get real avatars from DB
+            const dbAvatars = await getReviewAvatars();
+
+            let finalAvatars: string[] = [];
+
+            if (dbAvatars && dbAvatars.length >= 3) {
+                // If we have enough real DB avatars, use them (random shuffle)
+                finalAvatars = dbAvatars.sort(() => 0.5 - Math.random()).slice(0, 3);
+            } else {
+                // Fallback: Mix DB avatars with Testimonials
+                const testimonialAvatars = TESTIMONIALS.map(t => t.image);
+                const combined = [...dbAvatars, ...testimonialAvatars];
+                // Shuffle and pick 3
+                finalAvatars = combined.sort(() => 0.5 - Math.random()).slice(0, 3);
+            }
+
+            setRandomAvatars(finalAvatars);
+        };
+
+        initSocialProof();
     }, []);
 
     const handleApplyCoupon = async () => {
@@ -291,7 +314,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                         <div className="w-8 h-8 rounded-full border-2 border-slate-900 bg-emerald-500/20 flex items-center justify-center text-[10px] font-bold text-emerald-400">+1k</div>
                                     </div>
                                     <p className="text-xs text-gray-400 leading-snug">
-                                        <span className="text-white font-bold block">Unite a +1.000 alumnos</span>
+                                        <span className="text-white font-bold block">Unite a +{userCount} alumnos</span>
                                         que ya están operando en el mercado.
                                     </p>
                                 </div>
