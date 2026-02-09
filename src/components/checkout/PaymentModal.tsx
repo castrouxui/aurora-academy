@@ -204,7 +204,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 - Mobile: Full width/height adaptation, scrollable body
                 - Desktop: Centered, fixed max-height, internal scrolling
             */}
-            <div className="bg-[#0F1115] w-full max-w-5xl h-full md:h-auto md:max-h-[85vh] rounded-none md:rounded-2xl shadow-2xl flex flex-col md:flex-row relative overflow-y-auto md:overflow-hidden border-none md:border border-white/10">
+            <div className="bg-[#13151A] w-full max-w-5xl h-full md:h-auto md:max-h-[85vh] rounded-none md:rounded-2xl shadow-2xl flex flex-col md:flex-row relative overflow-y-auto md:overflow-hidden border-none md:border border-white/20 ring-1 ring-white/5">
 
                 {/* Close Button - Fixed on mobile to ensure visibility */}
                 <button
@@ -215,7 +215,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 </button>
 
                 {/* LEFT COLUMN: Order Summary (Visual & Trust) */}
-                <div className="w-full md:w-5/12 bg-[#0A0A0A] p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-white/5 relative shrink-0 md:overflow-y-auto custom-scrollbar">
+                <div className="w-full md:w-5/12 bg-[#0D0F13] p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-white/10 relative shrink-0 md:overflow-y-auto custom-scrollbar">
 
                     {/* Background blob */}
                     <div className="absolute top-0 left-0 w-full h-40 bg-indigo-500/5 blur-3xl pointer-events-none"></div>
@@ -306,14 +306,14 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                             <div className="flex items-center gap-3">
                                 <div className="flex -space-x-3">
                                     {randomAvatars.length > 0 ? randomAvatars.map((img, i) => (
-                                        <img key={i} className="w-9 h-9 rounded-full border-2 border-[#0A0A0A] object-cover" src={img} alt="Student" />
+                                        <img key={i} className="w-9 h-9 rounded-full border-2 border-[#0D0F13] object-cover" src={img} alt="Student" />
                                     )) : (
                                         <>
-                                            <img className="w-9 h-9 rounded-full border-2 border-[#0A0A0A]" src="https://ui-avatars.com/api/?name=Marcos+L&background=random" alt="Student" />
-                                            <img className="w-9 h-9 rounded-full border-2 border-[#0A0A0A]" src="https://ui-avatars.com/api/?name=Sofia+R&background=random" alt="Student" />
+                                            <img className="w-9 h-9 rounded-full border-2 border-[#0D0F13]" src="https://ui-avatars.com/api/?name=Marcos+L&background=random" alt="Student" />
+                                            <img className="w-9 h-9 rounded-full border-2 border-[#0D0F13]" src="https://ui-avatars.com/api/?name=Sofia+R&background=random" alt="Student" />
                                         </>
                                     )}
-                                    <div className="w-9 h-9 rounded-full border-2 border-[#0A0A0A] bg-[#1e2235] flex items-center justify-center text-[10px] font-bold text-white">+1k</div>
+                                    <div className="w-9 h-9 rounded-full border-2 border-[#0D0F13] bg-[#1e2235] flex items-center justify-center text-[10px] font-bold text-white">+1k</div>
                                 </div>
                                 <div className="flex flex-col">
                                     <div className="flex items-center gap-1 mb-0.5">
@@ -329,7 +329,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 </div>
 
                 {/* RIGHT COLUMN: Action Form */}
-                <div className="w-full md:w-7/12 bg-[#0F1115] relative flex flex-col h-full overflow-hidden">
+                <div className="w-full md:w-7/12 bg-[#13151A] relative flex flex-col h-full overflow-hidden">
 
                     {/* Scrollable Content */}
                     <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
@@ -363,7 +363,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                 {/* Email Input */}
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                                        Email de Contacto
+                                        Email de tu cuenta Mercado Pago
                                     </label>
                                     <input
                                         type="email"
@@ -376,7 +376,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                         className="w-full bg-[#1A1D26] border border-white/5 text-white text-sm rounded-xl px-4 py-3 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 outline-none transition-all placeholder:text-gray-600"
                                     />
                                     <p className="text-[10px] text-gray-500">
-                                        Aquí recibirás el comprobante y el acceso al curso.
+                                        Importante: Usá el mismo email que tenés registrado en Mercado Pago para evitar problemas.
                                     </p>
                                 </div>
 
@@ -441,13 +441,14 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                             href={preferenceId ? initPoint! : "#"}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="group relative w-full h-14 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-900/20 hover:shadow-indigo-900/40 flex items-center justify-between px-6 overflow-hidden"
+                                            className="group relative w-full h-14 bg-[#009EE3] hover:bg-[#008CC9] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#009EE3]/20 hover:shadow-[#009EE3]/40 flex items-center justify-between px-6 overflow-hidden"
                                         >
                                             <div className="flex items-center gap-3 z-10">
-                                                <div className="bg-white/20 p-1.5 rounded-lg">
-                                                    <img src="/payment-icons/mercadopago-new.png" alt="MP" className="h-4 w-auto brightness-0 invert" />
+                                                <div className="bg-white/20 p-1.5 rounded-lg flex items-center justify-center">
+                                                    {/* Changed image src to generic MP logo if specific one fails, otherwise relying on brightness removal fix */}
+                                                    <img src="/mercadopago.png" alt="MP" className="h-5 w-auto object-contain brightness-0 invert" />
                                                 </div>
-                                                <span className="text-base tracking-wide">Ir a Pagar</span>
+                                                <span className="text-base tracking-wide">Pagar con Mercado Pago</span>
                                             </div>
                                             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform z-10" />
                                             {/* Shine effect */}
@@ -473,14 +474,14 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                     </div>
 
                     {/* Footer - Fixed at bottom of right col */}
-                    <div className="bg-[#0A0A0A] py-4 px-8 border-t border-white/5 flex items-center justify-between shrink-0">
+                    <div className="bg-[#0D0F13] py-4 px-8 border-t border-white/5 flex items-center justify-between shrink-0">
                         <div className="flex items-center gap-2">
                             <span className="text-lg">🇦🇷</span>
                             <span className="text-xs text-gray-400 font-medium">Precios en Pesos.</span>
                         </div>
                         <div className="flex items-center gap-2 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all">
                             <span className="text-[10px] text-gray-500 uppercase tracking-widest hidden sm:block">Procesado por</span>
-                            <img src="/payment-icons/mercadopago-new.png" alt="Mercado Pago" className="h-4 w-auto object-contain" />
+                            <img src="/mercadopago.png" alt="Mercado Pago" className="h-4 w-auto object-contain" />
                         </div>
                     </div>
 
