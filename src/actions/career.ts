@@ -98,6 +98,28 @@ export async function getCareerProgress(userId: string, careerReferenceId: strin
                 userCareers: { where: { userId } }
             }
         });
+    } else if (career && careerReferenceId === "career-trader-100") {
+        // Check for integrity: Ensure key courses exist
+        const requiredCourses = await prisma.course.findMany({
+            where: {
+                id: { in: ["cl_camino_inversor", "cmleeinzo0000lk6ifkpg84m1"] }
+            },
+            select: { id: true }
+        });
+
+        if (requiredCourses.length < 2) {
+            console.log("🛠️ Detected missing courses in 'Trader de 0 a 100', triggering self-healing...");
+            await seedTraderCareerIfMissing();
+
+            // Re-fetch career to get updated milestones
+            career = await prisma.career.findUnique({
+                where: { referenceId: careerReferenceId },
+                include: {
+                    milestones: { orderBy: { position: 'asc' } },
+                    userCareers: { where: { userId } }
+                }
+            });
+        }
     }
 
     if (!career) {
