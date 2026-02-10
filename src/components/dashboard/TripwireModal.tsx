@@ -88,7 +88,7 @@ export function TripwireModal({ isOpen, onClose }: TripwireModalProps) {
                     {/* CTAs */}
                     <div className="space-y-3">
                         <Link
-                            href="/cursos/cl_7_pilares_exito"
+                            href="/cursos/cmleeinzo0000lk6ifkpg84m1"
                             className="flex items-center justify-center w-full bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-[#5D5CDE]/25 gap-2 group"
                         >
                             <span>Obtener Oferta Especial</span>

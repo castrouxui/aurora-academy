@@ -23,10 +23,10 @@ async function seedTraderCareerIfMissing() {
         });
 
         await prisma.course.upsert({
-            where: { id: "cl_7_pilares_exito" },
+            where: { id: "cmleeinzo0000lk6ifkpg84m1" },
             update: { published: true },
             create: {
-                id: "cl_7_pilares_exito",
+                id: "cmleeinzo0000lk6ifkpg84m1",
                 title: "Los 7 Pilares del Éxito en Bolsa",
                 description: "Estrategias avanzadas para operar en bolsa.",
                 price: 7000,
@@ -50,7 +50,7 @@ async function seedTraderCareerIfMissing() {
         // Positions: 0 (Free), 1 (Paid), 2 (Subscription)
         const milestones = [
             { courseId: "cl_camino_inversor", type: "COURSE", position: 0 },
-            { courseId: "cl_7_pilares_exito", type: "COURSE", position: 1 },
+            { courseId: "cmleeinzo0000lk6ifkpg84m1", type: "COURSE", position: 1 },
             { courseId: null, type: "SUBSCRIPTION", position: 2 }
         ];
 

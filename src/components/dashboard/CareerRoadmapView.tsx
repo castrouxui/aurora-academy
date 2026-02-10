@@ -79,7 +79,7 @@ export function CareerRoadmapView({ userId, careerReferenceId }: CareerRoadmapVi
                         if (isLocked) {
                             e.preventDefault();
                             if (index === 1) { // Tripwire
-                                window.location.href = "/checkout/cl_7_pilares_exito";
+                                window.location.href = "/checkout/cmleeinzo0000lk6ifkpg84m1";
                             } else if (index === 2) { // Membership
                                 window.location.href = "/membresias";
                             }
