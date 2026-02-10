@@ -5,23 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getRegisteredUserCount } from "@/actions/user";
 
 export function ExitIntentModal() {
     const [isVisible, setIsVisible] = useState(false);
     const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const [hasTriggered, setHasTriggered] = useState(false);
-    const [userCount, setUserCount] = useState(1000);
 
     // 3 days cooldown
     const COOLDOWN_DAYS = 3;
     const STORAGE_KEY = "aurora_exit_intent_seen";
-
-    useEffect(() => {
-        getRegisteredUserCount().then(setUserCount);
-    }, []);
 
     const checkShouldShow = useCallback(() => {
         // If already open or triggered in this session, don't show again immediatey unless logic allows (here we block re-trigger)
@@ -69,7 +62,7 @@ export function ExitIntentModal() {
         const handleScroll = () => {
             const scrollPercentage = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
             // Trigger if scrolled > 90%
-            if (scrollPercentage > 0.5) {
+            if (scrollPercentage > 0.9) {
                 showModal();
                 // Remove this listener to prevent repeated checks if desired, but checkShouldShow handles logic
             }
@@ -97,22 +90,9 @@ export function ExitIntentModal() {
         };
     }, [showModal]);
 
-    // Block scroll when modal is open
-    useEffect(() => {
-        if (isVisible) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "unset";
-        }
-
-        return () => {
-            document.body.style.overflow = "unset";
-        };
-    }, [isVisible]);
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!email || !name) return;
+        if (!email) return;
 
         setStatus("loading");
 
@@ -120,7 +100,7 @@ export function ExitIntentModal() {
             const res = await fetch("/api/capture-lead", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, name }),
+                body: JSON.stringify({ email }),
             });
 
             if (res.ok) {
@@ -189,7 +169,7 @@ export function ExitIntentModal() {
                                         ¿Todavía no estás listo para dar el paso?
                                     </h2>
                                     <p className="text-gray-400 text-base leading-relaxed">
-                                        No te vayas con las manos vacías. Unite a los <span className="text-purple-400 font-semibold">+{userCount} alumnos</span> que ya están transformando su relación con el dinero.
+                                        No te vayas con las manos vacías. Unite a los <span className="text-purple-400 font-semibold">+1.000 alumnos</span> que ya están transformando su relación con el dinero.
                                     </p>
                                     <p className="text-white font-medium bg-white/5 p-3 rounded-lg border border-white/5 inline-block w-full text-center sm:text-left">
                                         🎁 Accedé gratis a "El camino del inversor"
@@ -197,16 +177,7 @@ export function ExitIntentModal() {
                                 </div>
 
                                 <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div className="space-y-3">
-                                        <Input
-                                            type="text"
-                                            placeholder="Tu nombre..."
-                                            value={name}
-                                            onChange={(e) => setName(e.target.value)}
-                                            required
-                                            disabled={status === "loading"}
-                                            className="h-12 border-white/10 bg-white/5 text-white placeholder:text-gray-500 focus:border-purple-500/50 focus:ring-purple-500/20 text-base"
-                                        />
+                                    <div className="space-y-2">
                                         <Input
                                             type="email"
                                             placeholder="Tu mejor email..."
@@ -251,4 +222,3 @@ export function ExitIntentModal() {
         </AnimatePresence>
     );
 }
-
