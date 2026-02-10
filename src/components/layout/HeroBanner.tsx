@@ -48,28 +48,26 @@ export function HeroBanner() {
                         </div>
 
                         <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white drop-shadow-2xl mb-4 md:mb-6 font-display leading-[0.95]">
-                            Dejá de ahorrar,<br />
+                            Tu dinero pierde valor,<br />
                             <span className="text-[#5D5CDE]">
-                                empezá a invertir.
+                                aprendé a multiplicarlo.
                             </span>
                         </h1>
 
                         <p className="mx-auto max-w-[750px] text-gray-300 text-base sm:text-lg md:text-xl font-medium leading-relaxed mb-6 md:mb-8 md:px-6">
-                            Aprendé con la metodología práctica de <span className="text-white font-bold">Fran Castro</span>. Contenido 100% on-demand para proteger tu capital y dominar el mercado. Sin vueltas.
+                            La inflación no espera. Domina los mercados financieros con la metodología de <span className="text-white font-bold">Fran Castro</span> y protege tu capital hoy mismo.
                         </p>
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
-                        <Link href="/membresias" className="w-full sm:w-auto">
-                            <Button
-                                className="h-16 px-10 text-base font-bold w-full sm:w-auto bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-xl shadow-xl shadow-[#5D5CDE]/20 transition-all active:scale-95"
-                            >
-                                Ver planes
+                        <Link href="/cursos/cml05hq7n00025z0eogogsnge" className="w-full sm:w-auto relative z-20">
+                            <Button className="h-16 px-10 text-base font-bold w-full sm:w-auto bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-xl shadow-xl shadow-[#5D5CDE]/20 transition-all active:scale-95">
+                                Empezá Gratis: El camino del inversor
                             </Button>
                         </Link>
-                        <Link href="/cursos/cml05hq7n00025z0eogogsnge" className="w-full sm:w-auto relative z-20">
+                        <Link href="/membresias" className="w-full sm:w-auto">
                             <Button variant="outline" className="h-16 px-10 text-base font-bold w-full sm:w-auto text-white border border-white/20 bg-white/5 hover:bg-white hover:text-black rounded-xl backdrop-blur-sm transition-all active:scale-95">
-                                Curso gratis: El camino del inversor
+                                Ver Membresías
                             </Button>
                         </Link>
                     </div>

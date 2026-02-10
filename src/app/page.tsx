@@ -11,6 +11,7 @@ import { EcosystemSection } from "@/components/layout/EcosystemSection";
 import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 import { AuthoritySection } from "@/components/layout/AuthoritySection";
 import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
+import { MediaSection } from "@/components/layout/MediaSection";
 
 export default function Home() {
   return (
@@ -19,6 +20,7 @@ export default function Home() {
       <div>
         <HeroBanner />
         <TrustBar />
+        <MediaSection />
 
         <Categories />
         <div id="courses" className="scroll-mt-32">

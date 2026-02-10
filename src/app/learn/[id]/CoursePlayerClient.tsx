@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
-import { Play, CheckCircle, Lock, MonitorPlay, FileText, MessageSquare, Download, Trophy, ChevronLeft, FolderPlus, File as FileIcon, BrainCircuit, X } from "lucide-react";
+import { Play, CheckCircle, Lock, MonitorPlay, FileText, MessageSquare, Download, Trophy, ChevronLeft, FolderPlus, File as FileIcon, BrainCircuit, X, Loader2 } from "lucide-react";
 import { cn, formatDuration } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CertificateModal } from "@/components/certificates/CertificateModal";
@@ -12,7 +12,9 @@ import { VideoPlayer } from "@/components/player/VideoPlayer";
 import { RewardModal } from "@/components/rewards/RewardModal";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { TripwireModal } from "@/components/dashboard/TripwireModal";
 
 interface Lesson {
     id: string;
@@ -40,6 +42,7 @@ interface CoursePlayerProps {
         id: string;
         title: string;
         description?: string;
+        price?: number;
         modules: Module[];
     };
     isAccess: boolean; // Does user own this course?
@@ -49,6 +52,7 @@ interface CoursePlayerProps {
 }
 
 export function CoursePlayerClient({ course, isAccess, studentName, backLink, hasReviewed }: CoursePlayerProps) {
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState("description");
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [isCertificateOpen, setIsCertificateOpen] = useState(false);
@@ -56,6 +60,9 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
     const [hasUserReviewed, setHasUserReviewed] = useState(hasReviewed);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [rewardModalOpen, setRewardModalOpen] = useState(false);
+    const [tripwireModalOpen, setTripwireModalOpen] = useState(false);
+    const [isEnrolling, setIsEnrolling] = useState(false);
+
 
     // Determine initial active lesson
     // If has access, first uncompleted or last played. 
@@ -97,6 +104,30 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
     const totalLessons = localModules.reduce((acc, m) => acc + m.lessons.length, 0);
     const completedLessons = localModules.reduce((acc, m) => acc + m.lessons.filter(l => l.completed).length, 0);
     const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+    const handleFreeEnroll = async () => {
+        setIsEnrolling(true);
+        try {
+            const res = await fetch("/api/enroll/free", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ courseId: course.id }),
+            });
+
+            if (res.ok) {
+                toast.success("¡Inscripción exitosa!");
+                router.refresh(); // Just refresh to update UI state
+            } else {
+                const data = await res.json();
+                toast.error(data.message || "Error al inscribirse");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error de conexión");
+        } finally {
+            setIsEnrolling(false);
+        }
+    };
 
     const handleToggleComplete = async (lessonId: string, currentStatus: boolean) => {
         // Quiz check removed
@@ -222,8 +253,28 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                     </div>
 
                     {/* Video Player Container - Full Width on Mobile */}
-                    <div className="bg-black w-full flex justify-center bg-[#050505] py-0 lg:py-10 aspect-video lg:aspect-auto border-b border-gray-800 lg:border-none">
-                        <div className="w-full lg:max-w-5xl h-full lg:h-auto">
+                    <div className="bg-black w-full flex justify-center bg-[#050505] py-0 lg:py-10 aspect-video lg:aspect-auto border-b border-gray-800 lg:border-none relative">
+                        <div className="w-full lg:max-w-5xl h-full lg:h-auto relative">
+                            {/* Enrollment Overlay if Locked and Free */}
+                            {!isAccess && course.price === 0 && (
+                                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                                    <div className="text-center p-6 bg-[#13151A] border border-[#5D5CDE]/30 rounded-2xl shadow-xl max-w-sm w-full mx-4">
+                                        <div className="w-12 h-12 bg-[#5D5CDE]/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <Play className="text-[#5D5CDE] fill-current" />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-white mb-2">Comenzar Curso Gratis</h3>
+                                        <p className="text-sm text-gray-400 mb-6">Inscríbete ahora para acceder a todas las lecciones y comenzar tu camino.</p>
+                                        <Button
+                                            onClick={handleFreeEnroll}
+                                            disabled={isEnrolling}
+                                            className="w-full bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold h-12 rounded-xl"
+                                        >
+                                            {isEnrolling ? <Loader2 className="animate-spin mr-2" /> : null}
+                                            {isEnrolling ? "Inscribiendo..." : "Comenzar Ahora"}
+                                        </Button>
+                                    </div>
+                                </div>
+                            )}
                             {activeLesson ? (
                                 <VideoPlayer
                                     key={activeLesson.id} // Re-mount on lesson change to reset player state correctly
@@ -548,8 +599,20 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
             {/* Reward Modal */}
             <RewardModal
                 isOpen={rewardModalOpen}
-                onClose={() => setRewardModalOpen(false)}
+                onClose={() => {
+                    setRewardModalOpen(false);
+                    // Hook to trigger Tripwire Modal for specific course
+                    if (course.id === 'cl_camino_inversor') {
+                        setTripwireModalOpen(true);
+                    }
+                }}
                 couponCode="LANZAMIENTO10"
+            />
+
+            {/* Tripwire Modal */}
+            <TripwireModal
+                isOpen={tripwireModalOpen}
+                onClose={() => setTripwireModalOpen(false)}
             />
 
 

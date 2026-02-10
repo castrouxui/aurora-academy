@@ -69,7 +69,7 @@ export function ExitIntentModal() {
         const handleScroll = () => {
             const scrollPercentage = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
             // Trigger if scrolled > 90%
-            if (scrollPercentage > 0.9) {
+            if (scrollPercentage > 0.5) {
                 showModal();
                 // Remove this listener to prevent repeated checks if desired, but checkShouldShow handles logic
             }
