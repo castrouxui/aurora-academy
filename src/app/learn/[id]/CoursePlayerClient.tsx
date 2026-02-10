@@ -451,30 +451,39 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                 />
 
                 <div className={cn(
-                    "fixed inset-y-0 right-0 z-50 w-80 bg-[#121620] border-l border-gray-800 shadow-2xl transform transition-transform duration-300 lg:relative lg:transform-none lg:w-96 lg:flex lg:flex-col lg:z-auto",
+                    "fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-[#0E1016] border-l border-gray-800/50 shadow-2xl transform transition-transform duration-300 lg:relative lg:transform-none lg:w-[400px] lg:flex lg:flex-col lg:z-auto flex flex-col",
                     mobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"
                 )}>
                     {/* Mobile Close Button */}
                     <button
                         onClick={() => setMobileMenuOpen(false)}
-                        className="lg:hidden absolute top-4 right-4 text-gray-400 hover:text-white"
+                        className="lg:hidden absolute top-4 right-4 z-50 p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700"
                     >
-                        <ChevronLeft size={24} className="rotate-180" />
+                        <X size={20} />
                     </button>
 
-                    <div className="p-5 border-b border-gray-800 pt-12 lg:pt-5">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-white">Contenido del Curso</h3>
-                            <span className={cn(
-                                "text-xs font-medium px-2 py-1 rounded-full",
-                                progress === 100 ? "text-white bg-green-600" : "text-emerald-400 bg-emerald-400/10"
-                            )}>
-                                {progress}% completado
-                            </span>
+                    {/* Sidebar Header */}
+                    <div className="p-6 border-b border-gray-800/50 bg-[#0E1016]">
+                        <h3 className="font-bold text-white text-lg mb-4">Contenido del Curso</h3>
+
+                        {/* Progress Bar */}
+                        <div className="space-y-2">
+                            <div className="flex justify-between text-xs font-semibold uppercase tracking-wide">
+                                <span className="text-gray-400">Tu Progreso</span>
+                                <span className={cn(progress === 100 ? "text-emerald-400" : "text-[#5D5CDE]")}>
+                                    {progress}%
+                                </span>
+                            </div>
+                            <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
+                                <div
+                                    className={cn("h-full rounded-full transition-all duration-500", progress === 100 ? "bg-emerald-500" : "bg-[#5D5CDE]")}
+                                    style={{ width: `${progress}%` }}
+                                />
+                            </div>
                         </div>
 
                         {progress === 100 && (
-                            <div className="mt-2">
+                            <div className="mt-6 animate-in fade-in slide-in-from-top-2">
                                 <Button
                                     onClick={() => {
                                         if (!hasUserReviewed) {
@@ -483,96 +492,95 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                                             setIsCertificateOpen(true);
                                         }
                                     }}
-                                    className="w-full bg-[#D4AF37] hover:bg-[#b5952f] text-black font-bold gap-2 shadow-lg shadow-[#D4AF37]/20"
+                                    className="w-full bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-black font-bold h-10 gap-2 shadow-lg shadow-amber-500/20 border-0"
                                 >
                                     <Trophy size={16} />
-                                    Obtener Certificado
+                                    {hasUserReviewed ? "Ver Certificado" : "Reclamar Certificado"}
                                 </Button>
                             </div>
                         )}
                     </div>
 
-                    <div className="flex-1 overflow-y-auto">
+                    {/* Lesson List */}
+                    <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
                         {localModules.map((module, i) => (
-                            <div key={i} className="border-b border-gray-800/50">
-                                <div className="bg-gray-800/20 px-5 py-3 text-sm font-medium text-gray-300">
+                            <div key={i} className="border-b border-gray-800/30">
+                                <div className="bg-[#090b10] px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest sticky top-0 z-10 backdrop-blur-md bg-opacity-90">
                                     {module.title}
                                 </div>
                                 <div>
                                     {module.lessons.map((lesson) => {
                                         const isLocked = !isAccess && lesson.id !== course.modules[0].lessons[0].id;
-                                        // Calculate percentage for visual progress bar
-                                        // Assuming average lesson is 10 mins (600s) if duration not set/parsed?? 
-                                        // Lesson duration is string "MM:SS" ?? No, in interface it is string.
-                                        // But wait, in schema it is Int (Seconds). 
-                                        // In page.tsx we formatted it using formatDuration. 
-                                        // To calculate progress bar width we need TOTAL seconds.
-                                        // We might need to store totalSeconds in the Lesson interface or parse it back.
-                                        // Simpler: Just rely on lastPlayedTime if we have it? 
-                                        // Let's guess max 100% or use a simple indicator if we don't have total.
-
-                                        // Actually I can try to parse lesson.duration string back to seconds or add rawDuration to interface.
-                                        // For now let's just show a simple bar if lastPlayedTime > 0
+                                        const isActive = activeLessonId === lesson.id;
 
                                         return (
-                                            <div
+                                            <button
                                                 key={lesson.id}
-                                                onClick={() => setActiveLessonId(lesson.id)}
+                                                onClick={() => {
+                                                    if (!isLocked) {
+                                                        setActiveLessonId(lesson.id);
+                                                        setMobileMenuOpen(false);
+                                                    }
+                                                }}
+                                                disabled={isLocked}
                                                 className={cn(
-                                                    "flex items-start gap-3 px-5 py-4 cursor-pointer hover:bg-gray-800/40 transition-colors border-l-2 border-transparent relative overflow-hidden",
-                                                    activeLessonId === lesson.id ? "bg-gray-800/60 border-primary" : "",
-                                                    isLocked ? "" : ""
+                                                    "w-full text-left flex items-start gap-4 px-6 py-4 transition-all relative group",
+                                                    isActive
+                                                        ? "bg-[#1F2937]/30"
+                                                        : "hover:bg-gray-800/30",
+                                                    isLocked && "opacity-50 cursor-not-allowed"
                                                 )}
                                             >
-                                                {/* Visual Progress Bar Background - Subtle */}
-                                                {lesson.lastPlayedTime && !lesson.completed && (
-                                                    <div
-                                                        className="absolute bottom-0 left-0 h-[2px] bg-primary/50 transition-all duration-500"
-                                                        style={{
-                                                            width: `${Math.min((lesson.lastPlayedTime / (lesson.durationSeconds || 600)) * 100, 100)}%`
-                                                        }}
-                                                    />
+                                                {/* Active Indicator Line */}
+                                                {isActive && (
+                                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#5D5CDE] shadow-[0_0_10px_rgba(93,92,222,0.5)]" />
                                                 )}
 
-
-                                                <div className="mt-0.5 relative z-10">
-                                                    {isLocked ? (
-                                                        <Lock size={16} className="text-gray-500" />
-                                                    ) : lesson.completed ? (
-                                                        <CheckCircle size={16} className="text-emerald-500" />
+                                                {/* Icon State */}
+                                                <div className="mt-0.5 shrink-0">
+                                                    {lesson.completed ? (
+                                                        <div className="bg-emerald-500/10 text-emerald-500 rounded-full p-0.5">
+                                                            <CheckCircle size={16} />
+                                                        </div>
+                                                    ) : isLocked ? (
+                                                        <Lock size={16} className="text-gray-600" />
+                                                    ) : isActive ? (
+                                                        <div className="bg-[#5D5CDE] text-white rounded-full p-1 animate-pulse">
+                                                            <Play size={10} fill="currentColor" />
+                                                        </div>
                                                     ) : (
-                                                        <div className={cn(
-                                                            "h-4 w-4 rounded-full border-2",
-                                                            activeLessonId === lesson.id ? "border-primary" : "border-gray-500"
-                                                        )} />
+                                                        <div className="border-2 border-gray-600 rounded-full w-4 h-4" />
                                                     )}
                                                 </div>
-                                                <div className="flex-1 relative z-10">
+
+                                                <div className="flex-1 min-w-0">
                                                     <p className={cn(
-                                                        "text-sm font-medium mb-1",
-                                                        activeLessonId === lesson.id ? "text-primary" : "text-gray-300"
+                                                        "text-sm font-medium leading-snug mb-1 transition-colors",
+                                                        isActive ? "text-white" : "text-gray-400 group-hover:text-gray-200"
                                                     )}>
                                                         {lesson.title}
                                                     </p>
-                                                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                                                        <MonitorPlay size={12} />
-                                                        <span>{lesson.duration || "10 min"}</span>
+                                                    <div className="flex items-center gap-3 text-xs text-gray-600 font-medium">
+                                                        <span className="flex items-center gap-1">
+                                                            <MonitorPlay size={10} />
+                                                            {lesson.duration || "10 min"}
+                                                        </span>
                                                         {lesson.lastPlayedTime && lesson.lastPlayedTime > 0 && !lesson.completed && (
-                                                            <span className="text-primary ml-2">
-                                                                Retomar {formatDuration(lesson.lastPlayedTime)}
+                                                            <span className="text-[#5D5CDE]">
+                                                                Continuar
                                                             </span>
                                                         )}
                                                     </div>
                                                 </div>
-                                            </div>
-                                        )
+                                            </button>
+                                        );
                                     })}
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
-            </div >
+            </div>
 
             {/* Rating Modal */}
             <RatingModal
@@ -614,8 +622,6 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                 isOpen={tripwireModalOpen}
                 onClose={() => setTripwireModalOpen(false)}
             />
-
-
-        </div >
+        </div>
     );
 }

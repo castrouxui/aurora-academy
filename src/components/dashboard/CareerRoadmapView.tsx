@@ -64,23 +64,23 @@ export function CareerRoadmapView({ userId, careerReferenceId }: CareerRoadmapVi
                 </p>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            <div className="space-y-4 relative">
                 {/* Connecting Line (Desktop) */}
-                <div className="hidden md:block absolute top-[160px] left-[16%] right-[16%] h-1 bg-gray-800 -z-10"></div>
+                <div className="hidden md:block absolute left-[27px] top-8 bottom-8 w-0.5 bg-gray-800 -z-10"></div>
 
                 {milestones.map((milestone: any, index: number) => {
                     const isCompleted = milestone.completed;
                     const isLocked = milestone.isLocked;
-                    const isCurrent = !isCompleted && !isLocked;
+                    const isCurrent = !isLocked && !isCompleted;
+                    const isTripwire = index === 1; // Tripwire step
+                    const isMembership = milestone.type === "SUBSCRIPTION";
 
                     const handleClick = (e: React.MouseEvent) => {
                         if (isLocked) {
                             e.preventDefault();
-                            if (index === 1) {
-                                // Tripwire logic: Redirect to checkout
+                            if (index === 1) { // Tripwire
                                 window.location.href = "/checkout/cl_7_pilares_exito";
-                            } else if (index === 2) {
-                                // Membership logic: Redirect to memberships
+                            } else if (index === 2) { // Membership
                                 window.location.href = "/membresias";
                             }
                         }
@@ -90,85 +90,108 @@ export function CareerRoadmapView({ userId, careerReferenceId }: CareerRoadmapVi
                         ? (index === 0 ? `/learn/${milestone.courseId}` : `/cursos/${milestone.courseId}`)
                         : "/membresias";
 
-
                     return (
                         <div key={milestone.id} className="relative group">
-                            {/* Step Indicator */}
-                            <div className="flex justify-center mb-6">
-                                <div className={cn(
-                                    "w-12 h-12 rounded-full flex items-center justify-center font-black text-lg border-4 transition-all z-10",
-                                    isCompleted ? "bg-emerald-500 border-emerald-500 text-white" :
-                                        isCurrent ? "bg-[#5D5CDE] border-[#5D5CDE] text-white shadow-[0_0_20px_rgba(93,92,222,0.5)]" :
-                                            "bg-[#13151A] border-gray-700 text-gray-500"
-                                )}>
-                                    {isCompleted ? <CheckCircle2 size={24} /> : index + 1}
-                                </div>
-                            </div>
-
-                            {/* Card */}
                             <Link
                                 href={href}
                                 onClick={handleClick}
                                 className={cn(
-                                    "block relative rounded-2xl overflow-hidden border transition-all duration-300 h-full",
-                                    isLocked ? "opacity-60 grayscale hover:opacity-80 hover:grayscale-0 cursor-pointer" :
-                                        "hover:-translate-y-2 hover:shadow-2xl",
-                                    isCurrent ? "border-[#5D5CDE] ring-1 ring-[#5D5CDE]/50 shadow-xl shadow-[#5D5CDE]/10" : "border-gray-800 bg-[#13151A]"
+                                    "flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 p-4 md:p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden",
+                                    isLocked
+                                        ? "bg-[#0B0F19]/50 border-gray-800/50 opacity-70 hover:opacity-100 hover:bg-[#121620] cursor-pointer"
+                                        : isCurrent
+                                            ? "bg-[#121620] border-[#5D5CDE]/50 shadow-lg shadow-[#5D5CDE]/5"
+                                            : "bg-[#0B0F19] border-gray-800 hover:border-gray-700"
                                 )}
                             >
-                                {/* Thumbnail Image */}
-                                <div className="aspect-video relative bg-gray-900">
-                                    {milestone.imageUrl ? (
-                                        <img src={milestone.imageUrl} alt={milestone.title} className="w-full h-full object-cover" />
+                                {/* Status Icon / Number */}
+                                <div className={cn(
+                                    "w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border transition-colors relative z-10",
+                                    isCompleted ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" :
+                                        isCurrent ? "bg-[#5D5CDE] border-[#5D5CDE] text-white shadow-lg shadow-[#5D5CDE]/30" :
+                                            "bg-gray-800/50 border-gray-700 text-gray-400"
+                                )}>
+                                    {isCompleted ? (
+                                        <CheckCircle2 size={24} />
+                                    ) : isLocked ? (
+                                        <Lock size={20} />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-gray-800 text-gray-600">
-                                            <Zap size={40} />
-                                        </div>
-                                    )}
-
-                                    {/* Overlay for Lock/Play */}
-                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                        {isLocked ? <Lock size={48} className="text-white drop-shadow-lg" /> : <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm"><ArrowRight size={32} className="text-white" /></div>}
-                                    </div>
-
-                                    {/* Lock Icon Persistent if Locked */}
-                                    {isLocked && (
-                                        <div className="absolute inset-0 flex items-center justify-center bg-black/50 group-hover:opacity-0 transition-opacity">
-                                            <Lock size={32} className="text-white/70" />
-                                        </div>
+                                        <span className="text-lg font-bold">{index + 1}</span>
                                     )}
                                 </div>
 
-                                <div className="p-6">
-                                    <h3 className={cn("text-lg font-bold mb-2 leading-tight", isCompleted ? "text-emerald-400" : "text-white")}>
-                                        {milestone.title}
-                                    </h3>
-                                    <p className="text-sm text-gray-400 line-clamp-2 mb-4">
+                                {/* Content */}
+                                <div className="flex-1 min-w-0 w-full">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <h3 className={cn(
+                                            "text-lg font-bold truncate",
+                                            isCompleted ? "text-emerald-400" : "text-white"
+                                        )}>
+                                            {milestone.title}
+                                        </h3>
+                                        {isTripwire && isLocked && (
+                                            <span className="px-2 py-0.5 bg-amber-500/10 text-amber-500 text-[10px] font-bold uppercase rounded border border-amber-500/20">
+                                                Recomendado
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <p className="text-sm text-gray-400 line-clamp-2 md:line-clamp-1 mb-3 md:mb-0">
                                         {milestone.description}
                                     </p>
 
-                                    <div className="flex items-center justify-between mt-auto">
+                                    {/* Mobile Only: Action Button/State */}
+                                    <div className="mt-3 md:hidden">
                                         {isLocked ? (
-                                            <span className="text-xs font-bold px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 flex items-center gap-2">
-                                                <Lock size={12} />
-                                                {milestone.price > 0 ? `$${milestone.price.toLocaleString('es-AR')}` : "Requiere Membresía"}
+                                            <span className="text-xs font-bold text-gray-500 flex items-center gap-1">
+                                                <Lock size={12} /> Bloqueado
                                             </span>
                                         ) : (
-                                            <span className={cn(
-                                                "text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-2",
-                                                isCompleted ? "bg-emerald-500/10 text-emerald-400" : "bg-[#5D5CDE]/10 text-[#5D5CDE]"
-                                            )}>
-                                                {isCompleted ? "Completado" : index === 0 ? "En curso" : "Desbloqueado"}
+                                            <span className="text-xs font-bold text-[#5D5CDE] flex items-center gap-1">
+                                                <ArrowRight size={12} /> Continuar
                                             </span>
                                         )}
                                     </div>
                                 </div>
-                            </Link>
 
-                            {/* Mobile Connector (Line) */}
-                            {index < milestones.length - 1 && (
-                                <div className="md:hidden absolute left-1/2 bottom-[-32px] w-1 h-8 bg-gray-800 -translate-x-1/2"></div>
-                            )}
+                                {/* Desktop Actions */}
+                                <div className="hidden md:flex items-center gap-4 shrink-0">
+                                    {isLocked ? (
+                                        <div className="text-right">
+                                            {isTripwire && (
+                                                <p className="text-xs text-gray-400 mb-1">Oferta única</p>
+                                            )}
+                                            <div className="px-4 py-2 rounded-lg bg-gray-800 text-gray-400 text-sm font-bold flex items-center gap-2 group-hover:bg-gray-700 transition-colors">
+                                                <Lock size={14} />
+                                                {isMembership ? "Requiere Membresía" : "Desbloquear"}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center gap-4">
+                                            {milestone.progress > 0 && milestone.progress < 100 && (
+                                                <div className="flex flex-col items-end gap-1">
+                                                    <span className="text-xs text-gray-400 font-medium">{milestone.progress}%</span>
+                                                    <div className="w-24 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                                                        <div
+                                                            className="h-full bg-[#5D5CDE] rounded-full"
+                                                            style={{ width: `${milestone.progress}%` }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            <div className={cn(
+                                                "w-10 h-10 rounded-full flex items-center justify-center transition-all",
+                                                isCurrent
+                                                    ? "bg-white text-black hover:scale-110"
+                                                    : "bg-gray-800 text-gray-400 group-hover:bg-gray-700 group-hover:text-white"
+                                            )}>
+                                                <ArrowRight size={20} />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </Link>
                         </div>
                     );
                 })}
