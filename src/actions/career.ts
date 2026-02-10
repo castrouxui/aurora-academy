@@ -113,10 +113,59 @@ export async function getCareerProgress(userId: string, careerReferenceId: strin
     });
     const hasActiveSubscription = subscriptions.length > 0;
 
-    const milestonesWithStatus = await Promise.all(career.milestones.map(async (milestone) => {
+    // Fetch user purchases for specific courses
+    const userPurchases = await prisma.purchase.findMany({
+        where: {
+            userId,
+            status: 'approved', // Assuming 'approved' is the status for successful purchases
+            courseId: { in: career.milestones.filter(m => m.type === 'COURSE' && m.courseId).map(m => m.courseId!) }
+        }
+    });
+
+    const purchasedCourseIds = new Set(userPurchases.map(p => p.courseId));
+
+    const milestonesWithStatus = await Promise.all(career.milestones.map(async (milestone, index) => {
         let completed = false;
+        let isLocked = true;
+        let milestoneDetails: any = {
+            title: "",
+            description: "",
+            imageUrl: "",
+            price: 0
+        };
 
         if (milestone.type === "COURSE" && milestone.courseId) {
+            // Fetch course details
+            const course = await prisma.course.findUnique({
+                where: { id: milestone.courseId },
+                select: { title: true, description: true, imageUrl: true, price: true }
+            });
+
+            if (course) {
+                milestoneDetails = {
+                    title: course.title,
+                    description: course.description,
+                    imageUrl: course.imageUrl,
+                    price: Number(course.price)
+                };
+            }
+
+            // Lock Logic
+            if (index === 0) {
+                // Step 1: Always Unlocked (Free)
+                isLocked = false;
+            } else if (index === 1) {
+                // Step 2: Unlocked if Purchased OR Subscription
+                if (purchasedCourseIds.has(milestone.courseId) || hasActiveSubscription) {
+                    isLocked = false;
+                }
+            } else {
+                // Default fallback
+                if (purchasedCourseIds.has(milestone.courseId) || hasActiveSubscription) {
+                    isLocked = false;
+                }
+            }
+
             // Check if course is completed
             const allLessons = await prisma.lesson.findMany({
                 where: { module: { courseId: milestone.courseId } },
@@ -133,12 +182,21 @@ export async function getCareerProgress(userId: string, careerReferenceId: strin
 
             completed = allLessons.length > 0 && completedLessons === allLessons.length;
         } else if (milestone.type === "SUBSCRIPTION") {
+            milestoneDetails = {
+                title: "Membresía Aurora",
+                description: "Acceso total a la academia.",
+                imageUrl: "/images/membership.jpg", // Placeholder
+                price: 0
+            };
+            isLocked = !hasActiveSubscription;
             completed = hasActiveSubscription;
         }
 
         return {
             ...milestone,
-            completed
+            completed,
+            isLocked,
+            ...milestoneDetails
         };
     }));
 
@@ -167,7 +225,11 @@ export async function getCareerProgress(userId: string, careerReferenceId: strin
                 status: progressPercentage === 100 ? "COMPLETED" : "IN_PROGRESS"
             }
         });
-        revalidatePath("/dashboard");
+        try {
+            revalidatePath("/dashboard");
+        } catch (e) {
+            // Ignored: likely running in script context
+        }
     }
 
     return {

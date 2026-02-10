@@ -98,6 +98,7 @@ export default async function CoursePlayerPage({ params, searchParams }: { param
         id: course.id,
         title: course.title,
         description: course.description || undefined,
+        price: Number(course.price) || 0,
         modules: course.modules.map((mod: any) => ({
             id: mod.id,
             title: mod.title,
