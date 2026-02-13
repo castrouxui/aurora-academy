@@ -232,7 +232,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                 <div className="flex flex-1 flex-col overflow-y-auto w-full">
 
                     {/* Breadcrumb Navigation - Mobile Optimized */}
-                    <div className="px-4 lg:px-6 py-3 lg:py-4 text-xs lg:text-sm text-gray-400 border-b border-gray-800 bg-[#0B0F19] flex justify-between items-center w-full">
+                    <div className="sticky top-0 z-30 px-4 lg:px-6 py-3 lg:py-4 text-xs lg:text-sm text-gray-400 border-b border-gray-800 bg-[#0B0F19]/95 backdrop-blur-sm flex justify-between items-center w-full">
                         <div className="flex items-center gap-2 truncate">
                             <Link href={backLink} className="flex items-center gap-1 hover:text-white transition-colors shrink-0">
                                 <ChevronLeft size={16} />
@@ -444,14 +444,14 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                 {/* Mobile Overlay Background */}
                 <div
                     className={cn(
-                        "fixed inset-0 bg-black/80 z-40 lg:hidden transition-opacity duration-300",
+                        "fixed inset-0 bg-black/80 z-[590] lg:hidden transition-opacity duration-300",
                         mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                 />
 
                 <div className={cn(
-                    "fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-[#0E1016] border-l border-gray-800/50 shadow-2xl transform transition-transform duration-300 lg:relative lg:transform-none lg:w-[400px] lg:flex lg:flex-col lg:z-auto flex flex-col",
+                    "fixed inset-y-0 right-0 z-[600] w-full sm:w-96 bg-[#0E1016] border-l border-gray-800/50 shadow-2xl transform transition-transform duration-300 lg:relative lg:transform-none lg:w-[400px] lg:flex lg:flex-col lg:z-auto flex flex-col",
                     mobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"
                 )}>
                     {/* Mobile Close Button */}
@@ -486,6 +486,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                             <div className="mt-6 animate-in fade-in slide-in-from-top-2">
                                 <Button
                                     onClick={() => {
+                                        setMobileMenuOpen(false); // Close sidebar so modal is not covered
                                         if (!hasUserReviewed) {
                                             setIsRatingOpen(true);
                                         } else {
