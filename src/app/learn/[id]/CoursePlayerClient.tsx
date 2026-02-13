@@ -14,7 +14,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useRouter } from "next/navigation";
 import { TripwireModal } from "@/components/dashboard/TripwireModal";
 import { NextCourseModal } from "@/components/dashboard/NextCourseModal";
 import { MembershipSuggestionModal } from "@/components/dashboard/MembershipSuggestionModal";
@@ -61,8 +60,6 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
     const [isCertificateOpen, setIsCertificateOpen] = useState(false);
     const [isRatingOpen, setIsRatingOpen] = useState(false);
     const [hasUserReviewed, setHasUserReviewed] = useState(hasReviewed);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [rewardModalOpen, setRewardModalOpen] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [rewardModalOpen, setRewardModalOpen] = useState(false);
     const [tripwireModalOpen, setTripwireModalOpen] = useState(false);
@@ -635,8 +632,6 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
             />
 
             {/* Tripwire Modal */}
-            <TripwireModal
-                isOpen={tripwireModalOpen}
             <TripwireModal
                 isOpen={tripwireModalOpen}
                 onClose={() => setTripwireModalOpen(false)}
