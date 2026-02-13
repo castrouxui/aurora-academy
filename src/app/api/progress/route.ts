@@ -18,11 +18,32 @@ export async function POST(req: Request) {
             return new NextResponse("Missing lessonId", { status: 400 });
         }
 
+        // 1. Fetch existing progress first to allow smart updates
+        const existingProgress = await prisma.userProgress.findUnique({
+            where: {
+                userId_lessonId: {
+                    userId: session.user.id,
+                    lessonId: lessonId
+                }
+            }
+        });
+
         // Logic: Mark as completed if user manually sets it OR if watched > 90%
         let isCompleted = completed;
-        if (seconds && totalDuration && totalDuration > 0) {
-            const progressPercentage = seconds / totalDuration;
-            if (progressPercentage >= 0.9) {
+
+        // Handling Playback Updates (seconds provided)
+        if (seconds !== undefined && seconds !== null) {
+            // Calculate percentage if duration is valid
+            if (totalDuration && totalDuration > 0) {
+                const progressPercentage = seconds / totalDuration;
+                if (progressPercentage >= 0.9) {
+                    isCompleted = true;
+                }
+            }
+
+            // CRITICAL FIX: If already completed, DO NOT un-complete it just because we are scrubbing/watching again
+            // Only allow un-completion via manual toggle (where seconds is undefined/null usually)
+            if (existingProgress?.completed) {
                 isCompleted = true;
             }
         }
@@ -37,7 +58,8 @@ export async function POST(req: Request) {
             },
             update: {
                 completed: isCompleted,
-                lastPlayedTime: seconds || 0
+                // Only update time if provided, otherwise keep existing
+                lastPlayedTime: seconds !== undefined && seconds !== null ? seconds : (existingProgress?.lastPlayedTime ?? 0)
             },
             create: {
                 userId: session.user.id,
