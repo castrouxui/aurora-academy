@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { TelegramReminder } from "@/components/dashboard/TelegramReminder";
-import { PromotionalBanner } from "@/components/dashboard/PromotionalBanner";
+// import { PromotionalBanner } from "@/components/dashboard/PromotionalBanner";
+import { RoadmapBanner } from "@/components/dashboard/RoadmapBanner";
 import { QuoteOfTheWeek } from "@/components/dashboard/QuoteOfTheWeek";
 import { CareerProgressCard } from "@/components/dashboard/CareerProgressCard";
 
@@ -126,7 +127,7 @@ export default function StudentDashboard() {
             {/* <TelegramReminder isVerified={session?.user?.telegramVerified || false} /> */}{/* DISABLED */}
 
             {/* Promotional Banner for Users with 0 Purchases, but hide for Admins */}
-            {!hasPurchases && session?.user?.role !== "ADMIN" && <PromotionalBanner />}
+            {!hasPurchases && session?.user?.role !== "ADMIN" && <RoadmapBanner />}
 
             {/* Stats Grid */}
             <div className={`grid gap-4 md:grid-cols-2 ${membershipItems.length > 0 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'}`}>
