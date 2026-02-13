@@ -126,8 +126,8 @@ export default function StudentDashboard() {
 
             {/* <TelegramReminder isVerified={session?.user?.telegramVerified || false} /> */}{/* DISABLED */}
 
-            {/* Promotional Banner for Users with 0 Purchases, but hide for Admins */}
-            {!hasPurchases && session?.user?.role !== "ADMIN" && <RoadmapBanner />}
+            {/* Promotional Banner for Users with NO Memberships (regardless of individual course purchases) */}
+            {session?.user?.role !== "ADMIN" && membershipItems.length === 0 && <RoadmapBanner />}
 
             {/* Stats Grid */}
             <div className={`grid gap-4 md:grid-cols-2 ${membershipItems.length > 0 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'}`}>
