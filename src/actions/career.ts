@@ -3,22 +3,23 @@
 import { prisma } from "../lib/prisma";
 import { revalidatePath } from "next/cache";
 
-async function seedTraderCareerIfMissing() {
+export async function seedTraderCareerIfMissing() {
     try {
         console.log("🌱 Seeding 'Trader de 0 a 100' career (self-healing)...");
 
         // Ensure courses exist (minimal version if they don't)
         await prisma.course.upsert({
-            where: { id: "cl_camino_inversor" },
-            update: { published: true },
+            where: { id: "cml05hq7n00025z0eogogsnge" },
+            update: { published: true, imageUrl: "/images/courses/trading_inicial_cover_1768005327407.png" },
             create: {
-                id: "cl_camino_inversor",
+                id: "cml05hq7n00025z0eogogsnge",
                 title: "El camino del inversor",
                 description: "Curso introductorio al mundo de las inversiones.",
                 price: 0,
                 published: true,
                 category: "Trading",
-                level: "Principiante"
+                level: "Principiante",
+                imageUrl: "/images/courses/trading_inicial_cover_1768005327407.png"
             }
         });
 
@@ -49,7 +50,7 @@ async function seedTraderCareerIfMissing() {
 
         // Positions: 0 (Free), 1 (Paid), 2 (Subscription)
         const milestones = [
-            { courseId: "cl_camino_inversor", type: "COURSE", position: 0 },
+            { courseId: "cml05hq7n00025z0eogogsnge", type: "COURSE", position: 0 },
             { courseId: "cmleeinzo0000lk6ifkpg84m1", type: "COURSE", position: 1 },
             { courseId: null, type: "SUBSCRIPTION", position: 2 }
         ];
@@ -102,7 +103,7 @@ export async function getCareerProgress(userId: string, careerReferenceId: strin
         // Check for integrity: Ensure key courses exist
         const requiredCourses = await prisma.course.findMany({
             where: {
-                id: { in: ["cl_camino_inversor", "cmleeinzo0000lk6ifkpg84m1"] }
+                id: { in: ["cml05hq7n00025z0eogogsnge", "cmleeinzo0000lk6ifkpg84m1"] }
             },
             select: { id: true }
         });

@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { LoginModal } from "@/components/auth/LoginModal";
 import Link from "next/link";
 import { UpsellModal } from "@/components/checkout/UpsellModal";
+import { CourseGateModal } from "@/components/auth/CourseGateModal";
 
 
 interface CourseFloatingCardProps {
@@ -50,6 +51,7 @@ export function CourseFloatingCard({
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [isUpsellModalOpen, setIsUpsellModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isGateModalOpen, setIsGateModalOpen] = useState(false);
     const [isEnrolling, setIsEnrolling] = useState(false);
 
     const isFree = rawPrice === 0;
@@ -79,6 +81,12 @@ export function CourseFloatingCard({
     };
 
     const handleFreeEnroll = async () => {
+        // Special Logic for "Trojan Horse" Course
+        if (courseId === 'cml05hq7n00025z0eogogsnge') {
+            setIsGateModalOpen(true);
+            return;
+        }
+
         if (!session) {
             setIsLoginModalOpen(true);
             return;
@@ -115,6 +123,12 @@ export function CourseFloatingCard({
                 onClose={() => setIsLoginModalOpen(false)}
                 redirectUrl={`/cursos/${courseId}`}
                 view="purchase"
+            />
+
+            <CourseGateModal
+                isOpen={isGateModalOpen}
+                onClose={() => setIsGateModalOpen(false)}
+                courseId={courseId}
             />
 
             <UpsellModal

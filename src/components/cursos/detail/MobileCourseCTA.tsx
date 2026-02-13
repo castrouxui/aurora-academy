@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { LoginModal } from "@/components/auth/LoginModal";
+import { CourseGateModal } from "@/components/auth/CourseGateModal";
 import { PaymentModal } from "@/components/checkout/PaymentModal";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -34,6 +35,7 @@ export function MobileCourseCTA({
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [isUpsellModalOpen, setIsUpsellModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isGateModalOpen, setIsGateModalOpen] = useState(false);
     const [isEnrolling, setIsEnrolling] = useState(false);
 
     const isFree = rawPrice === 0;
@@ -62,6 +64,11 @@ export function MobileCourseCTA({
     };
 
     const handleFreeEnroll = async () => {
+        if (courseId === 'cml05hq7n00025z0eogogsnge') {
+            setIsGateModalOpen(true);
+            return;
+        }
+
         if (!session) {
             setIsLoginModalOpen(true);
             return;
@@ -98,6 +105,12 @@ export function MobileCourseCTA({
                 onClose={() => setIsLoginModalOpen(false)}
                 redirectUrl={`/cursos/${courseId}`}
                 view="purchase"
+            />
+
+            <CourseGateModal
+                isOpen={isGateModalOpen}
+                onClose={() => setIsGateModalOpen(false)}
+                courseId={courseId}
             />
 
             <UpsellModal

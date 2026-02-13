@@ -14,7 +14,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { TripwireModal } from "@/components/dashboard/TripwireModal";
+import { NextCourseModal } from "@/components/dashboard/NextCourseModal";
+import { MembershipSuggestionModal } from "@/components/dashboard/MembershipSuggestionModal";
 
 interface Lesson {
     id: string;
@@ -60,7 +63,11 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
     const [hasUserReviewed, setHasUserReviewed] = useState(hasReviewed);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [rewardModalOpen, setRewardModalOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [rewardModalOpen, setRewardModalOpen] = useState(false);
     const [tripwireModalOpen, setTripwireModalOpen] = useState(false);
+    const [nextCourseModalOpen, setNextCourseModalOpen] = useState(false);
+    const [membershipModalOpen, setMembershipModalOpen] = useState(false);
     const [isEnrolling, setIsEnrolling] = useState(false);
 
 
@@ -611,7 +618,16 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                 onClose={() => {
                     setRewardModalOpen(false);
                     // Hook to trigger Tripwire Modal for specific course
-                    if (course.id === 'cl_camino_inversor') {
+                    // Trojan Horse Course (#1) -> Suggest 7 Pilares
+                    if (course.id === 'cml05hq7n00025z0eogogsnge') {
+                        setNextCourseModalOpen(true);
+                    }
+                    // 7 Pilares Course (#2) -> Suggest Membership
+                    else if (course.id === 'cmleeinzo0000lk6ifkpg84m1') {
+                        setMembershipModalOpen(true);
+                    }
+                    // Legacy check (if needed)
+                    else if (course.id === 'cl_camino_inversor') {
                         setTripwireModalOpen(true);
                     }
                 }}
@@ -621,7 +637,19 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
             {/* Tripwire Modal */}
             <TripwireModal
                 isOpen={tripwireModalOpen}
+            <TripwireModal
+                isOpen={tripwireModalOpen}
                 onClose={() => setTripwireModalOpen(false)}
+            />
+
+            <NextCourseModal
+                isOpen={nextCourseModalOpen}
+                onClose={() => setNextCourseModalOpen(false)}
+            />
+
+            <MembershipSuggestionModal
+                isOpen={membershipModalOpen}
+                onClose={() => setMembershipModalOpen(false)}
             />
         </div>
     );

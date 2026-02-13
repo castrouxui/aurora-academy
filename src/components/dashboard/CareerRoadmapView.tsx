@@ -86,8 +86,8 @@ export function CareerRoadmapView({ userId, careerReferenceId }: CareerRoadmapVi
                         }
                     };
 
-                    const href = milestone.type === "COURSE"
-                        ? (index === 0 ? `/learn/${milestone.courseId}` : `/cursos/${milestone.courseId}`)
+                    const href = (milestone.type === "COURSE" && milestone.courseId)
+                        ? `/cursos/${milestone.courseId}`
                         : "/membresias";
 
                     return (
