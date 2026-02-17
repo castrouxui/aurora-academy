@@ -64,7 +64,7 @@ export function MobileCourseCTA({
     };
 
     const handleFreeEnroll = async () => {
-        if (courseId === 'cml05hq7n00025z0eogogsnge') {
+        if (courseId === 'cml05hq7n00025z0eogogsnge' && !session) {
             setIsGateModalOpen(true);
             return;
         }

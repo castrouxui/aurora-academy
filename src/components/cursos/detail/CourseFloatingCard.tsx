@@ -82,7 +82,7 @@ export function CourseFloatingCard({
 
     const handleFreeEnroll = async () => {
         // Special Logic for "Trojan Horse" Course
-        if (courseId === 'cml05hq7n00025z0eogogsnge') {
+        if (courseId === 'cml05hq7n00025z0eogogsnge' && !session) {
             setIsGateModalOpen(true);
             return;
         }
