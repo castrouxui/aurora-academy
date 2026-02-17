@@ -1,6 +1,6 @@
 "use client";
 
-// import { useChat } from "@ai-sdk/react"; // Removed, using manual implementation due to version issues
+// import { useChat } from "@ai-sdk/react"; // Using manual implementation due to version issues
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,12 +10,14 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { MessageCircle, X, Minimize2, Maximize2 } from "lucide-react";
+import { MessageCircle, X, Minimize2, Maximize2, AlertCircle } from "lucide-react";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
+import { ChatSkeleton } from "./ChatSkeleton";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner"; // Assuming Sonner is installed
 
 export function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +25,7 @@ export function ChatWidget() {
     const pathname = usePathname();
     const scrollTriggered = useRef(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const [localInput, setLocalInput] = useState("");
 
@@ -31,48 +34,57 @@ export function ChatWidget() {
         id: string;
         role: Role;
         content: string;
+        isThinking?: boolean;
     }
 
     const [messages, setMessages] = useState<Message[]>([
         {
             id: "welcome",
             role: "assistant",
-            content: "¡Hola! Soy tu asistente de Aurora Academy. ¿En qué puedo ayudarte hoy?",
+            content: "Hola, soy tu guía en Aurora. Para orientarte mejor con los cursos, ¿qué experiencia tenés hoy en los mercados?",
         },
     ]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isTimeoutWarning, setIsTimeoutWarning] = useState(false);
 
     const append = async (message: { role: Role; content: string }) => {
         const newMsg = { ...message, id: Date.now().toString() };
-        // Use functional update to ensure we have latest messages if multiple updates occur
-        // But for API call we need the array. We can just use the state variable from scope as it updates on re-render.
-        // Wait, if we use state variable, we trust React re-renders. 
-        // For the API call payload, we should construct it based on current 'messages' + newMsg.
 
         setMessages((prev) => [...prev, newMsg]);
         setIsLoading(true);
+        setIsTimeoutWarning(false);
+
+        // Timeout Warning Logic (5s)
+        const timeoutId = setTimeout(() => {
+            setIsTimeoutWarning(true);
+        }, 5000);
 
         try {
             const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    messages: [...messages, newMsg], // Note: this uses closure 'messages', ensure it's fresh enough
+                    messages: [...messages, newMsg],
                     pathname,
                 }),
             });
 
+            clearTimeout(timeoutId); // Clear timeout if response starts before 5s
             if (!response.ok) throw new Error("Failed to fetch");
 
             const reader = response.body?.getReader();
             if (!reader) return;
 
             const assistantMsgId = (Date.now() + 1).toString();
-            // Optimistically add empty assistant message
+            // Optimistically add empty assistant message to start streaming into
             setMessages((prev) => [
                 ...prev,
-                { id: assistantMsgId, role: "assistant", content: "" },
+                { id: assistantMsgId, role: "assistant", content: "" }, // Start empty
             ]);
+
+            // Disable loading indicator once streaming starts, as we show the message grow
+            setIsLoading(false);
+            setIsTimeoutWarning(false);
 
             const decoder = new TextDecoder();
             while (true) {
@@ -86,10 +98,17 @@ export function ChatWidget() {
                             : m
                     )
                 );
+                // Scroll to bottom on update
+                // Use scrollIntoView with 'auto' for performance during streaming
+                // Or just rely on useEffect
             }
         } catch (error) {
             console.error("Chat error:", error);
+            toast.error("Hubo un error al conectar con el asistente.");
+            setIsLoading(false);
+            setIsTimeoutWarning(false);
         } finally {
+            clearTimeout(timeoutId);
             setIsLoading(false);
         }
     };
@@ -127,21 +146,23 @@ export function ChatWidget() {
         }
     }, [pathname, isOpen, append]);
 
-    // Checkout Trigger (Example: if on /checkout)
+    // Checkout Trigger
     useEffect(() => {
         if (pathname?.includes("/checkout") && !isOpen) {
-            // Could implement a timer here to trigger "Operator" help
-            // For now, we just ensure the widget is available
+            // Logic handled by backend context, UI just needs to be ready
         }
     }, [pathname, isOpen]);
 
-    // Auto-scroll to bottom using a resize observer or effect dependency on messages
+    // Auto-scroll to bottom
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages, isOpen]); // Also scroll when opening
+    }, [messages, isOpen, isTimeoutWarning]);
 
     return (
-        <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 sm:bottom-8 sm:right-8">
+        <div className={cn(
+            "fixed z-50 transition-all duration-300",
+            isOpen ? "inset-0 sm:inset-auto sm:bottom-8 sm:right-8" : "bottom-4 right-4 sm:bottom-8 sm:right-8"
+        )}>
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -149,56 +170,50 @@ export function ChatWidget() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         className={cn(
-                            "origin-bottom-right shadow-2xl transition-all duration-300",
-                            isMinimized ? "w-72" : "w-[90vw] sm:w-[400px]"
+                            "origin-bottom-right shadow-2xl transition-all duration-300 flex flex-col bg-background/95 backdrop-blur-xl border-border/50",
+                            // Mobile Fullscreen
+                            "w-full h-[100dvh] sm:rounded-2xl sm:h-[600px] sm:w-[400px]",
+                            isMinimized && "sm:w-72 sm:h-auto"
                         )}
                     >
-                        <Card className="border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2 border-b">
+                        <Card className="flex flex-col h-full border-0 bg-transparent shadow-none">
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 border-b shrink-0 bg-background/50 backdrop-blur-md">
                                 <CardTitle className="text-sm font-medium flex items-center gap-2">
                                     <div className="relative">
-                                        <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                                        <div className="h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
                                     </div>
-                                    Aurora AI
+                                    <span className="font-semibold tracking-wide">Aurora AI</span>
                                 </CardTitle>
                                 <div className="flex items-center gap-1">
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-6 w-6"
+                                        className="h-8 w-8 hover:bg-muted/50 hidden sm:flex"
                                         onClick={() => setIsMinimized(!isMinimized)}
                                     >
                                         {isMinimized ? (
-                                            <Maximize2 className="h-3 w-3" />
+                                            <Maximize2 className="h-4 w-4" />
                                         ) : (
-                                            <Minimize2 className="h-3 w-3" />
+                                            <Minimize2 className="h-4 w-4" />
                                         )}
                                     </Button>
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="h-6 w-6"
+                                        className="h-8 w-8 hover:bg-muted/50"
                                         onClick={() => setIsOpen(false)}
                                     >
-                                        <X className="h-3 w-3" />
+                                        <X className="h-5 w-5" />
                                     </Button>
                                 </div>
                             </CardHeader>
 
                             {!isMinimized && (
                                 <>
-                                    <CardContent className="h-[400px] overflow-y-auto p-0 px-2 space-y-4">
-                                        <div className="flex flex-col gap-2 p-4">
+                                    <CardContent className="flex-1 overflow-y-auto p-0 scrollbar-thin scrollbar-thumb-muted/50 scrollbar-track-transparent">
+                                        <div className="flex flex-col p-4 pb-2">
                                             {messages.map((m) => {
-                                                // Hide system trigger messages from UI if possible, or filter them
                                                 if (m.content === "REQUEST_DIAGNOSIS_START") return null;
-
-                                                // Determine agent name based on content/metadata if available
-                                                // For now, we can infer or simpler: The backend could prefix responses or we just use generic
-                                                // But ideally, the backend sends structured data. 
-                                                // Since we are using standard `useChat` text stream, we'll just show "Aurora AI" or parse if we add prefixes.
-                                                // Let's assume the text is plain for now.
-
                                                 return (
                                                     <ChatMessage
                                                         key={m.id}
@@ -208,21 +223,35 @@ export function ChatWidget() {
                                                     />
                                                 );
                                             })}
-                                            <div ref={messagesEndRef} />
-                                            {isLoading && (
-                                                <div className="flex items-center gap-2 px-4 text-xs text-muted-foreground">
-                                                    <span className="animate-pulse">Escribiendo...</span>
-                                                </div>
+
+                                            {/* Timeout Warning Message */}
+                                            {isTimeoutWarning && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    className="flex items-center gap-2 p-3 mb-4 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 text-xs"
+                                                >
+                                                    <AlertCircle className="h-4 w-4 shrink-0" />
+                                                    <span>Estoy revisando los detalles técnicos para darte la respuesta más precisa, dame un segundo más...</span>
+                                                </motion.div>
                                             )}
+
+                                            {/* Skeleton Loader */}
+                                            {isLoading && <ChatSkeleton />}
+
+                                            <div ref={messagesEndRef} className="h-1" />
                                         </div>
                                     </CardContent>
-                                    <CardFooter className="p-0">
-                                        <ChatInput
-                                            input={localInput}
-                                            handleInputChange={handleInputChange}
-                                            handleSubmit={handleSubmit}
-                                            isLoading={isLoading}
-                                        />
+
+                                    <CardFooter className="p-0 shrink-0 bg-background/50 backdrop-blur-md border-t">
+                                        <div className="w-full pb-[env(safe-area-inset-bottom)]">
+                                            <ChatInput
+                                                input={localInput}
+                                                handleInputChange={handleInputChange}
+                                                handleSubmit={handleSubmit}
+                                                isLoading={isLoading}
+                                            />
+                                        </div>
                                     </CardFooter>
                                 </>
                             )}
@@ -235,7 +264,7 @@ export function ChatWidget() {
                 <Button
                     onClick={() => setIsOpen(true)}
                     size="icon"
-                    className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-primary text-primary-foreground"
+                    className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-primary text-primary-foreground hover:scale-105 active:scale-95"
                 >
                     <MessageCircle className="h-6 w-6" />
                 </Button>
