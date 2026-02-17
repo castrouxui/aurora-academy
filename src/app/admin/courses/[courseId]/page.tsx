@@ -659,10 +659,43 @@ export default function CourseEditorPage() {
                                     <div className="bg-white p-2 rounded-lg">
                                         <UploadButton
                                             endpoint="courseImage"
-                                            onClientUploadComplete={(res) => {
+                                            onClientUploadComplete={async (res) => {
                                                 if (res?.[0]) {
-                                                    setCourse(prev => prev ? { ...prev, imageUrl: res[0].url } : null);
-                                                    toast.success("Imagen actualizada");
+                                                    const newImageUrl = res[0].url;
+
+                                                    // Optimistic update
+                                                    setCourse(prev => prev ? { ...prev, imageUrl: newImageUrl } : null);
+
+                                                    // Auto-save to backend
+                                                    try {
+                                                        const price = priceInput === "" ? 0 : parseFloat(priceInput);
+                                                        const discount = discountInput === "" ? 0 : parseInt(discountInput);
+
+                                                        const updateRes = await fetch(`/api/courses/${courseId}`, {
+                                                            method: "PATCH",
+                                                            headers: { "Content-Type": "application/json" },
+                                                            body: JSON.stringify({
+                                                                title: titleInput,
+                                                                description: course?.description,
+                                                                shortDescription: course?.shortDescription,
+                                                                price: price,
+                                                                discount: discount,
+                                                                category: categoryInput,
+                                                                level: levelInput,
+                                                                type: typeInput,
+                                                                imageUrl: newImageUrl,
+                                                            }),
+                                                        });
+
+                                                        if (updateRes.ok) {
+                                                            toast.success("Imagen actualizada y guardada");
+                                                        } else {
+                                                            toast.error("Error al guardar la imagen en el servidor");
+                                                        }
+                                                    } catch (error) {
+                                                        console.error(error);
+                                                        toast.error("Error de conexión al guardar la imagen");
+                                                    }
                                                 }
                                             }}
                                             onUploadError={(error: Error) => {
