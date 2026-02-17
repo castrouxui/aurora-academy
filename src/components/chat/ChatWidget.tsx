@@ -1,6 +1,6 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
+// import { useChat } from "@ai-sdk/react"; // Removed, using manual implementation due to version issues
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,27 +24,86 @@ export function ChatWidget() {
     const scrollTriggered = useRef(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    const {
-        messages,
-        input,
-        handleInputChange,
-        handleSubmit,
-        isLoading,
-        append,
-        setMessages,
-    } = useChat({
-        api: "/api/chat",
-        initialMessages: [
-            {
-                id: "welcome",
-                role: "assistant",
-                content: "¡Hola! Soy tu asistente de Aurora Academy. ¿En qué puedo ayudarte hoy?",
-            },
-        ],
-        body: {
-            pathname, // Pass current path to context
+    const [localInput, setLocalInput] = useState("");
+
+    type Role = "user" | "assistant" | "system";
+    interface Message {
+        id: string;
+        role: Role;
+        content: string;
+    }
+
+    const [messages, setMessages] = useState<Message[]>([
+        {
+            id: "welcome",
+            role: "assistant",
+            content: "¡Hola! Soy tu asistente de Aurora Academy. ¿En qué puedo ayudarte hoy?",
         },
-    });
+    ]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const append = async (message: { role: Role; content: string }) => {
+        const newMsg = { ...message, id: Date.now().toString() };
+        // Use functional update to ensure we have latest messages if multiple updates occur
+        // But for API call we need the array. We can just use the state variable from scope as it updates on re-render.
+        // Wait, if we use state variable, we trust React re-renders. 
+        // For the API call payload, we should construct it based on current 'messages' + newMsg.
+
+        setMessages((prev) => [...prev, newMsg]);
+        setIsLoading(true);
+
+        try {
+            const response = await fetch("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    messages: [...messages, newMsg], // Note: this uses closure 'messages', ensure it's fresh enough
+                    pathname,
+                }),
+            });
+
+            if (!response.ok) throw new Error("Failed to fetch");
+
+            const reader = response.body?.getReader();
+            if (!reader) return;
+
+            const assistantMsgId = (Date.now() + 1).toString();
+            // Optimistically add empty assistant message
+            setMessages((prev) => [
+                ...prev,
+                { id: assistantMsgId, role: "assistant", content: "" },
+            ]);
+
+            const decoder = new TextDecoder();
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                const text = decoder.decode(value, { stream: true });
+                setMessages((prev) =>
+                    prev.map((m) =>
+                        m.id === assistantMsgId
+                            ? { ...m, content: m.content + text }
+                            : m
+                    )
+                );
+            }
+        } catch (error) {
+            console.error("Chat error:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setLocalInput(e.target.value);
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (!localInput.trim()) return;
+        append({ role: "user", content: localInput });
+        setLocalInput("");
+    };
 
     // Scroll Trigger for Home Page
     useEffect(() => {
@@ -159,7 +218,7 @@ export function ChatWidget() {
                                     </CardContent>
                                     <CardFooter className="p-0">
                                         <ChatInput
-                                            input={input}
+                                            input={localInput}
                                             handleInputChange={handleInputChange}
                                             handleSubmit={handleSubmit}
                                             isLoading={isLoading}
