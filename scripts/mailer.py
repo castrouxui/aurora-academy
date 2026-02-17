@@ -162,6 +162,10 @@ def main():
             
             if email in sent_emails:
                 continue # Ya enviado
+
+            # FILTRO GMAIL
+            if not email.lower().endswith("@gmail.com"):
+                continue # Saltar si no es gmail
             
             # Limpieza
             name = clean_name(raw_name)
