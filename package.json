@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && prisma db push && next build",
-    "seed:reviews": "tsx scripts/seed-reviews.ts",
+    "undo:reviews": "tsx scripts/undo-reviews.ts",
     "start": "next start",
     "lint": "echo 'Skipping lint check for deployment'"
   },
