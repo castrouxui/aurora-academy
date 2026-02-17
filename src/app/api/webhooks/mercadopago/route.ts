@@ -187,6 +187,71 @@ export async function POST(request: Request) {
                         console.error("[WEBHOOK] Upgrade Error:", err);
                     }
                 }
+            } else if (paymentData.status === "refunded" || paymentData.status === "charged_back") {
+                // REFUND / CHARGEBACK HANDLING
+                console.log(`[WEBHOOK] Payment ${id} was REFUNDED or CHARGED_BACK. Processing revocation...`);
+
+                const purchase = await prisma.purchase.findFirst({
+                    where: { paymentId: id },
+                    include: { user: true }
+                });
+
+                if (purchase) {
+                    // 1. Update Purchase Status
+                    await prisma.purchase.update({
+                        where: { id: purchase.id },
+                        data: { status: "refunded" } // or 'charged_back' if you prefer distinction
+                    });
+                    console.log(`[WEBHOOK] Purchase ${purchase.id} marked as REFUNDED.`);
+
+                    // 2. Revoke Subscription Access if applicable
+                    if (purchase.bundleId) {
+                        const subscription = await prisma.subscription.findFirst({
+                            where: {
+                                userId: purchase.userId,
+                                bundleId: purchase.bundleId,
+                                status: "authorized"
+                            }
+                        });
+
+                        if (subscription) {
+                            // Cancel MP Subscription to stop future billing if it's recurrent
+                            if (subscription.mercadoPagoId) {
+                                try {
+                                    await cancelSubscription(subscription.mercadoPagoId);
+                                    console.log(`[WEBHOOK] Cancelled MP Subscription ${subscription.mercadoPagoId} due to refund.`);
+                                } catch (err) {
+                                    console.error(`[WEBHOOK] Error cancelling MP Subscription ${subscription.mercadoPagoId}:`, err);
+                                }
+                            }
+
+                            // Update DB Subscription Status
+                            await prisma.subscription.update({
+                                where: { id: subscription.id },
+                                data: {
+                                    status: "cancelled",
+                                    updatedAt: new Date()
+                                }
+                            });
+                            console.log(`[WEBHOOK] Subscription ${subscription.id} cancelled due to refund.`);
+                        }
+                    }
+
+                    // 3. Notify User (Optional but good practice)
+                    if (purchase.user?.email) {
+                        await sendEmail(
+                            purchase.user.email,
+                            "Confirmación de Reembolso - Aurora Academy",
+                            `<p>Hola <strong>${purchase.user.name || ''}</strong>,</p>
+                             <p>Te confirmamos que se ha procesado el reembolso de tu compra.</p>
+                             <p>En consecuencia, el acceso al contenido asociado ha sido revocado.</p>
+                             <p>Si crees que esto es un error, por favor contactanos.</p>`,
+                            "Tu reembolso ha sido procesado."
+                        );
+                    }
+                } else {
+                    console.warn(`[WEBHOOK] Received refund for unknown payment ID ${id}`);
+                }
             }
         } else if ((topic === "preapproval" || topic === "subscription_preapproval") && id) {
             // SUBSCRIPTION STATUS UPDATE

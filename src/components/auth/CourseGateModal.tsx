@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Loader2, Google, Mail } from "lucide-react";
+import { X, Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { FloatingInput } from "@/components/ui/FloatingInput";
