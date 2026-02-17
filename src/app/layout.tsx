@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/components/auth/Providers";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -75,6 +76,7 @@ export default function RootLayout({
           {children}
           <Toaster richColors position="top-center" closeButton />
           <Analytics />
+          <ChatWidget />
         </Providers>
       </body>
     </html>
