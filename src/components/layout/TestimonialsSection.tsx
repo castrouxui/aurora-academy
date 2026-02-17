@@ -91,7 +91,7 @@ export function TestimonialsSection() {
                                 </div>
                             ))}
                             <div className="w-10 h-10 rounded-full border-2 border-[#0B0F19] bg-[#5D5CDE] flex items-center justify-center text-[10px] font-bold text-white">
-                                +1k
+                                +100
                             </div>
                         </div>
                         <p className="text-sm font-bold text-white tracking-wide">
