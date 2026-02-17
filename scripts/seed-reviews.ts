@@ -260,7 +260,18 @@ const COLORS = [
     "EC4899", // Pink
 ];
 
+const IMAGES = [
+    "/images/trading-intro.png",
+    "/images/price-action.png",
+    "/images/bonds-valuation.png",
+    "/images/francisco-speaking.png"
+];
+
 // --- Helpers ---
+
+function getRandomImage() {
+    return IMAGES[Math.floor(Math.random() * IMAGES.length)];
+}
 
 function getRandomColor() {
     return COLORS[Math.floor(Math.random() * COLORS.length)];
@@ -299,6 +310,10 @@ async function main() {
             }
         });
 
+        // (Removed from here)
+
+        // ... existing code ...
+
         if (!course) {
             console.log(`- Course not found. Creating: ${item.courseTitle}`);
             course = await prisma.course.create({
@@ -309,12 +324,22 @@ async function main() {
                     shortDescription: `Domina ${item.courseTitle} con este curso práctico.`,
                     price: 0, // Placeholder
                     published: true,
-                    imageUrl: "/course-placeholder.jpg", // Default
+                    imageUrl: getRandomImage(), // Use real image
                     level: "Todos los niveles",
                 }
             });
         } else {
             console.log(`- Found existing course: ${course.title} (${course.id})`);
+
+            // Fix broken images
+            if (course.imageUrl === "/course-placeholder.jpg" || !course.imageUrl) {
+                await prisma.course.update({
+                    where: { id: course.id },
+                    data: { imageUrl: getRandomImage() }
+                });
+                console.log("  -> Fixed broken image.");
+            }
+
             // Ensure it's published so reviews show up
             if (!course.published) {
                 await prisma.course.update({
