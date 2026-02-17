@@ -24,7 +24,11 @@ export async function GET() {
         ] = await Promise.all([
             // All Sales for Revenue Calculation
             prisma.purchase.findMany({
-                where: { status: 'approved' },
+                where: {
+                    status: {
+                        in: ['approved', 'refunded']
+                    }
+                },
                 orderBy: { createdAt: 'desc' }, // Latest first
                 include: {
                     user: { select: { email: true, name: true, image: true } }, // Minimal user data
@@ -85,7 +89,10 @@ export async function GET() {
 
             if (!isDuplicate) {
                 uniqueSales.push(sale);
-                revenue += Number(sale.amount);
+                // Only add to revenue if approved. Refunded items act as 0 (or we could subtract if we were tracking gross)
+                if (sale.status === 'approved') {
+                    revenue += Number(sale.amount);
+                }
             }
         }
 

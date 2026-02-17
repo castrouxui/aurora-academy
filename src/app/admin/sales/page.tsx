@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, DollarSign, Calendar, CheckCircle, XCircle, Clock, TrendingUp, CreditCard, ShoppingCart, Pencil, Save } from "lucide-react";
+import { Loader2, DollarSign, Calendar, CheckCircle, XCircle, Clock, TrendingUp, CreditCard, ShoppingCart, Pencil, Save, RotateCcw } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -192,7 +192,7 @@ export default function AdminSalesPage() {
             case 'approved': return <Badge variant="success" className="gap-1"><CheckCircle size={10} /> Aprobado</Badge>;
             case 'rejected': return <Badge variant="destructive" className="gap-1"><XCircle size={10} /> Rechazado</Badge>;
             case 'refunded':
-            case 'refund': return <Badge variant="outline" className="gap-1 border-orange-500 text-orange-500 bg-orange-500/10"><Clock size={10} /> Reembolsado</Badge>;
+            case 'refund': return <Badge variant="outline" className="gap-1 border-orange-500 text-orange-500 bg-orange-500/10"><RotateCcw size={10} /> Reembolsado</Badge>;
             default: return <Badge variant="warning" className="gap-1"><Clock size={10} /> Pendiente</Badge>;
         }
     };
