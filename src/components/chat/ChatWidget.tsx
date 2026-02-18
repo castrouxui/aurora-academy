@@ -1,7 +1,7 @@
 "use client";
 
-// import { useChat } from "@ai-sdk/react"; // Using manual implementation due to version issues
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -10,54 +10,119 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { MessageCircle, X, Minimize2, Maximize2, AlertCircle } from "lucide-react";
+import { MessageCircle, X, Minimize2, Maximize2 } from "lucide-react";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
-import { ChatSkeleton } from "./ChatSkeleton";
+import { StreamingIndicator, type StreamPhase } from "./StreamingIndicator";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner"; // Assuming Sonner is installed
+import { toast } from "sonner";
+
+/* ─── Course title map for contextual welcomes ─── */
+const COURSE_TITLES: Record<string, string> = {
+    cml05hq7n00025z0eogogsnge: "El camino del inversor",
+    cmk76vago00052i3oi9ajtj81: "Análisis Técnico",
+    cmk77d6jw00162i3o2xduugqj: "Renta Fija",
+    cmkvizzkv000014opaskujn6u: "Finanzas Personales",
+    cmkbfyovj0000iv7p7dwuyjbc: "Opciones Financieras",
+    cmke3r7q600025b9gasf4r0jr: "Futuros Financieros",
+    cml2grqhs0005szmiu6q72oaw: "Fondos Comunes de Inversión",
+    cml2ggu690000szmi2uarsi6e: "Machine Learning e IA",
+    cmky03zq30004t8b2fwg93678: "Testing con IA",
+    cmkigsyen000kkb3n05vphttk: "Valuación de Bonos",
+    cmleeinzo0000lk6ifkpg84m1: "Los 7 Pilares del Éxito en Bolsa",
+    cmkigoac4000akb3nnhyypiic: "Domina el Stop Loss",
+    cmkigqmn4000fkb3nd3eyxd5m: "El Valor del Tiempo: TNA, TEA y TIR",
+    cmkigidme0000kb3nyhnjeyt6: "Beneficio vs. Caja",
+    cmkigm36w0005kb3n1hkgjuin: "Dominando el Riesgo",
+    cmkb3mgzw0000d3a47s50rk9t: "Introducción al Mercado de Capitales",
+    cmkb3vwqf0001yj6t5lbqq7h8: "Mentoría Análisis Técnico",
+    cmkb45yfn0000l51swh07aw37: "Mentoría Gestión de Cartera",
+    cmkb3u2nv0000yj6tef9f2xup: "Análisis Fundamental",
+    cmk76jxm700002i3ojyfpjbm5: "Price Action",
+    cmku6uohg000014bcqk7yysrc: "IA en Inversiones",
+    cmlpu5m900000fugwd22skz53: "Manejo de TradingView",
+};
+
+function getContextualWelcome(pathname: string): string {
+    // Course page
+    const courseMatch = pathname.match(/\/cursos\/([a-z0-9]+)/i);
+    if (courseMatch) {
+        const title = COURSE_TITLES[courseMatch[1]];
+        if (title) {
+            return `¿Estás explorando **${title}**? Si tenés alguna duda sobre el contenido o querés saber cuál es el mejor camino de formación para vos, preguntame.`;
+        }
+        return "Veo que estás mirando un curso. ¿Querés que te cuente más sobre el contenido o te ayude a elegir?";
+    }
+
+    // Memberships page
+    if (pathname.includes("/membresias")) {
+        return "¿Necesitás ayuda para elegir el plan ideal? Puedo compararte los beneficios de cada membresía según tus objetivos.";
+    }
+
+    // Checkout page
+    if (pathname.includes("/checkout")) {
+        return "Estoy acá por si necesitás algo antes de completar tu compra. ¿Tenés alguna duda?";
+    }
+
+    // Dashboard
+    if (pathname.includes("/dashboard")) {
+        return "¡Hola! ¿Cómo va tu formación? Si necesitás orientación sobre qué curso seguir, preguntame.";
+    }
+
+    // Default (home)
+    return "¡Hola! Soy tu guía en Aurora Academy. Para orientarte mejor, ¿qué experiencia tenés hoy en los mercados?";
+}
+
+type Role = "user" | "assistant" | "system";
+
+interface Message {
+    id: string;
+    role: Role;
+    content: string;
+}
 
 export function ChatWidget() {
     const [isOpen, setIsOpen] = useState(false);
     const [isMinimized, setIsMinimized] = useState(false);
     const pathname = usePathname();
-    const scrollTriggered = useRef(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const [localInput, setLocalInput] = useState("");
+    const [streamPhase, setStreamPhase] = useState<StreamPhase>("idle");
 
-    type Role = "user" | "assistant" | "system";
-    interface Message {
-        id: string;
-        role: Role;
-        content: string;
-        isThinking?: boolean;
-    }
+    // Contextual welcome message based on URL
+    const welcomeMessage = useMemo(() => getContextualWelcome(pathname || "/"), [pathname]);
 
     const [messages, setMessages] = useState<Message[]>([
         {
             id: "welcome",
             role: "assistant",
-            content: "Hola, soy tu guía en Aurora. Para orientarte mejor con los cursos, ¿qué experiencia tenés hoy en los mercados?",
+            content: welcomeMessage,
         },
     ]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isTimeoutWarning, setIsTimeoutWarning] = useState(false);
 
-    const append = async (message: { role: Role; content: string }) => {
-        const newMsg = { ...message, id: Date.now().toString() };
+    // Update welcome when pathname changes and chat hasn't been used yet
+    useEffect(() => {
+        setMessages((prev) => {
+            if (prev.length === 1 && prev[0].id === "welcome") {
+                return [{ id: "welcome", role: "assistant", content: getContextualWelcome(pathname || "/") }];
+            }
+            return prev;
+        });
+    }, [pathname]);
+
+    const append = useCallback(async (message: { role: Role; content: string }) => {
+        const newMsg: Message = { ...message, id: Date.now().toString() };
 
         setMessages((prev) => [...prev, newMsg]);
-        setIsLoading(true);
-        setIsTimeoutWarning(false);
+        setStreamPhase("connecting");
 
-        // Timeout Warning Logic (5s)
-        const timeoutId = setTimeout(() => {
-            setIsTimeoutWarning(true);
-        }, 5000);
+        // Phase progression: connecting → analyzing (after 1.5s)
+        const phaseTimer = setTimeout(() => {
+            setStreamPhase("analyzing");
+        }, 1500);
 
         try {
             const response = await fetch("/api/chat", {
@@ -69,22 +134,21 @@ export function ChatWidget() {
                 }),
             });
 
-            clearTimeout(timeoutId); // Clear timeout if response starts before 5s
+            clearTimeout(phaseTimer);
+
             if (!response.ok) throw new Error("Failed to fetch");
 
             const reader = response.body?.getReader();
             if (!reader) return;
 
             const assistantMsgId = (Date.now() + 1).toString();
-            // Optimistically add empty assistant message to start streaming into
             setMessages((prev) => [
                 ...prev,
-                { id: assistantMsgId, role: "assistant", content: "" }, // Start empty
+                { id: assistantMsgId, role: "assistant", content: "" },
             ]);
 
-            // Disable loading indicator once streaming starts, as we show the message grow
-            setIsLoading(false);
-            setIsTimeoutWarning(false);
+            // Switch to streaming phase on first chunk
+            setStreamPhase("streaming");
 
             const decoder = new TextDecoder();
             while (true) {
@@ -98,20 +162,15 @@ export function ChatWidget() {
                             : m
                     )
                 );
-                // Scroll to bottom on update
-                // Use scrollIntoView with 'auto' for performance during streaming
-                // Or just rely on useEffect
             }
         } catch (error) {
             console.error("Chat error:", error);
             toast.error("Hubo un error al conectar con el asistente.");
-            setIsLoading(false);
-            setIsTimeoutWarning(false);
         } finally {
-            clearTimeout(timeoutId);
-            setIsLoading(false);
+            clearTimeout(phaseTimer);
+            setStreamPhase("idle");
         }
-    };
+    }, [messages, pathname]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setLocalInput(e.target.value);
@@ -119,44 +178,15 @@ export function ChatWidget() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!localInput.trim()) return;
+        if (!localInput.trim() || streamPhase !== "idle") return;
         append({ role: "user", content: localInput });
         setLocalInput("");
     };
 
-    // Scroll Trigger for Home Page
-    useEffect(() => {
-        if (pathname === "/" && !scrollTriggered.current) {
-            const handleScroll = () => {
-                const scrollPercentage =
-                    (window.scrollY / (document.body.scrollHeight - window.innerHeight)) *
-                    100;
-                if (scrollPercentage > 50 && !isOpen) {
-                    scrollTriggered.current = true;
-                    setIsOpen(true);
-                    // Trigger Mentor Diagnosis
-                    append({
-                        role: "user",
-                        content: "REQUEST_DIAGNOSIS_START",
-                    });
-                }
-            };
-            window.addEventListener("scroll", handleScroll);
-            return () => window.removeEventListener("scroll", handleScroll);
-        }
-    }, [pathname, isOpen, append]);
-
-    // Checkout Trigger
-    useEffect(() => {
-        if (pathname?.includes("/checkout") && !isOpen) {
-            // Logic handled by backend context, UI just needs to be ready
-        }
-    }, [pathname, isOpen]);
-
     // Auto-scroll to bottom
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages, isOpen, isTimeoutWarning]);
+    }, [messages, isOpen, streamPhase]);
 
     return (
         <div className={cn(
@@ -170,19 +200,23 @@ export function ChatWidget() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         className={cn(
-                            "origin-bottom-right shadow-2xl transition-all duration-300 flex flex-col bg-background/95 backdrop-blur-xl border-border/50",
-                            // Mobile Fullscreen
+                            "origin-bottom-right shadow-2xl transition-all duration-300 flex flex-col bg-background/95 backdrop-blur-xl border border-border/50",
                             "w-full h-[100dvh] sm:rounded-2xl sm:h-[600px] sm:w-[400px]",
                             isMinimized && "sm:w-72 sm:h-auto"
                         )}
                     >
                         <Card className="flex flex-col h-full border-0 bg-transparent shadow-none">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 border-b shrink-0 bg-background/50 backdrop-blur-md">
-                                <CardTitle className="text-sm font-medium flex items-center gap-2">
-                                    <div className="relative">
-                                        <div className="h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
+                            {/* Header */}
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 px-4 py-3 border-b shrink-0 bg-background/50 backdrop-blur-md">
+                                <CardTitle className="text-sm font-medium flex items-center gap-2.5">
+                                    <div className="relative flex items-center justify-center h-8 w-8 rounded-lg bg-primary/10 border border-primary/20">
+                                        <Bot className="h-4 w-4 text-primary" />
+                                        <div className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-background animate-pulse" />
                                     </div>
-                                    <span className="font-semibold tracking-wide">Aurora AI</span>
+                                    <div className="flex flex-col">
+                                        <span className="font-semibold tracking-wide text-sm leading-tight">Aurora</span>
+                                        <span className="text-[10px] font-normal text-muted-foreground/60 leading-tight">Asistente de IA</span>
+                                    </div>
                                 </CardTitle>
                                 <div className="flex items-center gap-1">
                                     <Button
@@ -210,46 +244,37 @@ export function ChatWidget() {
 
                             {!isMinimized && (
                                 <>
+                                    {/* Messages */}
                                     <CardContent className="flex-1 overflow-y-auto p-0 scrollbar-thin scrollbar-thumb-muted/50 scrollbar-track-transparent">
                                         <div className="flex flex-col p-4 pb-2">
-                                            {messages.map((m) => {
-                                                if (m.content === "REQUEST_DIAGNOSIS_START") return null;
-                                                return (
-                                                    <ChatMessage
-                                                        key={m.id}
-                                                        role={m.role}
-                                                        content={m.content}
-                                                        agentName={m.role === 'assistant' ? "Aurora AI" : undefined}
-                                                    />
-                                                );
-                                            })}
+                                            {messages.map((m) => (
+                                                <ChatMessage
+                                                    key={m.id}
+                                                    role={m.role}
+                                                    content={m.content}
+                                                    agentName={m.role === "assistant" ? "Aurora" : undefined}
+                                                />
+                                            ))}
 
-                                            {/* Timeout Warning Message */}
-                                            {isTimeoutWarning && (
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    className="flex items-center gap-2 p-3 mb-4 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 text-xs"
-                                                >
-                                                    <AlertCircle className="h-4 w-4 shrink-0" />
-                                                    <span>Estoy revisando los detalles técnicos para darte la respuesta más precisa, dame un segundo más...</span>
-                                                </motion.div>
-                                            )}
-
-                                            {/* Skeleton Loader */}
-                                            {isLoading && <ChatSkeleton />}
+                                            {/* Streaming phase indicator */}
+                                            <AnimatePresence>
+                                                {streamPhase !== "idle" && streamPhase !== "streaming" && (
+                                                    <StreamingIndicator phase={streamPhase} />
+                                                )}
+                                            </AnimatePresence>
 
                                             <div ref={messagesEndRef} className="h-1" />
                                         </div>
                                     </CardContent>
 
-                                    <CardFooter className="p-0 shrink-0 bg-background/50 backdrop-blur-md border-t">
+                                    {/* Input — sticky bottom */}
+                                    <CardFooter className="p-0 shrink-0 bg-background/50 backdrop-blur-md border-t sticky bottom-0">
                                         <div className="w-full pb-[env(safe-area-inset-bottom)]">
                                             <ChatInput
                                                 input={localInput}
                                                 handleInputChange={handleInputChange}
                                                 handleSubmit={handleSubmit}
-                                                isLoading={isLoading}
+                                                isLoading={streamPhase !== "idle"}
                                             />
                                         </div>
                                     </CardFooter>
