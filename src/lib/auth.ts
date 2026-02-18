@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
+import { sendGeneralWelcomeEmail } from "@/lib/email";
 
 export const authOptions: AuthOptions = {
     adapter: PrismaAdapter(prisma),
@@ -58,6 +59,14 @@ export const authOptions: AuthOptions = {
                             password: hashedPassword
                         }
                     });
+
+                    // Send General Welcome Email
+                    // Note: This is async but we don't await to not block the login process, 
+                    // though for emails it's usually better to ensure they sent or at least handled.
+                    // Given the context of "instant access", we want it fast.
+                    sendGeneralWelcomeEmail(newUser.email!, newUser.name).catch(err =>
+                        console.error("[AUTH_WELCOME_EMAIL_ERROR]", err)
+                    );
 
                     return {
                         id: newUser.id,

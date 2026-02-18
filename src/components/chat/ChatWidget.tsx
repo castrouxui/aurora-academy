@@ -191,7 +191,7 @@ export function ChatWidget() {
     return (
         <div className={cn(
             "fixed z-50 transition-all duration-300",
-            isOpen ? "inset-0 sm:inset-auto sm:bottom-8 sm:right-8" : "bottom-4 right-4 sm:bottom-8 sm:right-8"
+            isOpen ? "inset-0 sm:inset-auto sm:bottom-8 sm:right-8" : "bottom-24 right-4 sm:bottom-8 sm:right-8"
         )}>
             <AnimatePresence>
                 {isOpen && (

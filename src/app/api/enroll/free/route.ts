@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { sendCourseWelcomeEmail } from "@/lib/email";
 
 export async function POST(req: Request) {
     try {
@@ -51,6 +52,13 @@ export async function POST(req: Request) {
                 status: 'approved',
             }
         });
+
+        // Send Welcome Email if it's "El camino del inversor"
+        // We can check by title or just send it for any free course if that's the intent, 
+        // but the user specifically asked for "El camino del inversor" to match Lead Capture.
+        if (course.title === "El camino del inversor") {
+            await sendCourseWelcomeEmail(session.user.email!, session.user.name);
+        }
 
         return NextResponse.json({ success: true });
 
