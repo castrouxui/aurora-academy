@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && prisma db push && next build",
-    "undo:reviews": "tsx scripts/undo-reviews.ts",
     "start": "next start",
     "lint": "echo 'Skipping lint check for deployment'"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.29",
     "@ai-sdk/openai": "^3.0.29",
     "@ai-sdk/react": "^3.0.88",
     "@dnd-kit/core": "^6.3.1",

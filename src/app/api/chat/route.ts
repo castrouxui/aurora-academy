@@ -1,5 +1,5 @@
-import { openai } from "@ai-sdk/openai";
-import { streamText, convertToModelMessages } from "ai";
+import { google } from "@ai-sdk/google";
+import { streamText } from "ai";
 import { MENTOR_PROMPT, TUTOR_PROMPT, OPERATOR_PROMPT } from "@/lib/chat/prompts";
 
 // Allow streaming responses up to 30 seconds
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     let activeAgent = "Mentor";
 
     const lastMessage = messages[messages.length - 1];
-    const userContent = lastMessage.content.toLowerCase();
+    const userContent = lastMessage?.content?.toLowerCase() || "";
 
     // Check specific triggers
     if (userContent === "request_diagnosis_start") {
@@ -43,9 +43,12 @@ export async function POST(req: Request) {
     }
 
     const result = await streamText({
-        model: openai("gpt-4o"), // Defaulting to gpt-4o for quality
+        model: google("gemini-flash-latest"), // Using stable alias to avoid preview quota issues
         system: systemPrompt,
-        messages: convertToModelMessages(messages),
+        messages: messages.map((m: any) => ({
+            role: m.role,
+            content: m.content,
+        })),
     });
 
     return result.toTextStreamResponse();
