@@ -17,7 +17,6 @@ import { StreamingIndicator, type StreamPhase } from "./StreamingIndicator";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
 
 /* ─── Course title map for contextual welcomes ─── */
 const COURSE_TITLES: Record<string, string> = {
@@ -103,6 +102,12 @@ export function ChatWidget() {
         },
     ]);
 
+    // Ref to always hold fresh messages (avoids stale closure in append)
+    const messagesRef = useRef<Message[]>(messages);
+    useEffect(() => {
+        messagesRef.current = messages;
+    }, [messages]);
+
     // Update welcome when pathname changes and chat hasn't been used yet
     useEffect(() => {
         setMessages((prev) => {
@@ -125,21 +130,27 @@ export function ChatWidget() {
         }, 1500);
 
         try {
+            // Use ref for fresh message history (avoids stale closure)
+            const currentMessages = [...messagesRef.current, newMsg];
+
             const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    messages: [...messages, newMsg],
+                    messages: currentMessages,
                     pathname,
                 }),
             });
 
             clearTimeout(phaseTimer);
 
-            if (!response.ok) throw new Error("Failed to fetch");
+            if (!response.ok) {
+                const errorText = await response.text().catch(() => "");
+                throw new Error(`API error ${response.status}: ${errorText}`);
+            }
 
             const reader = response.body?.getReader();
-            if (!reader) return;
+            if (!reader) throw new Error("No response body");
 
             const assistantMsgId = (Date.now() + 1).toString();
             setMessages((prev) => [
@@ -165,12 +176,21 @@ export function ChatWidget() {
             }
         } catch (error) {
             console.error("Chat error:", error);
-            toast.error("Hubo un error al conectar con el asistente.");
+            // Show error as a visible message in the chat instead of a toast
+            const errorMsgId = `error-${Date.now()}`;
+            setMessages((prev) => [
+                ...prev,
+                {
+                    id: errorMsgId,
+                    role: "assistant",
+                    content: "⚠️ No pude conectar con el asistente en este momento. Intentá de nuevo en unos segundos.",
+                },
+            ]);
         } finally {
             clearTimeout(phaseTimer);
             setStreamPhase("idle");
         }
-    }, [messages, pathname]);
+    }, [pathname]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setLocalInput(e.target.value);

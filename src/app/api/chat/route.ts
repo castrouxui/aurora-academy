@@ -97,14 +97,22 @@ export async function POST(req: Request) {
         contextAddendum += `\n\nIMPORTANT: The user has just triggered the diagnosis flow. Ignore the text "REQUEST_DIAGNOSIS_START" and immediately ask the Key Question: "Para recomendarte el mejor camino, ¿qué experiencia tenés gestionando tus ahorros e inversiones?"`;
     }
 
-    const result = await streamText({
-        model: google("gemini-flash-latest"),
-        system: systemPrompt + contextAddendum,
-        messages: messages.map((m: any) => ({
-            role: m.role,
-            content: m.content,
-        })),
-    });
+    try {
+        const result = await streamText({
+            model: google("gemini-flash-latest"),
+            system: systemPrompt + contextAddendum,
+            messages: messages.map((m: any) => ({
+                role: m.role,
+                content: m.content,
+            })),
+        });
 
-    return result.toTextStreamResponse();
+        return result.toTextStreamResponse();
+    } catch (error) {
+        console.error("Chat API error:", error);
+        return new Response(
+            JSON.stringify({ error: "Failed to generate response" }),
+            { status: 500, headers: { "Content-Type": "application/json" } }
+        );
+    }
 }
