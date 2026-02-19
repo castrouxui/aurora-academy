@@ -154,7 +154,7 @@ export function CourseDetailContent({
 
             {/* Testimonials Carousel (Footer) */}
             <div className="border-t border-white/[0.04] pt-24 pb-32">
-                <TestimonialsSection />
+                {/* <TestimonialsSection /> */}
             </div>
 
             {/* Mobile Sticky CTA - Increased Z-index */}

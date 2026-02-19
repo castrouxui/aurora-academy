@@ -80,8 +80,12 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     const totalModules = course.modules.length;
 
     // Calculate total duration
-    const totalDurationSeconds = course.modules.reduce((acc, module) => {
-        return acc + module.lessons.reduce((lAcc, lesson) => lAcc + (lesson.duration || 0), 0);
+    // Calculate total duration (sum of all lesson durations)
+    const totalDurationSeconds = course.modules.reduce((total, module) => {
+        const moduleDuration = module.lessons.reduce((modTotal, lesson) => {
+            return modTotal + (lesson.duration || 0);
+        }, 0);
+        return total + moduleDuration;
     }, 0);
 
     // Format duration using centralized utility

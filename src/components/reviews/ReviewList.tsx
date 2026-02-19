@@ -14,19 +14,7 @@ interface Review {
     };
 }
 
-// Expanded distinctive colors
-const AVATAR_COLORS = [
-    { bg: "bg-indigo-500/15", text: "text-indigo-400" },
-    { bg: "bg-violet-500/15", text: "text-violet-400" },
-    { bg: "bg-emerald-500/15", text: "text-emerald-400" },
-    { bg: "bg-amber-500/15", text: "text-amber-400" },
-    { bg: "bg-sky-500/15", text: "text-sky-400" },
-    { bg: "bg-rose-500/15", text: "text-rose-400" },
-    { bg: "bg-fuchsia-500/15", text: "text-fuchsia-400" },
-    { bg: "bg-cyan-500/15", text: "text-cyan-400" },
-    { bg: "bg-lime-500/15", text: "text-lime-400" },
-    { bg: "bg-orange-500/15", text: "text-orange-400" },
-];
+
 
 const RESULT_KEYWORDS = ["broker", "cuenta", "segundo curso", "abrí", "inscrib", "resultado", "operando", "invertir"];
 
@@ -75,22 +63,27 @@ export function ReviewList({ reviews }: { reviews: Review[] }) {
         <div className="space-y-6">
             {sortedReviews.map((review, index) => {
                 const isHighlighted = hasConcreteResults(review.comment);
-                const color = AVATAR_COLORS[index % AVATAR_COLORS.length];
+                const isInstructor = review.user.name === "Fran Castro" || review.user.name === "Francisco Castro";
                 const instructorReply = INSTRUCTOR_REPLIES[review.id];
+
+                // Standard color for students (Indigo), distinguished for Instructor
+                const avatarStyle = isInstructor
+                    ? "bg-[#5D5CDE] text-white"
+                    : "bg-indigo-500/15 text-indigo-400";
 
                 return (
                     <div key={review.id} className="group">
                         {/* Review Card - Increased padding 24px (p-6) */}
                         <div
                             className={`rounded-2xl p-6 transition-all duration-300 ${isHighlighted
-                                    ? "bg-[#5D5CDE]/[0.05] border border-[#5D5CDE]/20 shadow-[0_4px_20px_rgba(93,92,222,0.05)]"
-                                    : "bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.03] hover:border-white/[0.08]"
+                                ? "bg-[#5D5CDE]/[0.05] border border-[#5D5CDE]/20 shadow-[0_4px_20px_rgba(93,92,222,0.05)]"
+                                : "bg-white/[0.02] border border-white/[0.05] hover:bg-white/[0.03] hover:border-white/[0.08]"
                                 }`}
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-4">
                                     {/* Avatar - Always enforced colors/initials unless image exists */}
-                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${review.user.image ? "" : `${color.bg} ${color.text}`
+                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${review.user.image ? "" : avatarStyle
                                         } overflow-hidden relative shadow-inner ring-1 ring-white/5`}>
                                         {review.user.image ? (
                                             <Image src={review.user.image} alt={review.user.name || "User"} fill className="object-cover" />
