@@ -1,5 +1,5 @@
 import { google } from "@ai-sdk/google";
-import { streamText, Message } from "ai";
+import { streamText } from "ai";
 import { MENTOR_PROMPT, TUTOR_PROMPT, OPERATOR_PROMPT } from "@/lib/chat/prompts";
 
 // Allow streaming responses up to 30 seconds
@@ -100,18 +100,18 @@ export async function POST(req: Request) {
     try {
         console.log(`[API] Stream start for: ${pathname}`);
         const result = await streamText({
-            model: google("gemini-1.5-flash"),
+            model: google("gemini-1.5-pro"),
             system: systemPrompt + contextAddendum,
             messages: messages.map((m: any) => ({
                 role: m.role,
                 content: m.content,
             })),
-            safetySettings: [
-                { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
-                { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
-                { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
-                { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
-            ],
+            onFinish: ({ text, finishReason }) => {
+                console.log(`[API] Stream finished. Reason: ${finishReason}, Text length: ${text.length}`);
+                if (finishReason !== "stop") {
+                    console.warn(`[API] Abnormal finish reason: ${finishReason}`);
+                }
+            },
         });
 
         return result.toTextStreamResponse();
