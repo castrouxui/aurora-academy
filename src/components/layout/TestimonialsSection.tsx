@@ -98,20 +98,10 @@ export function TestimonialsSection() {
                     </div>
                 </div>
 
-                {/* DESKTOP GRID (Vertical Marquee) */}
-                <div className="hidden md:grid relative h-[800px] max-h-[80vh] overflow-hidden grid-cols-2 lg:grid-cols-3 gap-8 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">
+                <div className="relative h-[800px] max-h-[80vh] overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">
                     <ReviewColumn reviews={TESTIMONIALS.slice(0, 3)} duration={45} />
-                    <ReviewColumn reviews={TESTIMONIALS.slice(3, 6)} duration={55} />
+                    <ReviewColumn reviews={TESTIMONIALS.slice(3, 6)} duration={55} className="hidden md:block" />
                     <ReviewColumn reviews={TESTIMONIALS.slice(6, 9)} duration={50} className="hidden lg:block" />
-                </div>
-
-                {/* MOBILE SWIPER (Horizontal Scroll) */}
-                <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-6 px-6 scrollbar-hide">
-                    {TESTIMONIALS.slice(0, 6).map((testimonial, index) => (
-                        <div key={index} className="min-w-[85vw] snap-center">
-                            <ReviewCard review={testimonial} />
-                        </div>
-                    ))}
                 </div>
             </Container>
 
@@ -125,14 +115,6 @@ export function TestimonialsSection() {
                 }
                 .animate-marquee:hover {
                     animation-play-state: paused;
-                }
-                /* Hide scrollbar for mobile swiper */
-                .scrollbar-hide::-webkit-scrollbar {
-                    display: none;
-                }
-                .scrollbar-hide {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
                 }
             `}</style>
         </section>
