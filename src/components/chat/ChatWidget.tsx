@@ -143,6 +143,7 @@ export function ChatWidget() {
 
         while (attempt < MAX_RETRIES && !success) {
             try {
+                console.log(`[Chat] Attempt ${attempt + 1} starting...`);
                 // Use ref for fresh message history (avoids stale closure)
                 const currentMessages = [...messagesRef.current];
                 // Ensure the new message is in the list
@@ -195,7 +196,7 @@ export function ChatWidget() {
                     );
                 }
             } catch (error) {
-                console.error(`Chat error (attempt ${attempt + 1}):`, error);
+                console.error(`[Chat] Error (attempt ${attempt + 1}):`, error);
                 attempt++;
 
                 if (attempt < MAX_RETRIES) {
@@ -203,12 +204,13 @@ export function ChatWidget() {
                     await new Promise((r) => setTimeout(r, attempt * 1000));
                 } else {
                     // Final failure after all retries
+                    console.error("[Chat] Max retries reached. Showing error message.");
                     setMessages((prev) => [
                         ...prev,
                         {
                             id: `error-${Date.now()}`,
                             role: "assistant",
-                            content: "⚠️ Hubo un problema con la conexión. Por favor, intentá de nuevo.",
+                            content: "⚠️ Hubo un problema con la conexión. Por favor, intentá de nuevo en unos segundos.",
                         },
                     ]);
                 }
