@@ -44,12 +44,16 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     const { id } = await params;
     const session = await getServerSession(authOptions);
 
+    // FIX: Order modules and lessons by position
     const course = await prisma.course.findUnique({
         where: { id },
         include: {
             modules: {
+                orderBy: { position: 'asc' },
                 include: {
-                    lessons: true
+                    lessons: {
+                        orderBy: { position: 'asc' }
+                    }
                 }
             }
         }
@@ -92,11 +96,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     }
     if (totalDurationSeconds === 0) formattedDuration = "Variable"; // Fallback
 
-    // Get student count (real + base for social proof if desired, or just real)
-    // For now, let's use real count. If 0 and we want to "standardize" with a fake minimum, we could.
-    // User asked "que tenga data real... pero estandarizado". I'll stick to real + a specific fallback if 0? 
-    // Or maybe just real. Let's use Real, but maybe add a random seed for "Aurora" demo feel if requested? 
-    // No, user said "data REAL".
+    // Get student count (real)
     const studentCount = await prisma.purchase.count({
         where: { courseId: id, status: 'approved' }
     });
@@ -114,13 +114,19 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
             minimumFractionDigits: 0
         }).format(finalPrice);
 
-    // Get first lesson video for preview
-    const firstModule = course.modules.sort((a, b) => a.position - b.position)[0];
-    const firstLesson = firstModule?.lessons.sort((a, b) => a.position - b.position)[0];
+    // Get first lesson video for preview (now correctly ordered)
+    const firstModule = course.modules[0];
+    const firstLesson = firstModule?.lessons[0];
     const previewVideoUrl = firstLesson?.videoUrl || "/hero-video.mp4";
 
     // Calculate display image (Priority: Local Map override > Uploaded > YouTube (HQ) > Placeholder)
     const youtubeId = previewVideoUrl ? getYouTubeId(previewVideoUrl) : null;
+    let displayImage = getCourseImage(course);
+
+    // Initial fallback if utility returns placeholder but we have video
+    if (displayImage === "/course-placeholder.jpg" && youtubeId) {
+        displayImage = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+    }
 
     // Fetch Reviews
     const dbReviews = await prisma.review.findMany({
@@ -193,10 +199,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     // Check Completion
     let isCompleted = false;
     if (session?.user?.id && hasAccess) {
-        // Get all lesson IDs for this course
         const allLessonIds = course.modules.flatMap(m => m.lessons.map(l => l.id));
-
-        // Count completed lessons for this user
         const completedCount = await prisma.userProgress.count({
             where: {
                 userId: session.user.id,
@@ -204,21 +207,12 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 completed: true
             }
         });
-
         isCompleted = allLessonIds.length > 0 && completedCount === allLessonIds.length;
     }
 
     const canReview = hasAccess && isCompleted && !userReview;
 
-    // Use shared utility for consistency
-    let displayImage = getCourseImage(course);
-
-    // Initial fallback if utility returns placeholder but we have video
-    if (displayImage === "/course-placeholder.jpg" && youtubeId) {
-        displayImage = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
-    }
-
-    // Build featured testimonial from hardcoded or real reviews
+    // Build featured testimonial
     const RESULT_KEYWORDS = ["broker", "cuenta", "segundo curso", "abrí", "inscrib"];
     const featuredSource = hardcodedReviews.length > 0
         ? hardcodedReviews[0]
@@ -232,7 +226,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         }
         : undefined;
 
-    // Always show original price for anchor effect (even on free courses)
+    // Always show original price for anchor effect
     const formattedOriginalPrice = basePrice > 0
         ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice)
         : "";
@@ -267,7 +261,6 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         rawPrice: finalPrice
     };
 
-    // Count ALL published content (Courses + Mentorships + Micro)
     const totalPublishedCourses = await prisma.course.count({
         where: { published: true }
     });

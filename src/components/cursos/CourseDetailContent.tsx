@@ -41,24 +41,25 @@ export function CourseDetailContent({
     return (
         <div className="bg-[#0B0F19] min-h-screen">
 
-            {/* HER HERO SECTION WRAPPER - Full Width Background */}
+            {/* HERO BG WRAPPER */}
             <div className="relative w-full">
-                {/* Background Image Layer */}
-                <div className="absolute inset-0 h-[800px] z-0 overflow-hidden">
+                {/* Background Image - Increased opacity for better visibility per feedback */}
+                <div className="absolute inset-0 h-[850px] z-0 overflow-hidden">
                     <img
                         src={courseData.videoThumbnail || courseData.imageUrl}
                         alt=""
-                        className="w-full h-full object-cover opacity-30 select-none"
+                        className="w-full h-full object-cover opacity-50 select-none"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F19]/60 via-[#0B0F19]/90 to-[#0B0F19]" />
+                    {/* Gradient overlay - Slightly reduced top opacity to let image show through more */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F19]/40 via-[#0B0F19]/90 to-[#0B0F19]" />
                     <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0B0F19] to-transparent" />
                 </div>
 
-                {/* Main Content Grid (Hero + Sidebar) */}
+                {/* Main Content Grid */}
                 <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-32 lg:pt-40">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
 
-                        {/* LEFT COLUMN: Hero Content & Main Details */}
+                        {/* LEFT COLUMN */}
                         <div className="lg:col-span-7 xl:col-span-8 space-y-24 md:space-y-32 pb-24">
 
                             {/* 1. Hero Text Content */}
@@ -71,8 +72,6 @@ export function CourseDetailContent({
                                 instructor={courseData.instructor}
                                 level={courseData.level}
                                 students={courseData.students}
-                                // Image passed but ignored by component, used in parent wrapper instead
-                                image={courseData.videoThumbnail || courseData.imageUrl}
                             />
 
                             {/* 2. Featured Testimonial */}
@@ -104,7 +103,12 @@ export function CourseDetailContent({
                                 <InstructorCard totalCourses={totalCourses} />
                             </section>
 
-                            {/* 5. Reviews */}
+                            {/* 5. FAQ (Moved before reviews per feedback) */}
+                            <section id="faq">
+                                <CourseFAQ />
+                            </section>
+
+                            {/* 6. Reviews */}
                             <section id="reviews">
                                 <div className="flex items-center justify-between mb-10">
                                     <h2 className="text-3xl font-black text-white font-headings tracking-tight">
@@ -120,11 +124,6 @@ export function CourseDetailContent({
                                 )}
 
                                 <ReviewList reviews={reviews || []} />
-                            </section>
-
-                            {/* 6. FAQ */}
-                            <section id="faq">
-                                <CourseFAQ />
                             </section>
                         </div>
 
@@ -153,13 +152,13 @@ export function CourseDetailContent({
                 </div>
             </div>
 
-            {/* Testimonials Carousel (Full Width Footer) */}
+            {/* Testimonials Carousel (Footer) */}
             <div className="border-t border-white/[0.04] pt-24 pb-32">
                 <TestimonialsSection />
             </div>
 
-            {/* Mobile Sticky CTA */}
-            <div className="lg:hidden">
+            {/* Mobile Sticky CTA - Increased Z-index */}
+            <div className="lg:hidden relative z-[100]">
                 <MobileCourseCTA
                     title={courseData.title}
                     price={courseData.price}

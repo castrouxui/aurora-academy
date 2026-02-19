@@ -1,8 +1,9 @@
 "use client";
 
-import { Star } from "lucide-react";
+import { Star, ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 
 interface CourseHeroProps {
     title: string;
@@ -14,7 +15,7 @@ interface CourseHeroProps {
         name: string;
         image: string;
     };
-    image?: string; // Kept for interface compatibility but ignored in rendering
+    image?: string;
     level?: string;
     students?: number;
 }
@@ -29,12 +30,17 @@ export function CourseHero({
     level,
     students,
 }: CourseHeroProps) {
-    const displayDescription = shortDescription || (description && description.length > 220
-        ? description.slice(0, 220).trim() + "..."
-        : description);
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    // Logic: Use description. If shortDescription exists, use it as fallback? 
+    // Usually full description is what we truncate.
+    const textToShow = description || shortDescription || "";
+
+    // Only show toggle if text is long
+    const isLongText = textToShow.length > 150;
 
     return (
-        <div className="flex flex-col gap-6 md:gap-8 relative z-10">
+        <div className="flex flex-col gap-6 md:gap-8 relative z-10 w-full">
             {/* Breadcrumbs */}
             <nav className="flex items-center gap-2 text-xs font-medium text-gray-400">
                 <Link href="/cursos" className="hover:text-white transition-colors">
@@ -45,14 +51,30 @@ export function CourseHero({
             </nav>
 
             {/* Title */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.05] tracking-tight text-shadow-sm">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-[1.05] tracking-tight text-shadow-sm">
                 {title}
             </h1>
 
-            {/* Description */}
-            <p className="text-lg md:text-xl text-gray-200 leading-relaxed max-w-2xl font-light">
-                {displayDescription}
-            </p>
+            {/* Description with Truncation */}
+            <div className="max-w-2xl relative">
+                <p
+                    className={`text-lg md:text-xl text-gray-200 leading-relaxed font-light transition-all duration-300 ${!isExpanded ? 'line-clamp-2 md:line-clamp-2' : ''}`}
+                >
+                    {textToShow}
+                </p>
+                {isLongText && (
+                    <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="mt-2 text-[#5D5CDE] text-sm font-bold hover:text-[#4B4AC0] transition-colors flex items-center gap-1 focus:outline-none"
+                    >
+                        {isExpanded ? (
+                            <>Ver menos <ChevronUp size={14} /></>
+                        ) : (
+                            <>Ver más <ChevronDown size={14} /></>
+                        )}
+                    </button>
+                )}
+            </div>
 
             {/* Meta Row */}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-2">

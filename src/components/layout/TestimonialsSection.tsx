@@ -9,9 +9,9 @@ import { getRegisteredUserCount } from "@/actions/user";
 
 function ReviewCard({ review }: { review: Testimonial }) {
     return (
-        <figure className="relative w-full cursor-pointer overflow-hidden rounded-3xl border border-white/5 bg-[#0D0D0D] p-8 transition-all duration-300 hover:border-white/10 hover:bg-[#151515]">
+        <figure className="relative w-full cursor-pointer overflow-hidden rounded-3xl border border-white/5 bg-[#0D0D0D] p-8 transition-all duration-300 hover:border-white/10 hover:bg-[#151515] h-full flex flex-col">
             <div className="flex flex-row items-center gap-4 mb-6">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/10">
+                <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/10 shrink-0">
                     <Image
                         src={review.image}
                         alt={review.author}
@@ -23,11 +23,9 @@ function ReviewCard({ review }: { review: Testimonial }) {
                     <figcaption className="text-base font-bold text-white">
                         {review.author}
                     </figcaption>
-                    {/* Optional: Keep role if useful, or remove to match strict reference */}
-                    {/* <p className="text-xs font-medium text-white/40">{review.role}</p> */}
                 </div>
             </div>
-            <blockquote className="text-base leading-relaxed text-gray-400 font-light">
+            <blockquote className="text-base leading-relaxed text-gray-400 font-light flex-1">
                 {review.text}
             </blockquote>
         </figure>
@@ -43,7 +41,7 @@ function ReviewColumn({
     className?: string;
     duration?: number;
 }) {
-    // Double the array to ensure smooth infinite scroll
+    // Double the array for marquee
     const doubledReviews = [...reviews, ...reviews];
 
     return (
@@ -100,10 +98,20 @@ export function TestimonialsSection() {
                     </div>
                 </div>
 
-                <div className="relative h-[800px] max-h-[80vh] overflow-hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">
+                {/* DESKTOP GRID (Vertical Marquee) */}
+                <div className="hidden md:grid relative h-[800px] max-h-[80vh] overflow-hidden grid-cols-2 lg:grid-cols-3 gap-8 [mask-image:linear-gradient(to_bottom,transparent,black_20%,black_80%,transparent)]">
                     <ReviewColumn reviews={TESTIMONIALS.slice(0, 3)} duration={45} />
-                    <ReviewColumn reviews={TESTIMONIALS.slice(3, 6)} duration={55} className="hidden md:block" />
+                    <ReviewColumn reviews={TESTIMONIALS.slice(3, 6)} duration={55} />
                     <ReviewColumn reviews={TESTIMONIALS.slice(6, 9)} duration={50} className="hidden lg:block" />
+                </div>
+
+                {/* MOBILE SWIPER (Horizontal Scroll) */}
+                <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-4 pb-8 -mx-6 px-6 scrollbar-hide">
+                    {TESTIMONIALS.slice(0, 6).map((testimonial, index) => (
+                        <div key={index} className="min-w-[85vw] snap-center">
+                            <ReviewCard review={testimonial} />
+                        </div>
+                    ))}
                 </div>
             </Container>
 
@@ -117,6 +125,14 @@ export function TestimonialsSection() {
                 }
                 .animate-marquee:hover {
                     animation-play-state: paused;
+                }
+                /* Hide scrollbar for mobile swiper */
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                }
+                .scrollbar-hide {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
                 }
             `}</style>
         </section>

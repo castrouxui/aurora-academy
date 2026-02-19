@@ -41,8 +41,6 @@ export function MobileCourseCTA({
     const [isEnrolling, setIsEnrolling] = useState(false);
 
     const isFree = rawPrice === 0;
-
-    // State for bundle purchase
     const [selectedBundle, setSelectedBundle] = useState<{ id: string, title: string, price: string } | null>(null);
 
     const handlePurchase = () => {
@@ -133,24 +131,26 @@ export function MobileCourseCTA({
                 bundleId={selectedBundle ? selectedBundle.id : undefined}
             />
 
-            <div className={cn("fixed bottom-0 left-0 right-0 p-4 bg-[#0B0F19]/95 backdrop-blur-xl border-t border-white/[0.06] z-50 lg:hidden safe-area-pb", className)}>
-                <div className="flex items-center gap-4">
+            {/* Added Z-Index 100 and safe area handling */}
+            <div className={cn("fixed bottom-0 left-0 right-0 p-4 pb-safe bg-[#0B0F19]/95 backdrop-blur-xl border-t border-white/[0.06] z-[100] lg:hidden", className)}>
+                <div className="flex items-center gap-4 max-w-lg mx-auto">
                     <div className="flex-1 min-w-0">
                         {isFree ? (
                             <div className="flex items-baseline gap-2">
                                 {originalPrice && (
-                                    <span className="text-sm text-gray-500 line-through">{originalPrice}</span>
+                                    <span className="text-xs text-gray-500 line-through">{originalPrice}</span>
                                 )}
-                                <span className="text-xl font-black text-white">GRATIS</span>
+                                <span className="text-lg font-black text-white">GRATIS</span>
                             </div>
                         ) : (
-                            <p className="text-xl font-black text-white truncate">{price}</p>
+                            <p className="text-lg font-black text-white truncate">{price}</p>
                         )}
+                        <p className="text-[10px] text-gray-400 truncate leading-none mt-1">{title}</p>
                     </div>
 
                     {hasAccess ? (
                         <Link href={`/learn/${courseId}`} className="flex-1">
-                            <Button className="w-full h-12 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover">
+                            <Button className="w-full h-11 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover">
                                 Ver Curso
                             </Button>
                         </Link>
@@ -158,16 +158,16 @@ export function MobileCourseCTA({
                         <Button
                             onClick={handleFreeEnroll}
                             disabled={isEnrolling}
-                            className="flex-[1.5] h-12 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover flex items-center justify-center gap-2"
+                            className="flex-[1.5] h-11 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover flex items-center justify-center gap-2"
                         >
-                            {isEnrolling ? <Loader2 className="animate-spin" /> : "Comenzar ahora"}
+                            {isEnrolling ? <Loader2 className="animate-spin" size={16} /> : "Comenzar ahora"}
                         </Button>
                     ) : (
                         <Button
                             onClick={handlePurchase}
-                            className="flex-[1.5] h-12 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
+                            className="flex-[1.5] h-11 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
                         >
-                            Acceder al curso
+                            Acceder
                         </Button>
                     )}
                 </div>
