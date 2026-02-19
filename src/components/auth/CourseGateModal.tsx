@@ -16,20 +16,27 @@ interface CourseGateModalProps {
     courseTitle: string;
 }
 
+import { createPortal } from "react-dom";
+
+// ... existing imports
+
 export function CourseGateModal({ isOpen, onClose, courseId, courseTitle }: CourseGateModalProps) {
     useBodyScrollLock(isOpen);
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [providers, setProviders] = useState<Record<LiteralUnion<string>, ClientSafeProvider> | null>(null);
+    const [mounted, setMounted] = useState(false);
 
     // Default to 'register' mode since this is a "complete profile" flow
     const [mode, setMode] = useState<'login' | 'register'>('register');
 
     useEffect(() => {
+        setMounted(true);
         getProviders().then(setProviders);
+        return () => setMounted(false);
     }, []);
 
-    if (!isOpen) return null;
+    if (!isOpen || !mounted) return null;
 
     const isRegister = mode === 'register';
 
@@ -95,44 +102,40 @@ export function CourseGateModal({ isOpen, onClose, courseId, courseTitle }: Cour
         }
     };
 
-    if (isSuccess) {
-        return (
-            <div className="fixed inset-0 z-[5000] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
-                <div className="relative w-full max-w-lg bg-[#0E1219] border border-blue-500/30 rounded-3xl shadow-2xl p-8 text-center">
-                    {/* User Avatar / Success Icon */}
-                    <div className="relative mx-auto mb-6 w-24 h-24">
-                        <div className="w-24 h-24 rounded-full bg-gray-500/20 overflow-hidden border-2 border-gray-700/50 flex items-center justify-center">
-                            {/* Generic User Icon or Initials if we had them, placeholder for now */}
-                            <svg className="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                        </div>
-                        <div className="absolute -bottom-1 -right-1 bg-emerald-500 rounded-full p-1.5 border-4 border-[#0E1219]">
-                            <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
+    const modalContent = isSuccess ? (
+        <div className="fixed inset-0 z-[5000] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
+            <div className="relative w-full max-w-lg bg-[#0E1219] border border-blue-500/30 rounded-3xl shadow-2xl p-8 text-center">
+                {/* User Avatar / Success Icon */}
+                <div className="relative mx-auto mb-6 w-24 h-24">
+                    <div className="w-24 h-24 rounded-full bg-gray-500/20 overflow-hidden border-2 border-gray-700/50 flex items-center justify-center">
+                        {/* Generic User Icon or Initials if we had them, placeholder for now */}
+                        <svg className="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
                     </div>
-
-                    <h2 className="text-2xl font-bold text-white mb-4">¡Perfil actualizado con éxito!</h2>
-                    <p className="text-gray-400 text-sm leading-relaxed mb-8 px-4">
-                        ¡Gracias por actualizar tu perfil! Ahora tendrás una experiencia mas personalizada para continuar tu aprendizaje
-                    </p>
-
-                    <Button
-                        onClick={() => {
-                            window.location.href = `/learn/${courseId}`;
-                        }}
-                        className="w-full h-12 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-xl transition-all"
-                    >
-                        Completar perfil
-                    </Button>
+                    <div className="absolute -bottom-1 -right-1 bg-emerald-500 rounded-full p-1.5 border-4 border-[#0E1219]">
+                        <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
                 </div>
-            </div>
-        );
-    }
 
-    return (
+                <h2 className="text-2xl font-bold text-white mb-4">¡Perfil actualizado con éxito!</h2>
+                <p className="text-gray-400 text-sm leading-relaxed mb-8 px-4">
+                    ¡Gracias por actualizar tu perfil! Ahora tendrás una experiencia mas personalizada para continuar tu aprendizaje
+                </p>
+
+                <Button
+                    onClick={() => {
+                        window.location.href = `/learn/${courseId}`;
+                    }}
+                    className="w-full h-12 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-xl transition-all"
+                >
+                    Completar perfil
+                </Button>
+            </div>
+        </div>
+    ) : (
         <div className="fixed inset-0 z-[5000] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
             {/* Background Decoration */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -259,6 +262,8 @@ export function CourseGateModal({ isOpen, onClose, courseId, courseTitle }: Cour
             </div>
         </div>
     );
+
+    return createPortal(modalContent, document.body);
 }
 
 // Simple Google Icon Component
