@@ -110,6 +110,7 @@ export function MobileCourseCTA({
                 isOpen={isGateModalOpen}
                 onClose={() => setIsGateModalOpen(false)}
                 courseId={courseId}
+                courseTitle={title}
             />
 
             <UpsellModal

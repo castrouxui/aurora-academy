@@ -13,9 +13,10 @@ interface CourseGateModalProps {
     isOpen: boolean;
     onClose: () => void;
     courseId: string;
+    courseTitle: string;
 }
 
-export function CourseGateModal({ isOpen, onClose, courseId }: CourseGateModalProps) {
+export function CourseGateModal({ isOpen, onClose, courseId, courseTitle }: CourseGateModalProps) {
     useBodyScrollLock(isOpen);
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
@@ -96,7 +97,7 @@ export function CourseGateModal({ isOpen, onClose, courseId }: CourseGateModalPr
 
     if (isSuccess) {
         return (
-            <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
+            <div className="fixed inset-0 z-[5000] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
                 <div className="relative w-full max-w-lg bg-[#0E1219] border border-blue-500/30 rounded-3xl shadow-2xl p-8 text-center">
                     {/* User Avatar / Success Icon */}
                     <div className="relative mx-auto mb-6 w-24 h-24">
@@ -132,7 +133,7 @@ export function CourseGateModal({ isOpen, onClose, courseId }: CourseGateModalPr
     }
 
     return (
-        <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[5000] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-300">
             {/* Background Decoration */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute -top-[20%] -right-[10%] w-[50%] h-[50%] bg-[#5D5CDE]/20 blur-[120px] rounded-full" />
@@ -167,7 +168,7 @@ export function CourseGateModal({ isOpen, onClose, courseId }: CourseGateModalPr
                             Acceso Exclusivo
                         </div>
                         <h2 className="text-3xl font-black text-white leading-tight">
-                            Tu camino como Trader <br />
+                            {courseTitle} <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">comienza aquí.</span>
                         </h2>
                         <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
@@ -181,7 +182,7 @@ export function CourseGateModal({ isOpen, onClose, courseId }: CourseGateModalPr
                     <div className="mb-8 text-center md:text-left">
                         <h3 className="text-2xl font-bold text-white mb-2">Completá tu perfil</h3>
                         <p className="text-gray-400 text-sm">
-                            Para acceder al curso "Trader de 0 a 100", necesitamos crear tu cuenta de estudiante.
+                            Para acceder al curso "{courseTitle}", necesitamos crear tu cuenta de estudiante.
                         </p>
                     </div>
 

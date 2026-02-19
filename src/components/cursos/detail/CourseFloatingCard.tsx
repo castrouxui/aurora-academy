@@ -128,6 +128,7 @@ export function CourseFloatingCard({
                 isOpen={isGateModalOpen}
                 onClose={() => setIsGateModalOpen(false)}
                 courseId={courseId}
+                courseTitle={title}
             />
 
             <UpsellModal
