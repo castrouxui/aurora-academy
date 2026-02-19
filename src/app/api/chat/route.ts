@@ -2,8 +2,8 @@ import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
 import { MENTOR_PROMPT, TUTOR_PROMPT, OPERATOR_PROMPT } from "@/lib/chat/prompts";
 
-// Allow streaming responses up to 30 seconds
-export const maxDuration = 30;
+// Allow streaming responses up to 60 seconds
+export const maxDuration = 60;
 
 /* ─── Course title map for context injection ─── */
 const COURSE_TITLES: Record<string, string> = {
@@ -101,7 +101,8 @@ export async function POST(req: Request) {
         console.log(`[API] Stream start for: ${pathname}`);
         const result = await streamText({
             model: google("gemini-1.5-pro"),
-            system: systemPrompt + contextAddendum,
+            // LOBOTOMY TEST: Simple prompt to rule out Safety Blocks
+            system: "You are Aurora, a helpful and friendly assistant. Answer briefly.",
             messages: messages.map((m: any) => ({
                 role: m.role,
                 content: m.content,
