@@ -12,18 +12,23 @@ export async function generateCourseOutcomes(courseTitle: string, courseDescript
                 outcomes: z.array(z.string()).min(3).max(4),
             }),
             prompt: `
-        You are an expert instructional designer.
-        Generate 3 to 4 concise, impact-driven learning outcomes for a course titled "${courseTitle}".
+        You are an expert instructional designer and copywriter.
+        Your task is to analyze the course description and synthesize the 3-4 most critical value propositions or skills the student will acquire.
         
-        Course Description:
-        "${courseDescription}"
+        Course Title: "${courseTitle}"
+        Course Description: "${courseDescription}"
         
         Requirements:
-        - Focus on what the student will be able to DO or ACHIEVE after the course.
-        - Start with strong verbs (Dominar, Crear, Implementar, Analizar).
-        - Keep each outcome under 60 characters if possible.
-        - Tone: Professional, inspiring, direct.
-        - Language: Spanish.
+        1. **Summarize the Promise**: Do not just list topics. Explain what the student will be able to DO or ACHIEVE.
+        2. **Action-Oriented**: Start with strong verbs (Validar, Construir, Dominar, Rentabilizar).
+        3. **Concise**: Keep each outcome under 50 characters for mobile readability.
+        4. **Language**: Spanish.
+        5. **Format**: Returns a JSON array of strings.
+        
+        Example Output:
+        - "Dominarás el análisis técnico desde cero"
+        - "Crearás tu primer portafolio de inversión"
+        - "Gestionarás el riesgo como un profesional"
       `,
         });
 

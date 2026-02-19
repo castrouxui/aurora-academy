@@ -19,6 +19,8 @@ export const getYouTubeId = (url: string) => {
   }
   return null;
 };
+
+// Used for video player timers (MM:SS)
 export const formatDuration = (seconds?: number) => {
   if (!seconds) return "00:00";
 
@@ -32,4 +34,17 @@ export const formatDuration = (seconds?: number) => {
   }
 
   return `${minutes}:${secs.toString().padStart(2, '0')}`;
+};
+
+// Used for course metadata display (e.g. "2 horas 30 min")
+export const formatCourseDuration = (totalSeconds: number) => {
+  if (!totalSeconds) return "Variable";
+
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+  if (hours > 0) {
+    return `${hours} hora${hours !== 1 ? 's' : ''}${minutes > 0 ? ` ${minutes} min` : ''}`;
+  }
+  return `${minutes} min`;
 };

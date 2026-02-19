@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { CourseDetailContent } from "@/components/cursos/CourseDetailContent";
-import { getYouTubeId } from "@/lib/utils";
+import { getYouTubeId, formatCourseDuration } from "@/lib/utils";
 import { getCourseImage } from "@/lib/course-constants";
 
 export default async function DashboardCourseDatailPage({ params }: { params: Promise<{ courseId: string }> }) {
@@ -11,6 +11,7 @@ export default async function DashboardCourseDatailPage({ params }: { params: Pr
     const id = courseId; // Alias for easier copy-paste logic
     const session = await getServerSession(authOptions);
 
+    // FIX: Order to consistent module output
     const course = await prisma.course.findUnique({
         where: { id },
         include: {
@@ -50,17 +51,8 @@ export default async function DashboardCourseDatailPage({ params }: { params: Pr
         return acc + module.lessons.reduce((lAcc, lesson) => lAcc + (lesson.duration || 0), 0);
     }, 0);
 
-    // Format duration (e.g., "24 horas" or "2h 30m")
-    const hours = Math.floor(totalDurationSeconds / 3600);
-    const minutes = Math.floor((totalDurationSeconds % 3600) / 60);
-    let formattedDuration = "";
-    if (hours > 0) {
-        formattedDuration = `${hours} hora${hours !== 1 ? 's' : ''}`;
-        if (minutes > 0) formattedDuration += ` ${minutes} min`;
-    } else {
-        formattedDuration = `${minutes} min`;
-    }
-    if (totalDurationSeconds === 0) formattedDuration = "Variable";
+    // Format duration using centralized utility
+    const formattedDuration = formatCourseDuration(totalDurationSeconds);
 
     // Get student count (real)
     const studentCount = await prisma.purchase.count({
@@ -93,8 +85,8 @@ export default async function DashboardCourseDatailPage({ params }: { params: Pr
         displayImage = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
     }
 
-    // Fetch Reviews (Real only)
-    const reviews = await prisma.review.findMany({
+    // Fetch Reviews
+    const dbReviews = await prisma.review.findMany({
         where: { courseId: id },
         orderBy: { createdAt: 'desc' },
         include: {
@@ -102,12 +94,64 @@ export default async function DashboardCourseDatailPage({ params }: { params: Pr
         }
     });
 
-    const totalRatings = reviews.length;
-    const averageRating = totalRatings > 0
-        ? reviews.reduce((acc, rev) => acc + rev.rating, 0) / totalRatings
-        : 5.0;
+    // Hardcoded marketing logic (Requested to be KEPT)
+    const HARDCODED_COURSE_ID = "cml05hq7n00025z0eogogsnge";
+    const hardcodedReviews = id === HARDCODED_COURSE_ID ? [
+        {
+            id: "fake-review-1",
+            rating: 5,
+            comment: "Gracias Fran, crack total. Yo venía de ver videos random en YouTube sin entender nada y acá en unas horas ya tenía todo claro. Ya abrí mi cuenta en el broker.",
+            createdAt: new Date("2026-02-10T14:30:00Z"),
+            userId: "fake-user-1",
+            courseId: HARDCODED_COURSE_ID,
+            user: { name: "Facundo Giménez", image: null }
+        },
+        {
+            id: "fake-review-2",
+            rating: 5,
+            comment: "Un amigo me lo recomendó y enserio no me arrepiento. Fran no te vende humo, te habla con ejemplos de la vida real y eso se valora. Ya voy por el segundo curso de la plataforma.",
+            createdAt: new Date("2026-02-05T09:15:00Z"),
+            userId: "fake-user-2",
+            courseId: HARDCODED_COURSE_ID,
+            user: { name: "Martín Aguirre", image: null }
+        },
+        {
+            id: "fake-review-3",
+            rating: 4,
+            comment: "Le pongo 4 porque me quedé con ganas de que profundice más en análisis técnico, pero entiendo que eso va en otro curso. Igualmente para ser gratuito la calidad es una locura, Fran explica sin tecnicismos y se entiende todo.",
+            createdAt: new Date("2026-01-28T18:45:00Z"),
+            userId: "fake-user-3",
+            courseId: HARDCODED_COURSE_ID,
+            user: { name: "Santiago Pereyra", image: null }
+        },
+        {
+            id: "fake-review-4",
+            rating: 4,
+            comment: "Justo lo que necesitaba para dejar de tener la plata parada en el banco. Videos cortitos, los veía en el bondi. Lo único que le agregaría son ejercicios prácticos pero fuera de eso joya.",
+            createdAt: new Date("2026-01-20T11:00:00Z"),
+            userId: "fake-user-4",
+            courseId: HARDCODED_COURSE_ID,
+            user: { name: "Nicolás Herrera", image: null }
+        }
+    ] : [];
 
-    const userReview = session?.user?.id ? reviews.find(r => r.userId === session.user.id) : null;
+    const reviews = [...hardcodedReviews, ...dbReviews];
+
+    // Override rating
+    let totalRatings: number;
+    let averageRating: number;
+
+    if (id === HARDCODED_COURSE_ID) {
+        averageRating = 4.5;
+        totalRatings = 35;
+    } else {
+        totalRatings = dbReviews.length;
+        averageRating = totalRatings > 0
+            ? dbReviews.reduce((acc, rev) => acc + rev.rating, 0) / totalRatings
+            : 5.0;
+    }
+
+    const userReview = session?.user?.id ? dbReviews.find(r => r.userId === session.user.id) : null;
 
     // Check Completion
     let isCompleted = false;
@@ -125,9 +169,11 @@ export default async function DashboardCourseDatailPage({ params }: { params: Pr
 
     const canReview = hasAccess && isCompleted && !userReview;
 
-    // Build featured testimonial (Real only)
+    // Build featured testimonial
     const RESULT_KEYWORDS = ["broker", "cuenta", "segundo curso", "abrí", "inscrib"];
-    const featuredSource = reviews.find(r => r.comment && RESULT_KEYWORDS.some(k => r.comment!.toLowerCase().includes(k)));
+    const featuredSource = hardcodedReviews.length > 0
+        ? hardcodedReviews[0]
+        : reviews.find(r => r.comment && RESULT_KEYWORDS.some(k => r.comment!.toLowerCase().includes(k)));
 
     const featuredTestimonial = featuredSource && featuredSource.comment
         ? {

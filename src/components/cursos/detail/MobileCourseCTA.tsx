@@ -131,8 +131,8 @@ export function MobileCourseCTA({
                 bundleId={selectedBundle ? selectedBundle.id : undefined}
             />
 
-            {/* Added Z-Index 100 and safe area handling */}
-            <div className={cn("fixed bottom-0 left-0 right-0 p-4 pb-safe bg-[#0B0F19]/95 backdrop-blur-xl border-t border-white/[0.06] z-[100] lg:hidden", className)}>
+            {/* Added Z-Index 100 and simpler padding to avoid cutoff */}
+            <div className={cn("fixed bottom-0 left-0 right-0 p-4 pb-8 bg-[#0B0F19]/95 backdrop-blur-xl border-t border-white/[0.06] z-[100] lg:hidden mb-0", className)}>
                 <div className="flex items-center gap-4 max-w-lg mx-auto">
                     <div className="flex-1 min-w-0">
                         {isFree ? (

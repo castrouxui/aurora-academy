@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { CourseDetailContent } from "@/components/cursos/CourseDetailContent";
-import { getYouTubeId } from "@/lib/utils";
+import { getYouTubeId, formatCourseDuration } from "@/lib/utils";
 import { getCourseImage } from "@/lib/course-constants";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
@@ -84,17 +84,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         return acc + module.lessons.reduce((lAcc, lesson) => lAcc + (lesson.duration || 0), 0);
     }, 0);
 
-    // Format duration (e.g., "24 horas" or "2h 30m")
-    const hours = Math.floor(totalDurationSeconds / 3600);
-    const minutes = Math.floor((totalDurationSeconds % 3600) / 60);
-    let formattedDuration = "";
-    if (hours > 0) {
-        formattedDuration = `${hours} hora${hours !== 1 ? 's' : ''}`;
-        if (minutes > 0) formattedDuration += ` ${minutes} min`;
-    } else {
-        formattedDuration = `${minutes} min`;
-    }
-    if (totalDurationSeconds === 0) formattedDuration = "Variable"; // Fallback
+    // Format duration using centralized utility
+    const formattedDuration = formatCourseDuration(totalDurationSeconds); // Fallback
 
     // Get student count (real)
     const studentCount = await prisma.purchase.count({
