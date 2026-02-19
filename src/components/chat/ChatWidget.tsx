@@ -130,87 +130,92 @@ export function ChatWidget() {
         });
     }, [pathname]);
 
-    const append = useCallback(async (message: { role: Role; content: string }, retryCount = 0) => {
+    const append = useCallback(async (message: { role: Role; content: string }) => {
         const newMsg: Message = { ...message, id: Date.now().toString() };
 
-        // Only add message to chat on first attempt
-        if (retryCount === 0) {
-            setMessages((prev) => [...prev, newMsg]);
-        }
+        // Optimistic update
+        setMessages((prev) => [...prev, newMsg]);
         setStreamPhase("thinking");
 
-        try {
-            // Use ref for fresh message history (avoids stale closure)
-            const currentMessages = [...messagesRef.current];
-            // Ensure the new message is in the list (might not be on retry)
-            if (!currentMessages.find((m) => m.id === newMsg.id)) {
-                currentMessages.push(newMsg);
+        const MAX_RETRIES = 3;
+        let attempt = 0;
+        let success = false;
+
+        while (attempt < MAX_RETRIES && !success) {
+            try {
+                // Use ref for fresh message history (avoids stale closure)
+                const currentMessages = [...messagesRef.current];
+                // Ensure the new message is in the list
+                if (!currentMessages.find((m) => m.id === newMsg.id)) {
+                    currentMessages.push(newMsg);
+                }
+
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 25000); // 25s timeout
+
+                const response = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        messages: currentMessages,
+                        pathname,
+                    }),
+                    signal: controller.signal,
+                });
+
+                clearTimeout(timeout);
+
+                if (!response.ok) {
+                    throw new Error(`API error ${response.status}`);
+                }
+
+                const reader = response.body?.getReader();
+                if (!reader) throw new Error("No response body");
+
+                const assistantMsgId = (Date.now() + 1).toString();
+                setMessages((prev) => [
+                    ...prev,
+                    { id: assistantMsgId, role: "assistant", content: "" },
+                ]);
+
+                setStreamPhase("streaming");
+                success = true; // Exit loop
+
+                const decoder = new TextDecoder();
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const text = decoder.decode(value, { stream: true });
+                    setMessages((prev) =>
+                        prev.map((m) =>
+                            m.id === assistantMsgId
+                                ? { ...m, content: m.content + text }
+                                : m
+                        )
+                    );
+                }
+            } catch (error) {
+                console.error(`Chat error (attempt ${attempt + 1}):`, error);
+                attempt++;
+
+                if (attempt < MAX_RETRIES) {
+                    // Wait before next attempt (backoff: 1s, 2s)
+                    await new Promise((r) => setTimeout(r, attempt * 1000));
+                } else {
+                    // Final failure after all retries
+                    setMessages((prev) => [
+                        ...prev,
+                        {
+                            id: `error-${Date.now()}`,
+                            role: "assistant",
+                            content: "⚠️ Hubo un problema con la conexión. Por favor, intentá de nuevo.",
+                        },
+                    ]);
+                }
             }
-
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 25000); // 25s timeout
-
-            const response = await fetch("/api/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    messages: currentMessages,
-                    pathname,
-                }),
-                signal: controller.signal,
-            });
-
-            clearTimeout(timeout);
-
-            if (!response.ok) {
-                throw new Error(`API error ${response.status}`);
-            }
-
-            const reader = response.body?.getReader();
-            if (!reader) throw new Error("No response body");
-
-            const assistantMsgId = (Date.now() + 1).toString();
-            setMessages((prev) => [
-                ...prev,
-                { id: assistantMsgId, role: "assistant", content: "" },
-            ]);
-
-            setStreamPhase("streaming");
-
-            const decoder = new TextDecoder();
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                const text = decoder.decode(value, { stream: true });
-                setMessages((prev) =>
-                    prev.map((m) =>
-                        m.id === assistantMsgId
-                            ? { ...m, content: m.content + text }
-                            : m
-                    )
-                );
-            }
-        } catch (error) {
-            console.error(`Chat error (attempt ${retryCount + 1}):`, error);
-
-            // Retry up to 2 times
-            if (retryCount < 2) {
-                await new Promise((r) => setTimeout(r, 1000)); // Wait 1s before retry
-                return append(message, retryCount + 1);
-            }
-
-            // After max retries, show error
-            setMessages((prev) => [
-                ...prev,
-                {
-                    id: `error-${Date.now()}`,
-                    role: "assistant",
-                    content: "⚠️ Hubo un problema con la conexión. Por favor, intentá de nuevo.",
-                },
-            ]);
-        } finally {
-            setStreamPhase("idle");
         }
+
+        setStreamPhase("idle");
     }, [pathname]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
