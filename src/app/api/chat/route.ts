@@ -114,7 +114,9 @@ export async function POST(req: Request) {
             },
         });
 
-        return result.toTextStreamResponse();
+        const response = result.toTextStreamResponse();
+        response.headers.set("X-Chat-Provider", "OpenAI");
+        return response;
     } catch (error) {
         console.error("Chat API error:", error);
         return new Response(
