@@ -98,6 +98,7 @@ export async function POST(req: Request) {
     }
 
     try {
+        console.log(`[API] Stream start for: ${pathname}`);
         const result = await streamText({
             model: google("gemini-1.5-flash"),
             system: systemPrompt + contextAddendum,

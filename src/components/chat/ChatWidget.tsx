@@ -183,14 +183,27 @@ export function ChatWidget() {
                 success = true; // Exit loop
 
                 const decoder = new TextDecoder();
+                let fullText = "";
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
                     const text = decoder.decode(value, { stream: true });
+                    fullText += text;
                     setMessages((prev) =>
                         prev.map((m) =>
                             m.id === assistantMsgId
                                 ? { ...m, content: m.content + text }
+                                : m
+                        )
+                    );
+                }
+
+                // If response was empty (200 OK but no content)
+                if (!fullText.trim()) {
+                    setMessages((prev) =>
+                        prev.map((m) =>
+                            m.id === assistantMsgId
+                                ? { ...m, content: "⚠️ Recibí una respuesta vacía. Por favor, preguntame de nuevo." }
                                 : m
                         )
                     );
