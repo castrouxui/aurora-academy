@@ -3,38 +3,37 @@
 import { generateObject } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { z } from "zod";
+import { prisma } from "@/lib/prisma";
 
-export async function generateCourseOutcomes(courseTitle: string, courseDescription: string) {
+export async function generateCourseOutcomes(courseId: string, description: string, modulesSummary: string) {
     try {
         const { object } = await generateObject({
             model: openai("gpt-4o"),
             schema: z.object({
-                outcomes: z.array(z.string()).min(3).max(4),
+                outcomes: z.array(z.string()).length(4),
             }),
             prompt: `
-        You are an expert instructional designer and copywriter.
-        Your task is to analyze the course description and synthesize the 3-4 most critical value propositions or skills the student will acquire.
+        A partir de la siguiente descripción y contenido de curso, generá exactamente 4 bullets concisos (máximo 12 palabras cada uno) que describan los resultados concretos que va a obtener el alumno al finalizar. 
+        Escribilos en segunda persona, comenzando con un verbo en futuro. 
+        Sin introducciones ni explicaciones, solo los 4 bullets.
         
-        Course Title: "${courseTitle}"
-        Course Description: "${courseDescription}"
-        
-        Requirements:
-        1. **Summarize the Promise**: Do not just list topics. Explain what the student will be able to DO or ACHIEVE.
-        2. **Action-Oriented**: Start with strong verbs (Validar, Construir, Dominar, Rentabilizar).
-        3. **Concise**: Keep each outcome under 50 characters for mobile readability.
-        4. **Language**: Spanish.
-        5. **Format**: Returns a JSON array of strings.
-        
-        Example Output:
-        - "Dominarás el análisis técnico desde cero"
-        - "Crearás tu primer portafolio de inversión"
-        - "Gestionarás el riesgo como un profesional"
+        Descripción: "${description}"
+        Módulos: "${modulesSummary}"
       `,
+        });
+
+        // Cache the result in the database
+        // Assuming database stores learningOutcomes as a newline-separated string
+        const outcomesString = object.outcomes.join("\n");
+
+        await prisma.course.update({
+            where: { id: courseId },
+            data: { learningOutcomes: outcomesString }
         });
 
         return object.outcomes;
     } catch (error) {
         console.error("Error generating course outcomes:", error);
-        return []; // Fallback to empty array to handle gracefully
+        return []; // Fallback
     }
 }

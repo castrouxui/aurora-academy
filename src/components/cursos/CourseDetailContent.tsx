@@ -129,7 +129,7 @@ export function CourseDetailContent({
 
                         {/* RIGHT COLUMN: Sticky Pricing Card */}
                         <div className="hidden lg:block lg:col-span-5 xl:col-span-4 relative">
-                            <div className="sticky top-8">
+                            <div className="sticky top-[80px]">
                                 <CourseFloatingCard
                                     title={courseData.title}
                                     price={courseData.price}

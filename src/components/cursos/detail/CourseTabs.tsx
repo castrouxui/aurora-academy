@@ -18,27 +18,35 @@ export function CourseTabs({ modules = [], totalLessons, totalModules, duration,
     const [aiOutcomes, setAiOutcomes] = useState<string[]>([]);
     const [isLoadingAI, setIsLoadingAI] = useState(false);
 
-    // Initial parsing of manual outcomes
+    // Initial parsing
     const manualPoints = learningOutcomes ? learningOutcomes.split('\n').filter(line => line.trim() !== '') : [];
-
-    // Determine what to show: Manual > AI > Description fallback
     const displayPoints = manualPoints.length > 0 ? manualPoints : aiOutcomes;
-    const showDescriptionFallback = displayPoints.length === 0 && !isLoadingAI;
 
     useEffect(() => {
-        // If no manual outcomes, try to generate
-        if (manualPoints.length === 0 && title && description) {
+        // Trigger AI only if no manual outcomes exist and we haven't generated yet
+        if (manualPoints.length === 0 && description && modules.length > 0 && !isLoadingAI && aiOutcomes.length === 0) {
             setIsLoadingAI(true);
-            generateCourseOutcomes(title, description)
-                .then((outcomes) => {
-                    if (outcomes && outcomes.length > 0) {
-                        setAiOutcomes(outcomes);
-                    }
-                })
-                .catch(console.error)
-                .finally(() => setIsLoadingAI(false));
+
+            const modulesList = modules.map(m => m.title).join(", ");
+            // Assuming courseId is available in modules[0].courseId or passed as prop. 
+            // Better to pass courseId as prop to CourseTabs. 
+            // Using a fallback if not explicitly passed, but ideally we add it to props.
+            const courseId = modules[0]?.courseId;
+
+            if (courseId) {
+                generateCourseOutcomes(courseId, description, modulesList)
+                    .then((outcomes) => {
+                        if (outcomes && outcomes.length > 0) {
+                            setAiOutcomes(outcomes);
+                        }
+                    })
+                    .catch(console.error)
+                    .finally(() => setIsLoadingAI(false));
+            } else {
+                setIsLoadingAI(false);
+            }
         }
-    }, [title, description, manualPoints.length]);
+    }, [description, manualPoints.length, modules]);
 
     // Description bullets: Max 4
     // We'll simulate bullet points from the description if standard prose
