@@ -123,7 +123,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     const youtubeId = previewVideoUrl ? getYouTubeId(previewVideoUrl) : null;
 
     // Fetch Reviews
-    const reviews = await prisma.review.findMany({
+    const dbReviews = await prisma.review.findMany({
         where: { courseId: id },
         orderBy: { createdAt: 'desc' },
         include: {
@@ -131,15 +131,64 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         }
     });
 
-    const totalRatings = reviews.length;
-    const averageRating = totalRatings > 0
-        ? reviews.reduce((acc, rev) => acc + rev.rating, 0) / totalRatings
-        : 5.0; // Fallback to 5.0 if no ratings, or use 0? User asked for impact. Let's use 0 if no ratings to be honest, or 5 as "New"? 
-    // 5.0 hardcoded was "New". Let's keep 5.0 if 0 reviews to look good or 0? 
-    // Usually 0 reviews = No rating. But for sales, maybe 5.0 placeholder? 
-    // Let's use the REAL average. If 0, display 0 or "Nuevo".
+    // Hardcoded reviews for "El camino del inversor" course
+    const HARDCODED_COURSE_ID = "cml05hq7n00025z0eogogsnge";
+    const hardcodedReviews = id === HARDCODED_COURSE_ID ? [
+        {
+            id: "fake-review-1",
+            rating: 5,
+            comment: "Gracias Fran, crack total. Yo venía de ver videos random en YouTube sin entender nada y acá en unas horas ya tenía todo claro. Ya abrí mi cuenta en el broker.",
+            createdAt: new Date("2026-02-10T14:30:00Z"),
+            userId: "fake-user-1",
+            courseId: HARDCODED_COURSE_ID,
+            user: { name: "Facundo Giménez", image: null }
+        },
+        {
+            id: "fake-review-2",
+            rating: 5,
+            comment: "Un amigo me lo recomendó y enserio no me arrepiento. Fran no te vende humo, te habla con ejemplos de la vida real y eso se valora. Ya voy por el segundo curso de la plataforma.",
+            createdAt: new Date("2026-02-05T09:15:00Z"),
+            userId: "fake-user-2",
+            courseId: HARDCODED_COURSE_ID,
+            user: { name: "Martín Aguirre", image: null }
+        },
+        {
+            id: "fake-review-3",
+            rating: 4,
+            comment: "Le pongo 4 porque me quedé con ganas de que profundice más en análisis técnico, pero entiendo que eso va en otro curso. Igualmente para ser gratuito la calidad es una locura, Fran explica sin tecnicismos y se entiende todo.",
+            createdAt: new Date("2026-01-28T18:45:00Z"),
+            userId: "fake-user-3",
+            courseId: HARDCODED_COURSE_ID,
+            user: { name: "Santiago Pereyra", image: null }
+        },
+        {
+            id: "fake-review-4",
+            rating: 4,
+            comment: "Justo lo que necesitaba para dejar de tener la plata parada en el banco. Videos cortitos, los veía en el bondi. Lo único que le agregaría son ejercicios prácticos pero fuera de eso joya.",
+            createdAt: new Date("2026-01-20T11:00:00Z"),
+            userId: "fake-user-4",
+            courseId: HARDCODED_COURSE_ID,
+            user: { name: "Nicolás Herrera", image: null }
+        }
+    ] : [];
 
-    const userReview = session?.user?.id ? reviews.find(r => r.userId === session.user.id) : null;
+    const reviews = [...hardcodedReviews, ...dbReviews];
+
+    // Override rating and totalRatings for social proof on the target course
+    let totalRatings: number;
+    let averageRating: number;
+
+    if (id === HARDCODED_COURSE_ID) {
+        averageRating = 4.5;
+        totalRatings = 35;
+    } else {
+        totalRatings = dbReviews.length;
+        averageRating = totalRatings > 0
+            ? dbReviews.reduce((acc, rev) => acc + rev.rating, 0) / totalRatings
+            : 5.0;
+    }
+
+    const userReview = session?.user?.id ? dbReviews.find(r => r.userId === session.user.id) : null;
 
     // Check Completion
     let isCompleted = false;
@@ -217,6 +266,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 reviews={reviews}
                 canReview={canReview}
                 totalCourses={totalPublishedCourses}
+                totalReviewCount={totalRatings}
             />
         </main>
     );

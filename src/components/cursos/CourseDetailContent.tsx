@@ -21,6 +21,7 @@ interface CourseDetailContentProps {
     reviews?: any[];
     canReview?: boolean;
     totalCourses?: number;
+    totalReviewCount?: number;
 }
 
 export function CourseDetailContent({
@@ -32,7 +33,8 @@ export function CourseDetailContent({
     breadcrumbs,
     reviews,
     canReview,
-    totalCourses
+    totalCourses,
+    totalReviewCount
 }: CourseDetailContentProps) {
     return (
         <div className="bg-[#0B0F19] min-h-screen">
@@ -82,7 +84,7 @@ export function CourseDetailContent({
                             <div className="space-y-8">
                                 <h2 className="text-2xl font-black text-white font-headings">
                                     Opiniones de Estudiantes
-                                    <span className="ml-3 text-lg font-medium text-gray-500">({reviews?.length || 0})</span>
+                                    <span className="ml-3 text-lg font-medium text-gray-500">({totalReviewCount ?? reviews?.length ?? 0})</span>
                                 </h2>
 
                                 {canReview && (
