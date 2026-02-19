@@ -6,27 +6,14 @@ export interface Testimonial {
     role: string;
 }
 
+// Ordered: concrete-results testimonials first, then generic praise
 export const TESTIMONIALS: Testimonial[] = [
     {
-        id: 1,
-        author: "Ezequiel",
-        text: "La plataforma es increíblemente intuitiva y los cursos están muy bien estructurados. Llevo 6 meses estudiando y mis resultados han mejorado notablemente gracias a la claridad del contenido.",
-        image: "https://framerusercontent.com/images/p7bvoFnbGtK8RZ1HSLiAUiHxx8.jpg",
-        role: "Alumno de Trading"
-    },
-    {
-        id: 2,
-        author: "Pato Touceda",
-        text: "Lo mejor de Aurora Academy es la calidad de producción de las lecciones. Los videos en alta definición y los recursos descargables hacen que aprender conceptos complejos sea un placer.",
-        image: "https://framerusercontent.com/images/AvfrQfX4hg4yY1cKJQO4OAaXQ.png",
-        role: "Alumno de Crypto"
-    },
-    {
-        id: 3,
-        author: "Juany",
-        text: "La calidad de los cursos y la plataforma es de otro nivel. Las bitácoras y el seguimiento personalizado marcan la diferencia. Nunca había visto una academia tan completa.",
-        image: "https://framerusercontent.com/images/2zaizaltMbd0hfmlArpqcyuC20.png",
-        role: "Suscriptor Pro"
+        id: 6,
+        author: "Fabián",
+        text: "Empecé sin saber nada y ahora opero con confianza gracias al curso de análisis técnico. La metodología explicada en la plataforma es única y fácil de aplicar.",
+        image: "https://framerusercontent.com/images/ReDEVMJsLlrTYoDjEJ0Y42clXY.png",
+        role: "Alumno Inicial"
     },
     {
         id: 4,
@@ -36,18 +23,25 @@ export const TESTIMONIALS: Testimonial[] = [
         role: "Alumno de Trading"
     },
     {
-        id: 5,
-        author: "Juan Huérfano",
-        text: "Una plataforma robusta y confiable. Los cursos van directo al grano sin perder tiempo en teoría innecesaria. Es, sin dudas, la mejor inversión en mi educación financiera.",
-        image: "https://framerusercontent.com/images/4KykQdxaykJ3SmZZ9orjS0MT8.jpg",
-        role: "Alumno Avanzado"
+        id: 1,
+        author: "Ezequiel",
+        text: "La plataforma es increíblemente intuitiva y los cursos están muy bien estructurados. Llevo 6 meses estudiando y mis resultados han mejorado notablemente gracias a la claridad del contenido.",
+        image: "https://framerusercontent.com/images/p7bvoFnbGtK8RZ1HSLiAUiHxx8.jpg",
+        role: "Alumno de Trading"
     },
     {
-        id: 6,
-        author: "Fabián",
-        text: "Empecé sin saber nada y ahora opero con confianza gracias al curso de análisis técnico. La metodología explicada en la plataforma es única y fácil de aplicar.",
-        image: "https://framerusercontent.com/images/ReDEVMJsLlrTYoDjEJ0Y42clXY.png",
-        role: "Alumno Inicial"
+        id: 8,
+        author: "Cristian",
+        text: "Llevo años en esto y nunca vi una plataforma tan completa. Desde los videos hasta el soporte, todo está pensado para que aprendas de verdad y no pierdas el tiempo.",
+        image: "https://framerusercontent.com/images/zKJ6HAHTifYjmA2FxMEnpqy1jEg.png",
+        role: "Suscriptor Plus"
+    },
+    {
+        id: 3,
+        author: "Juany",
+        text: "La calidad de los cursos y la plataforma es de otro nivel. Las bitácoras y el seguimiento personalizado marcan la diferencia. Nunca había visto una academia tan completa.",
+        image: "https://framerusercontent.com/images/2zaizaltMbd0hfmlArpqcyuC20.png",
+        role: "Suscriptor Pro"
     },
     {
         id: 7,
@@ -57,11 +51,18 @@ export const TESTIMONIALS: Testimonial[] = [
         role: "Alumna de Inversiones"
     },
     {
-        id: 8,
-        author: "Cristian",
-        text: "Llevo años en esto y nunca vi una plataforma tan completa. Desde los videos hasta el soporte, todo está pensado para que aprendas de verdad y no pierdas el tiempo.",
-        image: "https://framerusercontent.com/images/zKJ6HAHTifYjmA2FxMEnpqy1jEg.png",
-        role: "Suscriptor Plus"
+        id: 5,
+        author: "Juan Huérfano",
+        text: "Una plataforma robusta y confiable. Los cursos van directo al grano sin perder tiempo en teoría innecesaria. Es, sin dudas, la mejor inversión en mi educación financiera.",
+        image: "https://framerusercontent.com/images/4KykQdxaykJ3SmZZ9orjS0MT8.jpg",
+        role: "Alumno Avanzado"
+    },
+    {
+        id: 2,
+        author: "Pato Touceda",
+        text: "Lo mejor de Aurora Academy es la calidad de producción de las lecciones. Los videos en alta definición y los recursos descargables hacen que aprender conceptos complejos sea un placer.",
+        image: "https://framerusercontent.com/images/AvfrQfX4hg4yY1cKJQO4OAaXQ.png",
+        role: "Alumno de Crypto"
     },
     {
         id: 9,

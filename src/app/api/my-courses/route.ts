@@ -133,6 +133,37 @@ export async function GET() {
             }
         });
 
+        // 4. Process Corporate Access
+        if (session.user.companyId) {
+            const company = await prisma.company.findUnique({
+                where: { id: session.user.companyId },
+                include: {
+                    bundle: {
+                        include: {
+                            courses: {
+                                include: {
+                                    modules: {
+                                        include: {
+                                            lessons: { select: { id: true } }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (company && company.bundle && (!company.expiresAt || new Date(company.expiresAt) > new Date())) {
+                console.log(`[DASHBOARD_DEBUG] Corporate access found: ${company.name}, Bundle: ${company.bundle.title}`);
+                company.bundle.courses.forEach(bundleCourse => {
+                    if (!coursesMap.has(bundleCourse.id)) {
+                        coursesMap.set(bundleCourse.id, { ...bundleCourse, lastAccessed: company.updatedAt });
+                    }
+                });
+            }
+        }
+
         // DEBUG LOGGING START
         console.log(`[DASHBOARD_DEBUG] Found ${coursesMap.size} courses for user.`);
         coursesMap.forEach((course, id) => {

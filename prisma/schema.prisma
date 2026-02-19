@@ -145,6 +145,7 @@ model Bundle {
   purchases     Purchase[]
   subscriptions Subscription[]
   courses       Course[]         @relation("BundleToCourse")
+  companies     Company[]
 }
 
 model MembershipItem {
@@ -281,6 +282,9 @@ model Company {
   maxSeats   Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  bundleId   String?
+  expiresAt  DateTime?
+  bundle     Bundle?  @relation(fields: [bundleId], references: [id])
   users      User[]
 }
 

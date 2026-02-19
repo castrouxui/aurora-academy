@@ -218,16 +218,35 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         displayImage = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
     }
 
+    // Build featured testimonial from hardcoded or real reviews
+    const RESULT_KEYWORDS = ["broker", "cuenta", "segundo curso", "abrí", "inscrib"];
+    const featuredSource = hardcodedReviews.length > 0
+        ? hardcodedReviews[0]
+        : reviews.find(r => r.comment && RESULT_KEYWORDS.some(k => r.comment!.toLowerCase().includes(k)));
+
+    const featuredTestimonial = featuredSource && featuredSource.comment
+        ? {
+            quote: featuredSource.comment,
+            authorName: featuredSource.user.name || "Estudiante",
+            authorImage: featuredSource.user.image || undefined,
+        }
+        : undefined;
+
+    // Always show original price for anchor effect (even on free courses)
+    const formattedOriginalPrice = basePrice > 0
+        ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice)
+        : "";
+
     // Prepare data for components
     const courseData = {
         id: course.id,
         title: course.title,
         description: course.description,
         price: formattedPrice,
-        imageUrl: displayImage, // Use calculated image for main cover too
+        imageUrl: displayImage,
         category: course.category,
         modules: course.modules,
-        rating: totalRatings > 0 ? averageRating : 5.0, // Keep 5.0 as default for aesthetics if empty
+        rating: totalRatings > 0 ? averageRating : 5.0,
         totalRatings: totalRatings,
         students: studentCount,
         lastUpdated: "01/2026",
@@ -235,13 +254,11 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         subtitles: "Español, Inglés",
         level: course.level || "Todos los niveles",
         duration: formattedDuration,
-        originalPrice: discount > 0
-            ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice)
-            : "",
+        originalPrice: formattedOriginalPrice,
         discount: discount > 0 ? `${discount}%` : "",
         instructor: {
-            name: "Aurora Academy",
-            image: "/logo.svg"
+            name: "Francisco Castro",
+            image: "/images/francisco-speaking.png"
         },
         videoThumbnail: displayImage,
         videoUrl: youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : previewVideoUrl,
@@ -267,6 +284,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 canReview={canReview}
                 totalCourses={totalPublishedCourses}
                 totalReviewCount={totalRatings}
+                featuredTestimonial={featuredTestimonial}
             />
         </main>
     );

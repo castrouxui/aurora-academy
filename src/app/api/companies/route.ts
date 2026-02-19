@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         }
 
         const body = await req.json();
-        const { name, domain, maxSeats } = body;
+        const { name, domain, maxSeats, bundleId, expiresAt } = body;
 
         if (!name) {
             return new NextResponse("Name is required", { status: 400 });
@@ -53,6 +53,8 @@ export async function POST(req: Request) {
                 domain: domain || null,
                 maxSeats: parseInt(maxSeats) || 5, // Default 5
                 accessCode: accessCode,
+                bundleId: bundleId || null,
+                expiresAt: expiresAt ? new Date(expiresAt) : null,
             }
         });
 

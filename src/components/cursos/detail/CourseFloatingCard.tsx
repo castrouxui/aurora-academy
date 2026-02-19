@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PaymentModal } from "@/components/checkout/PaymentModal";
-import { Play, PlayCircle, Clock, BarChart, Users, Globe, Captions, CheckCircle2, Loader2 } from "lucide-react";
+import { Clock, BarChart, Users, Globe, CheckCircle2, Loader2, Shield, CreditCard } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -70,7 +70,7 @@ export function CourseFloatingCard({
 
     const handleContinueSingle = () => {
         setIsUpsellModalOpen(false);
-        setSelectedBundle(null); // Ensure no bundle is selected
+        setSelectedBundle(null);
         setIsPaymentModalOpen(true);
     };
 
@@ -102,8 +102,7 @@ export function CourseFloatingCard({
 
             if (res.ok) {
                 toast.success("¡Inscripción exitosa!");
-                toast.success("¡Inscripción exitosa!");
-                router.refresh(); // Just refresh to update UI state
+                router.refresh();
             } else {
                 const data = await res.json();
                 toast.error(data.message || "Error al inscribirse");
@@ -144,67 +143,52 @@ export function CourseFloatingCard({
             <PaymentModal
                 isOpen={isPaymentModalOpen}
                 onClose={() => setIsPaymentModalOpen(false)}
-                // Dynamic Props: If bundle selected, use bundle info, else course info
                 courseTitle={selectedBundle ? selectedBundle.title : title}
                 coursePrice={selectedBundle ? selectedBundle.price : price}
                 courseId={selectedBundle ? undefined : courseId}
                 bundleId={selectedBundle ? selectedBundle.id : undefined}
             />
 
-            <div className="bg-white/5 backdrop-blur-xl rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 sticky top-24">
-                {/* Course Cover Image */}
-                <div className="relative aspect-video bg-black/50 border-b border-white/5">
-                    {videoThumbnail ? (
-                        <img
-                            src={videoThumbnail}
-                            alt={`Portada de ${title}`}
-                            className="w-full h-full object-cover"
-                        />
-                    ) : (
-                        <div className="absolute inset-0 flex items-center justify-center text-gray-500">
-                            <PlayCircle size={48} />
-                        </div>
-                    )}
-                </div>
-
-                <div className="p-6 md:p-8 space-y-6">
+            <div className="bg-[#111827] rounded-2xl overflow-hidden shadow-[0_8px_60px_rgba(0,0,0,0.6)] border border-white/[0.1]">
+                <div className="p-7 space-y-6">
                     {/* Price Section */}
-                    {/* Price Section */}
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                         {isFree ? (
                             <>
                                 <div className="flex items-baseline gap-3">
-                                    <span className="text-4xl font-black text-white">GRATIS</span>
+                                    {originalPrice && (
+                                        <span className="text-xl text-gray-500 line-through font-medium">{originalPrice}</span>
+                                    )}
+                                    <span className="text-4xl font-black text-white">$0</span>
+                                    <span className="text-lg text-gray-400 font-medium">hoy</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="bg-[#5D5CDE]/15 text-[#5D5CDE] border border-[#5D5CDE]/20 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
+                                        OFERTA DE LANZAMIENTO
+                                    </span>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="flex items-baseline gap-3">
+                                    <span className="text-4xl font-black text-white">{price}</span>
                                     {originalPrice && (
                                         <span className="text-lg text-gray-500 line-through font-medium">{originalPrice}</span>
                                     )}
                                 </div>
                                 {discount && (
                                     <div className="flex items-center gap-2">
-                                        <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-sm font-bold">{discount} OFF</span>
-                                        <span className="text-emerald-400 text-sm font-medium">¡Oferta por tiempo limitado!</span>
+                                        <span className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full text-xs font-bold tracking-wide">
+                                            {discount} OFF
+                                        </span>
                                     </div>
                                 )}
-                                {!discount && (
-                                    <span className="text-sm text-gray-500 font-medium">Por tiempo limitado</span>
-                                )}
-                            </>
-                        ) : (
-                            <>
-                                <div className="flex items-baseline gap-3">
-                                    <span className="text-4xl font-black text-white">{price}</span>
-                                    <span className="text-lg text-gray-500 line-through font-medium">{originalPrice}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-sm font-bold">{discount} OFF</span>
-                                    <span className="text-emerald-400 text-sm font-medium">¡Oferta por tiempo limitado!</span>
-                                </div>
                             </>
                         )}
                     </div>
 
-                    {/* CTAs */}
-                    <div className="space-y-3">
+                    {/* CTA */}
+                    <div className="space-y-4">
                         {hasAccess ? (
                             <Link href={`/learn/${courseId}`} className="block w-full">
                                 <Button className="w-full h-14 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover">
@@ -217,41 +201,53 @@ export function CourseFloatingCard({
                                 disabled={isEnrolling}
                                 className="w-full h-14 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover flex items-center justify-center gap-2"
                             >
-                                {isEnrolling ? <Loader2 className="animate-spin" /> : "Obtener Oferta"}
+                                {isEnrolling ? <Loader2 className="animate-spin" /> : "Comenzar ahora"}
                             </Button>
                         ) : (
                             <Button
                                 onClick={handlePurchase}
                                 className="w-full h-14 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
                             >
-                                Comprar Ahora
+                                Acceder al curso
                             </Button>
                         )}
-                        <p className="text-center text-xs text-gray-500 font-medium">Garantía de satisfacción de 7 días.</p>
+
+                        {/* Trust strip */}
+                        <div className="space-y-3 pt-1">
+                            <div className="flex items-center justify-center gap-2 text-gray-500 text-xs">
+                                <Shield size={14} className="text-emerald-500/70" />
+                                <span className="font-medium">Garantía de 7 días</span>
+                            </div>
+                            <div className="flex items-center justify-center gap-4 text-gray-600">
+                                <CreditCard size={16} />
+                                <span className="text-xs">Visa • Mastercard • MercadoPago</span>
+                            </div>
+                            {students > 0 && (
+                                <p className="text-center text-xs text-gray-500">
+                                    <span className="font-semibold text-gray-400">{students.toLocaleString()}</span> estudiantes activos
+                                </p>
+                            )}
+                        </div>
                     </div>
 
-                    {/* Course Include List */}
-                    <div className="space-y-4 pt-6 border-t border-white/10">
-                        <h4 className="font-bold text-white">Este curso incluye:</h4>
+                    {/* Course includes */}
+                    <div className="space-y-4 pt-5 border-t border-white/[0.06]">
+                        <h4 className="font-bold text-sm text-gray-400 uppercase tracking-wider">Este curso incluye</h4>
                         <ul className="space-y-3 text-sm text-gray-400">
                             <li className="flex items-center gap-3">
-                                <Clock size={18} className="shrink-0 text-[#5D5CDE]" />
+                                <Clock size={16} className="shrink-0 text-[#5D5CDE]/70" />
                                 <span>{duration} de video bajo demanda</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <BarChart size={18} className="shrink-0 text-[#5D5CDE]" />
+                                <BarChart size={16} className="shrink-0 text-[#5D5CDE]/70" />
                                 <span>Nivel: {level}</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <Users size={18} className="shrink-0 text-[#5D5CDE]" />
-                                <span>{students.toLocaleString()} estudiantes</span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <CheckCircle2 size={18} className="shrink-0 text-[#5D5CDE]" />
+                                <CheckCircle2 size={16} className="shrink-0 text-[#5D5CDE]/70" />
                                 <span>Certificado de finalización</span>
                             </li>
                             <li className="flex items-center gap-3">
-                                <Globe size={18} className="shrink-0 text-[#5D5CDE]" />
+                                <Globe size={16} className="shrink-0 text-[#5D5CDE]/70" />
                                 <span>Acceso completo 24/7</span>
                             </li>
                         </ul>

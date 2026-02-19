@@ -16,15 +16,17 @@ import { toast } from "sonner";
 interface MobileCourseCTAProps {
     title: string;
     price: string;
+    originalPrice?: string;
     courseId: string;
     hasAccess?: boolean;
-    className?: string; // Allow external styling
+    className?: string;
     rawPrice?: number;
 }
 
 export function MobileCourseCTA({
     title,
     price,
+    originalPrice,
     courseId,
     hasAccess = false,
     className,
@@ -84,7 +86,6 @@ export function MobileCourseCTA({
 
             if (res.ok) {
                 toast.success("¡Inscripción exitosa!");
-                toast.success("¡Inscripción exitosa!");
                 router.refresh();
             } else {
                 const data = await res.json();
@@ -132,17 +133,18 @@ export function MobileCourseCTA({
                 bundleId={selectedBundle ? selectedBundle.id : undefined}
             />
 
-            <div className={cn("fixed bottom-0 left-0 right-0 p-4 bg-[#0B0F19]/95 backdrop-blur-md border-t border-white/10 z-50 md:hidden safe-area-pb", className)}>
+            <div className={cn("fixed bottom-0 left-0 right-0 p-4 bg-[#0B0F19]/95 backdrop-blur-xl border-t border-white/[0.06] z-50 lg:hidden safe-area-pb", className)}>
                 <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                        <p className="text-gray-400 text-xs uppercase font-bold tracking-wider mb-0.5">Precio Total</p>
+                    <div className="flex-1 min-w-0">
                         {isFree ? (
-                            <div className="flex items-center gap-2">
-                                <p className="text-2xl font-black text-white">GRATIS</p>
-                                {/* We hide extended details on mobile specific bar to save space, or show small tag */}
+                            <div className="flex items-baseline gap-2">
+                                {originalPrice && (
+                                    <span className="text-sm text-gray-500 line-through">{originalPrice}</span>
+                                )}
+                                <span className="text-xl font-black text-white">GRATIS</span>
                             </div>
                         ) : (
-                            <p className="text-2xl font-black text-white">{price}</p>
+                            <p className="text-xl font-black text-white truncate">{price}</p>
                         )}
                     </div>
 
@@ -158,14 +160,14 @@ export function MobileCourseCTA({
                             disabled={isEnrolling}
                             className="flex-[1.5] h-12 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover flex items-center justify-center gap-2"
                         >
-                            {isEnrolling ? <Loader2 className="animate-spin" /> : "Obtener Oferta"}
+                            {isEnrolling ? <Loader2 className="animate-spin" /> : "Comenzar ahora"}
                         </Button>
                     ) : (
                         <Button
                             onClick={handlePurchase}
                             className="flex-[1.5] h-12 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
                         >
-                            Comprar Ahora
+                            Acceder al curso
                         </Button>
                     )}
                 </div>

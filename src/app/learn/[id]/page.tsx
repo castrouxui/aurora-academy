@@ -66,6 +66,25 @@ export default async function CoursePlayerPage({ params, searchParams }: { param
 
             if (purchase) {
                 isAccess = true;
+            } else if (session.user.companyId) {
+                // Check for Corporate Access
+                const company = await prisma.company.findUnique({
+                    where: { id: session.user.companyId },
+                    include: {
+                        bundle: {
+                            include: {
+                                courses: {
+                                    where: { id: id }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                if (company && company.bundle && company.bundle.courses.length > 0 && (!company.expiresAt || new Date(company.expiresAt) > new Date())) {
+                    console.log(`[ACCESS_CHECK] Corporate access granted via ${company.name}`);
+                    isAccess = true;
+                }
             }
         }
     }

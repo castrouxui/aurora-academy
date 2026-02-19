@@ -5,12 +5,10 @@ import { CourseTabs } from "@/components/cursos/detail/CourseTabs";
 import { InstructorCard } from "@/components/cursos/InstructorCard";
 import { CourseFAQ } from "@/components/cursos/detail/CourseFAQ";
 import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
-import { ChevronRight, Home } from "lucide-react";
-import Link from "next/link";
 import { MobileCourseCTA } from "@/components/cursos/detail/MobileCourseCTA";
 import { ReviewList } from "@/components/reviews/ReviewList";
 import { ReviewForm } from "@/components/reviews/ReviewForm";
-// import { CourseSidebar } from "@/components/cursos/detail/CourseSidebar"; // Unused
+import { FeaturedTestimonial } from "@/components/cursos/detail/FeaturedTestimonial";
 
 interface CourseDetailContentProps {
     courseData: any;
@@ -22,6 +20,11 @@ interface CourseDetailContentProps {
     canReview?: boolean;
     totalCourses?: number;
     totalReviewCount?: number;
+    featuredTestimonial?: {
+        quote: string;
+        authorName: string;
+        authorImage?: string;
+    };
 }
 
 export function CourseDetailContent({
@@ -29,89 +32,86 @@ export function CourseDetailContent({
     hasAccess,
     totalLessons,
     totalModules,
-
     breadcrumbs,
     reviews,
     canReview,
     totalCourses,
-    totalReviewCount
+    totalReviewCount,
+    featuredTestimonial
 }: CourseDetailContentProps) {
     return (
         <div className="bg-[#0B0F19] min-h-screen">
-            <Container className="pt-24 pb-24">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 relative">
-                    {/* Left Column: Hero + Content */}
-                    <div className="lg:col-span-8 space-y-12">
-                        {/* Hero Section */}
-                        <div className="py-2"> {/* Small padding adjustment */}
-                            <CourseHero
-                                title={courseData.title}
-                                description={courseData.description || ""}
-                                shortDescription={courseData.shortDescription}
-                                rating={courseData.rating}
-                                totalRatings={courseData.totalRatings}
-                                instructor={courseData.instructor}
-                                image={courseData.videoThumbnail || courseData.imageUrl}
+            {/* Hero — self-contained with internal max-width */}
+            <CourseHero
+                title={courseData.title}
+                description={courseData.description || ""}
+                shortDescription={courseData.shortDescription}
+                rating={courseData.rating}
+                totalRatings={courseData.totalRatings}
+                instructor={courseData.instructor}
+                image={courseData.videoThumbnail || courseData.imageUrl}
+                level={courseData.level}
+                students={courseData.students}
+            />
+
+            {/* Main content: two-column grid */}
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-4 pb-20">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 relative">
+
+                    {/* Left Column — Main Content */}
+                    <div className="lg:col-span-7 xl:col-span-8">
+
+                        {/* Featured Testimonial */}
+                        {featuredTestimonial && (
+                            <FeaturedTestimonial
+                                quote={featuredTestimonial.quote}
+                                authorName={featuredTestimonial.authorName}
+                                authorImage={featuredTestimonial.authorImage}
                             />
-                        </div>
+                        )}
 
-                        {/* Divider */}
-                        <div className="border-t border-gray-800" />
+                        {/* Description blocks + Course Content */}
+                        <section className="pt-4">
+                            <CourseTabs
+                                modules={courseData.modules}
+                                totalLessons={totalLessons}
+                                totalModules={totalModules}
+                                duration={courseData.duration}
+                                description={courseData.description}
+                                learningOutcomes={courseData.learningOutcomes}
+                            />
+                        </section>
 
-                        {/* Tabs & Details */}
-                        <CourseTabs
-                            modules={courseData.modules}
-                            totalLessons={totalLessons}
-                            totalModules={totalModules}
-                            duration={courseData.duration}
-                            description={courseData.description}
-                            learningOutcomes={courseData.learningOutcomes}
-                        />
-
-                        {/* Instructor Section */}
-                        <div id="instructor" className="pt-12 border-t border-white/5">
+                        {/* Instructor */}
+                        <section id="instructor" className="pt-14 md:pt-16">
                             <InstructorCard totalCourses={totalCourses} />
-                        </div>
+                        </section>
 
-                        {/* FAQ Section */}
-                        {/* FAQ Section */}
-                        <div id="faq" className="pt-12 border-t border-white/5">
+                        {/* FAQ */}
+                        <section id="faq" className="pt-14 md:pt-16">
                             <CourseFAQ />
-                        </div>
+                        </section>
 
-                        {/* Reviews Section */}
-                        <div id="reviews" className="pt-12 border-t border-white/5">
-                            <div className="space-y-8">
-                                <h2 className="text-2xl font-black text-white font-headings">
-                                    Opiniones de Estudiantes
-                                    <span className="ml-3 text-lg font-medium text-gray-500">({totalReviewCount ?? reviews?.length ?? 0})</span>
-                                </h2>
+                        {/* Reviews */}
+                        <section id="reviews" className="pt-14 md:pt-16">
+                            <h2 className="text-xl font-black text-white font-headings mb-6">
+                                Opiniones de Estudiantes
+                                <span className="ml-2 text-sm font-medium text-gray-600">({totalReviewCount ?? reviews?.length ?? 0})</span>
+                            </h2>
 
-                                {canReview && (
+                            {canReview && (
+                                <div className="mb-6">
                                     <ReviewForm courseId={courseData.id} />
-                                )}
+                                </div>
+                            )}
 
-                                <ReviewList reviews={reviews || []} />
-                            </div>
-                        </div>
-
-                        {/* Testimonials (Moved inside flow or keep separate?) 
-                             If sticky sidebar should scroll past testimonials, keep testimonials in left col? 
-                             Or usually testimonials are full width at bottom. 
-                             Let's put testimonials at the very bottom outside grid if they are wide.
-                             But if sticky card needs to coexist, it stops at grid bottom. 
-                             Let's keep testimonials outside grid for now as in original designs. */
-                        }
+                            <ReviewList reviews={reviews || []} />
+                        </section>
                     </div>
 
-                    {/* Right Column: Floating Card */}
-                    <div className="hidden lg:block lg:col-span-4 relative">
-                        {/* 
-                            Align top: 
-                            Hero has Breadcrumbs (~30px) + mb-6 (24px) = ~54px.
-                            We add mt-14 (56px) or mt-[52px] to align with Title.
-                        */}
-                        <div className="sticky top-8 mt-[54px] z-20">
+                    {/* Right Column — Sticky Pricing Card */}
+                    <div className="hidden lg:block lg:col-span-5 xl:col-span-4 relative">
+                        <div className="sticky top-8 z-20">
                             <CourseFloatingCard
                                 title={courseData.title}
                                 price={courseData.price}
@@ -131,16 +131,18 @@ export function CourseDetailContent({
                         </div>
                     </div>
                 </div>
-            </Container>
+            </div>
 
-            {/* Testimonials */}
-            <div className="border-t border-white/5 pb-24 lg:pb-0"> {/* Add padding bottom for mobile cta */}
+            {/* Testimonials Carousel — Full Width */}
+            <div className="border-t border-white/[0.04] pb-20 lg:pb-0">
                 <TestimonialsSection />
             </div>
 
+            {/* Mobile Sticky CTA */}
             <MobileCourseCTA
                 title={courseData.title}
                 price={courseData.price}
+                originalPrice={courseData.originalPrice}
                 courseId={courseData.id}
                 hasAccess={hasAccess}
                 rawPrice={courseData.rawPrice}

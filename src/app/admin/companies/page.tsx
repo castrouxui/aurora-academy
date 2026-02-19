@@ -14,6 +14,9 @@ export default function CompaniesPage() {
     const [name, setName] = useState("");
     const [domain, setDomain] = useState("");
     const [maxSeats, setMaxSeats] = useState("");
+    const [bundleId, setBundleId] = useState("");
+    const [expiresAt, setExpiresAt] = useState("");
+    const [bundles, setBundles] = useState<any[]>([]);
 
     const fetchCompanies = async () => {
         try {
@@ -30,7 +33,18 @@ export default function CompaniesPage() {
 
     useEffect(() => {
         fetchCompanies();
+        fetchBundles();
     }, []);
+
+    const fetchBundles = async () => {
+        try {
+            const res = await fetch("/api/bundles");
+            const data = await res.json();
+            setBundles(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -38,7 +52,7 @@ export default function CompaniesPage() {
             const res = await fetch("/api/companies", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, domain, maxSeats }),
+                body: JSON.stringify({ name, domain, maxSeats, bundleId, expiresAt }),
             });
 
             if (!res.ok) throw new Error("Failed to create");
@@ -48,6 +62,8 @@ export default function CompaniesPage() {
             setName("");
             setDomain("");
             setMaxSeats("");
+            setBundleId("");
+            setExpiresAt("");
             fetchCompanies();
         } catch (error) {
             console.error(error);
@@ -124,6 +140,28 @@ export default function CompaniesPage() {
                                 placeholder="10"
                             />
                         </div>
+                        <div className="space-y-2">
+                            <label className="text-sm text-gray-400">Paquete Asignado</label>
+                            <select
+                                value={bundleId}
+                                onChange={(e) => setBundleId(e.target.value)}
+                                className="w-full bg-[#0b0e14] border border-gray-700 rounded-lg p-2.5 text-white focus:border-[#5D5CDE]"
+                            >
+                                <option value="">Sin paquete</option>
+                                {bundles.map((b) => (
+                                    <option key={b.id} value={b.id}>{b.title}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm text-gray-400">Vencimiento Anual</label>
+                            <input
+                                type="date"
+                                value={expiresAt}
+                                onChange={(e) => setExpiresAt(e.target.value)}
+                                className="w-full bg-[#0b0e14] border border-gray-700 rounded-lg p-2.5 text-white focus:border-[#5D5CDE]"
+                            />
+                        </div>
                     </div>
                     <div className="flex justify-end pt-4">
                         <button type="submit" className="bg-[#5D5CDE] text-white px-6 py-2 rounded-lg font-bold hover:bg-[#4b4ac0]">
@@ -160,11 +198,23 @@ export default function CompaniesPage() {
                                             Used: {company._count?.users || 0} / {company.maxSeats}
                                         </div>
                                     </div>
-                                    <div className="mt-2 inline-flex items-center gap-2 bg-gray-800/50 px-2 py-1 rounded text-xs font-mono text-gray-300">
-                                        Code: <span className="text-white font-bold">{company.accessCode}</span>
-                                        <button onClick={() => copyInviteLink(company.accessCode)} className="text-gray-500 hover:text-white" title="Copiar link">
-                                            <Copy size={12} />
-                                        </button>
+                                    <div className="mt-2 flex flex-wrap gap-2">
+                                        <div className="inline-flex items-center gap-2 bg-gray-800/50 px-2 py-1 rounded text-xs font-mono text-gray-300">
+                                            Code: <span className="text-white font-bold">{company.accessCode}</span>
+                                            <button onClick={() => copyInviteLink(company.accessCode)} className="text-gray-500 hover:text-white" title="Copiar link">
+                                                <Copy size={12} />
+                                            </button>
+                                        </div>
+                                        {company.bundleId && (
+                                            <div className="inline-flex items-center gap-2 bg-[#5D5CDE]/20 px-2 py-1 rounded text-xs font-bold text-[#b3b2f7] border border-[#5D5CDE]/30">
+                                                <span>🎁</span> {bundles.find(b => b.id === company.bundleId)?.title || "Paquete Asignado"}
+                                            </div>
+                                        )}
+                                        {company.expiresAt && (
+                                            <div className="inline-flex items-center gap-2 bg-amber-500/10 px-2 py-1 rounded text-xs font-bold text-amber-400 border border-amber-500/20">
+                                                <span>📅</span> Expira: {format(new Date(company.expiresAt), "dd/MM/yyyy")}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
