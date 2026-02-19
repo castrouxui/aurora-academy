@@ -99,7 +99,7 @@ export async function POST(req: Request) {
 
     try {
         const result = await streamText({
-            model: google("gemini-flash-latest"),
+            model: google("gemini-2.0-flash"),
             system: systemPrompt + contextAddendum,
             messages: messages.map((m: any) => ({
                 role: m.role,

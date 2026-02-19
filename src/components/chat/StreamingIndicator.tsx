@@ -4,32 +4,39 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bot } from "lucide-react";
 
-export type StreamPhase = "idle" | "connecting" | "analyzing" | "streaming";
+export type StreamPhase = "idle" | "thinking" | "streaming";
 
-const PHASE_LABELS: Record<Exclude<StreamPhase, "idle">, string> = {
-    connecting: "Consultando disponibilidad",
-    analyzing: "Analizando perfil",
-    streaming: "Escribiendo",
-};
+// Rotating contextual messages while waiting
+const THINKING_MESSAGES = [
+    "Aurora está pensando…",
+    "Buscando la mejor respuesta…",
+    "Preparando respuesta…",
+    "Consultando información…",
+    "Un momento…",
+];
 
 interface StreamingIndicatorProps {
     phase: StreamPhase;
 }
 
 export function StreamingIndicator({ phase }: StreamingIndicatorProps) {
-    const [dots, setDots] = useState("");
+    const [messageIndex, setMessageIndex] = useState(0);
 
+    // Rotate through messages every 2.5s
     useEffect(() => {
-        if (phase === "idle") return;
+        if (phase !== "thinking") return;
+        // Pick a random starting index
+        setMessageIndex(Math.floor(Math.random() * THINKING_MESSAGES.length));
+
         const interval = setInterval(() => {
-            setDots((prev) => (prev.length >= 3 ? "" : prev + "."));
-        }, 400);
+            setMessageIndex((prev) => (prev + 1) % THINKING_MESSAGES.length);
+        }, 2500);
         return () => clearInterval(interval);
     }, [phase]);
 
     if (phase === "idle") return null;
 
-    const label = PHASE_LABELS[phase];
+    const label = phase === "thinking" ? THINKING_MESSAGES[messageIndex] : "Escribiendo…";
 
     return (
         <motion.div
@@ -38,7 +45,7 @@ export function StreamingIndicator({ phase }: StreamingIndicatorProps) {
             exit={{ opacity: 0, y: -4 }}
             className="flex items-center gap-2.5 mb-4 pl-1"
         >
-            {/* Avatar placeholder */}
+            {/* Avatar */}
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-muted/60 border border-border/40">
                 <Bot className="h-3.5 w-3.5 text-primary animate-pulse" />
             </div>
@@ -66,13 +73,14 @@ export function StreamingIndicator({ phase }: StreamingIndicatorProps) {
 
                 <AnimatePresence mode="wait">
                     <motion.span
-                        key={phase}
+                        key={label}
                         initial={{ opacity: 0, x: -4 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 4 }}
+                        transition={{ duration: 0.2 }}
                         className="text-xs text-muted-foreground/70 font-medium"
                     >
-                        {label}{dots}
+                        {label}
                     </motion.span>
                 </AnimatePresence>
             </div>

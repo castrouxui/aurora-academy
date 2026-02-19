@@ -130,20 +130,25 @@ export function ChatWidget() {
         });
     }, [pathname]);
 
-    const append = useCallback(async (message: { role: Role; content: string }) => {
+    const append = useCallback(async (message: { role: Role; content: string }, retryCount = 0) => {
         const newMsg: Message = { ...message, id: Date.now().toString() };
 
-        setMessages((prev) => [...prev, newMsg]);
-        setStreamPhase("connecting");
-
-        // Phase progression: connecting → analyzing (after 1.5s)
-        const phaseTimer = setTimeout(() => {
-            setStreamPhase("analyzing");
-        }, 1500);
+        // Only add message to chat on first attempt
+        if (retryCount === 0) {
+            setMessages((prev) => [...prev, newMsg]);
+        }
+        setStreamPhase("thinking");
 
         try {
             // Use ref for fresh message history (avoids stale closure)
-            const currentMessages = [...messagesRef.current, newMsg];
+            const currentMessages = [...messagesRef.current];
+            // Ensure the new message is in the list (might not be on retry)
+            if (!currentMessages.find((m) => m.id === newMsg.id)) {
+                currentMessages.push(newMsg);
+            }
+
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 25000); // 25s timeout
 
             const response = await fetch("/api/chat", {
                 method: "POST",
@@ -152,13 +157,13 @@ export function ChatWidget() {
                     messages: currentMessages,
                     pathname,
                 }),
+                signal: controller.signal,
             });
 
-            clearTimeout(phaseTimer);
+            clearTimeout(timeout);
 
             if (!response.ok) {
-                const errorText = await response.text().catch(() => "");
-                throw new Error(`API error ${response.status}: ${errorText}`);
+                throw new Error(`API error ${response.status}`);
             }
 
             const reader = response.body?.getReader();
@@ -170,7 +175,6 @@ export function ChatWidget() {
                 { id: assistantMsgId, role: "assistant", content: "" },
             ]);
 
-            // Switch to streaming phase on first chunk
             setStreamPhase("streaming");
 
             const decoder = new TextDecoder();
@@ -187,19 +191,24 @@ export function ChatWidget() {
                 );
             }
         } catch (error) {
-            console.error("Chat error:", error);
-            // Show error as a visible message in the chat instead of a toast
-            const errorMsgId = `error-${Date.now()}`;
+            console.error(`Chat error (attempt ${retryCount + 1}):`, error);
+
+            // Retry up to 2 times
+            if (retryCount < 2) {
+                await new Promise((r) => setTimeout(r, 1000)); // Wait 1s before retry
+                return append(message, retryCount + 1);
+            }
+
+            // After max retries, show error
             setMessages((prev) => [
                 ...prev,
                 {
-                    id: errorMsgId,
+                    id: `error-${Date.now()}`,
                     role: "assistant",
-                    content: "⚠️ No pude conectar con el asistente en este momento. Intentá de nuevo en unos segundos.",
+                    content: "⚠️ Hubo un problema con la conexión. Por favor, intentá de nuevo.",
                 },
             ]);
         } finally {
-            clearTimeout(phaseTimer);
             setStreamPhase("idle");
         }
     }, [pathname]);
@@ -303,9 +312,9 @@ export function ChatWidget() {
                                                 />
                                             ))}
 
-                                            {/* Streaming phase indicator */}
+                                            {/* Streaming indicator — visible during thinking phase */}
                                             <AnimatePresence>
-                                                {streamPhase !== "idle" && streamPhase !== "streaming" && (
+                                                {streamPhase === "thinking" && (
                                                     <StreamingIndicator phase={streamPhase} />
                                                 )}
                                             </AnimatePresence>
