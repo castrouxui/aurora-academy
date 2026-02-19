@@ -4,6 +4,7 @@ import { MENTOR_PROMPT, TUTOR_PROMPT, OPERATOR_PROMPT } from "@/lib/chat/prompts
 
 // Allow streaming responses up to 60 seconds
 export const maxDuration = 60;
+export const runtime = "edge";
 
 /* ─── Course title map for context injection ─── */
 const COURSE_TITLES: Record<string, string> = {
