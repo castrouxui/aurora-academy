@@ -100,8 +100,9 @@ export async function POST(req: Request) {
     try {
         console.log(`[API] Stream start for: ${pathname}`);
         const result = await streamText({
-            model: openai("gpt-4o"),
-            system: systemPrompt + contextAddendum,
+            model: openai("gpt-4o-mini"),
+            // LOBOTOMY TEST 2: Check if gpt-4o was too slow or prompts too complex
+            system: "You are a helpful assistant. Answer in one sentence.",
             messages: messages.map((m: any) => ({
                 role: m.role,
                 content: m.content,
@@ -115,7 +116,7 @@ export async function POST(req: Request) {
         });
 
         const response = result.toTextStreamResponse();
-        response.headers.set("X-Chat-Provider", "OpenAI");
+        response.headers.set("X-Chat-Provider", "OpenAI-Mini");
         return response;
     } catch (error) {
         console.error("Chat API error:", error);
