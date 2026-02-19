@@ -44,34 +44,46 @@ const COURSE_TITLES: Record<string, string> = {
     cmlpu5m900000fugwd22skz53: "Manejo de TradingView",
 };
 
+/* ─── Should this page auto-open the chat? ─── */
+function shouldAutoOpen(pathname: string): boolean {
+    if (pathname.includes("/membresias")) return true;
+    if (pathname.match(/\/cursos(\/[a-z0-9]+)?$/i)) return true;
+    return false;
+}
+
 function getContextualWelcome(pathname: string): string {
-    // Course page
+    // Specific course page
     const courseMatch = pathname.match(/\/cursos\/([a-z0-9]+)/i);
     if (courseMatch) {
         const title = COURSE_TITLES[courseMatch[1]];
         if (title) {
-            return `¿Estás explorando **${title}**? Si tenés alguna duda sobre el contenido o querés saber cuál es el mejor camino de formación para vos, preguntame.`;
+            return `¡Hola! Soy **Aurora** 🤖 Veo que estás explorando **${title}**. ¿Sabías que con una membresía accedés a este curso y muchos más? Preguntame y te ayudo a elegir la mejor opción.`;
         }
-        return "Veo que estás mirando un curso. ¿Querés que te cuente más sobre el contenido o te ayude a elegir?";
+        return "¡Hola! Soy **Aurora** 🤖 Veo que estás mirando un curso. ¿Querés que te cuente sobre las ventajas de la membresía vs comprarlo individual?";
+    }
+
+    // Courses listing
+    if (pathname === "/cursos" || pathname === "/cursos/") {
+        return "¡Hola! Soy **Aurora** 🤖 ¿Buscás un curso puntual o preferís acceso a todo el ecosistema con una membresía? Te ayudo a elegir.";
     }
 
     // Memberships page
     if (pathname.includes("/membresias")) {
-        return "¿Necesitás ayuda para elegir el plan ideal? Puedo compararte los beneficios de cada membresía según tus objetivos.";
+        return "¡Hola! Soy **Aurora** 🤖 Estás mirando nuestras membresías. ¿Querés que te ayude a comparar los planes y encontrar el ideal para vos?";
     }
 
     // Checkout page
     if (pathname.includes("/checkout")) {
-        return "Estoy acá por si necesitás algo antes de completar tu compra. ¿Tenés alguna duda?";
+        return "¡Hola! Soy **Aurora** 🤖 Estoy acá por si necesitás algo antes de completar tu compra. ¿Tenés alguna duda?";
     }
 
     // Dashboard
     if (pathname.includes("/dashboard")) {
-        return "¡Hola! ¿Cómo va tu formación? Si necesitás orientación sobre qué curso seguir, preguntame.";
+        return "¡Hola! Soy **Aurora** 🤖 ¿Cómo va tu formación? Si necesitás orientación sobre qué curso seguir, preguntame.";
     }
 
     // Default (home)
-    return "¡Hola! Soy tu guía en Aurora Academy. Para orientarte mejor, ¿qué experiencia tenés hoy en los mercados?";
+    return "¡Hola! Soy **Aurora**, tu asistente de IA en Aurora Academy 🤖 Para orientarte mejor, ¿qué experiencia tenés hoy en los mercados?";
 }
 
 type Role = "user" | "assistant" | "system";
@@ -202,6 +214,21 @@ export function ChatWidget() {
         append({ role: "user", content: localInput });
         setLocalInput("");
     };
+
+    // Auto-open on sales pages (courses, memberships) after 3s
+    const autoOpenTriggered = useRef(false);
+    useEffect(() => {
+        if (autoOpenTriggered.current || isOpen) return;
+        if (shouldAutoOpen(pathname || "/")) {
+            const timer = setTimeout(() => {
+                if (!autoOpenTriggered.current) {
+                    autoOpenTriggered.current = true;
+                    setIsOpen(true);
+                }
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [pathname, isOpen]);
 
     // Auto-scroll to bottom
     useEffect(() => {
