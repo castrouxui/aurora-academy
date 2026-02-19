@@ -61,7 +61,7 @@ export function Navbar() {
 
   return (
     <>
-      <div className="fixed top-0 z-[500] w-full flex flex-col">
+      <div className="absolute top-0 z-[500] w-full flex flex-col">
         <TopBanner />
         <nav className="w-full border-b border-muted bg-background/80 backdrop-blur-md">
           <Container className="flex h-16 items-center gap-6 justify-between">
