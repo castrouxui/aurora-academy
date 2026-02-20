@@ -2,7 +2,13 @@
 import { runEvergreenWorkflow } from "@/functions/marketing";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: Request) {
+    // Verify it's Vercel calling the cron
+    const authHeader = req.headers.get('authorization');
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}` && process.env.NODE_ENV === 'production') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const result = await runEvergreenWorkflow();
         return NextResponse.json({ success: true, ...result });
