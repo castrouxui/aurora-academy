@@ -235,6 +235,15 @@ export async function sendCampaignEmail3(targetEmail?: string) {
 
 export async function runEvergreenWorkflow(targetEmail?: string) {
     const now = new Date();
+
+    // --- PAUSE FOR FEB LAUNCH CAMPAIGN ---
+    // Prevent Evergreen from running during the "12 Cuotas" launch window.
+    // Automatically resumes on March 2nd after the promo ends.
+    if (now < new Date("2026-03-02T00:00:00Z")) {
+        console.log("Evergreen workflow paused during Launch Campaign.");
+        return { email1Sent: 0, email2Sent: 0, paused: true };
+    }
+
     // Logic: 
     // Email 1: Registered 2 days ago (between 48h and 72h ago to be safe, or run hourly and check precise window)
     // Email 2: Sent Email 1 48h ago (between 48h and 72h) AND Did not buy.
