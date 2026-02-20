@@ -58,6 +58,8 @@ model User {
   progress          UserProgress[]
   rewards           UserReward[]
   userCareers       UserCareer[]
+  tags              String[]       @default([])
+  emailLogs         EmailLog[]
 }
 
 model UserReward {
@@ -369,4 +371,20 @@ model UserCareer {
 
   @@unique([userId, careerId])
   @@index([userId])
+}
+
+model EmailLog {
+  id        String   @id @default(cuid())
+  userId    String
+  emailType String   // "CAMPAIGN_1", "CAMPAIGN_2", "EVERGREEN_1", "EVERGREEN_2"
+  campaignId String? // Optional campaign identifier
+  sentAt    DateTime @default(now())
+  openedAt  DateTime?
+  clickedAt DateTime?
+  metadata  Json?
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([emailType])
 }

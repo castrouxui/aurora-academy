@@ -87,6 +87,25 @@ export const renderEmailTemplate = (contentHtml: string, previewText?: string) =
                 color: #6b7280 !important;
             }
         }
+
+        /* Mobile Optimization */
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 100% !important;
+                border-radius: 0 !important;
+            }
+            .content {
+                padding: 20px !important;
+            }
+            .header {
+                padding: 20px !important;
+            }
+            .button {
+                display: block !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -116,6 +135,17 @@ export const renderEmailTemplate = (contentHtml: string, previewText?: string) =
     `;
 };
 
+/**
+ * Simple HTML to Text converter for the fallback text version
+ */
+function stripHtml(html: string): string {
+    return html
+        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '') // Remove style tags
+        .replace(/<[^>]+>/g, '\n') // Replace tags with newlines
+        .replace(/\n\s*\n/g, '\n\n') // Collapse multiple newlines
+        .trim(); // Trim whitespace
+}
+
 export const sendEmail = async (to: string, subject: string, html: string, previewText?: string, bcc?: string) => {
     const { SMTP_EMAIL, SMTP_PASSWORD } = process.env;
 
@@ -136,6 +166,8 @@ export const sendEmail = async (to: string, subject: string, html: string, previ
 
     // Wrap the HTML in our standard template
     const brandedHtml = renderEmailTemplate(html, previewText || subject);
+    const textVersion = stripHtml(html); // Generate real text version
+    const domain = "auroracademy.net";
 
     try {
         const info = await transporter.sendMail({
@@ -144,6 +176,12 @@ export const sendEmail = async (to: string, subject: string, html: string, previ
             bcc,
             subject,
             html: brandedHtml,
+            text: textVersion || previewText || subject, // Use generated text
+            headers: {
+                'List-Unsubscribe': `<mailto: unsubscribe@${domain}>, <https://${domain}/unsubscribe>`,
+                'X-Entity-Ref-ID': new Date().getTime().toString(),
+                'Message-ID': `<${new Date().getTime()}@${domain}>`,
+            }
         });
         console.log("Message sent: %s", info.messageId);
         return true;
