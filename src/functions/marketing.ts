@@ -89,11 +89,16 @@ export async function sendCampaignEmail1(targetEmail?: string) {
     });
 
     let sentCount = 0;
+    let debugPaidSkipped = 0;
+    let debugLogExistsSkipped = 0;
     const campaignId = "CAMPAIGN_FEB_2026"; // Unique ID for this blast
 
     for (const user of users) {
         // Exclude if paid
-        if (await isPaidMember(user.id)) continue;
+        if (await isPaidMember(user.id)) {
+            debugPaidSkipped++;
+            continue;
+        }
 
         // Exclude if already sent this specific email (idempotency)
         const existingLog = await prisma.emailLog.findFirst({
@@ -103,7 +108,10 @@ export async function sendCampaignEmail1(targetEmail?: string) {
                 campaignId
             }
         });
-        if (existingLog) continue;
+        if (existingLog) {
+            debugLogExistsSkipped++;
+            continue;
+        }
 
         // Content
         const html = `
@@ -120,11 +128,20 @@ export async function sendCampaignEmail1(targetEmail?: string) {
             <p>Nos vemos adentro,<br><br>Fran Castro</p>
         `;
 
-        await sendTrackedEmail(user as any, "Tu acceso exclusivo en 12 cuotas sin interés", html, "CAMPAIGN_1", campaignId);
-        sentCount++;
+        const sentOk = await sendTrackedEmail(user as any, "Tu acceso exclusivo en 12 cuotas sin interés", html, "CAMPAIGN_1", campaignId);
+        if (sentOk) {
+            sentCount++;
+        }
     }
 
-    return { sent: sentCount };
+    return {
+        sent: sentCount,
+        debug: {
+            totalUsersFound: users.length,
+            paidSkipped: debugPaidSkipped,
+            logExistsSkipped: debugLogExistsSkipped
+        }
+    };
 }
 
 export async function sendCampaignEmail2(targetEmail?: string) {
