@@ -123,8 +123,8 @@ export function PricingCard({
                         <span className="text-sm font-medium">$</span>
                         <span className="text-lg font-bold line-through tracking-tight">
                             {isAnnual && originalMonthlyPrice
-                                ? new Intl.NumberFormat("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Number(originalMonthlyPrice))
-                                : new Intl.NumberFormat("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Number(price) * 1.3 / (isAnnual ? 12 : 1))
+                                ? new Intl.NumberFormat("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Number(originalMonthlyPrice) / 30)
+                                : new Intl.NumberFormat("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Number(price) * 1.3 / (isAnnual ? 365 : 1))
                             }
                         </span>
                     </div>
@@ -136,9 +136,9 @@ export function PricingCard({
                             {new Intl.NumberFormat("es-AR", {
                                 minimumFractionDigits: 0,
                                 maximumFractionDigits: 0
-                            }).format(Number(price) / (isAnnual ? 12 : 1))}
+                            }).format(Number(price) / (isAnnual ? 365 : 1))}
                         </span>
-                        <span className="text-lg md:text-xl font-bold text-gray-400">/mes</span>
+                        <span className="text-lg md:text-xl font-bold text-gray-400">{isAnnual ? '/día' : '/mes'}</span>
                     </div>
 
                     {/* Annual Billing Context & Installments Highlight - Minimalist */}
@@ -146,7 +146,7 @@ export function PricingCard({
                         <div className="mt-2 text-left">
                             <p className="text-[13px] text-emerald-400 font-bold flex items-center gap-1.5">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/60 animate-pulse" />
-                                3 cuotas sin interés de {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(Number(price) / 3)}
+                                {installments}
                             </p>
                         </div>
                     )}

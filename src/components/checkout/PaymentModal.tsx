@@ -388,7 +388,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                         <span>Cupón de Descuento</span>
                                         {isAnnual && (
                                             <span className="text-[10px] text-emerald-400 normal-case flex items-center gap-1">
-                                                <Zap size={10} /> Incluye 3 meses gratis
+                                                <Zap size={10} /> Ya estás ahorrando 3 meses
                                             </span>
                                         )}
                                     </label>

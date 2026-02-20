@@ -70,15 +70,15 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                 finalPrice = basePrice * 9; // 12 months for price of 9
                 periodicity = "año";
 
-                // Installments: 3 cuotas sin interés
-                const installmentAmount = finalPrice / 3;
+                // Installments: 12 cuotas sin interés
+                const installmentAmount = finalPrice / 12;
                 const formattedInstallment = new Intl.NumberFormat("es-AR", {
                     style: "currency",
                     currency: "ARS",
                     maximumFractionDigits: 0
                 }).format(installmentAmount);
 
-                installmentsText = `3 cuotas sin interés de ${formattedInstallment}`;
+                installmentsText = `12 cuotas sin interés de ${formattedInstallment}`;
 
                 // Savings calc
                 const annualFull = basePrice * 12;
@@ -217,9 +217,9 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                     <div className="flex items-baseline gap-1">
                                         <span className="text-lg font-medium text-gray-400">$</span>
                                         <span className="font-display font-bold tracking-tighter text-white text-4xl">
-                                            {new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 }).format(plan.finalPrice / (billingCycle === 'annual' ? 12 : 1))}
+                                            {new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 }).format(plan.finalPrice / (billingCycle === 'annual' ? 365 : 1))}
                                         </span>
-                                        <span className="text-sm font-medium text-gray-500">/mes</span>
+                                        <span className="text-sm font-medium text-gray-500">{billingCycle === 'annual' ? '/día' : '/mes'}</span>
                                     </div>
                                     {billingCycle === 'annual' && plan.savingsPct && (
                                         <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400">

@@ -334,14 +334,14 @@ export default function MyMembershipsPage() {
 
                             periodicity = "año";
 
-                            // Installments logic: 3 cuotas sin interés
-                            const installmentAmount = finalPrice / 3;
+                            // Installments logic: 12 cuotas sin interés
+                            const installmentAmount = finalPrice / 12;
                             const formattedInstallment = new Intl.NumberFormat("es-AR", {
                                 style: "currency",
                                 currency: "ARS",
                                 maximumFractionDigits: 0
                             }).format(installmentAmount);
-                            installmentsText = `3 cuotas sin interés de ${formattedInstallment}`;
+                            installmentsText = `12 cuotas sin interés de ${formattedInstallment}`;
 
                             totalFormatted = new Intl.NumberFormat("es-AR", {
                                 style: "currency",
