@@ -76,7 +76,7 @@ export default function RootLayout({
           {children}
           <Toaster richColors position="top-center" closeButton />
           <Analytics />
-          <ChatWidget />
+          {/* <ChatWidget /> */}
         </Providers>
       </body>
     </html>

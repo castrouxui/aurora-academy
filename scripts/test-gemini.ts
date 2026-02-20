@@ -12,7 +12,7 @@ async function main() {
     console.log("Testing Gemini generation...");
     try {
         const { object } = await generateObject({
-            model: google("gemini-1.5-flash"),
+            model: google("models/gemini-flash-latest"),
             schema: z.object({
                 outcomes: z.array(z.string()).length(4),
             }),

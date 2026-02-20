@@ -1,14 +1,14 @@
 "use server";
 
 import { generateObject } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { google } from "@ai-sdk/google";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 
 export async function generateCourseOutcomes(courseId: string, description: string, modulesSummary: string) {
     try {
         const { object } = await generateObject({
-            model: openai("gpt-4o"),
+            model: google("models/gemini-flash-latest"),
             schema: z.object({
                 outcomes: z.array(z.string()).length(4),
             }),
