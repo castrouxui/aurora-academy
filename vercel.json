@@ -10,11 +10,15 @@
         },
         {
             "path": "/api/cron/campaign/email1",
-            "schedule": "30 22 * * 0"
+            "schedule": "30 22 20 2 *"
         },
         {
             "path": "/api/cron/campaign/email2",
-            "schedule": "0 15 * * 2"
+            "schedule": "0 12 24 2 *"
+        },
+        {
+            "path": "/api/cron/campaign/email3",
+            "schedule": "0 13 27 2 *"
         },
         {
             "path": "/api/cron/evergreen",

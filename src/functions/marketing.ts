@@ -107,22 +107,20 @@ export async function sendCampaignEmail1(targetEmail?: string) {
 
         // Content
         const html = `
-            <p>La mayoría de las personas consumen información y no hacen nada. Acumulan teoría, miran los gráficos pasar y esperan el "momento perfecto".</p>
-            <p>Pero el momento perfecto es una ilusión de los que no quieren tomar riesgos.</p>
-            <p>En Aurora Academy no formamos espectadores, formamos protagonistas. Ya diste el primer paso y conocés las bases, pero la educación financiera sin ejecución es solo entretenimiento.</p>
-            <p>Para dominar el mercado necesitás metodología institucional, estructura y estrategia. Es momento de elevar el estándar y tomar el control real de tu capital.</p>
-            <p>Para los que están listos para dejar de observar, abrimos 25 cupos con un 25% OFF en nuestras membresías mensuales. Tu código es: AURORA25</p>
+            <p>Muchos se registran buscando una forma de profesionalizar su operativa, pero pocos dan el paso necesario para dominar una metodología real de mercado.</p>
+            <p>A partir de este momento, habilitamos el beneficio de lanzamiento para nuestras Membresías Anuales en Aurora Academy. Tenés un 25% de descuento ya aplicado y la posibilidad de financiar cualquiera de nuestros planes anuales en 12 cuotas sin interés.</p>
+            <p>Esto te permite acceder hoy mismo al programa completo, herramientas de análisis y el acompañamiento que elijas, dividiendo tu inversión en 12 pagos mensuales. Es la oportunidad para asegurar tu formación profesional por todo un año con el plan que mejor se adapte a vos.</p>
             <p style="text-align: center; margin: 25px 0;">
                 <a href="https://auroracademy.net/membresias" class="button" style="background-color: #5D5CDE; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; mso-padding-alt: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 100%; box-sizing: border-box;">
                     <!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt">&nbsp;</i><![endif]-->
-                    <span style="mso-text-raise: 15pt;">Aprovechar uno de los 25 cupos.</span>
+                    <span style="mso-text-raise: 15pt;">Ver planes anuales y beneficios</span>
                     <!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%">&nbsp;</i><![endif]-->
                 </a>
             </p>
-            <p>El mercado no espera a nadie. Nos vemos dentro,<br>Fran Castro</p>
+            <p>Nos vemos adentro,<br><br>Fran Castro</p>
         `;
 
-        await sendTrackedEmail(user as any, "El costo de mirar desde afuera.", html, "CAMPAIGN_1", campaignId);
+        await sendTrackedEmail(user as any, "Tu acceso exclusivo en 12 cuotas sin interés", html, "CAMPAIGN_1", campaignId);
         sentCount++;
     }
 
@@ -130,7 +128,6 @@ export async function sendCampaignEmail1(targetEmail?: string) {
 }
 
 export async function sendCampaignEmail2(targetEmail?: string) {
-    // Condition: Sent Email 1, Opened Email 1, Did NOT click Email 1.
     const campaignId = "CAMPAIGN_FEB_2026";
 
     // Find users who got Email 1
@@ -140,21 +137,16 @@ export async function sendCampaignEmail2(targetEmail?: string) {
             campaignId,
             user: targetEmail ? { email: targetEmail } : undefined
         },
-        include: { user: true } // Include user to filter by email if needed
+        include: { user: true }
     });
 
     let sentCount = 0;
 
     for (const log of logsEmail1) {
-        // Must have opened
-        if (!log.openedAt) continue;
-        // Must NOT have clicked
-        if (log.clickedAt) continue;
-
         const user = log.user;
         if (!user || !user.email) continue;
 
-        // Double check they didn't buy in the meantime
+        // "El segundo mail se puede activar si la persona no compró nada ni pagó nada después del primer mail."
         if (await isPaidMember(user.id)) continue;
 
         // Check idempotency for Email 2
@@ -168,22 +160,71 @@ export async function sendCampaignEmail2(targetEmail?: string) {
         if (existingLog2) continue;
 
         const html = `
-            <p>El domingo liberamos 25 cupos para entrar a Aurora. Varios ya tomaron la decisión, entraron a la plataforma y están armando su estructura. Noté que leíste el correo, pero te quedaste afuera.</p>
-            <p>Casi siempre, cuando dudamos frente a una oportunidad no es por el precio. Es porque dudamos de si realmente vamos a aplicar lo que aprendemos. Preferimos la comodidad de seguir investigando gratis en lugar de comprometernos con un método.</p>
-            <p>Pero la parálisis por análisis arruina más portafolios que las malas inversiones.</p>
-            <p>En Aurora Academy diseñamos todo para eliminar el ruido. No te damos más horas de teoría interminable; te damos los sistemas exactos para que dejes de adivinar y empieces a ejecutar con confianza.</p>
-            <p>Si estabas esperando una señal para dejar de postergarlo, es esta. Quedan los últimos lugares de los 25 que abrimos con el 25% OFF. Tu código sigue siendo: AURORA25</p>
+            <p>Noté que revisaste la plataforma pero todavía no confirmaste tu lugar en la Academia. Es normal dudar sobre qué nivel de compromiso tomar al elegir tu formación.</p>
+            <p>La consistencia en el trading requiere estructura y un sistema probado. Por eso diseñamos diferentes Membresías Anuales: para que elijas el nivel de profundidad y acompañamiento que necesitás para madurar tu estrategia.</p>
+            <p>Con el beneficio de lanzamiento, el costo anual de cualquiera de nuestros planes se divide en 12 cuotas sin interés. Esto te permite invertir en tu conocimiento de forma profesional, con pagos previsibles y un descuento del 25% ya incluido.</p>
             <p style="text-align: center; margin: 25px 0;">
                 <a href="https://auroracademy.net/membresias" class="button" style="background-color: #5D5CDE; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; mso-padding-alt: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 100%; box-sizing: border-box;">
                     <!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt">&nbsp;</i><![endif]-->
-                    <span style="mso-text-raise: 15pt;">Asegurar mi lugar antes de que se agoten.</span>
+                    <span style="mso-text-raise: 15pt;">Elegir mi membresía anual</span>
                     <!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%">&nbsp;</i><![endif]-->
                 </a>
             </p>
-            <p>El momento de construir es ahora. Nos vemos adentro,<br>Fran Castro</p>
+            <p>Un saludo,<br><br>Fran Castro</p>
         `;
 
-        await sendTrackedEmail(user as any, "El problema de pensarlo demasiado.", html, "CAMPAIGN_2", campaignId);
+        await sendTrackedEmail(user as any, "¿Cuál es tu plan para este año? (Leeme)", html, "CAMPAIGN_2", campaignId);
+        sentCount++;
+    }
+
+    return { sent: sentCount };
+}
+
+export async function sendCampaignEmail3(targetEmail?: string) {
+    const campaignId = "CAMPAIGN_FEB_2026";
+
+    // Find users who got Email 1
+    const logsEmail1 = await prisma.emailLog.findMany({
+        where: {
+            emailType: "CAMPAIGN_1",
+            campaignId,
+            user: targetEmail ? { email: targetEmail } : undefined
+        },
+        include: { user: true }
+    });
+
+    let sentCount = 0;
+
+    for (const log of logsEmail1) {
+        const user = log.user;
+        if (!user || !user.email) continue;
+
+        if (await isPaidMember(user.id)) continue;
+
+        const existingLog3 = await prisma.emailLog.findFirst({
+            where: {
+                userId: user.id,
+                emailType: "CAMPAIGN_3",
+                campaignId
+            }
+        });
+        if (existingLog3) continue;
+
+        const html = `
+            <p>Este es un aviso breve para informarte que mañana, 28 de febrero, finaliza la promoción de apertura de Aurora Academy.</p>
+            <p>A partir de la medianoche, el precio con el 25% de descuento y la opción de pago en 12 cuotas sin interés en nuestras membresías anuales dejarán de estar disponibles.</p>
+            <p>Si tu objetivo para este año es dominar una metodología de inversión sólida, esta es la ventana de tiempo para elegir tu plan anual con las mejores condiciones financieras posibles.</p>
+            <p style="text-align: center; margin: 25px 0;">
+                <a href="https://auroracademy.net/membresias" class="button" style="background-color: #5D5CDE; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; mso-padding-alt: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 100%; box-sizing: border-box;">
+                    <!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt">&nbsp;</i><![endif]-->
+                    <span style="mso-text-raise: 15pt;">Última oportunidad para acceder</span>
+                    <!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%">&nbsp;</i><![endif]-->
+                </a>
+            </p>
+            <p>Te veo en el programa,<br><br>Fran Castro</p>
+        `;
+
+        await sendTrackedEmail(user as any, "Tu beneficio de lanzamiento vence mañana", html, "CAMPAIGN_3", campaignId);
         sentCount++;
     }
 
