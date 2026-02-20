@@ -2,6 +2,8 @@
 import { runEvergreenWorkflow } from "@/functions/marketing";
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request) {
     // Verify it's Vercel calling the cron
     const authHeader = req.headers.get('authorization');
