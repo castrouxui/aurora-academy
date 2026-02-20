@@ -22,6 +22,7 @@ async function main() {
     }
 
     console.log(`Course: ${course.title}`);
+    console.log(`Learning Outcomes: ${JSON.stringify(course.learningOutcomes)}`);
     console.log(`Total Modules: ${course.modules.length}`);
 
     let totalDuration = 0;

@@ -1,4 +1,4 @@
-import { openai } from "@ai-sdk/openai";
+import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
 import { MENTOR_PROMPT, TUTOR_PROMPT, OPERATOR_PROMPT } from "@/lib/chat/prompts";
 
@@ -100,22 +100,33 @@ export async function POST(req: Request) {
     try {
         console.log(`[API] Stream start for: ${pathname}`);
         const result = await streamText({
-            model: openai("gpt-4o"),
+            model: google("gemini-1.5-flash"),
             system: systemPrompt + contextAddendum,
             messages: messages.map((m: any) => ({
                 role: m.role,
                 content: m.content,
             })),
+            // @ts-expect-error - experimental_providerMetadata is supported by Google provider runtime but missing in types
+            experimental_providerMetadata: {
+                google: {
+                    safetySettings: [
+                        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
+                    ],
+                },
+            },
             onFinish: ({ text, finishReason }) => {
                 console.log(`[API] Stream finished. Reason: ${finishReason}, Text length: ${text.length}`);
                 if (finishReason !== "stop") {
-                    console.warn(`[API] Abnormal finish reason: ${finishReason}`);
+                    console.log("[API] Incomplete stream reason:", finishReason);
                 }
             },
         });
 
         const response = result.toTextStreamResponse();
-        // response.headers.set("X-Chat-Provider", "OpenAI"); 
+        response.headers.set("X-Chat-Provider", "Google-Flash");
         return response;
     } catch (error) {
         console.error("Chat API error:", error);
