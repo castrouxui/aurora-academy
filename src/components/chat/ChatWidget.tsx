@@ -203,7 +203,7 @@ export function ChatWidget() {
                     setMessages((prev) =>
                         prev.map((m) =>
                             m.id === assistantMsgId
-                                ? { ...m, content: "⚠️ Recibí una respuesta vacía. Por favor, preguntame de nuevo." }
+                                ? { ...m, content: `⚠️ Recibí una respuesta vacía (${response.headers.get("X-Chat-Provider") || "Unknown Provider"}). Por favor, preguntame de nuevo.` }
                                 : m
                         )
                     );
