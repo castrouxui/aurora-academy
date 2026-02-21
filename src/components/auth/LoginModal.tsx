@@ -11,6 +11,7 @@ import { Logo } from "@/components/layout/Logo";
 import { signIn, getProviders, LiteralUnion, ClientSafeProvider } from "next-auth/react";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -28,11 +29,14 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default', ini
     const [providers, setProviders] = useState<Record<LiteralUnion<string>, ClientSafeProvider> | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
+    const [isMounted, setIsMounted] = useState(false);
+
     useEffect(() => {
+        setIsMounted(true);
         getProviders().then(setProviders);
     }, []);
 
-    if (!isOpen) return null;
+    if (!isOpen || !isMounted) return null;
 
     const isRegister = mode === 'register';
     const titleText = isRegister ? "Crea tu cuenta para continuar" : "Bienvenido de nuevo";
@@ -86,7 +90,7 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default', ini
     // ... rest of component
 
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
             <div className="relative w-full max-w-md rounded-2xl border border-border bg-card p-5 md:p-6 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
 
@@ -193,7 +197,8 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default', ini
                     Al {isRegister ? "crear una cuenta" : "ingresar"} en Aurora Academy, aceptas los <span className="text-foreground cursor-pointer hover:underline">Términos de Servicio</span> y <span className="text-foreground cursor-pointer hover:underline">Políticas de privacidad</span>.
                 </p>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 

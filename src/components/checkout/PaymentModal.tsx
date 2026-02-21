@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ArrowRight, ShieldCheck, Lock, Zap, CheckCircle2, Loader2 } from 'lucide-react';
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
@@ -195,9 +196,12 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
     }, [isOpen, courseTitle, coursePrice, preferenceId, courseId, effectiveUserId, appliedCoupon, bundleId, mpEmail]);
 
 
-    if (!isOpen) return null;
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => setIsMounted(true), []);
 
-    return (
+    if (!isOpen || !isMounted) return null;
+
+    return createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-0 md:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
             {/* 
                 Main Container
@@ -493,6 +497,8 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 </div>
             </div>
 
-        </div>
+        </div>,
+        document.body
     );
 }
+
