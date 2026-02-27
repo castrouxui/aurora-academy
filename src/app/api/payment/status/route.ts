@@ -22,23 +22,46 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ status: 'approved', purchaseId: purchase.id });
         }
 
-        // Search by userId and courseId if provided (more reliable than preferenceId for webhook sync)
+        // Check if a subscription exists with this preferenceId (mercadoPagoId for subscriptions)
+        const subscriptionById = await prisma.subscription.findFirst({
+            where: {
+                mercadoPagoId: preferenceId,
+                status: 'authorized'
+            }
+        });
+
+        if (subscriptionById) {
+            return NextResponse.json({ status: 'approved', subscriptionId: subscriptionById.id });
+        }
+
         // Search by userId and courseId/bundleId if provided (more reliable than preferenceId for webhook sync)
         const userId = searchParams.get('userId');
         const courseId = searchParams.get('courseId');
         const bundleId = searchParams.get('bundleId');
 
         if (userId && (courseId || bundleId)) {
+            // For context fallback, only check VERY recent records (last 15 minutes)
+            const recentThreshold = new Date(Date.now() - 15 * 60 * 1000);
+
             // 1. Check Purchases
-            const whereClause: any = { userId, status: 'approved' };
+            const whereClause: any = {
+                userId,
+                status: 'approved',
+                createdAt: { gte: recentThreshold }
+            };
             if (courseId) whereClause.courseId = courseId;
             if (bundleId) whereClause.bundleId = bundleId;
 
             const purchaseByContext = await prisma.purchase.findFirst({
-                where: whereClause
+                where: whereClause,
+                orderBy: { createdAt: 'desc' }
             });
+
             if (purchaseByContext) {
-                return NextResponse.json({ status: 'approved', purchaseId: purchaseByContext.id });
+                // Ignore if it explicitly belongs to a DIFFERENT preferenceId
+                if (!purchaseByContext.preferenceId || purchaseByContext.preferenceId === preferenceId) {
+                    return NextResponse.json({ status: 'approved', purchaseId: purchaseByContext.id });
+                }
             }
 
             // 2. Check Subscriptions (if bundleId)
@@ -47,11 +70,17 @@ export async function GET(req: NextRequest) {
                     where: {
                         userId,
                         bundleId,
-                        status: 'authorized'
-                    }
+                        status: 'authorized',
+                        updatedAt: { gte: recentThreshold }
+                    },
+                    orderBy: { updatedAt: 'desc' }
                 });
+
                 if (subscription) {
-                    return NextResponse.json({ status: 'approved', subscriptionId: subscription.id });
+                    // Ignore if it explicitly belongs to a DIFFERENT mercadoPagoId (preferenceId)
+                    if (!subscription.mercadoPagoId || subscription.mercadoPagoId === preferenceId) {
+                        return NextResponse.json({ status: 'approved', subscriptionId: subscription.id });
+                    }
                 }
             }
         }
