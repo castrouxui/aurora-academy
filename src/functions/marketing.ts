@@ -116,7 +116,7 @@ export async function sendCampaignEmail1(targetEmail?: string) {
         // Content
         const html = `
             <p>Muchos se registran buscando una forma de profesionalizar su operativa, pero pocos dan el paso necesario para dominar una metodología real de mercado.</p>
-            <p>A partir de este momento, habilitamos el beneficio de lanzamiento para nuestras Membresías Anuales en Aurora Academy. Tenés un 25% de descuento ya aplicado y la posibilidad de financiar cualquiera de nuestros planes anuales en 12 cuotas sin interés.</p>
+            <p>A partir de este momento, habilitamos el beneficio de lanzamiento para nuestras Membresías Anuales en Aurora Academy. Tenés un 25% de descuento ya aplicado y la posibilidad de financiar cualquiera de nuestros planes anuales en 6 cuotas sin interés.</p>
             <p>Esto te permite acceder hoy mismo al programa completo, herramientas de análisis y el acompañamiento que elijas, dividiendo tu inversión en 12 pagos mensuales. Es la oportunidad para asegurar tu formación profesional por todo un año con el plan que mejor se adapte a vos.</p>
             <p style="text-align: center; margin: 25px 0;">
                 <a href="https://auroracademy.net/membresias" class="button" style="background-color: #5D5CDE; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; mso-padding-alt: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 100%; box-sizing: border-box;">
@@ -128,7 +128,7 @@ export async function sendCampaignEmail1(targetEmail?: string) {
             <p>Nos vemos adentro,<br><br>Fran Castro</p>
         `;
 
-        const sentOk = await sendTrackedEmail(user as any, "Tu acceso exclusivo en 12 cuotas sin interés", html, "CAMPAIGN_1", campaignId);
+        const sentOk = await sendTrackedEmail(user as any, "Tu acceso exclusivo en 6 cuotas sin interés", html, "CAMPAIGN_1", campaignId);
         if (sentOk) {
             sentCount++;
         }
@@ -179,7 +179,7 @@ export async function sendCampaignEmail2(targetEmail?: string) {
         const html = `
             <p>Noté que revisaste la plataforma pero todavía no confirmaste tu lugar en la Academia. Es normal dudar sobre qué nivel de compromiso tomar al elegir tu formación.</p>
             <p>La consistencia en el trading requiere estructura y un sistema probado. Por eso diseñamos diferentes Membresías Anuales: para que elijas el nivel de profundidad y acompañamiento que necesitás para madurar tu estrategia.</p>
-            <p>Con el beneficio de lanzamiento, el costo anual de cualquiera de nuestros planes se divide en 12 cuotas sin interés. Esto te permite invertir en tu conocimiento de forma profesional, con pagos previsibles y un descuento del 25% ya incluido.</p>
+            <p>Con el beneficio de lanzamiento, el costo anual de cualquiera de nuestros planes se divide en 6 cuotas sin interés. Esto te permite invertir en tu conocimiento de forma profesional, con pagos previsibles y un descuento del 25% ya incluido.</p>
             <p style="text-align: center; margin: 25px 0;">
                 <a href="https://auroracademy.net/membresias" class="button" style="background-color: #5D5CDE; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; mso-padding-alt: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 100%; box-sizing: border-box;">
                     <!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt">&nbsp;</i><![endif]-->
@@ -229,7 +229,7 @@ export async function sendCampaignEmail3(targetEmail?: string) {
 
         const html = `
             <p>Este es un aviso breve para informarte que mañana, 28 de febrero, finaliza la promoción de apertura de Aurora Academy.</p>
-            <p>A partir de la medianoche, el precio con el 25% de descuento y la opción de pago en 12 cuotas sin interés en nuestras membresías anuales dejarán de estar disponibles.</p>
+            <p>A partir de la medianoche, el precio con el 25% de descuento y la opción de pago en 6 cuotas sin interés en nuestras membresías anuales dejarán de estar disponibles.</p>
             <p>Si tu objetivo para este año es dominar una metodología de inversión sólida, esta es la ventana de tiempo para elegir tu plan anual con las mejores condiciones financieras posibles.</p>
             <p style="text-align: center; margin: 25px 0;">
                 <a href="https://auroracademy.net/membresias" class="button" style="background-color: #5D5CDE; color: white; padding: 14px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; mso-padding-alt: 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 100%; box-sizing: border-box;">

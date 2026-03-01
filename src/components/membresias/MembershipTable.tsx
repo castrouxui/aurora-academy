@@ -70,15 +70,15 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                 finalPrice = basePrice * 9; // 12 months for price of 9
                 periodicity = "año";
 
-                // Installments: 12 cuotas sin interés
-                const installmentAmount = finalPrice / 12;
+                // Installments: 6 cuotas sin interés
+                const installmentAmount = finalPrice / 6;
                 const formattedInstallment = new Intl.NumberFormat("es-AR", {
                     style: "currency",
                     currency: "ARS",
                     maximumFractionDigits: 0
                 }).format(installmentAmount);
 
-                installmentsText = `12 cuotas sin interés de ${formattedInstallment}`;
+                installmentsText = `6 cuotas sin interés de ${formattedInstallment}`;
 
                 // Savings calc
                 const annualFull = basePrice * 12;
@@ -111,7 +111,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
             // 2. HIGHLIGHT: Fixed Extras (Marketing) - "1 curso nuevo..."
             if (index >= 1) { // Elite & Portfolio
                 displayFeatures.push(
-                    <span key={`benefit-15d-${index}`} className="inline-flex items-center gap-2 font-bold text-black bg-emerald-400 px-3 py-1 rounded-full text-[11px] shadow-[0_2px_10px_rgba(52,211,153,0.3)]">
+                    <span key={`benefit-15d-${index}`} className="inline-flex items-center gap-2 font-bold text-emerald-950 bg-emerald-400 px-3 py-1 rounded-full text-[11px] shadow-[0_2px_10px_rgba(52,211,153,0.3)]">
                         <span>🔥</span> 1 curso nuevo cada 15 días
                     </span>
                 );
@@ -192,7 +192,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                             {/* BADGE for Portfolio */}
                             {isPortfolio && (
                                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-full flex justify-center z-20">
-                                    <div className="backdrop-blur-md bg-white/80 border border-white/30 text-black px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-xl whitespace-nowrap">
+                                    <div className="backdrop-blur-md bg-white/80 border border-white/30 text-background px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-xl whitespace-nowrap">
                                         El más elegido / Sugerencia de Fran Castro
                                     </div>
                                 </div>
@@ -324,7 +324,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                 className={cn(
                                     "w-full h-12 rounded-xl text-sm font-bold tracking-wide transition-all duration-300",
                                     isPortfolio
-                                        ? "bg-white text-black hover:bg-gray-100 shadow-[0_4px_20px_-5px_rgba(255,255,255,0.2)]"
+                                        ? "bg-white text-background hover:bg-gray-200 shadow-[0_4px_20px_-5px_rgba(255,255,255,0.2)]"
                                         : "bg-transparent border border-white/20 text-white hover:bg-white/5 active:scale-95"
                                 )}
                             >
