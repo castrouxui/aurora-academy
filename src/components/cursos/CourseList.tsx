@@ -6,6 +6,7 @@ import { Container } from '@/components/layout/Container';
 import { CourseCard } from './CourseCard';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { getMockCourseReviews } from "@/lib/course-reviews";
 
 export function CourseList() {
     const [ownedCourseIds, setOwnedCourseIds] = useState<string[]>([]);
@@ -40,12 +41,15 @@ export function CourseList() {
                         const discount = course.discount || 0;
                         const finalPrice = basePrice * (1 - discount / 100);
 
+                        const { mockTotalRatings, mockAverageRating } = getMockCourseReviews(course.id);
+
                         return {
                             id: course.id,
                             title: course.title,
                             instructor: "Aurora Academy",
-                            rating: 5.0,
-                            reviews: "(120)",
+                            rating: mockAverageRating,
+                            reviews: mockTotalRatings.toString(),
+                            showDynamicStars: true,
                             price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(finalPrice),
                             oldPrice: discount > 0
                                 ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice)

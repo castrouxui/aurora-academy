@@ -5,6 +5,7 @@ import { getCourseImage } from "@/lib/course-constants";
 import { FilterModal, type FilterState } from "@/components/cursos/FilterModal";
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { getMockCourseReviews } from "@/lib/course-reviews";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -69,12 +70,16 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             oldPriceFormatted = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice);
                         }
 
+                        // Calculate dynamic reviews
+                        const { mockTotalRatings, mockAverageRating } = getMockCourseReviews(course.id);
+
                         return {
                             id: course.id,
                             title: course.title,
                             instructor: "Aurora Academy",
-                            rating: 5.0,
-                            reviews: "(0)",
+                            rating: mockAverageRating,
+                            reviews: mockTotalRatings.toString(),
+                            showDynamicStars: true,
                             price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(finalPrice),
                             oldPrice: oldPriceFormatted,
                             discountPercentage: discount > 0 ? discount : null,

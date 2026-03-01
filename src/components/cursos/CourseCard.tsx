@@ -21,6 +21,7 @@ interface CourseProps {
     rawPrice?: number;
     discountPercentage?: number;
     type?: string;
+    showDynamicStars?: boolean;
 }
 
 export function CourseCard({ course, isOwned = false }: { course: CourseProps, isOwned?: boolean }) {
@@ -116,8 +117,13 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
                             </div>
                         )}
                         <div className="flex items-center gap-1 text-yellow-400 ml-auto mr-0">
+                            {course.showDynamicStars && course.rating > 0 && (
+                                <span className="text-yellow-400 text-sm font-bold">{course.rating.toFixed(1)}</span>
+                            )}
                             <Star size={14} fill="currentColor" className="stroke-none" />
-                            <span className="text-gray-400 text-sm font-medium ml-1">({course.reviews})</span>
+                            <span className="text-gray-400 text-sm font-medium ml-1">
+                                {course.showDynamicStars ? `(${course.reviews})` : course.reviews}
+                            </span>
                         </div>
                     </div>
 
