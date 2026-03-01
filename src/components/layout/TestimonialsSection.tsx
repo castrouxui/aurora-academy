@@ -24,11 +24,11 @@ export function TestimonialsSection() {
     return (
         <section className="py-20 bg-muted/20">
             <Container>
-                <div className="max-w-2xl mb-12">
+                <div className="max-w-2xl mb-12 mx-auto text-center flex flex-col items-center">
                     <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-background border border-border text-foreground font-semibold text-xs uppercase tracking-widest mb-4">
                         <MessageCircle className="w-4 h-4 text-primary" /> Casos de Éxito
                     </span>
-                    <h2 className="text-3xl md:text-4xl font-black text-foreground font-display tracking-tight leading-tight">
+                    <h2 className="text-3xl md:text-4xl font-black text-foreground font-display tracking-tight leading-tight text-center">
                         No lo decimos nosotros, lo dicen los resultados.
                     </h2>
                 </div>
