@@ -12,6 +12,11 @@ interface Review {
         name: string | null;
         image: string | null;
     };
+    instructorReply?: {
+        name: string;
+        image: string;
+        reply: string;
+    };
 }
 
 
@@ -34,13 +39,7 @@ function getInitials(name: string | null): string {
         .slice(0, 2);
 }
 
-const INSTRUCTOR_REPLIES: Record<string, { name: string; image: string; reply: string }> = {
-    "fake-review-3": {
-        name: "Fran Castro",
-        image: "/images/francisco-speaking.png",
-        reply: "¡Gracias Santiago! El análisis técnico en profundidad lo trabajamos dentro de nuestras membresías, donde tenés acceso a todos los cursos avanzados. ¡Te esperamos ahí!",
-    },
-};
+
 
 export function ReviewList({ reviews }: { reviews: Review[] }) {
     if (reviews.length === 0) {
@@ -64,7 +63,7 @@ export function ReviewList({ reviews }: { reviews: Review[] }) {
             {sortedReviews.map((review, index) => {
                 const isHighlighted = hasConcreteResults(review.comment);
                 const isInstructor = review.user.name === "Fran Castro" || review.user.name === "Francisco Castro";
-                const instructorReply = INSTRUCTOR_REPLIES[review.id];
+                const instructorReply = review.instructorReply;
 
                 // Standard color for students (Indigo), distinguished for Instructor
                 const avatarStyle = isInstructor
