@@ -78,7 +78,7 @@ function seededRandom(seed: number): number {
     return x - Math.floor(x);
 }
 
-export function getMockCourseReviews(courseId: string) {
+export function getMockCourseReviews(courseId: string, limit?: number) {
     const seed = hashString(courseId);
 
     // totalRatings between 20 and 42 (all numbers different per seed)
@@ -89,22 +89,33 @@ export function getMockCourseReviews(courseId: string) {
     const randomVal2 = seededRandom(seed + 1);
     const mockAverageRating = 4.4 + Math.round(randomVal2 * 5) / 10;
 
-    // Pick 4 or 5 reviews
-    const hasFive = seededRandom(seed + 2) > 0.5;
-    const reviewCount = hasFive ? 5 : 4;
+    let selectedIndices: number[] = [];
 
-    // Always include review 0 (featured) and review 2 (with reply)
-    const requiredIndices = [0, 2];
-    const optionalIndices = [1, 3, 4, 5];
+    if (limit && limit >= 6) {
+        // Just return all of them shuffled for the ticker
+        selectedIndices = [0, 1, 2, 3, 4, 5];
+        for (let i = selectedIndices.length - 1; i > 0; i--) {
+            const j = Math.floor(seededRandom(seed + 5 + i) * (i + 1));
+            [selectedIndices[i], selectedIndices[j]] = [selectedIndices[j], selectedIndices[i]];
+        }
+    } else {
+        // Pick 4 or 5 reviews for courses
+        const hasFive = seededRandom(seed + 2) > 0.5;
+        const reviewCount = hasFive ? 5 : 4;
 
-    // Shuffle optional indices deterministically
-    const shuffledOptional = [...optionalIndices];
-    for (let i = shuffledOptional.length - 1; i > 0; i--) {
-        const j = Math.floor(seededRandom(seed + 3 + i) * (i + 1));
-        [shuffledOptional[i], shuffledOptional[j]] = [shuffledOptional[j], shuffledOptional[i]];
+        // Always include review 0 (featured) and review 2 (with reply)
+        const requiredIndices = [0, 2];
+        const optionalIndices = [1, 3, 4, 5];
+
+        // Shuffle optional indices deterministically
+        const shuffledOptional = [...optionalIndices];
+        for (let i = shuffledOptional.length - 1; i > 0; i--) {
+            const j = Math.floor(seededRandom(seed + 3 + i) * (i + 1));
+            [shuffledOptional[i], shuffledOptional[j]] = [shuffledOptional[j], shuffledOptional[i]];
+        }
+
+        selectedIndices = [...requiredIndices, ...shuffledOptional.slice(0, reviewCount - requiredIndices.length)];
     }
-
-    const selectedIndices = [...requiredIndices, ...shuffledOptional.slice(0, reviewCount - requiredIndices.length)];
 
     // Map to objects
     const now = new Date();
