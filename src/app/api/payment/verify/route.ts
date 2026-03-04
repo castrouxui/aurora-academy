@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import MercadoPagoConfig, { Payment } from "mercadopago";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
+    // Require authentication
+    const session = await getServerSession(authOptions);
+    if (!session?.user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const { paymentId } = await req.json();
 
@@ -27,6 +35,11 @@ export async function POST(req: Request) {
 
             if (!user_id || !course_id) {
                 return NextResponse.json({ error: "Invalid payment metadata" }, { status: 400 });
+            }
+
+            // Verify that the authenticated user owns this payment
+            if (user_id !== session.user.id && session.user.role !== "ADMIN") {
+                return NextResponse.json({ error: "Unauthorized - you can only verify your own payments" }, { status: 403 });
             }
 
             // Check if exists

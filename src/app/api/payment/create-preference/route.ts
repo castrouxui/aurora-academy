@@ -1,5 +1,6 @@
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
 
 // Initialize the client
 const token = (process.env.MP_ACCESS_TOKEN || '').trim().replace(/^Bearer\s+/i, '');
@@ -8,6 +9,13 @@ const client = new MercadoPagoConfig({
 });
 
 export async function POST(req: NextRequest) {
+    // Rate limit: 10 payment preference creations per minute per IP
+    const clientIP = getClientIP(req as unknown as Request);
+    const rateLimitKey = `payment:create:${clientIP}`;
+    if (!checkRateLimit(rateLimitKey, 10, 60 * 1000)) {
+        return rateLimitResponse();
+    }
+
     try {
         if (!process.env.MP_ACCESS_TOKEN) {
             console.error("Missing MP_ACCESS_TOKEN");
