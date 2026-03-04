@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
+    const ip = req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown";
+    if (!checkRateLimit(`coupon:${ip}`, 10, 60_000)) {
+        return rateLimitResponse();
+    }
+
     try {
         const { code, bundleId } = await req.json();
 

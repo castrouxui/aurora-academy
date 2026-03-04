@@ -3,10 +3,22 @@ import { prisma } from "@/lib/prisma";
 // @ts-ignore
 import bcrypt from "bcryptjs";
 
-export async function GET() {
+export async function GET(request: Request) {
+    const { searchParams } = new URL(request.url);
+    const key = searchParams.get("key");
+    const adminResetKey = process.env.ADMIN_RESET_KEY;
+    if (!adminResetKey || key !== adminResetKey) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const seedPassword = process.env.SEED_DEMO_PASSWORD;
+    if (!seedPassword) {
+        return NextResponse.json({ error: "Server misconfiguration: SEED_DEMO_PASSWORD not set" }, { status: 500 });
+    }
+
     try {
         const email = "expiry_demo@example.com";
-        const password = "password123";
+        const password = seedPassword;
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // 1. Create/Update User

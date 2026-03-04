@@ -25,18 +25,6 @@ export const authOptions: AuthOptions = {
 
                 const { email, password, isRegister } = credentials;
 
-                // EMERGENCY BYPASS: Access for admin@aurora.com OR aurora@admin.com
-                if ((email === "admin@aurora.com" || email === "aurora@admin.com") && password === "admin123") {
-                    console.log(`[AUTH] Emergency bypass triggered for ${email}`);
-                    return {
-                        id: "emergency-admin",
-                        name: "Admin Aurora",
-                        email: email,
-                        role: "ADMIN" as any,
-                        image: "https://ui-avatars.com/api/?name=Admin+Aurora&background=0D8ABC&color=fff"
-                    };
-                }
-
                 const bcrypt = await import("bcryptjs");
 
                 if (isRegister === "true") {
@@ -106,13 +94,7 @@ export const authOptions: AuthOptions = {
             try {
                 if (user) {
                     token.id = user.id;
-                    // EMERGENCY HOTFIX: Force Admin Role for specific emails
-                    const adminEmails = ["aurora@admin.com", "admin@aurora.com"];
-                    if (user.email && adminEmails.includes(user.email)) {
-                        token.role = "ADMIN";
-                    } else {
-                        token.role = user.role;
-                    }
+                    token.role = user.role;
 
                     token.companyId = user.companyId;
                     token.isCompanyAdmin = user.isCompanyAdmin;
@@ -152,7 +134,7 @@ export const authOptions: AuthOptions = {
     theme: {
         colorScheme: "dark",
     },
-    debug: true,
+    debug: process.env.NODE_ENV === "development",
     secret: process.env.NEXTAUTH_SECRET,
 };
 
@@ -173,7 +155,6 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
                     role: "ESTUDIANTE", // Default role for new users
                 }
             },
-            allowDangerousEmailAccountLinking: true,
         })
     );
 }

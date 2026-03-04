@@ -5,7 +5,8 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const key = searchParams.get("key");
 
-    if (key !== "aurora-admin-fix-2026") {
+    const adminResetKey = process.env.ADMIN_RESET_KEY;
+    if (!adminResetKey || key !== adminResetKey) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

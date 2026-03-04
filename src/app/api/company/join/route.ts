@@ -2,8 +2,14 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
+    const ip = req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown";
+    if (!checkRateLimit(`company-join:${ip}`, 5, 60_000)) {
+        return rateLimitResponse();
+    }
+
     try {
         const session = await getServerSession(authOptions);
         if (!session?.user) {
