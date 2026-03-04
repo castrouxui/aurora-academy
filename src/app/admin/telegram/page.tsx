@@ -121,7 +121,7 @@ export default function TelegramBroadcastPage() {
                                 <div className="flex-1 bg-[#0b0e14] border border-gray-700/50 rounded-xl p-6 min-h-[300px]">
                                     <div className="prose prose-invert prose-sm max-w-none">
                                         {message ? (
-                                            <div dangerouslySetInnerHTML={{ __html: message.replace(/\n/g, "<br/>") }} />
+                                            <p style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{message}</p>
                                         ) : (
                                             <p className="text-gray-600 italic">La vista previa aparecerá aquí...</p>
                                         )}

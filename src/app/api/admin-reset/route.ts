@@ -6,14 +6,20 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const key = searchParams.get("key");
 
-    // Simple protection to prevent public abuse
-    if (key !== "aurora-admin-fix-2026") {
+    const adminResetKey = process.env.ADMIN_RESET_KEY;
+    if (!adminResetKey || key !== adminResetKey) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_INITIAL_PASSWORD;
+    if (!adminEmail || !adminPassword) {
+        return NextResponse.json({ error: "Server misconfiguration" }, { status: 500 });
+    }
+
     try {
-        const email = "admin@aurora.com";
-        const hashedPassword = await bcrypt.hash("admin123", 10);
+        const email = adminEmail;
+        const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
         // Upsert ensures it works even if user doesn't exist
         const user = await prisma.user.upsert({
@@ -38,10 +44,6 @@ export async function GET(request: Request) {
         });
     } catch (error) {
         console.error("Reset error:", error);
-        return NextResponse.json({
-            error: "Failed to reset admin",
-            details: error instanceof Error ? error.message : String(error),
-            stack: error instanceof Error ? error.stack : undefined
-        }, { status: 500 });
+        return NextResponse.json({ error: "Failed to reset admin" }, { status: 500 });
     }
 }

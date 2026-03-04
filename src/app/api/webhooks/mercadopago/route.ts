@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createHmac } from "crypto";
 
 import MercadoPagoConfig, { Payment, PreApproval } from "mercadopago";
 import { prisma } from "@/lib/prisma";
@@ -13,9 +14,42 @@ const getClient = () => {
     return new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN.trim().replace(/^Bearer\s+/i, '') });
 };
 
+function verifyWebhookSignature(request: Request, url: URL): boolean {
+    const webhookSecret = process.env.MP_WEBHOOK_SECRET;
+    if (!webhookSecret) return true; // Skip if not configured (backward compat)
+
+    const xSignature = request.headers.get("x-signature");
+    const xRequestId = request.headers.get("x-request-id");
+    const dataId = url.searchParams.get("data.id") || url.searchParams.get("id");
+
+    if (!xSignature) return false;
+
+    const parts = xSignature.split(",");
+    let ts: string | undefined;
+    let v1: string | undefined;
+    for (const part of parts) {
+        const [key, value] = part.trim().split("=");
+        if (key === "ts") ts = value;
+        if (key === "v1") v1 = value;
+    }
+
+    if (!ts || !v1) return false;
+
+    const template = `id:${dataId};request-id:${xRequestId};ts:${ts};`;
+    const expectedHash = createHmac("sha256", webhookSecret).update(template).digest("hex");
+
+    return expectedHash === v1;
+}
+
 export async function POST(request: Request) {
     try {
         const url = new URL(request.url);
+
+        if (!verifyWebhookSignature(request, url)) {
+            console.warn("[WEBHOOK] Invalid signature — request rejected");
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
         const topic = url.searchParams.get("topic") || url.searchParams.get("type");
         const id = url.searchParams.get("id") || url.searchParams.get("data.id");
 
