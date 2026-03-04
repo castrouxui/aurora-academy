@@ -1,27 +1,37 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import { createHash } from "crypto";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateOTP, sendTelegramMessage } from "@/lib/telegram";
+import { checkRateLimit, getClientIP, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
     if (!session?.user) return new NextResponse("Unauthorized", { status: 401 });
+
+    // Rate limit: 3 OTP requests per 5 minutes per IP
+    const clientIP = getClientIP(req);
+    const rateLimitKey = `otp-send:${clientIP}:${session.user.id}`;
+    if (!checkRateLimit(rateLimitKey, 3, 5 * 60 * 1000)) {
+        return rateLimitResponse();
+    }
 
     try {
         const { telegramHandle } = await req.json();
         if (!telegramHandle) return NextResponse.json({ error: "Telegram handle is required" }, { status: 400 });
 
         const otp = generateOTP();
+        const otpHash = createHash('sha256').update(otp).digest('hex');
         const expires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-        // Store OTP in VerificationToken table
+        // Store hashed OTP in VerificationToken table
         await prisma.verificationToken.upsert({
-            where: { identifier_token: { identifier: session.user.email!, token: otp } },
+            where: { identifier_token: { identifier: session.user.email!, token: otpHash } },
             update: { expires },
             create: {
                 identifier: session.user.email!,
-                token: otp,
+                token: otpHash,
                 expires
             }
         });

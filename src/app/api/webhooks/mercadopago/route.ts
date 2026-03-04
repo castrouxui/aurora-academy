@@ -16,7 +16,7 @@ const getClient = () => {
 
 function verifyWebhookSignature(request: Request, url: URL): boolean {
     const webhookSecret = process.env.MP_WEBHOOK_SECRET;
-    if (!webhookSecret) return true; // Skip if not configured (backward compat)
+    if (!webhookSecret) return false; // REQUIRED: Reject if secret not configured
 
     const xSignature = request.headers.get("x-signature");
     const xRequestId = request.headers.get("x-request-id");

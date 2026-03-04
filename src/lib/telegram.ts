@@ -32,10 +32,15 @@ export async function sendTelegramMessage(chatId: string, message: string) {
 }
 
 /**
- * Generates a numeric OTP
+ * Generates a cryptographically secure numeric OTP
  */
 export function generateOTP(length: number = 6): string {
-    return Math.floor(100000 + Math.random() * 900000).toString().substring(0, length);
+    const { randomBytes } = require('crypto');
+    let otp = '';
+    for (let i = 0; i < length; i++) {
+        otp += Math.floor(randomBytes(1)[0] / 256 * 10);
+    }
+    return otp;
 }
 /**
  * Sets the Telegram Webhook URL

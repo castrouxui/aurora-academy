@@ -9,6 +9,15 @@ interface RateLimitEntry {
     resetAt: number;
 }
 
+/**
+ * Extract client IP from request, supporting proxies
+ */
+export function getClientIP(request: Request): string {
+    const forwarded = request.headers.get('x-forwarded-for');
+    if (forwarded) return forwarded.split(',')[0].trim();
+    return request.headers.get('x-real-ip') || 'unknown';
+}
+
 const store = new Map<string, RateLimitEntry>();
 
 // Clean up expired entries every 5 minutes

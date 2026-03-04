@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { checkRateLimit, getClientIP, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function GET(request: Request) {
+    // Rate limit: 5 attempts per hour per IP (to prevent brute force)
+    const clientIP = getClientIP(request);
+    const rateLimitKey = `admin-reset:${clientIP}`;
+    if (!checkRateLimit(rateLimitKey, 5, 60 * 60 * 1000)) {
+        return rateLimitResponse();
+    }
+
     const { searchParams } = new URL(request.url);
     const key = searchParams.get("key");
 

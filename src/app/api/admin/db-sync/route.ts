@@ -5,8 +5,8 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const secret = searchParams.get("secret");
 
-    // Use the same secret key as Telegram for simplicity in this emergency
-    if (secret !== "AURORA_ACTIVATE_2026") {
+    const adminResetKey = process.env.ADMIN_RESET_KEY;
+    if (!adminResetKey || secret !== adminResetKey) {
         return new NextResponse("Unauthorized", { status: 401 });
     }
 
