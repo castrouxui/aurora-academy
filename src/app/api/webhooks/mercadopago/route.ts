@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createHmac } from "crypto";
 
 import MercadoPagoConfig, { Payment, PreApproval } from "mercadopago";
 import { prisma } from "@/lib/prisma";
@@ -13,12 +14,41 @@ const getClient = () => {
     return new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN.trim().replace(/^Bearer\s+/i, '') });
 };
 
+function validateSignature(request: Request, dataId: string | null): boolean {
+    const secret = process.env.MP_WEBHOOK_SECRET;
+    if (!secret) return true; // Skip validation if secret not configured
+
+    const xSignature = request.headers.get("x-signature");
+    const xRequestId = request.headers.get("x-request-id");
+
+    if (!xSignature) return false;
+
+    const parts = Object.fromEntries(xSignature.split(",").map(p => p.split("=")));
+    const ts = parts["ts"];
+    const v1 = parts["v1"];
+
+    if (!ts || !v1) return false;
+
+    const template = [
+        dataId ? `id:${dataId}` : null,
+        xRequestId ? `request-id:${xRequestId}` : null,
+        `ts:${ts}`,
+    ].filter(Boolean).join(";") + ";";
+
+    const hash = createHmac("sha256", secret).update(template).digest("hex");
+    return hash === v1;
+}
+
 export async function POST(request: Request) {
     try {
         const url = new URL(request.url);
         const topic = url.searchParams.get("topic") || url.searchParams.get("type");
         const id = url.searchParams.get("id") || url.searchParams.get("data.id");
 
+        if (!validateSignature(request, id)) {
+            console.warn("[WEBHOOK] Invalid signature");
+            return NextResponse.json({ status: "error", message: "Invalid signature" }, { status: 401 });
+        }
 
         if (topic === "payment" && id) {
             const client = getClient();
