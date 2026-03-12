@@ -100,7 +100,7 @@ export function CourseList() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {courses.map((course, i) => (
-                        <CourseCard key={i} course={course} isOwned={ownedCourseIds.includes(course.id)} />
+                        <CourseCard key={course.id} course={course} isOwned={ownedCourseIds.includes(course.id)} />
                     ))}
                 </div>
 
