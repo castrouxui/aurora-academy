@@ -69,14 +69,9 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default', ini
             if (result?.ok) {
                 toast.success("¡Bienvenido!");
 
-                // Force a hard navigation to ensure session cookie is picked up immediately
-                if (redirectUrl) {
-                    window.location.href = redirectUrl;
-                } else if (email === "admin@aurora.com" || email === "aurora@admin.com") {
-                    window.location.href = "/admin";
-                } else {
-                    window.location.href = "/dashboard";
-                }
+                // Always redirect to /dashboard — the dashboard layout handles
+                // redirecting admins to /admin once the session is fully loaded.
+                window.location.href = redirectUrl || "/dashboard";
 
                 onClose();
             }

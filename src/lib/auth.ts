@@ -96,6 +96,12 @@ export const authOptions: AuthOptions = {
                     token.id = user.id;
                     token.role = user.role;
 
+                    // Override role to ADMIN if email is in ADMIN_EMAILS env var
+                    const adminEmails = process.env.ADMIN_EMAILS?.split(',').map(e => e.trim()) ?? [];
+                    if (user.email && adminEmails.includes(user.email)) {
+                        token.role = "ADMIN" as any;
+                    }
+
                     token.companyId = user.companyId;
                     token.isCompanyAdmin = user.isCompanyAdmin;
                     token.telegram = (user as any).telegram;

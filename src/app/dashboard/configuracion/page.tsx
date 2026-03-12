@@ -4,9 +4,8 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User, Mail, Lock, Shield, Trash2, AlertTriangle, ShieldCheck } from "lucide-react";
+import { User, Mail, Lock, Shield, Trash2, AlertTriangle, Info } from "lucide-react";
 import { signOut } from "next-auth/react";
 import {
     AlertDialog,
@@ -49,46 +48,39 @@ export default function SettingsPage() {
                             <div className="grid md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label className="text-gray-300">Nombre Completo</Label>
-                                    <div className="relative">
-                                        <User className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-                                        <Input
-                                            defaultValue={session?.user?.name || ""}
-                                            className="bg-[#121620] border-gray-600 pl-10 text-white"
-                                            disabled
-                                        />
-                                        {/* Telegram Verified Shield - HIDDEN
-                                        {session?.user?.telegramVerified && (
-                                            <div className="absolute right-3 top-3 text-green-500" title="Verificado en Telegram">
-                                                <ShieldCheck size={18} fill="currentColor" className="text-green-500/20" />
-                                            </div>
-                                        )}
-                                        */}
+                                    <div className="flex items-center gap-3 bg-[#121620] border border-gray-700 rounded-md px-4 py-2.5 text-white">
+                                        <User className="h-4 w-4 text-gray-500 shrink-0" />
+                                        <span className="text-sm">{session?.user?.name || "—"}</span>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-gray-300">Correo Electrónico</Label>
-                                    <div className="relative">
-                                        <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-                                        <Input
-                                            defaultValue={session?.user?.email || ""}
-                                            className="bg-[#121620] border-gray-600 pl-10 text-white"
-                                            disabled
-                                        />
+                                    <div className="flex items-center gap-3 bg-[#121620] border border-gray-700 rounded-md px-4 py-2.5 text-white">
+                                        <Mail className="h-4 w-4 text-gray-500 shrink-0" />
+                                        <span className="text-sm">{session?.user?.email || "—"}</span>
                                     </div>
                                 </div>
                             </div>
-                            {/* Telegram Verification Section - HIDDEN
-                            <div className="pt-6 border-t border-gray-700/50">
-                                <TelegramVerification
-                                    initialHandle={session?.user?.telegram}
-                                    isVerified={session?.user?.telegramVerified || false}
-                                />
-                            </div>
-                            */}
 
-                            <div className="pt-2">
-                                <p className="text-xs text-yellow-500/80">
-                                    * Para cambiar estos datos, contacta a soporte o edítalos en tu proveedor de identidad (Google).
+                            <div className="flex items-start gap-3 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                                <Info size={15} className="text-blue-400 shrink-0 mt-0.5" />
+                                <p className="text-xs text-blue-300 leading-relaxed">
+                                    Estos datos provienen de tu cuenta de Google y no se pueden editar aquí.{" "}
+                                    <a
+                                        href="https://myaccount.google.com/personal-info"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="underline font-medium hover:text-blue-200 transition-colors"
+                                    >
+                                        Editá tu perfil en Google
+                                    </a>{" "}
+                                    o{" "}
+                                    <a
+                                        href="mailto:soporte@auroraacademy.com"
+                                        className="underline font-medium hover:text-blue-200 transition-colors"
+                                    >
+                                        contactá a soporte
+                                    </a>.
                                 </p>
                             </div>
                         </CardContent>

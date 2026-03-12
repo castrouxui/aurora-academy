@@ -25,6 +25,8 @@ export default function DashboardLayout({
         if (status === "loading") return;
         if (!session) {
             router.push("/");
+        } else if (session.user.role === "ADMIN") {
+            router.push("/admin");
         }
     }, [session, status, router]);
 

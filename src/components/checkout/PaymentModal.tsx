@@ -386,54 +386,56 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                                     </p>
                                 </div>
 
-                                {/* Coupon Input */}
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center justify-between">
-                                        <span>Cupón de Descuento</span>
-                                        {isAnnual && (
-                                            <span className="text-[10px] text-emerald-400 normal-case flex items-center gap-1">
-                                                <Zap size={10} /> Ya estás ahorrando 3 meses
-                                            </span>
-                                        )}
-                                    </label>
-                                    <div className="flex gap-2">
-                                        <input
-                                            type="text"
-                                            value={couponCode}
-                                            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                                            placeholder={isAnnual ? "Plan anual ya tiene descuento" : "CÓDIGO"}
-                                            disabled={!!appliedCoupon || isAnnual}
-                                            className="flex-1 bg-[#1A1D26] border border-white/5 text-white text-sm rounded-xl px-4 py-3 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 outline-none transition-all placeholder:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                                        />
-                                        {appliedCoupon ? (
-                                            <button
-                                                onClick={() => {
-                                                    setAppliedCoupon(null);
-                                                    setCouponCode("");
-                                                    setPreferenceId(null);
-                                                }}
-                                                className="bg-red-500/10 text-red-400 border border-red-500/20 px-4 rounded-xl hover:bg-red-500/20 transition-colors"
-                                            >
-                                                <X size={18} />
-                                            </button>
-                                        ) : (
-                                            <button
-                                                onClick={handleApplyCoupon}
-                                                disabled={!couponCode || isValidatingCoupon || isAnnual}
-                                                className="bg-white/5 text-white border border-white/10 px-6 rounded-xl font-medium hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
-                                            >
-                                                {isValidatingCoupon ? <Loader2 size={16} className="animate-spin" /> : "Aplicar"}
-                                            </button>
+                                {/* Coupon Input - only for membership/bundle purchases */}
+                                {bundleId && (
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center justify-between">
+                                            <span>Cupón de Descuento</span>
+                                            {isAnnual && (
+                                                <span className="text-[10px] text-emerald-400 normal-case flex items-center gap-1">
+                                                    <Zap size={10} /> Ya estás ahorrando 3 meses
+                                                </span>
+                                            )}
+                                        </label>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                value={couponCode}
+                                                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                                                placeholder={isAnnual ? "Plan anual ya tiene descuento" : "CÓDIGO"}
+                                                disabled={!!appliedCoupon || isAnnual}
+                                                className="flex-1 bg-[#1A1D26] border border-white/5 text-white text-sm rounded-xl px-4 py-3 focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 outline-none transition-all placeholder:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            />
+                                            {appliedCoupon ? (
+                                                <button
+                                                    onClick={() => {
+                                                        setAppliedCoupon(null);
+                                                        setCouponCode("");
+                                                        setPreferenceId(null);
+                                                    }}
+                                                    className="bg-red-500/10 text-red-400 border border-red-500/20 px-4 rounded-xl hover:bg-red-500/20 transition-colors"
+                                                >
+                                                    <X size={18} />
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={handleApplyCoupon}
+                                                    disabled={!couponCode || isValidatingCoupon || isAnnual}
+                                                    className="bg-white/5 text-white border border-white/10 px-6 rounded-xl font-medium hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
+                                                >
+                                                    {isValidatingCoupon ? <Loader2 size={16} className="animate-spin" /> : "Aplicar"}
+                                                </button>
+                                            )}
+                                        </div>
+                                        {!isAnnual && couponError && <p className="text-red-400 text-xs">{couponError}</p>}
+                                        {appliedCoupon && (
+                                            <p className="text-emerald-400 text-xs flex items-center gap-1.5">
+                                                <CheckCircle2 size={12} />
+                                                Cupón {appliedCoupon.code} aplicado
+                                            </p>
                                         )}
                                     </div>
-                                    {!isAnnual && couponError && <p className="text-red-400 text-xs">{couponError}</p>}
-                                    {appliedCoupon && (
-                                        <p className="text-emerald-400 text-xs flex items-center gap-1.5">
-                                            <CheckCircle2 size={12} />
-                                            Cupón {appliedCoupon.code} aplicado
-                                        </p>
-                                    )}
-                                </div>
+                                )}
                             </div>
                         )}
                     </div>

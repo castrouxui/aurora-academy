@@ -14,7 +14,8 @@ export function ReviewForm({ courseId }: { courseId: string }) {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e?: React.FormEvent) => {
+        e?.preventDefault();
         if (rating === 0) {
             toast.error("Por favor seleccioná una calificación");
             return;
@@ -48,45 +49,51 @@ export function ReviewForm({ courseId }: { courseId: string }) {
         <div className="bg-[#121620] border border-white/5 rounded-2xl p-6">
             <h3 className="text-lg font-bold text-white mb-4">Dejá tu opinión</h3>
 
-            <div className="flex items-center gap-2 mb-4">
-                {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                        key={star}
-                        type="button"
-                        onClick={() => setRating(star)}
-                        onMouseEnter={() => setHoverRating(star)}
-                        onMouseLeave={() => setHoverRating(0)}
-                        className="transition-transform hover:scale-110 focus:outline-none"
-                    >
-                        <Star
-                            size={28}
-                            className={`${star <= (hoverRating || rating)
-                                    ? "text-yellow-400 fill-yellow-400"
-                                    : "text-gray-600"
-                                } transition-colors`}
-                        />
-                    </button>
-                ))}
-                <span className="ml-2 text-sm text-gray-400">
-                    {rating > 0 ? (rating === 5 ? "¡Excelente!" : rating === 1 ? "Malo" : "") : "Seleccioná"}
-                </span>
-            </div>
+            <form onSubmit={handleSubmit}>
+                <div className="flex items-center gap-2 mb-4" role="group" aria-label="Calificación">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                            key={star}
+                            type="button"
+                            aria-label={`Calificar con ${star} estrella${star > 1 ? 's' : ''}`}
+                            aria-pressed={rating === star}
+                            onClick={() => setRating(star)}
+                            onMouseEnter={() => setHoverRating(star)}
+                            onMouseLeave={() => setHoverRating(0)}
+                            className="transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5D5CDE] rounded"
+                        >
+                            <Star
+                                size={28}
+                                className={`${star <= (hoverRating || rating)
+                                        ? "text-yellow-400 fill-yellow-400"
+                                        : "text-gray-600"
+                                    } transition-colors`}
+                            />
+                        </button>
+                    ))}
+                    <span className="ml-2 text-sm text-gray-400">
+                        {rating > 0 ? (rating === 5 ? "¡Excelente!" : rating === 1 ? "Malo" : "") : "Seleccioná"}
+                    </span>
+                </div>
 
-            <Textarea
-                placeholder="¿Qué te pareció el curso?"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                className="bg-black/30 border-white/10 text-white min-h-[100px] mb-4 focus:border-[#5D5CDE]"
-            />
+                <label htmlFor="review-comment" className="sr-only">Comentario sobre el curso</label>
+                <Textarea
+                    id="review-comment"
+                    placeholder="¿Qué te pareció el curso?"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    className="bg-black/30 border-white/10 text-white min-h-[100px] mb-4 focus:border-[#5D5CDE]"
+                />
 
-            <Button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="bg-[#5D5CDE] hover:bg-[#4b4ac0] text-white w-full sm:w-auto"
-            >
-                {loading ? <Loader2 className="animate-spin mr-2" /> : null}
-                Publicar Reseña
-            </Button>
+                <Button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-[#5D5CDE] hover:bg-[#4b4ac0] text-white w-full sm:w-auto"
+                >
+                    {loading ? <Loader2 className="animate-spin mr-2" /> : null}
+                    Publicar Reseña
+                </Button>
+            </form>
         </div>
     );
 }
