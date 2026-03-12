@@ -52,67 +52,61 @@ export function PricingClient({ initialBundles, footer }: PricingClientProps) {
     };
 
     return (
-        <div className="min-h-screen bg-[#0B0F19] text-white">
+        <div className="min-h-screen bg-background text-foreground">
             <Navbar />
 
             {/* Announcement Bar - Controlled by TopBanner for consistency, but if needed here, we'll make it cleaner */}
             {/* Removing the local announcement bar to avoid duplication once TopBanner is updated */}
 
             {/* Hero Section */}
-            <section className="relative overflow-hidden pt-40 md:pt-48 pb-12 md:pb-14">
-                <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
+            <section className="relative overflow-hidden pt-32 md:pt-40 pb-12 md:pb-14">
+                {/* Background glowing effects */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-[300px] bg-primary/20 blur-[100px] rounded-full pointer-events-none opacity-40 z-0" />
+
                 <Container className="relative z-10 text-center">
-                    <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 font-display tracking-tight">
-                        Evolucioná tu capital con el respaldo de expertos
+                    <div className="inline-block text-[10px] font-black tracking-widest uppercase bg-primary/10 text-primary px-3 py-1.5 rounded-full mb-4">
+                        Membresías VIP
+                    </div>
+                    <h1 className="text-4xl md:text-5xl lg:text-[56px] font-black text-foreground mb-6 tracking-tight leading-[1.1]">
+                        Evolucioná tu capital.
                     </h1>
-                    <p className="text-base md:text-lg leading-relaxed text-gray-400 max-w-2xl mx-auto mb-4">
-                        Tu hoja de ruta y acompañamiento diario en los mercados.
-                        Desde tus primeros pasos hasta operar como un profesional.
-                    </p>
-                    {/* Social Proof */}
-                    <p className="text-sm text-gray-500 mb-12">
-                        Sumate a los más de 1000 alumnos activos que ya están aprendiendo
+                    <p className="text-base md:text-xl font-medium leading-relaxed text-muted-foreground max-w-2xl mx-auto mb-10">
+                        Tu hoja de ruta y acompañamiento diario en los mercados institucionales.
                     </p>
 
-                    {/* Toggle with Enhanced Badge */}
-                    <div className="flex justify-center mt-8 mb-12">
-                        <div className="bg-[#1e2235] p-1.5 rounded-2xl flex items-center shadow-2xl border border-white/5 relative">
+                    {/* Saas Tab Switch for Pricing */}
+                    <div className="flex justify-center items-center">
+                        <div className="relative flex items-center p-1 bg-secondary/80 backdrop-blur-md rounded-full border border-border">
                             <button
                                 onClick={() => setBillingCycle("monthly")}
                                 className={cn(
-                                    "relative z-10 px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300",
-                                    billingCycle === "monthly"
-                                        ? "text-black"
-                                        : "text-gray-400 hover:text-white"
+                                    "relative w-32 py-2.5 text-sm font-bold rounded-full transition-all duration-300 z-10",
+                                    billingCycle === "monthly" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                                 )}
                             >
                                 Mensual
-                                {billingCycle === "monthly" && (
-                                    <div className="absolute inset-0 bg-white rounded-xl -z-10 animate-in fade-in zoom-in-95 duration-200" />
-                                )}
                             </button>
                             <button
                                 onClick={() => setBillingCycle("annual")}
                                 className={cn(
-                                    "relative z-10 px-8 py-3 rounded-xl text-sm font-bold transition-all duration-300 flex items-center gap-3",
-                                    billingCycle === "annual"
-                                        ? "text-black"
-                                        : "text-gray-400 hover:text-white"
+                                    "relative w-40 py-2.5 text-sm font-bold rounded-full transition-all duration-300 z-10 flex items-center justify-center gap-2",
+                                    billingCycle === "annual" ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
                                 )}
                             >
                                 Anual
                                 <span className={cn(
-                                    "text-[9px] md:text-[10px] font-black px-2 py-1 rounded-md whitespace-nowrap",
-                                    billingCycle === "annual"
-                                        ? "bg-emerald-500 text-white shadow-lg"
-                                        : "bg-white/10 text-gray-400"
-                                )}>
-                                    Ahorrá 25%
-                                </span>
-                                {billingCycle === "annual" && (
-                                    <div className="absolute inset-0 bg-white rounded-xl -z-10 animate-in fade-in zoom-in-95 duration-200" />
-                                )}
+                                    "text-[10px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm transition-colors",
+                                    billingCycle === "annual" ? "bg-white/20 text-white" : "bg-primary/20 text-primary"
+                                )}>-25%</span>
                             </button>
+
+                            {/* Animated Background Pill */}
+                            <div
+                                className={cn(
+                                    "absolute top-1 bottom-1 w-32 rounded-full bg-primary shadow-lg transition-transform duration-300 ease-out z-0",
+                                    billingCycle === "annual" ? "translate-x-32 w-40" : "translate-x-0"
+                                )}
+                            />
                         </div>
                     </div>
                 </Container>
@@ -132,16 +126,16 @@ export function PricingClient({ initialBundles, footer }: PricingClientProps) {
                     </div>
 
                     {/* Pricing Footer Info Centered matches Platzi */}
-                    <div className="mx-auto max-w-6xl mt-8 md:mt-12 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 px-4 md:px-6 py-6 text-sm text-gray-400 border-t border-white/5 pt-8 text-center">
+                    <div className="mx-auto max-w-6xl mt-8 md:mt-12 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 px-4 md:px-6 py-6 text-sm text-muted-foreground border-t border-border pt-8 text-center">
                         <div className="flex items-center gap-2 md:gap-3 opacity-80">
                             <span className="text-lg">🇦🇷</span>
-                            <span className="font-normal text-gray-300 whitespace-nowrap">Precios en pesos argentinos.</span>
+                            <span className="font-normal text-foreground/80 whitespace-nowrap">Precios en pesos argentinos.</span>
                         </div>
 
-                        <div className="h-[24px] w-[1px] bg-white/10 hidden md:block" />
+                        <div className="h-[24px] w-[1px] bg-border hidden md:block" />
 
                         <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">PAGA CON:</span>
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">PAGA CON:</span>
                             <div className="flex items-center gap-3">
                                 {/* Mercado Pago Chip */}
                                 <div className="bg-white/90 rounded px-1.5 h-6 flex items-center justify-center">

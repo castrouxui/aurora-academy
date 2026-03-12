@@ -1,42 +1,104 @@
-import { TrendingUp, Bitcoin, Wallet, PiggyBank, LineChart, Bot } from "lucide-react";
-import { Container } from "@/components/layout/Container";
+"use client";
+
+import { Container } from "../layout/Container";
+import Link from "next/link";
+import { ArrowRight, TrendingUp, Cpu, MonitorPlay, BarChart3, Binary } from "lucide-react";
+import { useInView } from "@/hooks/useInView";
+import { cn } from "@/lib/utils";
 
 const categories = [
-    { name: "Trading", count: "Programa Completo", icon: TrendingUp },
-    { name: "Finanzas Personales", count: "Curso Intensivo", icon: PiggyBank },
-    { name: "Fondos Comunes de Inversión", count: "Curso Especializado", icon: LineChart },
-    { name: "IA + Inversiones", count: "Masterclass", icon: Bot },
-    { name: "Cripto", count: "Próximamente", icon: Bitcoin, status: "coming_soon" },
-    { name: "Bonos", count: "Curso Especializado", icon: Wallet },
+    {
+        title: "Mentoriado Personalizado",
+        description: "Acompañamiento 1 a 1 para transformar tu trading.",
+        icon: TrendingUp,
+        href: "/mentoria",
+        count: "Cupos limitados",
+    },
+    {
+        title: "Trading Algorítmico",
+        description: "Automatiza y optimiza tus estrategias con IA.",
+        icon: Cpu,
+        href: "/cursos/algoritmico",
+        count: "2 Cursos",
+    },
+    {
+        title: "Análisis Técnico Avanzado",
+        description: "Perfecciona tus entradas y salidas en el mercado.",
+        icon: BarChart3,
+        href: "/cursos/analisis-tecnico",
+        count: "4 Cursos",
+    },
+    {
+        title: "Criptos & DeFi",
+        description: "Navega el ecosistema descentralizado con seguridad.",
+        icon: Binary,
+        href: "/cursos/crypto",
+        count: "3 Cursos",
+    },
+    {
+        title: "Live Sessions",
+        description: "Análisis en vivo de los mercados.",
+        icon: MonitorPlay,
+        href: "/cursos/live",
+        count: "Semanal",
+    },
 ];
 
 export function Categories() {
-    return (
-        <section id="categories" className="py-16">
-            <Container>
-                <h2 className="text-3xl font-bold text-center mb-8 md:mb-12 text-white">Categorías principales</h2>
+    const { ref, isInView } = useInView();
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {categories.map((cat, i) => (
-                        <div key={i} className="bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/10 transition-all duration-300 p-6 rounded-2xl flex items-center gap-4 cursor-pointer group hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/5">
-                            <div className="p-3 bg-white/5 rounded-xl text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                                <cat.icon size={28} />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-white text-base flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 group-hover:text-primary transition-colors">
-                                    {cat.name}
-                                    {cat.status === "coming_soon" && (
-                                        <span className="text-[10px] bg-white/10 text-gray-300 border border-white/10 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider w-fit">
-                                            Próximamente
-                                        </span>
-                                    )}
-                                </h3>
-                                <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
-                                    {cat.status === "coming_soon" ? "Disponible pronto" : cat.count}
-                                </p>
-                            </div>
-                        </div>
-                    ))}
+    return (
+        <section ref={ref} className="py-28 bg-background">
+            <Container>
+                {/* Header */}
+                <div className={cn("flex flex-col md:flex-row justify-between items-end gap-6 mb-16 fade-in-up", isInView && "visible")}>
+                    <div className="max-w-2xl">
+                        <span className="text-sm text-primary font-medium mb-3 block">
+                            Rutas de Aprendizaje
+                        </span>
+                        <h2 className="text-3xl md:text-4xl font-display font-medium leading-[1.15] tracking-normal text-foreground">
+                            Explora nuestras áreas de especialización técnica.
+                        </h2>
+                    </div>
+                    <Link
+                        href="/cursos"
+                        className="inline-flex items-center text-sm font-semibold text-foreground hover:text-primary transition-colors gap-1"
+                    >
+                        Ver todos los cursos
+                        <ArrowRight className="w-4 h-4" />
+                    </Link>
+                </div>
+
+                {/* Uniform 3-column Grid */}
+                <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 fade-in-up", isInView && "visible")} style={{ transitionDelay: "0.1s" }}>
+                    {categories.map((category) => {
+                        const Icon = category.icon;
+                        return (
+                            <Link
+                                key={category.title}
+                                href={category.href}
+                                className="group flex items-center gap-4 p-5 rounded-xl border border-border bg-card hover:border-primary/30 transition-colors"
+                            >
+                                {/* Icon */}
+                                <div className="shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                    <Icon className="w-6 h-6" />
+                                </div>
+
+                                {/* Text */}
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="text-base font-bold text-foreground mb-0.5 group-hover:text-primary transition-colors">
+                                        {category.title}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground truncate">
+                                        {category.description}
+                                    </p>
+                                </div>
+
+                                {/* Arrow */}
+                                <ArrowRight className="w-4 h-4 shrink-0 text-muted-foreground group-hover:text-primary transition-colors" />
+                            </Link>
+                        );
+                    })}
                 </div>
             </Container>
         </section>

@@ -29,7 +29,7 @@ export function PromotionalBanner() {
                 {/* CTA */}
                 <div className="shrink-0 w-full md:w-auto">
                     <Link href="/membresias">
-                        <Button className="w-full h-14 px-8 text-lg font-bold bg-white text-black hover:bg-gray-100 hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.3)] shiny-hover rounded-xl flex items-center justify-center gap-2 group-hover:gap-3">
+                        <Button className="w-full h-14 px-8 text-lg font-bold bg-white text-background hover:bg-gray-200 hover:scale-105 transition-all shadow-[0_0_30px_rgba(255,255,255,0.3)] shiny-hover rounded-xl flex items-center justify-center gap-2 group-hover:gap-3">
                             <Sparkles size={20} className="text-amber-500 fill-current animate-pulse" />
                             Obtener Membresía
                             <ArrowRight size={20} />

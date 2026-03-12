@@ -2,170 +2,112 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star, Video, CheckCircle, ImageOff } from 'lucide-react';
 import { cn, getYouTubeId } from '@/lib/utils';
 import { useState, useEffect } from 'react';
+import { MoveRight } from 'lucide-react';
 
 interface CourseProps {
     id: string;
     title: string;
-    instructor: string;
-    rating: number;
-    reviews: string;
     price: string;
-    oldPrice: string;
     image: string;
     tag: string;
     basePath?: string;
-    videoUrl?: string; // New prop for video URL
+    videoUrl?: string;
     rawPrice?: number;
-    discountPercentage?: number;
     type?: string;
-    showDynamicStars?: boolean;
 }
 
 export function CourseCard({ course, isOwned = false }: { course: CourseProps, isOwned?: boolean }) {
     const href = course.type === 'bundle' ? `/bundles/${course.id}` : (course.basePath ? `${course.basePath}/${course.id}` : `/cursos/${course.id}`);
 
-    // Determine Logic for Image
     const initialDesc = course.image;
-
     const [displayImage, setDisplayImage] = useState<string | null>(initialDesc);
+    const [ytQuality, setYtQuality] = useState<'maxresdefault' | 'hqdefault'>('maxresdefault');
     const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
         setDisplayImage(course.image);
+        setYtQuality('maxresdefault');
         setHasError(false);
     }, [course.image]);
 
-    /* 
-       Priority:
-       1. Custom Image (if uploaded and not placeholder)
-       2. YouTube Thumbnail (hqdefault for safety)
-       3. Placeholder
-    */
     const isCustomImage = displayImage && displayImage !== "/course-placeholder.jpg";
     const youtubeId = course.videoUrl ? getYouTubeId(course.videoUrl) : null;
     const isFree = course.rawPrice === 0;
 
     let finalImageToRender = displayImage;
 
-    // Fallback logic for initial render if no custom image
     if (!isCustomImage && youtubeId && !hasError) {
-        finalImageToRender = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+        finalImageToRender = `https://img.youtube.com/vi/${youtubeId}/${ytQuality}.jpg`;
     }
 
     return (
-        <Link href={href} className={cn("block h-full group", isOwned && "pointer-events-none")}>
+        <Link href={href} className={cn("block group h-full", isOwned && "pointer-events-none")}>
             <div className={cn(
-                "group h-full flex flex-col bg-white/5 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/10 backdrop-blur-sm",
-                !isOwned && "hover:-translate-y-2 hover:border-white/20",
-                isOwned && "opacity-80 grayscale-[0.5]"
+                "group h-full flex flex-col overflow-hidden bento-card relative z-10",
+                isOwned && "opacity-60 grayscale shadow-none border-border hover:translate-y-0"
             )}>
-                <div className="p-6 flex flex-col flex-1 h-full relative">
-                    {/* OWNED BADGE placed inside content since image is gone */}
-                    {isOwned && (
-                        <div className="absolute top-4 right-4 z-20">
-                            <span className="bg-emerald-500/20 text-emerald-500 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20 flex items-center gap-1">
-                                <CheckCircle size={12} />
-                                Adquirido
-                            </span>
-                        </div>
-                    )}
+                {/* Image Container with inner shadow/tech feel */}
+                <div className="relative aspect-[16/10] w-full bg-muted overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent z-10" />
+                    <Image
+                        src={finalImageToRender || "/course-placeholder.jpg"}
+                        alt={course.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        onError={() => {
+                            if (ytQuality === 'maxresdefault') {
+                                setYtQuality('hqdefault');
+                            } else {
+                                setHasError(true);
+                            }
+                        }}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
 
-                    {/* FREE BADGE */}
-                    {!isOwned && isFree && (
-                        <div className="absolute top-4 right-4 z-20">
-                            <span className="bg-[#5D5CDE] text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-lg shadow-[#5D5CDE]/40 animate-pulse">
-                                Gratis por tiempo limitado
-                            </span>
-                        </div>
-                    )}
-
-                    {/* IMAGE CONTAINER */}
-                    <div className="relative aspect-video w-full mb-4 rounded-2xl overflow-hidden bg-black/50 shadow-inner group-hover:shadow-[#5D5CDE]/20 transition-all duration-500">
-                        <Image
-                            src={finalImageToRender || "/course-placeholder.jpg"}
-                            alt={course.title}
-                            fill
-                            className={cn(
-                                "object-cover transition-transform duration-700 ease-out group-hover:scale-110",
-                                !isCustomImage && "opacity-80"
-                            )}
-                            onError={() => setHasError(true)}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-
-                        {/* OVERLAY GRADIENT */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
-                    </div>
-
-                    <div className="flex items-center gap-2 mb-2">
-                        <div className="bg-[#5D5CDE]/10 text-[#5D5CDE] text-sm font-bold px-2 py-1 rounded uppercase tracking-wide border border-[#5D5CDE]/20">
+                    {/* Floating Tech Badges over image */}
+                    <div className="absolute top-4 left-4 z-20 flex gap-2">
+                        <span className="text-[10px] font-black uppercase tracking-widest bg-primary text-primary-foreground px-2.5 py-1.5 rounded-md shadow-lg">
                             {course.tag}
-                        </div>
-
-                        {/* Course Type Badge */}
+                        </span>
                         {course.type && course.type !== 'bundle' && (
-                            <div className={cn(
-                                "text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide border ml-2",
-                                course.type === 'Mentoría' ? "bg-amber-500/10 text-amber-500 border-amber-500/20" :
-                                    course.type === 'Micro Curso' ? "bg-cyan-500/10 text-cyan-500 border-cyan-500/20" :
-                                        "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                            )}>
+                            <span className="text-[10px] font-bold uppercase tracking-widest bg-background/80 text-foreground backdrop-blur-md px-2 py-1.5 rounded-md border border-border">
                                 {course.type}
-                            </div>
-                        )}
-                        <div className="flex items-center gap-1 text-yellow-400 ml-auto mr-0">
-                            {course.showDynamicStars && course.rating > 0 && (
-                                <span className="text-yellow-400 text-sm font-bold">{course.rating.toFixed(1)}</span>
-                            )}
-                            <Star size={14} fill="currentColor" className="stroke-none" />
-                            <span className="text-gray-400 text-sm font-medium ml-1">
-                                {course.showDynamicStars ? `(${course.reviews})` : course.reviews}
                             </span>
-                        </div>
+                        )}
                     </div>
 
-                    <h3 className="text-white font-bold text-xl leading-tight line-clamp-2 mb-3 flex-1 group-hover:text-[#5D5CDE] transition-colors">
+                    {isOwned && (
+                        <div className="absolute inset-0 bg-background/80 flex items-center justify-center backdrop-blur-sm z-30">
+                            <span className="text-foreground font-bold text-sm tracking-widest uppercase border border-border px-4 py-2 rounded-md">Tu Curso</span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Tech Content */}
+                <div className="p-5 md:p-6 flex flex-col flex-1 h-full relative z-20 -mt-6 bg-card border-t border-border rounded-t-xl transition-colors">
+                    <h3 className="text-foreground font-black text-[20px] md:text-[22px] leading-tight mb-3 flex-1 group-hover:text-primary transition-colors pr-4 relative">
                         {course.title}
                     </h3>
 
-                    <div className="w-12 h-1 bg-white/10 rounded-full mb-5 group-hover:bg-[#5D5CDE] transition-colors"></div>
-
-                    <div className="flex items-center justify-between mt-auto">
+                    {/* Footer: Price tech block */}
+                    <div className="mt-auto pt-6 flex items-center justify-between border-t border-border/50">
                         <div className="flex flex-col">
-                            <span className="text-sm text-gray-400 font-medium uppercase tracking-wider mb-1">Inversión</span>
                             {isFree ? (
-                                <div className="flex items-center gap-2">
-                                    <span className="text-gray-500 line-through text-sm">$40.000</span>
-                                    <span className="text-[#5D5CDE] font-black text-xl">GRATIS</span>
-                                </div>
+                                <span className="text-emerald-400 font-black text-xl uppercase tracking-wide">Gratis</span>
                             ) : (
-                                <div className="flex flex-col">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-white font-black text-xl">{course.price}</span>
-                                        {course.discountPercentage && course.discountPercentage > 0 && (
-                                            <span className="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded border border-emerald-400/20">
-                                                {course.discountPercentage}% OFF
-                                            </span>
-                                        )}
-                                    </div>
-                                    {course.oldPrice && (
-                                        <span className="text-gray-500 line-through text-xs font-medium">{course.oldPrice}</span>
-                                    )}
-                                </div>
+                                <span className="text-foreground font-black text-xl">{course.price}</span>
                             )}
                         </div>
-                        <div className={cn(
-                            "h-10 w-10 rounded-full flex items-center justify-center text-white transition-all shadow-lg",
-                            isOwned ? "bg-emerald-500/20 text-emerald-500" : "bg-white/10 group-hover:bg-[#5D5CDE] group-hover:scale-110"
-                        )}>
-                            {isOwned ? <CheckCircle size={18} /> : <Video size={18} />}
+
+                        <div className="flex items-center gap-2 text-sm font-bold text-primary group-hover:text-primary/80 transition-colors">
+                            <span>Ver Curso</span>
+                            <MoveRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </div>
                     </div>
-                </div >
-            </div >
-        </Link >
+                </div>
+            </div>
+        </Link>
     );
 }

@@ -5,7 +5,6 @@ import { getCourseImage } from "@/lib/course-constants";
 import { FilterModal, type FilterState } from "@/components/cursos/FilterModal";
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { Container } from "@/components/layout/Container";
-import { getMockCourseReviews } from "@/lib/course-reviews";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -70,26 +69,17 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             oldPriceFormatted = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice);
                         }
 
-                        // Calculate dynamic reviews
-                        const { mockTotalRatings, mockAverageRating } = getMockCourseReviews(course.id);
-
                         return {
                             id: course.id,
                             title: course.title,
-                            instructor: "Aurora Academy",
-                            rating: mockAverageRating,
-                            reviews: mockTotalRatings.toString(),
-                            showDynamicStars: true,
                             price: new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(finalPrice),
-                            oldPrice: oldPriceFormatted,
-                            discountPercentage: discount > 0 ? discount : null,
                             image: finalImage,
                             tag: course.category || "General",
                             level: course.level || "Todos los niveles",
                             rawPrice: finalPrice,
                             createdAt: course.createdAt,
                             videoUrl: firstLessonWithVideo?.videoUrl || null,
-                            type: typeLabel // Use mapped label
+                            type: typeLabel
                         };
                     });
 
@@ -138,7 +128,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
             <Container>
                 {showTitle && (
                     <div className="mb-12">
-                        <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-8">Cursos</h1>
+                        <h1 className="text-4xl md:text-5xl font-bold text-foreground text-center mb-8">Cursos</h1>
                     </div>
                 )}
 
@@ -156,8 +146,8 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             }}
                             className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all border ${(tab === 'Todos' && (!activeFilters.types || activeFilters.types.length === 0)) ||
                                 (activeFilters.types?.includes(tab))
-                                ? 'bg-[#5D5CDE] text-white border-[#5D5CDE] shadow-lg shadow-[#5D5CDE]/20'
-                                : 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10 hover:text-white'
+                                ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20'
+                                : 'bg-muted/50 text-muted-foreground border-border hover:bg-muted hover:text-foreground'
                                 }`}
                         >
                             {tab}
@@ -169,12 +159,12 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                 <div className="flex flex-col md:flex-row gap-4 mb-8">
                     <button
                         onClick={() => setIsFilterOpen(true)}
-                        className="flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors backdrop-blur-sm"
+                        className="flex items-center gap-2 px-6 py-3 rounded-full bg-muted/50 border border-border text-foreground hover:bg-muted transition-colors"
                     >
                         <SlidersHorizontal size={20} />
                         <span className="font-bold">Filtros</span>
                         {(activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)) > 0 && (
-                            <span className="ml-2 bg-[#5D5CDE] text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">
+                            <span className="ml-2 bg-primary text-primary-foreground text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">
                                 {activeFilters.categories.length + activeFilters.levels.length + (activeFilters.price ? 1 : 0)}
                             </span>
                         )}
@@ -186,30 +176,30 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             placeholder="Buscar curso, instructor o categoría..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full h-[50px] rounded-full bg-white/5 border border-white/10 pl-12 pr-6 text-white placeholder-gray-400 focus:outline-none focus:border-[#5D5CDE]/50 focus:ring-1 focus:ring-[#5D5CDE]/50 transition-all backdrop-blur-sm"
+                            className="w-full h-[50px] rounded-full bg-muted/50 border border-border pl-12 pr-6 text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all"
                         />
-                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground" size={20} />
                     </div>
 
                     <div className="relative group min-w-[200px] h-[50px]">
                         <select
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value)}
-                            className="appearance-none w-full h-full px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white cursor-pointer hover:bg-white/10 transition-colors pl-6 pr-12 focus:outline-none backdrop-blur-sm font-medium"
+                            className="appearance-none w-full h-full px-6 py-3 rounded-full bg-muted/50 border border-border text-foreground cursor-pointer hover:bg-muted transition-colors pl-6 pr-12 focus:outline-none font-medium"
                         >
-                            <option value="popular" className="bg-[#1F2937]">Más Populares</option>
-                            <option value="newest" className="bg-[#1F2937]">Más Recientes</option>
-                            <option value="price-asc" className="bg-[#1F2937]">Menor Precio</option>
-                            <option value="price-desc" className="bg-[#1F2937]">Mayor Precio</option>
+                            <option value="popular" className="bg-card">Más Populares</option>
+                            <option value="newest" className="bg-card">Más Recientes</option>
+                            <option value="price-asc" className="bg-card">Menor Precio</option>
+                            <option value="price-desc" className="bg-card">Mayor Precio</option>
                         </select>
-                        <ChevronDown size={16} className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                        <ChevronDown size={16} className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                     </div>
                 </div>
 
                 {/* Tags and Results Count */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 text-sm">
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="text-gray-400">Sugerencias:</span>
+                        <span className="text-muted-foreground">Sugerencias:</span>
                         {['análisis técnico', 'trading', 'finanzas', 'crypto', 'python'].map((tag) => (
                             <button
                                 key={tag}
@@ -220,8 +210,8 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             </button>
                         ))}
                     </div>
-                    <div className="text-gray-400">
-                        <span className="font-bold text-white">{filteredCourses.length}</span> resultados encontrados
+                    <div className="text-muted-foreground">
+                        <span className="font-bold text-foreground">{filteredCourses.length}</span> resultados encontrados
                     </div>
                 </div>
 
@@ -237,7 +227,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                                 <CourseCard key={course.id} course={{ ...course, basePath }} />
                             ))
                         ) : (
-                            <div className="col-span-full text-center py-12 text-gray-500">
+                            <div className="col-span-full text-center py-12 text-muted-foreground">
                                 No se encontraron cursos publicados.
                             </div>
                         )}

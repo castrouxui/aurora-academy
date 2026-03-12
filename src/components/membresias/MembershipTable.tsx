@@ -4,8 +4,6 @@ import React, { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { PLANS } from "@/constants/pricing";
-import { PricingCheckmark } from "./PricingCheckmark";
-import { Lock } from "lucide-react";
 
 interface MembershipTableProps {
     bundles: any[];
@@ -13,332 +11,271 @@ interface MembershipTableProps {
     onPurchase: (title: string, price: string, courseId?: string, bundleId?: string, isAnnual?: boolean) => void;
 }
 
-const PERSONA_DATA = [
-    {
-        label: "Inicial",
-        description: "Ideal para dar tus primeros pasos. El escalón de entrada para dominar los conceptos base.",
-        authorityBadge: false,
-        doubtRemoval: undefined
-    },
-    {
-        label: "Elite",
-        description: "Para traders que buscan consistencia e IA. Operá activamente con actualización constante.",
-        authorityBadge: false,
-        doubtRemoval: undefined
-    },
-    {
-        label: "Portfolio",
-        description: "La experiencia definitiva para profesionales. Networking de alto nivel y visión macro.",
-        authorityBadge: true,
-        doubtRemoval: "La mejor inversión para tu carrera profesional"
-    }
+// Tier metadata per plan index
+const TIER_META = [
+    { label: "Inicial",   icon: "◆" },
+    { label: "Elite",     icon: "◈" },
+    { label: "Pro",       icon: "◉" },
 ];
 
+function CheckIcon({ recommended }: { recommended?: boolean }) {
+    return (
+        <svg
+            className={cn("w-4 h-4 flex-shrink-0 mt-0.5", recommended ? "text-primary" : "text-white/40")}
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+        >
+            <path
+                d="M13.25 4.75L6 12L2.75 8.75"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+    );
+}
+
+function XIcon() {
+    return (
+        <svg
+            className="w-4 h-4 flex-shrink-0 mt-0.5 text-white/20"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+        >
+            <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+    );
+}
+
+function formatPrice(n: number) {
+    return new Intl.NumberFormat("es-AR", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(n);
+}
+
 export function MembershipTable({ bundles, billingCycle, onPurchase }: MembershipTableProps) {
-
-    // Process and sort items to display
     const displayItems = useMemo(() => {
-        const sourceData = bundles.length > 0 ? bundles : PLANS.map(p => ({
-            ...p,
-            id: undefined,
-            // Simulate bundle structure for simpler mapping if needed, or handle differently
-            price: p.price.replace(/[^0-9]/g, '') // Normalize static price
-        }));
-
-        // Sort by price (assumption: price is numeric or numeric-string)
-        const sorted = [...sourceData].sort((a, b) => {
-            const priceA = parseFloat(a.price);
-            const priceB = parseFloat(b.price);
-            return priceA - priceB;
+        const sourceData = PLANS.map((p, idx) => {
+            const matchedBundle = bundles.find((b: any) =>
+                b.title.toLowerCase().includes(p.title.toLowerCase().split(" ")[0]) ||
+                (idx === 1 && b.title.toLowerCase().includes("elite")) ||
+                (idx === 2 && b.title.toLowerCase().includes("portfolio"))
+            );
+            return { ...p, id: matchedBundle?.id };
         });
 
-        return sorted.map((item, index, arr) => {
-            // Determine Plan Identity
-            const staticPlan = PLANS[index]; // Fallback to static meta-data by index
-            const isPortfolio = item.title.includes("Portfolio") || index === 2;
-            const isElite = item.title.includes("Elite") || index === 1;
-
-            // --- Price Logic ---
+        return sourceData.map((item, index, arr) => {
             const basePrice = parseFloat(item.price);
+
             let finalPrice = basePrice;
-            let periodicity = "mes";
-            let installmentsText = undefined;
-            let savingsPct = undefined;
-            let totalPriceDisplay = undefined;
+            let monthlyDisplay = basePrice;
+            let installmentsText: string | undefined;
+            let annualTotal: string | undefined;
 
             if (billingCycle === "annual") {
-                finalPrice = basePrice * 9; // 12 months for price of 9
-                periodicity = "año";
-
-                // Installments: 6 cuotas sin interés
+                finalPrice = basePrice * 9;
+                monthlyDisplay = Math.round(finalPrice / 12);
                 const installmentAmount = finalPrice / 6;
-                const formattedInstallment = new Intl.NumberFormat("es-AR", {
+                installmentsText = `6 cuotas sin interés de ${new Intl.NumberFormat("es-AR", {
                     style: "currency",
                     currency: "ARS",
-                    maximumFractionDigits: 0
-                }).format(installmentAmount);
-
-                installmentsText = `6 cuotas sin interés de ${formattedInstallment}`;
-
-                // Savings calc
-                const annualFull = basePrice * 12;
-                savingsPct = Math.round(((annualFull - finalPrice) / annualFull) * 100);
-
-                totalPriceDisplay = new Intl.NumberFormat("es-AR", {
+                    maximumFractionDigits: 0,
+                }).format(installmentAmount)}`;
+                annualTotal = new Intl.NumberFormat("es-AR", {
                     style: "currency",
                     currency: "ARS",
-                    maximumFractionDigits: 0
-                }).format(finalPrice);
-
-            } else {
-                totalPriceDisplay = new Intl.NumberFormat("es-AR", {
-                    style: "currency",
-                    currency: "ARS",
-                    maximumFractionDigits: 0
+                    maximumFractionDigits: 0,
                 }).format(finalPrice);
             }
 
-            // --- Features Logic ---
-            let displayFeatures: (string | React.ReactNode)[] = [];
-
-            // 1. HEADER: Value Bridge (Todo lo del Plan Anterior) - ALWAYS FIRST
+            let displayFeatures: string[] = [];
             if (index > 0) {
-                const prevBundle = arr[index - 1];
-                // Forced header as the very first item
-                displayFeatures.push(`Todo lo del Plan ${prevBundle.title} y:`);
+                displayFeatures.push(`__INCLUDE__${arr[index - 1].title}`);
             }
-
-            // 2. HIGHLIGHT: Fixed Extras (Marketing) - "1 curso nuevo..."
-            if (index >= 1) { // Elite & Portfolio
-                displayFeatures.push(
-                    <span key={`benefit-15d-${index}`} className="inline-flex items-center gap-2 font-bold text-emerald-950 bg-emerald-400 px-3 py-1 rounded-full text-[11px] shadow-[0_2px_10px_rgba(52,211,153,0.3)]">
-                        <span>🔥</span> 1 curso nuevo cada 15 días
-                    </span>
-                );
-            }
-
-            // 3. CONTENT: Courses & Items
-            if (bundles.length > 0) {
-                const currentCourseTitles = item.courses.map((c: any) => c.title);
-
-                if (index > 0) {
-                    const prevBundle = arr[index - 1];
-                    const prevCourseTitles = prevBundle.courses.map((c: any) => c.title);
-
-                    // Filter out duplicate courses (show only what's NEW)
-                    const newCourses = currentCourseTitles.filter((t: string) => !prevCourseTitles.includes(t));
-                    displayFeatures.push(...newCourses);
-                } else {
-                    displayFeatures.push(...currentCourseTitles);
-                }
-
-                // Dynamic Items
-                if (item.items && item.items.length > 0) {
-                    const dynItems = item.items.map((i: any) => {
-                        let name = i.name;
-                        if ((name.toLowerCase().includes("canal") || name.toLowerCase().includes("telegram")) && !name.toLowerCase().startsWith("acceso a")) {
-                            return `Acceso a ${name}`;
-                        }
-                        return name;
-                    });
-
-                    const existing = displayFeatures.filter(f => typeof f === 'string') as string[];
-                    const newDyns = dynItems.filter((di: string) => !existing.includes(di) && !di.toLowerCase().includes("comunidad de inversores"));
-                    displayFeatures.push(...newDyns);
-                }
-            } else {
-                // Static Fallback
-                displayFeatures.push(...(staticPlan?.features || []));
-            }
+            displayFeatures.push(...item.features);
 
             return {
                 ...item,
+                basePrice,
                 finalPrice,
-                periodicity,
+                monthlyDisplay,
                 installmentsText,
-                features: displayFeatures,
-                excludedFeatures: staticPlan?.excludedFeatures || [],
-                description: PERSONA_DATA[index]?.description || item.description,
-                formattedTotal: totalPriceDisplay,
-                savingsPct,
-                isRecommended: isPortfolio, // Portfolio is Hero
-                // Identifying marks
-                isPortfolio,
-                index
+                annualTotal,
+                displayFeatures,
             };
         });
     }, [bundles, billingCycle]);
 
-
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch max-w-7xl mx-auto scoll-mt-32">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start max-w-[1060px] mx-auto">
             {displayItems.map((plan, idx) => {
-                const isPortfolio = plan.isPortfolio;
+                const { isRecommended } = plan;
+                const tier = TIER_META[idx] ?? TIER_META[0];
 
                 return (
                     <div
                         key={idx}
                         className={cn(
-                            "relative flex flex-col h-full rounded-3xl p-8 transition-all duration-300",
-                            // Removed order-first/last to respect natural sorted order (Inicial -> Elite -> Portfolio)
-                            isPortfolio
-                                ? "bg-[#0F1115] border-[1.5px] border-[#5D5CDE]/50 shadow-2xl shadow-indigo-500/10 z-10 pb-10"
-                                : "bg-[#0A0A0A]/50 border border-white/5 hover:border-white/10 opacity-90 hover:opacity-100 pb-10"
+                            "relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300",
+                            isRecommended
+                                ? "border border-primary/40 shadow-2xl shadow-primary/10 ring-1 ring-primary/15 md:-mt-4 md:mb-4"
+                                : "border border-white/[0.08] hover:border-white/[0.14]"
                         )}
                     >
-                        {/* WRAPPER FOR TOP CONTENT TO PUSH CTA DOWN */}
-                        <div className="flex-grow flex flex-col">
-
-                            {/* BADGE for Portfolio */}
-                            {isPortfolio && (
-                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-full flex justify-center z-20">
-                                    <div className="backdrop-blur-md bg-white/80 border border-white/30 text-background px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-xl whitespace-nowrap">
-                                        El más elegido / Sugerencia de Fran Castro
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Header */}
-                            <div className="mb-6">
-                                <h3 className={cn(
-                                    "font-bold font-display tracking-tight mb-2 min-h-[32px] flex items-center",
-                                    isPortfolio ? "text-2xl text-white" : "text-xl text-gray-200"
+                        {/* ── CARD HEADER ────────────────────────────────────── */}
+                        <div className={cn(
+                            "px-6 pt-6 pb-5 border-b",
+                            isRecommended
+                                ? "bg-gradient-to-br from-primary/[0.18] via-primary/[0.08] to-transparent border-primary/20"
+                                : "bg-white/[0.025] border-white/[0.06]"
+                        )}>
+                            {/* Tier badge row */}
+                            <div className="flex items-center justify-between mb-3">
+                                <span className={cn(
+                                    "inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.18em] px-2.5 py-1 rounded-md",
+                                    isRecommended
+                                        ? "bg-primary/25 text-primary border border-primary/30"
+                                        : "bg-white/[0.06] text-white/40 border border-white/[0.08]"
                                 )}>
-                                    {plan.title}
-                                </h3>
-                                <p className="text-sm text-gray-400 font-light leading-relaxed min-h-[44px]">
-                                    {plan.description}
-                                </p>
+                                    <span className="text-[11px]">{tier.icon}</span>
+                                    {tier.label}
+                                </span>
+
+                                {isRecommended && (
+                                    <span className="text-[10px] font-bold text-amber-400/90 flex items-center gap-1">
+                                        👑 Más elegido
+                                    </span>
+                                )}
                             </div>
 
-                            {/* Price */}
-                            <div className="mb-8 min-h-[84px] flex flex-col justify-end">
-                                <div className="flex items-center gap-2">
-                                    <div className="flex items-baseline gap-1">
-                                        <span className="text-lg font-medium text-gray-400">$</span>
-                                        <span className="font-display font-bold tracking-tighter text-white text-4xl">
-                                            {new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 }).format(plan.finalPrice / (billingCycle === 'annual' ? 365 : 1))}
-                                        </span>
-                                        <span className="text-sm font-medium text-gray-500">{billingCycle === 'annual' ? '/día' : '/mes'}</span>
-                                    </div>
-                                    {billingCycle === 'annual' && plan.savingsPct && (
-                                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-bold text-emerald-400">
-                                            -{plan.savingsPct}%
-                                        </span>
-                                    )}
+                            {/* Plan name */}
+                            <h3 className={cn(
+                                "text-[21px] font-black tracking-tight leading-tight",
+                                isRecommended ? "text-white" : "text-white/80"
+                            )}>
+                                {plan.title}
+                            </h3>
+
+                            {/* Description */}
+                            <p className="text-[13px] text-white/45 leading-relaxed mt-1.5 min-h-[36px]">
+                                {plan.description}
+                            </p>
+                        </div>
+
+                        {/* ── CARD BODY ──────────────────────────────────────── */}
+                        <div className={cn(
+                            "flex flex-col flex-1 px-6 pt-5 pb-6",
+                            isRecommended ? "bg-[#0e0e12]" : "bg-[#0c0c0f]"
+                        )}>
+
+                            {/* Price block */}
+                            <div className="mb-5">
+                                {/* Crossed-out original price */}
+                                <p className="text-[12px] text-white/30 line-through font-medium mb-0.5">
+                                    ${formatPrice(plan.basePrice)}/mes
+                                </p>
+
+                                {/* Main price row */}
+                                <div className="flex items-baseline gap-1 leading-none">
+                                    <span className="text-base font-bold text-white/40">$</span>
+                                    <span className={cn(
+                                        "text-[42px] font-black tracking-tighter leading-none",
+                                        isRecommended ? "text-white" : "text-white/80"
+                                    )}>
+                                        {formatPrice(plan.monthlyDisplay)}
+                                    </span>
+                                    <span className="text-[13px] font-medium text-white/35 ml-0.5 self-end mb-1.5">
+                                        {billingCycle === "annual" ? "/mes equiv." : "/mes"}
+                                    </span>
                                 </div>
 
-                                {billingCycle === 'annual' && (
-                                    <div className="mt-2 space-y-0.5">
+                                {/* Annual context */}
+                                {billingCycle === "annual" && plan.installmentsText && (
+                                    <div className="mt-2.5 space-y-0.5">
                                         <p className={cn(
-                                            "text-xs font-bold",
-                                            isPortfolio ? "text-emerald-400" : "text-emerald-500/80"
+                                            "text-[11.5px] font-bold leading-snug",
+                                            isRecommended ? "text-primary" : "text-primary/70"
                                         )}>
                                             {plan.installmentsText}
                                         </p>
-                                        <p className="text-[11px] text-gray-400 font-medium">
-                                            Se factura {plan.formattedTotal} al año
-                                        </p>
-                                    </div>
-                                )}
-
-                                {billingCycle === 'monthly' && (
-                                    <div className="mt-2">
-                                        <p className="text-[11px] text-gray-400 font-medium h-[32px] flex items-center">
-                                            Facturación mensual recurrente
+                                        <p className="text-[11px] text-white/35">
+                                            Total anual: {plan.annualTotal} · ahorrás 25%
                                         </p>
                                     </div>
                                 )}
                             </div>
 
-                            {/* Features List */}
-                            <div className="flex flex-col justify-start">
-                                {plan.features.map((feature: any, i: number) => {
-                                    // 1. Section Title (Bridge)
-                                    if (typeof feature === 'string' && feature.startsWith("Todo lo del Plan")) {
-                                        // Specific text replacement for Portfolio
-                                        const displayParams = isPortfolio
-                                            ? "Todo lo del Plan Elite y:"
-                                            : feature;
+                            {/* CTA */}
+                            <Button
+                                onClick={() => onPurchase(
+                                    plan.title,
+                                    plan.finalPrice.toString(),
+                                    undefined,
+                                    plan.id,
+                                    billingCycle === "annual"
+                                )}
+                                className={cn(
+                                    "w-full h-11 rounded-xl text-[13.5px] font-bold tracking-wide transition-all duration-200 mb-5",
+                                    isRecommended
+                                        ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
+                                        : "bg-transparent border border-white/[0.12] text-white/70 hover:border-white/25 hover:bg-white/[0.04]"
+                                )}
+                            >
+                                {isRecommended ? "Comenzar ahora" : "Elegir este plan"}
+                            </Button>
 
+                            {/* Dashed divider + "Incluye" label */}
+                            <div className="border-t border-dashed border-white/[0.08] mb-4" />
+                            <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.18em] mb-3.5">
+                                Incluye:
+                            </p>
+
+                            {/* Feature list */}
+                            <div className="flex flex-col gap-2.5 flex-1">
+                                {plan.displayFeatures.map((feature: string, i: number) => {
+                                    if (feature.startsWith("__INCLUDE__")) {
+                                        const prevName = feature.replace("__INCLUDE__", "");
                                         return (
-                                            <div key={i} className="mt-2 mb-3">
-                                                <p className={cn(
-                                                    "text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-relaxed",
-                                                    isPortfolio ? "max-w-[90%]" : ""
-                                                )}>
-                                                    {displayParams}
-                                                </p>
-                                            </div>
+                                            <p
+                                                key={i}
+                                                className="text-[10px] font-bold text-white/25 uppercase tracking-[0.16em] pt-3 mt-1 border-t border-white/[0.05]"
+                                            >
+                                                Todo lo de {prevName}, más:
+                                            </p>
                                         );
                                     }
-
-                                    // 2. React Node (Pill)
-                                    if (typeof feature !== 'string' || React.isValidElement(feature)) {
-                                        return (
-                                            <div key={i} className="mb-3 last:mb-0">
-                                                {/* Ensure pill text is always black if it's the specific green pill, though style is likely passed in object. 
-                                                    We assume component passed in `feature` has correct styles, but we verified it earlier. */}
-                                                {feature}
-                                            </div>
-                                        );
-                                    }
-
-                                    // 3. Standard Feature
                                     return (
-                                        <div key={i} className={cn(
-                                            "flex items-start gap-3 group last:mb-0",
-                                            "mb-3" // Consistent tight spacing for all plans
-                                        )}>
-                                            <div className="mt-0.5 shrink-0">
-                                                <PricingCheckmark />
-                                            </div>
-                                            <div className="text-sm font-medium text-gray-400 group-hover:text-gray-300 transition-colors leading-relaxed">
-                                                {feature}
-                                            </div>
+                                        <div key={i} className="flex items-start gap-2.5">
+                                            <CheckIcon recommended={isRecommended} />
+                                            <span className="text-[13px] text-white/65 leading-snug">{feature}</span>
                                         </div>
                                     );
                                 })}
 
                                 {plan.excludedFeatures && plan.excludedFeatures.length > 0 && (
-                                    <div className="mt-4 space-y-3 opacity-40 hover:opacity-100 transition-opacity duration-300">
-                                        {plan.excludedFeatures.map((feature: any, i: number) => (
-                                            <div key={`ex-${i}`} className="flex items-start gap-3 text-gray-500">
-                                                <div className="mt-0.5 shrink-0">
-                                                    <Lock className="w-4 h-4" strokeWidth={1.5} />
-                                                </div>
-                                                <div className="text-sm font-medium leading-relaxed line-through decoration-white/20">
+                                    <>
+                                        <div className="border-t border-white/[0.05] mt-1 pt-3" />
+                                        {plan.excludedFeatures.map((feature: string, i: number) => (
+                                            <div key={`x-${i}`} className="flex items-start gap-2.5">
+                                                <XIcon />
+                                                <span className="text-[13px] text-white/25 leading-snug line-through">
                                                     {feature}
-                                                </div>
+                                                </span>
                                             </div>
                                         ))}
-                                    </div>
+                                    </>
                                 )}
                             </div>
+
+                            {/* Guarantee footnote */}
+                            <p className="text-center text-[11px] text-white/25 font-medium mt-6 pt-4 border-t border-white/[0.05]">
+                                7 días de garantía · Cancelá cuando quieras
+                            </p>
                         </div>
-
-                        {/* CTA Button & Guarantee - ALWAYS AT BOTTOM */}
-                        <div className="mt-auto pt-8">
-                            <Button
-                                onClick={() => onPurchase(plan.title, plan.finalPrice.toString(), undefined, plan.id, billingCycle === 'annual')}
-                                className={cn(
-                                    "w-full h-12 rounded-xl text-sm font-bold tracking-wide transition-all duration-300",
-                                    isPortfolio
-                                        ? "bg-white text-background hover:bg-gray-200 shadow-[0_4px_20px_-5px_rgba(255,255,255,0.2)]"
-                                        : "bg-transparent border border-white/20 text-white hover:bg-white/5 active:scale-95"
-                                )}
-                            >
-                                {isPortfolio ? "Empezar Ahora" : "Elegir plan"}
-                            </Button>
-
-                            <div className="mt-3 flex items-start gap-2 opacity-80 min-h-[32px]">
-                                <span className="text-sm mt-0.5">🛡️</span>
-                                <p className="text-[10px] leading-snug text-gray-400 font-medium text-left">
-                                    <strong className="text-gray-300">Garantía de 7 días:</strong> Probá la academia sin riesgo. Si no cumple tus expectativas, te devolvemos el 100%.
-                                </p>
-                            </div>
-                        </div>
-
                     </div>
                 );
             })}

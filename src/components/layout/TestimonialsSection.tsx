@@ -1,12 +1,13 @@
 "use client";
 
 import { Container } from "../layout/Container";
-import { Star, MessageCircle } from "lucide-react";
-import Image from "next/image";
+import { MessageCircle } from "lucide-react";
 
 import { InfiniteMovingCards } from "../ui/infinite-moving-cards";
 import { getMockCourseReviews } from "@/lib/course-reviews";
 import { useMemo } from "react";
+import { useInView } from "@/hooks/useInView";
+import { cn } from "@/lib/utils";
 
 export function TestimonialsSection() {
     // Generate 15 deterministic reviews using our utility
@@ -21,14 +22,16 @@ export function TestimonialsSection() {
         rating: review.rating
     }));
 
+    const { ref, isInView } = useInView();
+
     return (
-        <section className="py-20 bg-muted/20">
+        <section ref={ref} className="py-28 bg-muted/20">
             <Container>
-                <div className="max-w-2xl mb-12 mx-auto text-center flex flex-col items-center">
-                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-background border border-border text-foreground font-semibold text-xs uppercase tracking-widest mb-4">
-                        <MessageCircle className="w-4 h-4 text-primary" /> Casos de Éxito
+                <div className={cn("max-w-2xl mb-12 mx-auto text-center flex flex-col items-center fade-in-up", isInView && "visible")}>
+                    <span className="text-sm text-muted-foreground font-medium mb-4 block">
+                        <MessageCircle className="w-4 h-4 inline mr-1.5 text-primary" />Casos de Éxito
                     </span>
-                    <h2 className="text-3xl md:text-4xl font-black text-foreground font-display tracking-tight leading-tight text-center">
+                    <h2 className="text-3xl md:text-4xl font-display font-medium leading-[1.15] tracking-normal text-foreground text-center">
                         No lo decimos nosotros, lo dicen los resultados.
                     </h2>
                 </div>

@@ -58,7 +58,7 @@ export function MembershipSuggestionModal({ isOpen, onClose }: MembershipSuggest
 
                     {/* Icon */}
                     <div className="w-20 h-20 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-amber-500/30 ring-4 ring-amber-500/20 animate-pulse">
-                        <Crown size={40} className="text-black fill-current" />
+                        <Crown size={40} className="text-amber-950 fill-current" />
                     </div>
 
                     <h2 className="text-3xl font-black text-white mb-3 tracking-tight">¡Eres un Estratega!</h2>
@@ -68,7 +68,7 @@ export function MembershipSuggestionModal({ isOpen, onClose }: MembershipSuggest
 
                     {/* Offer Card */}
                     <div className="relative bg-gradient-to-b from-amber-500/10 to-transparent border border-amber-500/20 rounded-2xl p-6 mb-8 text-left group hover:border-amber-500/40 transition-colors">
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg shadow-amber-500/20">
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 text-amber-950 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg shadow-amber-500/20">
                             Recomendado para ti
                         </div>
 
@@ -97,7 +97,7 @@ export function MembershipSuggestionModal({ isOpen, onClose }: MembershipSuggest
                     {/* CTAs */}
                     <div className="space-y-3">
                         <Link href="/membresias" className="block w-full">
-                            <Button className="w-full h-14 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-black font-bold rounded-xl shadow-lg shadow-amber-500/20 gap-2 group text-base border-0">
+                            <Button className="w-full h-14 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-amber-950 font-bold rounded-xl shadow-lg shadow-amber-500/20 gap-2 group text-base border-0">
                                 <span>Ver Planes de Membresía</span>
                                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                             </Button>

@@ -113,8 +113,8 @@ export function CourseGateModal({ isOpen, onClose, courseId, courseTitle }: Cour
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                     </div>
-                    <div className="absolute -bottom-1 -right-1 bg-emerald-500 rounded-full p-1.5 border-4 border-[#0E1219]">
-                        <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center mb-4">
+                        <svg className="w-5 h-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
@@ -191,13 +191,13 @@ export function CourseGateModal({ isOpen, onClose, courseId, courseTitle }: Cour
 
                     {/* Google Button */}
                     {providers?.google && (
-                        <Button
+                        <button
                             onClick={handleGoogleLogin}
-                            className="w-full h-14 bg-white hover:bg-gray-100 text-black font-bold rounded-xl flex items-center justify-center gap-3 transition-transform hover:scale-[1.02] active:scale-[0.98] mb-6"
+                            className="w-full h-14 bg-white hover:bg-gray-200 text-background font-bold rounded-xl flex items-center justify-center gap-3 transition-transform hover:scale-[1.02] active:scale-[0.98] mb-6"
                         >
                             <GoogleIcon /> {/* Reusing the SVG component defined below */}
                             Registrarse con Google
-                        </Button>
+                        </button>
                     )}
 
                     <div className="relative flex items-center gap-4 mb-6">

@@ -1,90 +1,80 @@
 "use client";
 
+import { Container } from "../layout/Container";
+import { CheckCircle2, Trophy, Target } from "lucide-react";
 import Image from "next/image";
-import { Container } from "./Container";
-import { CheckCircle2, PlayCircle, Users } from "lucide-react";
 
 export function AuthoritySection() {
-    const points = [
-        {
-            icon: <CheckCircle2 className="w-6 h-6 text-[#5D5CDE]" />,
-            title: "Estrategias reales",
-            description: "Aprendé la metodología que Fran Castro usa a diario en los mercados reales."
-        },
-        {
-            icon: <PlayCircle className="w-6 h-6 text-[#5D5CDE]" />,
-            title: "100% On-demand",
-            description: "Contenido práctico para que aprendas a tu ritmo, sin horarios fijos ni vueltas."
-        },
-        {
-            icon: <Users className="w-6 h-6 text-[#5D5CDE]" />,
-            title: "Comunidad de soporte",
-            description: "No estás solo. Accedé al canal premium para análisis compartido y soporte constante."
-        }
-    ];
-
     return (
-        <section className="py-20 md:py-32 bg-[#0a0d14] overflow-hidden">
+        <section className="py-24 bg-background relative overflow-hidden">
             <Container>
-                <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-24">
-                    {/* Image Column */}
-                    <div className="flex-1 relative">
-                        <div className="relative aspect-square w-full max-w-[500px] mx-auto rounded-[32px] overflow-hidden border border-white/10 shadow-2xl shadow-[#5D5CDE]/10 group">
-                            <Image
-                                src="/images/francisco-speaking.png"
-                                alt="Fran Castro - Fundador de Aurora Academy"
-                                fill
-                                className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                                priority
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent opacity-60" />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-                            {/* Floating Professional Badge */}
-                            <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
-                                <p className="font-display font-bold text-white text-lg">Fran Castro</p>
-                                <p className="text-sm text-gray-400 font-medium tracking-wide">CEO de Aurora Advisors y Co-Fundador de Aurora Academy</p>
+                    {/* Left: Huge Typography & Stats */}
+                    <div className="flex flex-col space-y-10">
+                        <div className="space-y-6">
+                            <span className="text-primary font-bold tracking-widest uppercase text-sm">
+                                Track Record Comprobado
+                            </span>
+                            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-foreground font-display leading-[0.9] tracking-tighter">
+                                No enseñamos teoría. <br />
+                                <span className="text-muted-foreground">Operamos la realidad.</span>
+                            </h2>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-8 pt-8 border-t border-border/50">
+                            <div>
+                                <h4 className="text-5xl font-black text-foreground font-display mb-2">+5M</h4>
+                                <p className="text-sm font-medium text-muted-foreground">En capital fondeado por nuestros alumnos este año.</p>
+                            </div>
+                            <div>
+                                <h4 className="text-5xl font-black text-foreground font-display mb-2">98%</h4>
+                                <p className="text-sm font-medium text-muted-foreground">De tasa de retención en Mentorías 1:1.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right: Visual Clean Card (No glow, just pure structure) */}
+                    <div className="relative w-full aspect-square md:aspect-[4/3] lg:aspect-square bg-muted/30 rounded-[3rem] border border-border p-8 flex flex-col justify-between overflow-hidden group">
+                        {/* Background subtle pattern */}
+                        <div className="absolute inset-0 opacity-[0.2]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+
+                        <div className="relative z-10 bg-background rounded-2xl p-4 shadow-sm self-start inline-flex items-center gap-3 border border-border/50">
+                            <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
+                                <Trophy className="w-5 h-5 text-green-400" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Status</p>
+                                <p className="text-sm font-black text-foreground">Top Rated Academy</p>
                             </div>
                         </div>
 
-                        {/* Decorative Background Elements */}
-                        <div className="absolute -top-12 -left-12 w-48 h-48 bg-[#5D5CDE]/20 rounded-full blur-[80px] -z-10 animate-pulse" />
-                        <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-[100px] -z-10" />
-                    </div>
-
-                    {/* Content Column */}
-                    <div className="flex-1 space-y-8 md:space-y-12">
-                        <div className="space-y-4">
-                            <h2 className="text-3xl md:text-5xl font-black text-white font-display leading-tight tracking-tight">
-                                Aprendé con <br />
-                                <span className="text-[#5D5CDE]">
-                                    Fran Castro
-                                </span>
-                            </h2>
-                            <p className="text-gray-400 text-lg md:text-xl leading-relaxed">
-                                Dejá de buscar teoría vacía. Formate con la metodología diseñada por quien opera de verdad en los mercados.
-                            </p>
-                        </div>
-
-                        <div className="space-y-8">
-                            {points.map((point, index) => (
-                                <div key={index} className="flex gap-4 md:gap-6 group">
-                                    <div className="mt-1 shrink-0 p-3 rounded-xl bg-white/5 border border-white/10 group-hover:border-[#5D5CDE]/40 transition-colors">
-                                        {point.icon}
-                                    </div>
-                                    <div className="space-y-1">
-                                        <h3 className="text-xl font-bold text-white font-display tracking-wider">
-                                            {point.title}
-                                        </h3>
-                                        <p className="text-gray-400 leading-relaxed font-medium">
-                                            {point.description}
-                                        </p>
-                                    </div>
+                        <div className="relative z-10 mt-auto bg-background/80 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-border shadow-2xl shadow-black/50 transform transition-transform duration-500 group-hover:-translate-y-2">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-inner">
+                                    <Target className="w-6 h-6" />
                                 </div>
-                            ))}
+                                <div>
+                                    <h3 className="font-black text-xl text-foreground font-display">El Método Aurora</h3>
+                                    <p className="text-sm text-muted-foreground font-medium">Validado por +10k horas de mercado</p>
+                                </div>
+                            </div>
+                            <ul className="space-y-3">
+                                {[
+                                    "Basado en Smart Money Concepts reales.",
+                                    "Psicología de trading aplicada y medible.",
+                                    "Gestión de riesgo matemática estricta."
+                                ].map((item, i) => (
+                                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-foreground/80">
+                                        <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
+                                        {item}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     </div>
                 </div>
             </Container>
-        </section >
+        </section>
     );
 }
