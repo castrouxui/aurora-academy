@@ -64,18 +64,20 @@ export function PricingCard({
     return (
         <div
             className={cn(
-                "relative flex flex-col rounded-xl border transition-all duration-300",
+                "relative flex flex-col rounded-[24px] border transition-all duration-300",
                 "p-8 md:p-10",
                 isRecommended
-                    ? "border-primary bg-card ring-1 ring-primary shadow-[var(--shadow-elevated)]"
-                    : "border-border bg-card hover:border-border/80",
+                    ? "border-[#5D5CDE] bg-[#10141d] ring-1 ring-[#5D5CDE] shadow-2xl shadow-[#5D5CDE]/10"
+                    : "border-white/10 bg-[#10141d] hover:border-white/20",
                 "h-full",
                 className
             )}
         >
-            {/* Recommended indicator: 2px top border */}
+            {/* Tag - Mayúscula a minúscula */}
             {(isRecommended || tag) && !persona && (
-                <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-xl bg-primary" />
+                <div className="absolute top-0 left-0 right-0 h-4 rounded-t-[24px] bg-[#5D5CDE] flex items-center justify-center">
+                    <span className="text-[10px] font-black text-white tracking-[0.2em] uppercase">MÁS POPULAR</span>
+                </div>
             )}
 
             {/* Persona Header */}
@@ -84,10 +86,11 @@ export function PricingCard({
                     <div className="inline-flex items-center gap-2">
                         <span className={cn(
                             "text-[10px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-lg",
-                            isRecommended ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                            isRecommended ? "bg-[#5D5CDE] text-white" : "bg-white/10 text-gray-400"
                         )}>
                             {persona.label}
                         </span>
+                        {/* Authority Badge */}
                         {authorityBadge && (
                             <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[9px] font-bold text-amber-400 tracking-wide uppercase">
                                 <span className="text-xs">👑</span>
@@ -101,14 +104,14 @@ export function PricingCard({
             <div className="flex-1 flex flex-col">
                 <div className="mb-8 text-left">
                     <div className="flex justify-between items-center gap-3 mb-3">
-                        <h3 className="text-xl md:text-2xl font-bold text-foreground leading-tight">{title}</h3>
+                        <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">{title}</h3>
                         {savings && (
-                            <span className="shrink-0 bg-emerald-500 text-white text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wide">
+                            <span className="shrink-0 bg-[#10b981] text-white text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-emerald-500/20 uppercase tracking-wide">
                                 3 MESES DE REGALO
                             </span>
                         )}
                     </div>
-                    <div className="text-sm text-muted-foreground font-medium leading-relaxed max-w-[90%] normal-case">
+                    <div className="text-sm text-gray-400 font-medium leading-relaxed max-w-[90%] normal-case">
                         {description}
                     </div>
                 </div>
@@ -116,7 +119,7 @@ export function PricingCard({
                 {/* Pricing Block */}
                 <div className="mb-8 flex flex-col items-start">
                     {/* Original Price */}
-                    <div className="flex items-center gap-1.5 text-muted-foreground mb-1">
+                    <div className="flex items-center gap-1.5 text-gray-500 mb-1">
                         <span className="text-sm font-medium">$</span>
                         <span className="text-lg font-bold line-through tracking-tight">
                             {isAnnual && originalMonthlyPrice
@@ -128,21 +131,21 @@ export function PricingCard({
 
                     {/* Main Price */}
                     <div className="flex items-baseline gap-1">
-                        <span className="text-xl md:text-2xl font-bold text-foreground">$</span>
-                        <span className="text-4xl md:text-5xl font-black tracking-tighter text-foreground font-display">
+                        <span className="text-xl md:text-2xl font-bold text-white">$</span>
+                        <span className="text-4xl md:text-5xl font-black tracking-tighter text-white font-display">
                             {new Intl.NumberFormat("es-AR", {
                                 minimumFractionDigits: 0,
                                 maximumFractionDigits: 0
                             }).format(Number(price) / (isAnnual ? 365 : 1))}
                         </span>
-                        <span className="text-lg md:text-xl font-bold text-muted-foreground">{isAnnual ? '/día' : '/mes'}</span>
+                        <span className="text-lg md:text-xl font-bold text-gray-400">{isAnnual ? '/día' : '/mes'}</span>
                     </div>
 
-                    {/* Annual Billing Context & Installments */}
+                    {/* Annual Billing Context & Installments Highlight - Minimalist */}
                     {isAnnual && installments && (
                         <div className="mt-2 text-left">
                             <p className="text-[13px] text-emerald-400 font-bold flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/60" />
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400/60 animate-pulse" />
                                 {installments}
                             </p>
                         </div>
@@ -151,49 +154,56 @@ export function PricingCard({
 
                 {/* Action Section */}
                 <div className="space-y-4 mb-10">
+                    {/* Promo Banner Style */}
+                    <div className="w-full py-1.5 rounded-lg bg-[#5D5CDE]/10 border border-[#5D5CDE]/20 flex items-center justify-center">
+                        <span className="text-[11px] font-bold text-[#5D5CDE] tracking-wide">Oferta por tiempo limitado</span>
+                    </div>
+
                     <Button
                         onClick={onAction}
                         className={cn(
                             "w-full h-14 text-base font-black transition-all duration-300 rounded-xl",
                             isRecommended
-                                ? "bg-foreground text-background hover:bg-foreground/90"
-                                : "bg-transparent border-2 border-foreground text-foreground hover:bg-foreground hover:text-background"
+                                ? "bg-white text-black hover:bg-gray-100"
+                                : "bg-transparent border-2 border-white text-white hover:bg-white hover:text-black"
                         )}
                     >
                         {buttonText || "Elegir plan"}
                     </Button>
 
-                    {/* Fine Print */}
+                    {/* Fine Print - Translated and Fixed */}
                     {isAnnual && (
-                        <div className="text-[11px] text-muted-foreground font-medium space-y-1">
+                        <div className="text-[11px] text-gray-500 font-medium space-y-1">
                             <p>
-                                Suscripción de 12 meses. Pagás solo 9 meses. <br className="hidden md:block" />Precio total: <span className="text-foreground/80 font-bold">{totalPrice}</span>.
+                                Suscripción de 12 meses. Pagás solo 9 meses. <br className="hidden md:block" />Precio total: <span className="text-gray-300 font-bold">{totalPrice}</span>.
                             </p>
                         </div>
                     )}
 
                     {/* Doubt Removal */}
                     {doubtRemoval && (
-                        <div className="mt-3 pt-3 border-t border-border">
-                            <p className="text-[11px] text-muted-foreground font-medium text-center italic">
-                                &ldquo;{doubtRemoval}&rdquo;
+                        <div className="mt-3 pt-3 border-t border-white/5">
+                            <p className="text-[11px] text-gray-400 font-medium text-center italic">
+                                "{doubtRemoval}"
                             </p>
                         </div>
                     )}
                 </div>
 
                 {/* Features Divider */}
-                <div className="h-px w-full bg-border mb-10" />
+                <div className="h-px w-full bg-white/5 mb-10" />
 
                 {/* Features List */}
                 <div className="space-y-10">
                     {/* Main Features */}
                     <div className="space-y-4">
+                        {/* Features List */}
                         {features.map((feature, index) => {
+                            // Check for "Bridge Text" (Todo lo del plan...)
                             if (typeof feature === 'string' && feature.startsWith("Todo lo del Plan")) {
                                 return (
                                     <div key={index} className="pt-2 pb-1">
-                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-relaxed">
+                                        <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-relaxed">
                                             {feature}
                                         </p>
                                     </div>
@@ -205,7 +215,7 @@ export function PricingCard({
                                     <div className="mt-1 shrink-0">
                                         <PricingCheckmark />
                                     </div>
-                                    <div className="text-sm font-medium text-foreground/80 leading-snug text-left">
+                                    <div className="text-sm font-medium text-gray-300 leading-snug text-left">
                                         {feature}
                                     </div>
                                 </div>
@@ -219,9 +229,9 @@ export function PricingCard({
                             {excludedFeatures.map((feature, index) => (
                                 <div key={index} className="flex items-start gap-4 opacity-30">
                                     <div className="mt-1 shrink-0">
-                                        <Lock className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
+                                        <Lock className="w-4 h-4 text-gray-500" strokeWidth={1.5} />
                                     </div>
-                                    <div className="text-sm text-muted-foreground font-medium leading-snug line-through">
+                                    <div className="text-sm text-gray-500 font-medium leading-snug line-through">
                                         {feature}
                                     </div>
                                 </div>

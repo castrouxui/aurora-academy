@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Logo } from "./Logo";
-import { Instagram, Youtube, Send } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Youtube, MoveRight, Bitcoin, TrendingUp, DollarSign, Send } from "lucide-react";
 import { Container } from "@/components/layout/Container";
+import { getRegisteredUserCount, getReviewAvatars } from "@/actions/user";
 
+// Custom X Icon (Lucide doesn't have it yet)
 function XIcon({ className }: { className?: string }) {
     return (
         <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor" width="1em" height="1em">
@@ -11,70 +14,140 @@ function XIcon({ className }: { className?: string }) {
     );
 }
 
-export function Footer() {
+export async function Footer() {
+    const userCount = await getRegisteredUserCount();
+    const avatars = await getReviewAvatars();
+    const displayAvatars = avatars.slice(0, 4);
+
     return (
-        <footer className="w-full border-t border-border bg-background">
-            <Container className="py-12 md:py-16">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                    {/* Brand Column */}
-                    <div className="space-y-4">
-                        <Logo />
-                        <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-                            Cursos y formaciones diseñadas por traders con experiencia real en mercados.
-                        </p>
-                        <div className="flex gap-2">
-                            <SocialIcon icon={<Instagram size={16} />} href="https://www.instagram.com/auroradvisorsok/" />
-                            <SocialIcon icon={<XIcon className="w-4 h-4" />} href="https://x.com/francastromt" />
-                            <SocialIcon icon={<Youtube size={16} />} href="https://www.youtube.com/channel/UCkMuy306bU7ZOrNb3NgYqew" />
-                            <SocialIcon icon={<Send size={16} />} href="https://t.me/Auroradvisors" />
+        <footer className="w-full">
+            {/* Top Banner (Community Style) */}
+            <div className="bg-black text-white py-12 md:py-20 relative overflow-hidden border-b border-gray-800">
+                {/* Background Gradient Effect */}
+                <div className="absolute top-0 right-0 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-[#5D5CDE]/20 blur-[80px] md:blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
+
+                <Container>
+                    <div className="flex flex-col lg:flex-row justify-between items-center gap-10 lg:gap-12 relative z-10">
+                        {/* Left Side: Copy & CTA */}
+                        <div className="flex flex-col items-center lg:items-start space-y-6 md:space-y-8 max-w-2xl text-center lg:text-left">
+                            <div className="inline-flex items-center px-4 py-1.5 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm">
+                                <span className="text-white text-xs md:text-sm font-medium">Comunidad Aurora</span>
+                            </div>
+
+                            <h2 className="text-3xl md:text-6xl font-black text-white leading-[0.95] tracking-tighter font-display">
+                                Unite a la comunidad Aurora
+                            </h2>
+
+                            <Link href="/membresias">
+                                <Button className="shiny-hover h-14 px-8 rounded-full bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-black text-lg shadow-[0_0_20px_rgba(93,92,222,0.5)] transition-all active:scale-95">
+                                    Unirme a la comunidad
+                                    <MoveRight className="ml-2 w-5 h-5" />
+                                </Button>
+                            </Link>
+                        </div>
+
+                        {/* Right Side: Social Proof & Avatars */}
+                        <div className="flex flex-col items-center lg:items-end gap-8">
+                            {/* Avatar Group */}
+                            <div className="flex items-center gap-4">
+                                <div className="flex -space-x-4">
+                                    {displayAvatars.map((src, i) => (
+                                        <div key={i} className="w-12 h-12 rounded-full border-2 border-black overflow-hidden relative bg-gray-800">
+                                            <img
+                                                src={src}
+                                                alt="Student"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-white font-bold text-lg leading-none">+{userCount}</span>
+                                    <span className="text-gray-400 text-sm font-medium">Estudiantes Activos</span>
+                                </div>
+                            </div>
+
+                            {/* Market Icons */}
+                            <div className="flex items-center gap-6 p-4 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-sm">
+                                <span className="text-gray-400 text-xs font-bold uppercase tracking-wider mr-2">Mercados:</span>
+                                <div className="flex items-center gap-4 text-white/80">
+                                    <div className="flex items-center gap-2" title="Crypto">
+                                        <Bitcoin size={24} className="text-orange-500" />
+                                    </div>
+                                    <div className="flex items-center gap-2" title="Forex">
+                                        <DollarSign size={24} className="text-green-500" />
+                                    </div>
+                                    <div className="flex items-center gap-2" title="Stocks">
+                                        <TrendingUp size={24} className="text-blue-500" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </Container>
+            </div>
 
-                    {/* Links */}
-                    <div className="space-y-3">
-                        <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">Plataforma</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li><Link href="/cursos" className="text-muted-foreground hover:text-foreground transition-colors">Cursos</Link></li>
-                            <li><Link href="/membresias" className="text-muted-foreground hover:text-foreground transition-colors">Precios</Link></li>
-                            <li><Link href="/mentoria" className="text-muted-foreground hover:text-foreground transition-colors">Mentoría 1:1</Link></li>
-                        </ul>
+            {/* Bottom Footer */}
+            <div className="bg-[#121620] text-gray-400 py-16 border-t border-gray-800">
+                <Container>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
+
+                        {/* Brand Column */}
+                        <div className="lg:col-span-2 space-y-6">
+                            <div className="space-y-4">
+                                <Logo />
+                                <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
+                                    Cursos y formaciones diseñadas por traders con experiencia real en mercados.
+                                </p>
+                            </div>
+                            <div className="flex gap-4">
+                                <SocialIcon icon={<Instagram size={20} />} href="https://www.instagram.com/auroradvisorsok/" />
+                                <SocialIcon icon={<XIcon className="w-5 h-5" />} href="https://x.com/francastromt" />
+                                <SocialIcon icon={<Youtube size={20} />} href="https://www.youtube.com/channel/UCkMuy306bU7ZOrNb3NgYqew" />
+                                <SocialIcon icon={<Send size={20} />} href="https://t.me/Auroradvisors" />
+                            </div>
+                        </div>
+
+                        {/* Links Columns */}
+                        <div className="space-y-4">
+                            <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Plataforma</h4>
+                            <ul className="space-y-3 text-sm">
+                                <li><Link href="/cursos" className="hover:text-white transition-colors">Cursos</Link></li>
+                                <li><Link href="/membresias" className="hover:text-white transition-colors">Precios</Link></li>
+                                <li><Link href="/nosotros" className="hover:text-white transition-colors">Nosotros</Link></li>
+                            </ul>
+                        </div>
+
+                        <div className="space-y-4">
+                            <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Legales</h4>
+                            <ul className="space-y-3 text-sm">
+                                <li><Link href="/terms" className="hover:text-white transition-colors">Términos y Condiciones</Link></li>
+                                <li><Link href="/privacy" className="hover:text-white transition-colors">Política de Privacidad</Link></li>
+                                <li><Link href="/refund-policy" className="hover:text-white transition-colors">Política de Reembolso</Link></li>
+                            </ul>
+                        </div>
+
+                        <div className="space-y-4">
+                            <h4 className="text-white font-semibold uppercase text-sm tracking-wider">Ayuda</h4>
+                            <ul className="space-y-3 text-sm">
+                                <li><Link href="mailto:contacto@auroracademy.net" className="hover:text-white transition-colors">Contacto</Link></li>
+                            </ul>
+                        </div>
+
                     </div>
 
-                    <div className="space-y-3">
-                        <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">Legales</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li><Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Términos y Condiciones</Link></li>
-                            <li><Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">Política de Privacidad</Link></li>
-                            <li><Link href="/refund-policy" className="text-muted-foreground hover:text-foreground transition-colors">Política de Reembolso</Link></li>
-                        </ul>
+                    <div className="mt-16 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
+                        © 2026 - Aurora Advisors. Todos los derechos reservados.
                     </div>
-
-                    <div className="space-y-3">
-                        <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">Ayuda</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li><Link href="/contacto" className="text-muted-foreground hover:text-foreground transition-colors">Contacto</Link></li>
-                            <li><Link href="mailto:contacto@auroracademy.net" className="text-muted-foreground hover:text-foreground transition-colors">contacto@auroracademy.net</Link></li>
-                        </ul>
-                    </div>
-                </div>
-
-                {/* Bottom Row */}
-                <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-                    <span>&copy; 2026 Aurora Advisors. Todos los derechos reservados.</span>
-                    <div className="flex items-center gap-4">
-                        <Link href="/terms" className="hover:text-foreground transition-colors">Términos</Link>
-                        <Link href="/privacy" className="hover:text-foreground transition-colors">Privacidad</Link>
-                        <Link href="/refund-policy" className="hover:text-foreground transition-colors">Reembolso</Link>
-                    </div>
-                </div>
-            </Container>
+                </Container>
+            </div>
         </footer>
     );
 }
 
 function SocialIcon({ icon, href }: { icon: React.ReactNode; href: string }) {
     return (
-        <a href={href} target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground hover:text-foreground transition-colors">
+        <a href={href} target="_blank" rel="noopener noreferrer" className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white transition-colors">
             {icon}
         </a>
     );

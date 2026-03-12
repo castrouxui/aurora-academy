@@ -1,31 +1,38 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { HeroBanner } from "@/components/layout/HeroBanner";
-import { SocialProofBar } from "@/components/layout/SocialProofBar";
+import { TrustBar } from "@/components/layout/TrustBar";
 import { Categories } from "@/components/cursos/Categories";
-import { LearningPath } from "@/components/cursos/LearningPath";
 import { CourseList } from "@/components/cursos/CourseList";
-import { InstructorSection } from "@/components/layout/InstructorSection";
-import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
-import { FAQSection } from "@/components/layout/FAQSection";
 import { CTASection } from "@/components/layout/CTASection";
 import { Footer } from "@/components/layout/Footer";
+import { StatsStrip } from "@/components/layout/StatsStrip";
+
+import { EcosystemSection } from "@/components/layout/EcosystemSection";
+import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
+import { AuthoritySection } from "@/components/layout/AuthoritySection";
+import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-[#0B0F19]">
       <Navbar />
-      <HeroBanner />
-      <SocialProofBar />
-      <Categories />
-      <LearningPath />
-      <div id="courses" className="scroll-mt-32">
-        <CourseList />
+      <div>
+        <HeroBanner />
+        <TrustBar />
+
+        <Categories />
+        <div id="courses" className="scroll-mt-32">
+          <CourseList />
+        </div>
+
+        <AuthoritySection />
+        <EcosystemSection />
+        <TestimonialsSection />
+        <CTASection />
+
+        <ExitIntentModal />
+        <Footer />
       </div>
-      <InstructorSection />
-      <TestimonialsSection />
-      <FAQSection />
-      <CTASection />
-      <Footer />
     </main>
   );
 }

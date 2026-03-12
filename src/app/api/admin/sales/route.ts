@@ -62,12 +62,8 @@ export async function GET(req: Request) {
             }
         });
 
-        // Exclude internal/test emails and users who upgraded to annual plans from churn metrics
-        const EXCLUDED_EMAILS = [
-            'castrouxui@gmail.com',
-            'maxi.aperio@gmail.com',
-            'jor.oscar.rivas@gmail.com'
-        ];
+        // Exclude internal/test emails from churn metrics
+        const EXCLUDED_EMAILS = ['castrouxui@gmail.com'];
         const subscriptions = subscriptionsResult.filter(s => !s.user?.email || !EXCLUDED_EMAILS.includes(s.user.email));
 
         const totalSubs = subscriptions.length;

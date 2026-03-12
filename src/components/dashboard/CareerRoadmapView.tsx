@@ -183,7 +183,7 @@ export function CareerRoadmapView({ userId, careerReferenceId }: CareerRoadmapVi
                                             <div className={cn(
                                                 "w-10 h-10 rounded-full flex items-center justify-center transition-all",
                                                 isCurrent
-                                                    ? "bg-white text-background hover:scale-110"
+                                                    ? "bg-white text-black hover:scale-110"
                                                     : "bg-gray-800 text-gray-400 group-hover:bg-gray-700 group-hover:text-white"
                                             )}>
                                                 <ArrowRight size={20} />
@@ -210,7 +210,7 @@ export function CareerRoadmapView({ userId, careerReferenceId }: CareerRoadmapVi
                         <p className="text-gray-400 text-lg mb-8 max-w-lg mx-auto leading-relaxed">
                             Has completado con éxito la ruta **Trader de 0 a 100**. Tu disciplina ha dado sus frutos.
                         </p>
-                        <button className="bg-amber-500 hover:bg-amber-600 text-amber-950 font-black px-12 py-4 rounded-xl transition-all shadow-xl shadow-amber-500/20 hover:-translate-y-1 active:scale-95">
+                        <button className="bg-amber-500 hover:bg-amber-600 text-black font-black px-12 py-4 rounded-xl transition-all shadow-xl shadow-amber-500/20 hover:-translate-y-1 active:scale-95">
                             Descargar Certificado Profesional
                         </button>
                     </div>

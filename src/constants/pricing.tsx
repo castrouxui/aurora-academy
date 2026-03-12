@@ -4,21 +4,16 @@ export const PLANS = [
     {
         // 1. Inversor Inicial
         title: "Inversor Inicial",
-        price: "54900",
-        description: "Ideal para dar tus primeros pasos. El escalón de entrada para dominar los conceptos base.",
+        price: "$54.900",
+        description: "El escalón de entrada para dominar los conceptos base.",
         features: [
-            "Los 7 Pilares del Éxito en Bolsa",
-            "El camino del inversor",
-            "Finanzas Personales",
             "Introducción al Mercado de Capitales",
-            "TNA, TEA y el Verdadero Rendimiento (TIR)",
-            "Manejo de TradingView",
-            "Acceso al Canal de Aurora Academy",
+            "Renta Fija / Bonos",
+            "Valuación de Bonos: TIR, Paridad",
+            "Valor Tiempo del Dinero: TNA, TEA"
         ],
         excludedFeatures: [
-            "1 nuevo curso cada 15 días",
-            "Comunidad VIP en Telegram",
-            "Mentorías personalizadas",
+            "Acceso a Canal de Aurora Academy"
         ],
         tag: null,
         isRecommended: false
@@ -26,41 +21,39 @@ export const PLANS = [
     {
         // 2. Trader de Elite
         title: "Trader de Elite",
-        price: "89900",
-        description: "Para traders que buscan consistencia. Operá activamente con actualización constante.",
+        price: "$89.900",
+        description: "Para quienes operan activamente y buscan actualización constante.",
         features: [
-            "1 nuevo curso cada 15 días",
-            "Fondos Comunes de Inversión",
-            "Opciones Financieras",
+            "Todo lo del Plan Inversor Inicial",
+            <span key="new-course" className="inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
+                <span>🔥</span> 1 curso nuevo cada 15 días
+            </span>,
+            "Curso de Opciones Financieras",
             "Domina el Stop Loss en 15 minutos",
-            "Price Action",
-            "Arbitraje Estadístico y Precisión con VWAP",
-            "Análisis Técnico",
-            "Renta Fija",
+            "Análisis Técnico & Price Action",
             "Futuros Financieros",
-            "Valuación de Bonos: TIR, Paridad y Escenarios de Salida",
+            "Acceso a Canal de Aurora Academy"
         ],
         excludedFeatures: [],
-        tag: "El más elegido",
+        tag: "EL MÁS BUSCADO",
         isRecommended: true
     },
     {
         // 3. Portfolio Manager
         title: "Portfolio Manager",
-        price: "149900",
-        description: "La experiencia definitiva para profesionales. Networking de alto nivel y visión macro.",
+        price: "$149.900",
+        description: "La experiencia completa con networking profesional.",
         features: [
-            "1 nuevo curso cada 15 días",
-            "Machine Learning e IA",
-            "Mentoría Análisis Técnico",
-            "Mentoría Gestión de Cartera",
-            "Análisis Fundamental",
-            "Beneficio vs. Caja: Valuación Real",
-            "IA en Inversiones",
-            "Dominando el Riesgo: De la Volatilidad a la Estabilidad",
-            "Testing con IA",
+            "Todo lo del Plan Trader de Elite",
+            <span key="new-course-pm" className="inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
+                <span>🔥</span> 1 curso nuevo cada 15 días
+            </span>,
+            "Curso de IA para Inversores",
+            "Análisis Fundamental & Cartera",
+            "Dominando el Riesgo: Volatilidad",
+            "Valuación Real: Beneficio vs. Caja",
+            "Acceso a Canal de Aurora Academy"
         ],
-        excludedFeatures: [],
         tag: null,
         isRecommended: false
     }
