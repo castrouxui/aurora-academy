@@ -62,14 +62,52 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
 
     let hasAccess = false;
     if (session?.user?.id && course) {
-        const purchase = await prisma.purchase.findFirst({
+        // 1. Direct course purchase
+        const directPurchase = await prisma.purchase.findFirst({
             where: {
                 userId: session.user.id,
                 courseId: course.id,
-                status: 'approved'
+                status: { in: ['approved', 'COMPLETED'] }
             }
         });
-        hasAccess = !!purchase;
+
+        if (directPurchase) {
+            hasAccess = true;
+        } else {
+            // 2. Bundle purchase containing this course
+            const bundlePurchase = await prisma.purchase.findFirst({
+                where: {
+                    userId: session.user.id,
+                    status: { in: ['approved', 'COMPLETED'] },
+                    bundle: {
+                        courses: {
+                            some: { id: course.id }
+                        }
+                    }
+                }
+            });
+
+            if (bundlePurchase) {
+                hasAccess = true;
+            } else {
+                // 3. Active subscription to a bundle containing this course
+                const activeSubscription = await prisma.subscription.findFirst({
+                    where: {
+                        userId: session.user.id,
+                        status: { in: ['authorized', 'active', 'ACTIVE', 'AUTHORIZED'] },
+                        bundle: {
+                            courses: {
+                                some: { id: course.id }
+                            }
+                        }
+                    }
+                });
+
+                if (activeSubscription) {
+                    hasAccess = true;
+                }
+            }
+        }
     }
 
     if (!course) {

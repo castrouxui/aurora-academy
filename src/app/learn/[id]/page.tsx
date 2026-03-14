@@ -48,7 +48,7 @@ export default async function CoursePlayerPage({ params, searchParams }: { param
             const purchase = await prisma.purchase.findFirst({
                 where: {
                     userId: session.user.id,
-                    status: 'approved',
+                    status: { in: ['approved', 'COMPLETED'] },
                     OR: [
                         { courseId: id },
                         {
@@ -62,9 +62,22 @@ export default async function CoursePlayerPage({ params, searchParams }: { param
                 }
             });
 
-            console.log(`[ACCESS_CHECK] User: ${session.user.id}, Course: ${id}, Role: ${session.user.role}, Purchase: ${purchase ? 'FOUND' : 'NOT FOUND'}`);
+            // Check for active subscription
+            const subscription = await prisma.subscription.findFirst({
+                where: {
+                    userId: session.user.id,
+                    status: { in: ['authorized', 'active', 'ACTIVE', 'AUTHORIZED'] },
+                    bundle: {
+                        courses: {
+                            some: { id: id }
+                        }
+                    }
+                }
+            });
 
-            if (purchase) {
+            console.log(`[ACCESS_CHECK] User: ${session.user.id}, Course: ${id}, Role: ${session.user.role}, Purchase: ${!!purchase}, Sub: ${!!subscription}`);
+
+            if (purchase || subscription) {
                 isAccess = true;
             } else if (session.user.companyId) {
                 // Check for Corporate Access
