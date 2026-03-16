@@ -1,78 +1,65 @@
-import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
 import Link from "next/link";
-import { Zap, Users, MonitorPlay, Trophy } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+
+const reasons = [
+    {
+        title: "Aprendé Haciendo",
+        desc: "Analizamos el mercado en vivo y operamos con dinero real desde el día 1. Sin teoría vacía.",
+    },
+    {
+        title: "Comunidad VIP",
+        desc: "Acceso exclusivo a Telegram con señales, análisis diario y networking con traders activos.",
+    },
+    {
+        title: "Mentoría Garantizada",
+        desc: "Acceso directo a tus instructores para revisar tus operaciones y resolver dudas en tiempo real.",
+    },
+];
 
 export function CTASection() {
     return (
-        <section className="py-24 bg-black/20">
+        <section className="py-28 md:py-36 border-b border-white/6">
             <Container>
-                <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 md:mb-6 tracking-tight">
-                        ¿Por qué elegir <span className="text-[#5D5CDE]">Aurora</span>?
+
+                {/* Header */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
+                    <h2 className="text-4xl md:text-5xl font-black font-display tracking-tight text-white leading-tight max-w-md">
+                        ¿Por qué elegir<br />
+                        <span className="text-[#5D5CDE]">Aurora?</span>
                     </h2>
-                    <p className="text-gray-400 text-lg md:text-xl">
-                        No somos solo una academia. Somos tu puente hacia la libertad financiera profesional.
+                    <p className="text-gray-500 text-base max-w-xs leading-relaxed md:text-right">
+                        No somos solo una academia. Somos tu puente hacia la libertad financiera.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6 auto-rows-auto md:auto-rows-[300px]">
-                    {/* Main Feature - Large */}
-                    <div className="md:col-span-2 row-span-1 rounded-3xl bg-[#5D5CDE] p-6 md:p-10 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300 border border-white/10 shadow-2xl shadow-primary/20 min-h-[250px] md:min-h-0">
-                        <div className="relative z-10 h-full flex flex-col justify-between gap-6 md:gap-0">
-                            <div>
-                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Aprende Haciendo</h3>
-                                <p className="text-indigo-100 text-sm md:text-lg max-w-md">Sin teoría aburrida. Analizamos el mercado en vivo y operamos con dinero real desde el día 1.</p>
-                            </div>
-                            <Link href="/cursos">
-                                <Button className="w-fit h-14 bg-white text-[#5D5CDE] hover:bg-gray-100 font-bold rounded-xl px-8 text-sm shadow-lg shiny-hover active:scale-95 transition-all">
-                                    Ver Carreras
-                                </Button>
-                            </Link>
+                {/* Reasons — 3 columns with dividers */}
+                <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/6 mb-24">
+                    {reasons.map((r, i) => (
+                        <div key={i} className="py-10 md:py-0 md:px-10 first:pl-0 last:pr-0">
+                            <span className="text-xs font-bold text-[#5D5CDE] tracking-[0.2em] block mb-4">0{i + 1}</span>
+                            <h3 className="text-xl font-bold text-white font-display mb-3">{r.title}</h3>
+                            <p className="text-gray-500 text-sm leading-relaxed">{r.desc}</p>
                         </div>
-                        <MonitorPlay className="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 text-white/10 group-hover:text-white/20 transition-colors rotate-12 w-32 h-32 md:w-[200px] md:h-[200px]" />
-                    </div>
-
-                    {/* Feature 2 - Tall (Community) */}
-                    <div className="md:col-span-1 row-span-1 rounded-3xl bg-[#1F2937] p-6 md:p-8 relative overflow-hidden group hover:bg-[#2D3748] transition-colors border border-white/5 min-h-[200px] md:min-h-0">
-                        <div className="relative z-10">
-                            <div className="w-12 h-12 md:w-14 md:h-14 bg-[#5D5CDE]/20 rounded-2xl flex items-center justify-center mb-4 md:mb-6 text-[#5D5CDE]">
-                                <Users size={28} className="md:w-8 md:h-8" />
-                            </div>
-                            <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Comunidad VIP</h3>
-                            <p className="text-sm md:text-base text-gray-400">Acceso exclusivo a nuestro Telegram. Señales, análisis diario y networking con otros traders.</p>
-                        </div>
-                    </div>
-
-                    {/* Feature 3 - Fast Track */}
-                    <div className="md:col-span-1 row-span-1 rounded-3xl bg-[#1F2937] p-6 md:p-8 relative overflow-hidden group hover:bg-[#2D3748] transition-colors border border-white/5 min-h-[200px] md:min-h-0">
-                        <div className="relative z-10">
-                            <div className="w-12 h-12 md:w-14 md:h-14 bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-4 md:mb-6 text-emerald-500">
-                                <Zap size={28} className="md:w-8 md:h-8" />
-                            </div>
-                            <h3 className="text-xl md:text-2xl font-bold text-white mb-2">Educación Financiera</h3>
-                            <p className="text-sm md:text-base text-gray-400">Programas integrales diseñados para que domines los mercados financieros y alcances tu libertad económica.</p>
-                        </div>
-                    </div>
-
-                    {/* Feature 4 - Mentorship (Was White) */}
-                    <div className="md:col-span-2 row-span-1 rounded-3xl bg-gradient-to-br from-gray-900 to-black p-6 md:p-10 relative overflow-hidden group hover:scale-[1.01] transition-transform duration-300 border border-white/10 min-h-[250px] md:min-h-0">
-                        <div className="relative z-10 text-white h-full flex flex-col justify-between gap-6 md:gap-0">
-                            <div>
-                                <h3 className="text-2xl md:text-3xl font-bold mb-2">Mentoria Garantizada</h3>
-                                <p className="text-gray-400 text-sm md:text-lg max-w-lg mb-0 md:mb-8">
-                                    No estarás solo. Tienes acceso directo a tus instructores para resolver dudas y revisar tus operaciones.
-                                </p>
-                            </div>
-                            <Link href="/nosotros">
-                                <Button variant="outline" className="w-fit h-14 border border-white/20 text-white hover:bg-white hover:text-black font-bold rounded-xl px-8 text-sm shiny-hover backdrop-blur-sm bg-white/5 active:scale-95 transition-all">
-                                    Conocé al Equipo
-                                </Button>
-                            </Link>
-                        </div>
-                        <Trophy className="absolute -top-4 -right-4 md:-top-6 md:-right-6 text-white/5 group-hover:text-white/10 transition-colors w-32 h-32 md:w-[180px] md:h-[180px]" />
-                    </div>
+                    ))}
                 </div>
+
+                {/* CTA Block */}
+                <div className="border border-white/8 rounded-3xl p-10 md:p-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 bg-white/[0.02]">
+                    <div>
+                        <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#5D5CDE] mb-4">Comenzá hoy</p>
+                        <h3 className="text-3xl md:text-4xl font-black font-display text-white tracking-tight leading-tight">
+                            Unite a la comunidad Aurora
+                        </h3>
+                    </div>
+                    <Link href="/membresias" className="shrink-0">
+                        <button className="group h-14 px-10 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold text-base transition-colors flex items-center gap-3 whitespace-nowrap">
+                            Ver planes
+                            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                        </button>
+                    </Link>
+                </div>
+
             </Container>
         </section>
     );

@@ -275,3 +275,37 @@ export const sendGeneralWelcomeEmail = async (email: string, name?: string | nul
         "¡Tu aventura en el mundo de las inversiones comienza hoy!"
     );
 };
+
+/**
+ * Sends an email for quick refunds (requested < 24hs)
+ */
+export const sendQuickRefundEmail = async (email: string, name?: string | null) => {
+    const greeting = getSpanishGreeting(name);
+    const subject = "Reembolso procesado - ¿Podemos ayudarte en algo?";
+
+    const htmlContent = `
+        <div style="font-family: sans-serif; color: #111827;">
+            <h2 style="color: #5D5CDE; margin-bottom: 24px;">${greeting},</h2>
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 16px;">
+                Te escribimos porque notamos que has solicitado la devolución de tu dinero a las pocas horas de tu compra. Te confirmamos que ya hemos procesado la devolución exitosamente y lo verás reflejado en tu cuenta pronto.
+            </p>
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 16px;">
+                Nos gustaría saber si tuviste algún problema técnico, si el contenido no era lo que esperabas, o si podemos ayudarte en algo. Nos importa mucho la experiencia de nuestros usuarios y cualquier feedback es súper útil.
+            </p>
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 24px;">
+                Podés responder directamente a este correo contándonos qué pasó, con gusto te leeremos.
+            </p>
+            <p style="font-size: 14px; color: #6b7280; margin-top: 32px;">
+                Un saludo,<br>
+                <strong>Equipo Aurora Academy</strong>
+            </p>
+        </div>
+    `;
+
+    return await sendEmail(
+        email,
+        subject,
+        htmlContent,
+        "Tu reembolso ha sido procesado. Nos gustaría saber tu opinión."
+    );
+};

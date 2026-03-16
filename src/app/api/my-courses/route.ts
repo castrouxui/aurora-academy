@@ -11,9 +11,6 @@ export async function GET() {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        // DEBUG: Trace user access
-        console.log(`[DASHBOARD_DEBUG] User: ${session.user.email} (${session.user.id}) requesting courses.`);
-
         const purchases = await prisma.purchase.findMany({
             where: {
                 userId: session.user.id,
@@ -56,11 +53,6 @@ export async function GET() {
             }
         });
 
-        // DEBUG LOGGING START
-        console.log(`[DASHBOARD_DEBUG] Purchases found: ${purchases.length}`);
-        purchases.forEach(p => console.log(`[DASHBOARD_DEBUG] Purchase: ID=${p.id}, Course=${p.course?.title}, Bundle=${p.bundle?.title}`));
-        // DEBUG LOGGING END
-
         // 2. Fetch Active Subscriptions
         const subscriptions = await prisma.subscription.findMany({
             where: {
@@ -83,11 +75,6 @@ export async function GET() {
                 }
             }
         });
-
-        // DEBUG LOGGING START
-        console.log(`[DASHBOARD_DEBUG] Subscriptions found: ${subscriptions.length}`);
-        subscriptions.forEach(s => console.log(`[DASHBOARD_DEBUG] Subscription: ID=${s.id}, Bundle=${s.bundle?.title}`));
-        // DEBUG LOGGING END
 
         const userProgress = await prisma.userProgress.findMany({
             where: {
@@ -155,7 +142,6 @@ export async function GET() {
             });
 
             if (company && company.bundle && (!company.expiresAt || new Date(company.expiresAt) > new Date())) {
-                console.log(`[DASHBOARD_DEBUG] Corporate access found: ${company.name}, Bundle: ${company.bundle.title}`);
                 company.bundle.courses.forEach(bundleCourse => {
                     if (!coursesMap.has(bundleCourse.id)) {
                         coursesMap.set(bundleCourse.id, { ...bundleCourse, lastAccessed: company.updatedAt });
@@ -163,13 +149,6 @@ export async function GET() {
                 });
             }
         }
-
-        // DEBUG LOGGING START
-        console.log(`[DASHBOARD_DEBUG] Found ${coursesMap.size} courses for user.`);
-        coursesMap.forEach((course, id) => {
-            console.log(`[DASHBOARD_DEBUG] - Access to: ${course.title} (${id})`);
-        });
-        // DEBUG LOGGING END
 
         const allCourses = Array.from(coursesMap.values());
 

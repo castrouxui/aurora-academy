@@ -165,6 +165,6 @@ export async function POST(req: NextRequest) {
         });
     } catch (error: any) {
         console.error('Error creating preference:', error);
-        return NextResponse.json({ error: 'Error creating preference', details: error.message || error }, { status: 500 });
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

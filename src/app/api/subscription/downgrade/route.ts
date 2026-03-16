@@ -89,6 +89,6 @@ export async function POST(req: Request) {
 
     } catch (error: any) {
         console.error("Downgrade error:", error);
-        return NextResponse.json({ error: error.message || "Failed" }, { status: 500 });
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

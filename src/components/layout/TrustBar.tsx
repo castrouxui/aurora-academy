@@ -9,41 +9,24 @@ export function TrustBar() {
     const [userCount, setUserCount] = useState<number | null>(null);
 
     useEffect(() => {
-        getRegisteredUserCount().then(count => {
-            setUserCount(count);
-        });
+        getRegisteredUserCount().then(setUserCount);
     }, []);
 
     const items = [
-        {
-            icon: <Users size={16} strokeWidth={1} className="text-gray-400" />,
-            text: `+${userCount !== null ? userCount : '...'} Estudiantes Activos`
-        },
-        {
-            icon: <CreditCard size={16} strokeWidth={1} className="text-gray-400" />,
-            text: "3 Cuotas Sin Interés"
-        },
-        {
-            icon: <ShieldCheck size={16} strokeWidth={1} className="text-gray-400" />,
-            text: "Garantía 7 días"
-        }
+        { icon: <Users size={14} />, text: `+${userCount ?? '...'} Estudiantes Activos` },
+        { icon: <CreditCard size={14} />, text: "3 Cuotas Sin Interés" },
+        { icon: <ShieldCheck size={14} />, text: "Garantía 7 días" },
     ];
 
     return (
-        <div className="w-full bg-[#0B0F19] border-y border-white/5 py-3 md:py-4">
+        <div className="border-y border-white/6 py-4 bg-[#0B0F19]">
             <Container>
-                <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 lg:gap-16">
-                    {items.map((item, index) => (
-                        <div key={index} className="flex items-center gap-2 group transition-all duration-300">
-                            <div className="shrink-0 transition-colors">
-                                {item.icon}
-                            </div>
-                            <span className="text-xs md:text-sm font-medium text-gray-400 group-hover:text-white transition-colors tracking-tight">
-                                {item.text}
-                            </span>
-                            {index < items.length - 1 && (
-                                <div className="hidden md:block h-3 w-px bg-white/10 ml-8 lg:ml-12" />
-                            )}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12">
+                    {items.map((item, i) => (
+                        <div key={i} className="flex items-center gap-2.5 text-gray-500">
+                            <span className="text-[#5D5CDE]">{item.icon}</span>
+                            <span className="text-sm font-medium">{item.text}</span>
+                            {i < items.length - 1 && <span className="hidden sm:block ml-10 w-px h-3 bg-white/10" />}
                         </div>
                     ))}
                 </div>

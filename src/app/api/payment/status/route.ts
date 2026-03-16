@@ -1,13 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 export async function GET(req: NextRequest) {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const { searchParams } = new URL(req.url);
         const preferenceId = searchParams.get('preferenceId');
+        const preapprovalId = searchParams.get('preapprovalId');
+
+        // --- Subscription return path (PreApproval) ---
+        if (preapprovalId) {
+            const sub = await prisma.subscription.findFirst({
+                where: { mercadoPagoId: preapprovalId, status: 'authorized' }
+            });
+            if (sub) return NextResponse.json({ status: 'approved', subscriptionId: sub.id });
+
+            // Also check by userId in case mercadoPagoId hasn't been linked yet
+            const userId = searchParams.get('userId');
+            if (userId) {
+                const recentSub = await prisma.subscription.findFirst({
+                    where: {
+                        userId,
+                        status: 'authorized',
+                        updatedAt: { gte: new Date(Date.now() - 10 * 60 * 1000) }
+                    },
+                    orderBy: { updatedAt: 'desc' }
+                });
+                if (recentSub) return NextResponse.json({ status: 'approved', subscriptionId: recentSub.id });
+            }
+
+            return NextResponse.json({ status: 'pending' });
+        }
 
         if (!preferenceId) {
-            return NextResponse.json({ error: 'Missing preferenceId' }, { status: 400 });
+            return NextResponse.json({ error: 'Missing preferenceId or preapprovalId' }, { status: 400 });
         }
 
         // Check if a purchase exists with this preferenceId

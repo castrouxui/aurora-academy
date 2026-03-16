@@ -109,7 +109,6 @@ export async function POST(req: NextRequest) {
         console.error("[UPGRADE ERROR]", error);
         return NextResponse.json({
             error: "Error interno procesando el upgrade",
-            details: error.message
         }, { status: 500 });
     }
 }

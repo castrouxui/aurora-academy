@@ -100,7 +100,6 @@ export async function POST(req: NextRequest) {
         console.error("[REFUND ERROR]", error);
         return NextResponse.json({
             error: "Error interno procesando el reembolso",
-            details: error.message
         }, { status: 500 });
     }
 }

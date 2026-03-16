@@ -42,6 +42,10 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Message is required" }, { status: 400 });
         }
 
+        if (message.length > 4096) {
+            return NextResponse.json({ error: "Message exceeds Telegram's 4096 character limit" }, { status: 400 });
+        }
+
         // Get all verified telegram users
         const verifiedUsers = await prisma.user.findMany({
             where: {

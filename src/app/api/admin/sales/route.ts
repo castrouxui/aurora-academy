@@ -44,16 +44,8 @@ export async function GET(req: Request) {
             }
         });
 
-        // HARDCODE FIX: Correct amount for pablosonez@gmail.com
-        const fixedSales = sales.map(s => {
-            if (s.user.email === 'pablosonez@gmail.com' && Number(s.amount) === 200000) {
-                return { ...s, amount: '150000' };
-            }
-            return s;
-        });
-
         // --- SUBSCRIPTION STATS ---
-        const subscriptionsResult = await prisma.subscription.findMany({
+        const subscriptions = await prisma.subscription.findMany({
             where: startDate ? {
                 updatedAt: { gte: startDate }
             } : {},
@@ -62,10 +54,6 @@ export async function GET(req: Request) {
             }
         });
 
-        // Exclude internal/test emails from churn metrics
-        const EXCLUDED_EMAILS = ['castrouxui@gmail.com'];
-        const subscriptions = subscriptionsResult.filter(s => !s.user?.email || !EXCLUDED_EMAILS.includes(s.user.email));
-
         const totalSubs = subscriptions.length;
         const activeSubs = subscriptions.filter(s => s.status === 'authorized').length;
         const cancelledSubsList = subscriptions.filter(s => s.status === 'cancelled');
@@ -73,7 +61,7 @@ export async function GET(req: Request) {
         const churnRate = totalSubs > 0 ? (cancelledSubs / totalSubs) * 100 : 0;
 
         return NextResponse.json({
-            sales: fixedSales,
+            sales: sales,
             subscriptions: {
                 total: totalSubs,
                 active: activeSubs,

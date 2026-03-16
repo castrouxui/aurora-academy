@@ -11,6 +11,8 @@ import { TelegramReminder } from "@/components/dashboard/TelegramReminder";
 import { RoadmapBanner } from "@/components/dashboard/RoadmapBanner";
 import { QuoteOfTheWeek } from "@/components/dashboard/QuoteOfTheWeek";
 import { CareerProgressCard } from "@/components/dashboard/CareerProgressCard";
+import { PaymentReturnBanner } from "@/components/dashboard/PaymentReturnBanner";
+import { useCallback } from "react";
 
 export default function StudentDashboard() {
     const { data: session } = useSession();
@@ -24,51 +26,52 @@ export default function StudentDashboard() {
     const [membershipItems, setMembershipItems] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function fetchData() {
-            if (!session) return;
-            try {
-                // Parallel fetch for courses and bundles
-                const [coursesRes, bundlesRes] = await Promise.all([
-                    fetch("/api/my-courses"),
-                    fetch("/api/my-bundles")
-                ]);
+    const fetchData = useCallback(async () => {
+        if (!session) return;
+        try {
+            // Parallel fetch for courses and bundles
+            const [coursesRes, bundlesRes] = await Promise.all([
+                fetch("/api/my-courses"),
+                fetch("/api/my-bundles")
+            ]);
 
-                if (coursesRes.ok) {
-                    const data = await coursesRes.json();
-                    const coursesList = Array.isArray(data) ? data : [];
-                    setCourses(coursesList);
+            if (coursesRes.ok) {
+                const data = await coursesRes.json();
+                const coursesList = Array.isArray(data) ? data : [];
+                setCourses(coursesList);
 
-                    const inProgress = coursesList.filter((c: any) => c.progress > 0 && c.progress < 100).length;
-                    const completed = coursesList.filter((c: any) => c.progress === 100).length;
+                const inProgress = coursesList.filter((c: any) => c.progress > 0 && c.progress < 100).length;
+                const completed = coursesList.filter((c: any) => c.progress === 100).length;
 
-                    setStats({
-                        inProgress,
-                        completed,
-                        totalCourses: coursesList.length
-                    });
+                setStats({
+                    inProgress,
+                    completed,
+                    totalCourses: coursesList.length
+                });
 
-                    const recent = coursesList.find((c: any) => c.progress > 0 && c.progress < 100) || coursesList[0];
-                    setRecentCourse(recent);
-                }
-
-                if (bundlesRes.ok) {
-                    const data = await bundlesRes.json();
-                    const bundlesList = Array.isArray(data) ? data : [];
-                    // Extract all unique items from bundles
-                    const allItems = bundlesList.flatMap((b: any) => b.items || []);
-                    // Filter duplicates by name + content if needed, or just show all
-                    setMembershipItems(allItems);
-                }
-
-            } catch (error) {
-                console.error("Error fetching dashboard data:", error);
-            } finally {
-                setLoading(false);
+                const recent = coursesList.find((c: any) => c.progress > 0 && c.progress < 100) || coursesList[0];
+                setRecentCourse(recent);
             }
+
+            if (bundlesRes.ok) {
+                const data = await bundlesRes.json();
+                const bundlesList = Array.isArray(data) ? data : [];
+                // Extract all unique items from bundles
+                const allItems = bundlesList.flatMap((b: any) => b.items || []);
+                // Filter duplicates by name + content if needed, or just show all
+                setMembershipItems(allItems);
+            }
+
+        } catch (error) {
+            console.error("Error fetching dashboard data:", error);
+        } finally {
+            setLoading(false);
         }
-        fetchData();
     }, [session]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     useEffect(() => {
         if (session?.user?.role === "ADMIN") {
@@ -112,6 +115,9 @@ export default function StudentDashboard() {
 
     return (
         <div className="space-y-8">
+            {/* Payment return handler — auto-confirms purchase after MP redirect */}
+            <PaymentReturnBanner onConfirmed={fetchData} />
+
             {/* Header */}
             <div>
                 <h1 className="text-3xl font-bold text-white mb-2">

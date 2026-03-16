@@ -125,6 +125,6 @@ export async function POST(req: Request) {
 
     } catch (error: any) {
         console.error("Subscription Action Error:", error);
-        return NextResponse.json({ error: error.message || "Failed to update subscription" }, { status: 500 });
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

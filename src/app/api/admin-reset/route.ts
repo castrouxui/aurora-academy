@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { checkRateLimit, getClientIP, rateLimitResponse } from "@/lib/rate-limit";
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
     // Rate limit: 5 attempts per hour per IP (to prevent brute force)
     const clientIP = getClientIP(request);
     const rateLimitKey = `admin-reset:${clientIP}`;
@@ -11,8 +11,8 @@ export async function GET(request: Request) {
         return rateLimitResponse();
     }
 
-    const { searchParams } = new URL(request.url);
-    const key = searchParams.get("key");
+    const body = await request.json().catch(() => ({}));
+    const key = body.key;
 
     const adminResetKey = process.env.ADMIN_RESET_KEY;
     if (!adminResetKey || key !== adminResetKey) {

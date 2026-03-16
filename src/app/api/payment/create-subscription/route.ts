@@ -133,7 +133,7 @@ export async function POST(req: NextRequest) {
                 transaction_amount: numericPrice,
                 currency_id: 'ARS',
             },
-            back_url: `${baseUrl}/dashboard/membresias`,
+            back_url: `${baseUrl}/dashboard`,
             payer_email: email, // Now using the explicit MP email provided by user
             status: "pending",
             external_reference: JSON.stringify({
@@ -168,6 +168,6 @@ export async function POST(req: NextRequest) {
         });
     } catch (error: any) {
         console.error('Error creating subscription:', error);
-        return NextResponse.json({ error: 'Error creating subscription', details: error.message || error }, { status: 500 });
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

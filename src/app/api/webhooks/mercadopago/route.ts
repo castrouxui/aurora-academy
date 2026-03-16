@@ -3,7 +3,7 @@ import { createHmac } from "crypto";
 
 import MercadoPagoConfig, { Payment, PreApproval } from "mercadopago";
 import { prisma } from "@/lib/prisma";
-import { sendEmail } from "@/lib/email";
+import { sendEmail, sendQuickRefundEmail } from "@/lib/email";
 import { cancelSubscription } from "@/lib/mercadopago";
 
 // Initialize client lazily to avoid build-time errors if env is missing
@@ -16,7 +16,7 @@ const getClient = () => {
 
 function validateSignature(request: Request, dataId: string | null): boolean {
     const secret = process.env.MP_WEBHOOK_SECRET;
-    if (!secret) return true; // Skip validation if secret not configured
+    if (!secret) throw new Error("MP_WEBHOOK_SECRET must be configured");
 
     const xSignature = request.headers.get("x-signature");
     const xRequestId = request.headers.get("x-request-id");
@@ -269,15 +269,23 @@ export async function POST(request: Request) {
 
                     // 3. Notify User (Optional but good practice)
                     if (purchase.user?.email) {
-                        await sendEmail(
-                            purchase.user.email,
-                            "Confirmación de Reembolso - Aurora Academy",
-                            `<p>Hola <strong>${purchase.user.name || ''}</strong>,</p>
-                             <p>Te confirmamos que se ha procesado el reembolso de tu compra.</p>
-                             <p>En consecuencia, el acceso al contenido asociado ha sido revocado.</p>
-                             <p>Si crees que esto es un error, por favor contactanos.</p>`,
-                            "Tu reembolso ha sido procesado."
-                        );
+                        const hoursSincePurchase = (new Date().getTime() - purchase.createdAt.getTime()) / (1000 * 60 * 60);
+
+                        if (hoursSincePurchase <= 24) {
+                            await sendQuickRefundEmail(purchase.user.email, purchase.user.name);
+                            console.log(`[WEBHOOK] Sent Quick Refund Email to ${purchase.user.email}`);
+                        } else {
+                            await sendEmail(
+                                purchase.user.email,
+                                "Confirmación de Reembolso - Aurora Academy",
+                                `<p>Hola <strong>${purchase.user.name || ''}</strong>,</p>
+                                 <p>Te confirmamos que se ha procesado el reembolso de tu compra.</p>
+                                 <p>En consecuencia, el acceso al contenido asociado ha sido revocado.</p>
+                                 <p>Si crees que esto es un error, por favor contactanos.</p>`,
+                                "Tu reembolso ha sido procesado."
+                            );
+                            console.log(`[WEBHOOK] Sent standard refund email to ${purchase.user.email}`);
+                        }
                     }
                 } else {
                     console.warn(`[WEBHOOK] Received refund for unknown payment ID ${id}`);
@@ -391,6 +399,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ status: "success" });
     } catch (error) {
         console.error("[WEBHOOK ERROR]", error);
-        return NextResponse.json({ status: "error", message: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
+        return NextResponse.json({ status: "error", message: "Internal Server Error" }, { status: 500 });
     }
 }

@@ -52,6 +52,25 @@ export default function MyMembershipsPage() {
         fetchBundles();
     }, []);
 
+    // Poll every 5s while subscription is pending (waiting for MP webhook to fire)
+    useEffect(() => {
+        if (!subscription || subscription.subscription?.status !== 'pending') return;
+
+        const interval = setInterval(async () => {
+            const res = await fetch("/api/subscription");
+            if (res.ok) {
+                const data = await res.json();
+                if (data.subscription?.status === 'authorized') {
+                    setSubscription(data);
+                    clearInterval(interval);
+                    toast.success("¡Suscripción activada! Ya tenés acceso a todos los contenidos.");
+                }
+            }
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [subscription]);
+
     const fetchBundles = async () => {
         try {
             const res = await fetch("/api/bundles");
@@ -136,7 +155,21 @@ export default function MyMembershipsPage() {
             </div>
 
             {/* Current Status Section */}
-            {subscription?.active && subscription.subscription ? (
+            {subscription?.subscription?.status === 'pending' ? (
+                <Card className="bg-[#111827] border-[#5D5CDE]/20 border-2 py-14 text-center shadow-2xl">
+                    <CardContent>
+                        <div className="bg-[#5D5CDE]/10 p-5 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 text-[#5D5CDE]">
+                            <Loader2 className="h-10 w-10 animate-spin" />
+                        </div>
+                        <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">Activando tu suscripción…</h2>
+                        <p className="text-gray-400 mb-2 max-w-md mx-auto text-base leading-relaxed">
+                            Recibimos tu pago. Estamos esperando la confirmación de Mercado Pago — esto puede tardar
+                            hasta 1 minuto.
+                        </p>
+                        <p className="text-gray-500 text-sm">Esta página se actualiza automáticamente.</p>
+                    </CardContent>
+                </Card>
+            ) : subscription?.active && subscription.subscription ? (
                 <Card className="bg-gradient-to-br from-[#1F2937] to-[#111827] border-[#5D5CDE]/30 shadow-xl shadow-[#5D5CDE]/5 overflow-hidden relative group border-2">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-[#5D5CDE]/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110 duration-700" />
                     <CardHeader className="relative z-10">
