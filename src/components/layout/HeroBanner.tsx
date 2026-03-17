@@ -3,78 +3,84 @@
 import { Container } from "@/components/layout/Container";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { getRegisteredUserCount } from "@/actions/user";
-import { ArrowRight, Play } from "lucide-react";
 
 export function HeroBanner() {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [userCount, setUserCount] = useState<number | null>(null);
 
     useEffect(() => {
-        getRegisteredUserCount().then(setUserCount);
+        getRegisteredUserCount().then(count => {
+            setUserCount(count);
+        });
     }, []);
 
+    const openLoginModal = () => setIsLoginModalOpen(true);
+    const closeLoginModal = () => setIsLoginModalOpen(false);
+
     return (
-        <section className="relative w-full min-h-screen flex items-end md:items-center overflow-hidden">
-            {/* Video */}
-            <div className="absolute inset-0 z-0">
-                <video autoPlay loop muted playsInline className="h-full w-full object-cover opacity-20">
-                    <source src="/hero-video.mp4" type="video/mp4" />
-                </video>
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F19]/80 via-[#0B0F19]/60 to-[#0B0F19]" />
-            </div>
 
-            <Container className="relative z-10 w-full pb-20 pt-36 md:pt-0">
-                <div className="max-w-4xl">
+        <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+            <Container className="relative z-10 w-full flex flex-col items-center justify-center pt-40 md:pt-48">
+                <div className="flex flex-col items-center space-y-6 md:space-y-8 text-center px-4 md:px-0">
+                    <div className="space-y-4 md:space-y-6 max-w-[900px]">
+                        {/* High-Impact Badge */}
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm animate-in fade-in slide-in-from-top-4 duration-1000">
+                            <span className="text-yellow-500 text-sm">⭐</span>
+                            <span className="text-xs md:text-sm font-bold text-gray-300 tracking-wide">
+                                Comunidad de +{userCount !== null ? userCount : '...'} alumnos activos
+                            </span>
+                        </div>
 
-                    {/* Label */}
-                    <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#5D5CDE] mb-8">
-                        Educación Financiera · Aurora Academy
-                    </p>
+                        <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white drop-shadow-2xl mb-4 md:mb-6 font-display leading-[0.95]">
+                            Dejá de ahorrar,<br />
+                            <span className="text-[#5D5CDE]">
+                                empezá a invertir.
+                            </span>
+                        </h1>
 
-                    {/* Headline */}
-                    <h1 className="font-black font-display tracking-tighter leading-[0.88] text-white mb-8">
-                        <span className="block text-[clamp(3rem,8vw,7rem)]">Dejá de ahorrar,</span>
-                        <span className="block text-[clamp(3rem,8vw,7rem)] text-[#5D5CDE]">empezá a invertir.</span>
-                    </h1>
-
-                    {/* Divider */}
-                    <div className="w-16 h-px bg-white/20 mb-8" />
-
-                    {/* Subtitle */}
-                    <p className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-xl mb-12">
-                        Aprendé con la metodología práctica de{" "}
-                        <span className="text-white font-semibold">Fran Castro</span>.
-                        Contenido 100% on-demand para proteger tu capital y dominar los mercados.
-                    </p>
-
-                    {/* CTAs */}
-                    <div className="flex flex-col sm:flex-row items-start gap-4">
-                        <Link href="/membresias">
-                            <button className="group h-14 px-8 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white font-bold text-base transition-colors flex items-center gap-3">
-                                Ver planes
-                                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
-                        </Link>
-                        <Link href="/cursos/cml05hq7n00025z0eogogsnge">
-                            <button className="group h-14 px-8 rounded-xl border border-white/15 text-white font-semibold text-base hover:border-white/30 hover:bg-white/5 transition-all flex items-center gap-3">
-                                <span className="w-6 h-6 rounded-full border border-white/30 flex items-center justify-center">
-                                    <Play size={10} fill="white" className="ml-px" />
-                                </span>
-                                Curso gratis
-                            </button>
-                        </Link>
+                        <p className="mx-auto max-w-[750px] text-gray-300 text-base sm:text-lg md:text-xl font-medium leading-relaxed mb-6 md:mb-8 md:px-6">
+                            Aprendé con la metodología práctica de <span className="text-white font-bold">Fran Castro</span>. Contenido 100% on-demand para proteger tu capital y dominar el mercado. Sin vueltas.
+                        </p>
                     </div>
 
-                    {/* Student count */}
-                    <p className="mt-10 text-sm text-gray-500">
-                        <span className="text-white font-semibold">+{userCount ?? '...'} estudiantes</span> ya están aprendiendo a invertir
-                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
+                        <Link href="/membresias" className="w-full sm:w-auto">
+                            <Button
+                                className="h-16 px-10 text-base font-bold w-full sm:w-auto bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white rounded-xl shadow-xl shadow-[#5D5CDE]/20 transition-all active:scale-95"
+                            >
+                                Ver planes
+                            </Button>
+                        </Link>
+                        <Link href="/cursos/cml05hq7n00025z0eogogsnge" className="w-full sm:w-auto relative z-20">
+                            <Button variant="outline" className="h-16 px-10 text-base font-bold w-full sm:w-auto text-white border border-white/20 bg-white/5 hover:bg-white hover:text-black rounded-xl backdrop-blur-sm transition-all active:scale-95">
+                                Curso gratis: El camino del inversor
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
             </Container>
 
-            <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
+            {/* Video Background */}
+            <div className="absolute inset-0 z-0">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="h-full w-full object-cover opacity-50"
+                >
+                    <source src="/hero-video.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                {/* Gradient Overlay for better text readability and seamless transition */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-[#0B0F19]/50 to-[#0B0F19]/40"></div>
+            </div>
+
+            {/* Login Modal */}
+            <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
         </section>
     );
 }

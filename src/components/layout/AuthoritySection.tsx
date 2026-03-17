@@ -2,69 +2,89 @@
 
 import Image from "next/image";
 import { Container } from "./Container";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { CheckCircle2, PlayCircle, Users } from "lucide-react";
 
 export function AuthoritySection() {
-    return (
-        <section className="py-28 md:py-36 border-b border-white/6">
-            <Container>
-                <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+    const points = [
+        {
+            icon: <CheckCircle2 className="w-6 h-6 text-[#5D5CDE]" />,
+            title: "Estrategias reales",
+            description: "Aprendé la metodología que Fran Castro usa a diario en los mercados reales."
+        },
+        {
+            icon: <PlayCircle className="w-6 h-6 text-[#5D5CDE]" />,
+            title: "100% On-demand",
+            description: "Contenido práctico para que aprendas a tu ritmo, sin horarios fijos ni vueltas."
+        },
+        {
+            icon: <Users className="w-6 h-6 text-[#5D5CDE]" />,
+            title: "Comunidad de soporte",
+            description: "No estás solo. Accedé al canal premium para análisis compartido y soporte constante."
+        }
+    ];
 
-                    {/* Image */}
-                    <div className="w-full lg:w-5/12 shrink-0">
-                        <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
+    return (
+        <section className="py-20 md:py-32 bg-[#0a0d14] overflow-hidden">
+            <Container>
+                <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-24">
+                    {/* Image Column */}
+                    <div className="flex-1 relative">
+                        <div className="relative aspect-square w-full max-w-[500px] mx-auto rounded-[32px] overflow-hidden border border-white/10 shadow-2xl shadow-[#5D5CDE]/10 group">
                             <Image
                                 src="/images/francisco-speaking.png"
-                                alt="Fran Castro"
+                                alt="Fran Castro - Fundador de Aurora Academy"
                                 fill
-                                className="object-cover object-top"
+                                className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
                                 priority
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19]/80 via-transparent to-transparent" />
-                            <div className="absolute bottom-6 left-6 right-6">
-                                <p className="text-white font-bold text-lg font-display">Fran Castro</p>
-                                <p className="text-gray-400 text-sm mt-1">CEO de Aurora Advisors · Co-Fundador de Aurora Academy</p>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent opacity-60" />
+
+                            {/* Floating Professional Badge */}
+                            <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10">
+                                <p className="font-display font-bold text-white text-lg">Fran Castro</p>
+                                <p className="text-sm text-gray-400 font-medium tracking-wide">CEO de Aurora Advisors y Co-Fundador de Aurora Academy</p>
                             </div>
                         </div>
+
+                        {/* Decorative Background Elements */}
+                        <div className="absolute -top-12 -left-12 w-48 h-48 bg-[#5D5CDE]/20 rounded-full blur-[80px] -z-10 animate-pulse" />
+                        <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-[100px] -z-10" />
                     </div>
 
-                    {/* Content */}
-                    <div className="flex-1 space-y-10">
-                        <div>
-                            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#5D5CDE] mb-6">
-                                Tu instructor
-                            </p>
-                            <h2 className="text-4xl md:text-5xl font-black font-display tracking-tight text-white leading-tight mb-6">
-                                Aprendé con quien<br />opera de verdad.
+                    {/* Content Column */}
+                    <div className="flex-1 space-y-8 md:space-y-12">
+                        <div className="space-y-4">
+                            <h2 className="text-3xl md:text-5xl font-black text-white font-display leading-tight tracking-tight">
+                                Aprendé con <br />
+                                <span className="text-[#5D5CDE]">
+                                    Fran Castro
+                                </span>
                             </h2>
-                            <p className="text-gray-400 text-lg leading-relaxed">
-                                Dejá de buscar teoría vacía. Formate con la metodología diseñada por quien está en los mercados todos los días.
+                            <p className="text-gray-400 text-lg md:text-xl leading-relaxed">
+                                Dejá de buscar teoría vacía. Formate con la metodología diseñada por quien opera de verdad en los mercados.
                             </p>
                         </div>
 
-                        <div className="space-y-0 border border-white/8 rounded-2xl overflow-hidden">
-                            {[
-                                { label: "Metodología", value: "Estrategias que Fran usa en operaciones reales, no simulaciones." },
-                                { label: "Ritmo", value: "100% on-demand — aprendés cuando querés, sin horarios fijos." },
-                                { label: "Comunidad", value: "Canal premium con análisis compartido y soporte constante." },
-                            ].map((row, i) => (
-                                <div key={i} className="flex gap-6 p-6 border-b border-white/6 last:border-0 hover:bg-white/[0.02] transition-colors">
-                                    <span className="text-xs font-bold uppercase tracking-widest text-[#5D5CDE] w-28 shrink-0 pt-0.5">{row.label}</span>
-                                    <span className="text-gray-300 text-sm leading-relaxed">{row.value}</span>
+                        <div className="space-y-8">
+                            {points.map((point, index) => (
+                                <div key={index} className="flex gap-4 md:gap-6 group">
+                                    <div className="mt-1 shrink-0 p-3 rounded-xl bg-white/5 border border-white/10 group-hover:border-[#5D5CDE]/40 transition-colors">
+                                        {point.icon}
+                                    </div>
+                                    <div className="space-y-1">
+                                        <h3 className="text-xl font-bold text-white font-display tracking-wider">
+                                            {point.title}
+                                        </h3>
+                                        <p className="text-gray-400 leading-relaxed font-medium">
+                                            {point.description}
+                                        </p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
-
-                        <Link href="/membresias" className="inline-flex">
-                            <button className="group h-12 px-7 rounded-xl border border-white/15 text-white font-semibold text-sm hover:border-white/30 hover:bg-white/5 transition-all flex items-center gap-3">
-                                Ver planes
-                                <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
-                            </button>
-                        </Link>
                     </div>
                 </div>
             </Container>
-        </section>
+        </section >
     );
 }

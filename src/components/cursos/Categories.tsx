@@ -1,49 +1,40 @@
 import { TrendingUp, Bitcoin, Wallet, PiggyBank, LineChart, Bot } from "lucide-react";
 import { Container } from "@/components/layout/Container";
-import Link from "next/link";
 
 const categories = [
-    { name: "Trading", tag: "Programa Completo", icon: TrendingUp },
-    { name: "Finanzas Personales", tag: "Curso Intensivo", icon: PiggyBank },
-    { name: "Fondos de Inversión", tag: "Curso Especializado", icon: LineChart },
-    { name: "IA + Inversiones", tag: "Masterclass", icon: Bot },
-    { name: "Cripto", tag: "Próximamente", icon: Bitcoin, soon: true },
-    { name: "Bonos", tag: "Curso Especializado", icon: Wallet },
+    { name: "Trading", count: "Programa Completo", icon: TrendingUp },
+    { name: "Finanzas Personales", count: "Curso Intensivo", icon: PiggyBank },
+    { name: "Fondos Comunes de Inversión", count: "Curso Especializado", icon: LineChart },
+    { name: "IA + Inversiones", count: "Masterclass", icon: Bot },
+    { name: "Cripto", count: "Próximamente", icon: Bitcoin, status: "coming_soon" },
+    { name: "Bonos", count: "Curso Especializado", icon: Wallet },
 ];
 
 export function Categories() {
     return (
-        <section id="categories" className="py-28 md:py-36 border-b border-white/6">
+        <section id="categories" className="py-16">
             <Container>
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-                    <h2 className="text-4xl md:text-5xl font-black font-display tracking-tight text-white leading-tight max-w-md">
-                        ¿Qué querés<br />aprender?
-                    </h2>
-                    <Link href="/cursos">
-                        <span className="text-sm font-semibold text-[#5D5CDE] hover:underline">Ver todos los cursos →</span>
-                    </Link>
-                </div>
+                <h2 className="text-3xl font-bold text-center mb-8 md:mb-12 text-white">Categorías principales</h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {categories.map((cat, i) => (
-                        <div
-                            key={i}
-                            className={`bg-[#0B0F19] p-8 group hover:bg-white/[0.02] transition-colors ${cat.soon ? "opacity-50 cursor-default" : "cursor-pointer"}`}
-                        >
-                            <div className="flex items-start justify-between mb-6">
-                                <cat.icon size={22} className="text-[#5D5CDE]" />
-                                {cat.soon && (
-                                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600 border border-white/8 px-2 py-1 rounded-full">
-                                        Pronto
-                                    </span>
-                                )}
+                        <div key={i} className="bg-white/5 border border-white/5 hover:border-white/10 hover:bg-white/10 transition-all duration-300 p-6 rounded-2xl flex items-center gap-4 cursor-pointer group hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/5">
+                            <div className="p-3 bg-white/5 rounded-xl text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                                <cat.icon size={28} />
                             </div>
-                            <h3 className="font-bold text-white text-base mb-1 font-display group-hover:text-[#5D5CDE] transition-colors">
-                                {cat.name}
-                            </h3>
-                            <p className="text-xs text-gray-600 uppercase tracking-widest font-medium">
-                                {cat.tag}
-                            </p>
+                            <div>
+                                <h3 className="font-bold text-white text-base flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 group-hover:text-primary transition-colors">
+                                    {cat.name}
+                                    {cat.status === "coming_soon" && (
+                                        <span className="text-[10px] bg-white/10 text-gray-300 border border-white/10 px-2 py-0.5 rounded-full uppercase font-bold tracking-wider w-fit">
+                                            Próximamente
+                                        </span>
+                                    )}
+                                </h3>
+                                <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
+                                    {cat.status === "coming_soon" ? "Disponible pronto" : cat.count}
+                                </p>
+                            </div>
                         </div>
                     ))}
                 </div>
