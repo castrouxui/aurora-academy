@@ -231,7 +231,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
         <div className="flex h-screen flex-col bg-[#0B0F19] text-white overflow-hidden">
             <Navbar />
 
-            <div className="flex flex-1 overflow-hidden pt-16 flex-col lg:flex-row relative">
+            <div className="flex flex-1 overflow-hidden pt-[6.5rem] flex-col lg:flex-row relative">
                 {/* Main Content Area */}
                 <div className="flex flex-1 flex-col overflow-y-auto w-full">
 
@@ -448,27 +448,27 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                 {/* Mobile Overlay Background */}
                 <div
                     className={cn(
-                        "fixed inset-0 bg-black/80 z-[590] lg:hidden transition-opacity duration-300",
+                        "fixed inset-x-0 top-0 bottom-0 bg-black/80 z-[590] lg:hidden transition-opacity duration-300",
                         mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                 />
 
                 <div className={cn(
-                    "fixed inset-y-0 right-0 z-[600] w-full sm:w-96 bg-[#0E1016] border-l border-gray-800/50 shadow-2xl transform transition-transform duration-300 lg:relative lg:transform-none lg:w-[400px] lg:flex lg:flex-col lg:z-auto flex flex-col",
+                    "fixed inset-y-0 right-0 z-[600] w-full sm:w-96 bg-[#0E1016] border-l border-gray-800/50 shadow-2xl transform transition-transform duration-300 lg:relative lg:transform-none lg:w-[400px] lg:shrink-0 lg:flex lg:flex-col lg:z-auto lg:overflow-hidden flex flex-col",
                     mobileMenuOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"
                 )}>
                     {/* Mobile Close Button */}
                     <button
                         onClick={() => setMobileMenuOpen(false)}
-                        className="lg:hidden absolute top-4 right-4 z-50 p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700"
+                        className="lg:hidden absolute top-5 right-4 z-50 p-2 bg-gray-800 rounded-full text-white hover:bg-gray-700"
                     >
                         <X size={20} />
                     </button>
 
                     {/* Sidebar Header */}
-                    <div className="p-6 border-b border-gray-800/50 bg-[#0E1016]">
-                        <h3 className="font-bold text-white text-lg mb-4">Contenido del Curso</h3>
+                    <div className="pt-14 px-6 pb-6 lg:p-6 border-b border-gray-800/50 bg-[#0E1016]">
+                        <h3 className="font-bold text-white text-lg mb-4 pr-10 lg:pr-0">Contenido del Curso</h3>
 
                         {/* Progress Bar */}
                         <div className="space-y-2">
@@ -510,7 +510,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                     <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
                         {localModules.map((module, i) => (
                             <div key={i} className="border-b border-gray-800/30">
-                                <div className="bg-[#090b10] px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest sticky top-0 z-10 backdrop-blur-md bg-opacity-90">
+                                <div className="bg-[#090b10]/90 px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest sticky top-0 z-10 backdrop-blur-md">
                                     {module.title}
                                 </div>
                                 <div>
