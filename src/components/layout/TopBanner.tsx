@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 export function TopBanner() {
     const pathname = usePathname();
 
-    if (pathname === "/membresias") return null;
+    if (pathname === "/membresias" || pathname.startsWith("/learn")) return null;
 
     return (
         <Link

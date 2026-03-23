@@ -231,12 +231,12 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
         <div className="flex h-screen flex-col bg-[#0B0F19] text-white overflow-hidden">
             <Navbar />
 
-            <div className="flex flex-1 overflow-hidden pt-[6.5rem] flex-col lg:flex-row relative">
+            <div className="flex flex-1 overflow-hidden pt-16 flex-col lg:flex-row relative">
                 {/* Main Content Area */}
                 <div className="flex flex-1 flex-col overflow-y-auto w-full">
 
                     {/* Breadcrumb Navigation - Mobile Optimized */}
-                    <div className="sticky top-0 z-30 px-4 lg:px-6 py-3 lg:py-4 text-xs lg:text-sm text-gray-400 border-b border-gray-800 bg-[#0B0F19]/95 backdrop-blur-sm flex justify-between items-center w-full">
+                    <div className="sticky top-0 z-30 px-3 lg:px-6 py-2 lg:py-4 text-xs lg:text-sm text-gray-400 border-b border-gray-800 bg-[#0B0F19]/95 backdrop-blur-sm flex justify-between items-center w-full">
                         <div className="flex items-center gap-2 truncate">
                             <Link href={backLink} className="flex items-center gap-1 hover:text-white transition-colors shrink-0">
                                 <ChevronLeft size={16} />
@@ -467,7 +467,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                     </button>
 
                     {/* Sidebar Header */}
-                    <div className="pt-14 px-6 pb-6 lg:p-6 border-b border-gray-800/50 bg-[#0E1016]">
+                    <div className="pt-4 px-5 pb-5 lg:p-6 border-b border-gray-800/50 bg-[#0E1016]">
                         <h3 className="font-bold text-white text-lg mb-4 pr-10 lg:pr-0">Contenido del Curso</h3>
 
                         {/* Progress Bar */}

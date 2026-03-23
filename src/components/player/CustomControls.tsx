@@ -65,20 +65,17 @@ export function CustomControls({
 }: CustomControlsProps) {
     return (
         <div className={cn(
-            "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent px-4 pb-4 pt-12 transition-opacity duration-300 z-30",
+            "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent px-3 sm:px-4 pb-3 sm:pb-4 pt-12 transition-opacity duration-300 z-30",
             isVisible ? "opacity-100" : "opacity-0 pointer-events-none"
         )}>
             {/* Progress Bar */}
-            <div className="mb-4 flex items-center gap-2 group/slider">
+            <div className="mb-2 sm:mb-4 flex items-center gap-2 group/slider">
                 <Slider
                     value={[played * 100]}
                     max={100}
                     onValueChange={(val) => onSeek(val[0])}
                     onPointerDown={onSeekMouseDown}
                     onPointerUp={(e) => {
-                        // We need the value here but Slider onPointerUp doesn't give it directly easily without ref
-                        // Actually onSeekMouseUp is usually called with the final value
-                        // But for simplicity in shadcn slider, we rely on onValueChange updating the state and then MouseUp committing it
                         onSeekMouseUp(played * 100);
                     }}
                     className="cursor-pointer"
@@ -86,20 +83,20 @@ export function CustomControls({
             </div>
 
             <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4">
                     {/* Play/Pause */}
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
                             onPlayPause();
                         }}
-                        className="text-white hover:text-[#5D5CDE] transition-colors p-2 -ml-2 hover:bg-white/10 rounded-full"
+                        className="text-white hover:text-[#5D5CDE] transition-colors p-1.5 sm:p-2 -ml-1 sm:-ml-2 hover:bg-white/10 rounded-full"
                     >
-                        {isPlaying ? <Pause size={24} fill="currentColor" /> : <Play size={24} fill="currentColor" />}
+                        {isPlaying ? <Pause size={20} fill="currentColor" className="sm:w-6 sm:h-6" /> : <Play size={20} fill="currentColor" className="sm:w-6 sm:h-6" />}
                     </button>
 
-                    {/* Volume */}
-                    <div className="flex items-center gap-2 group/volume relative">
+                    {/* Volume - Hidden on mobile, device volume used instead */}
+                    <div className="hidden sm:flex items-center gap-2 group/volume relative">
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -120,12 +117,12 @@ export function CustomControls({
                     </div>
 
                     {/* Time */}
-                    <div className="text-xs text-gray-300 font-mono">
+                    <div className="text-[10px] sm:text-xs text-gray-300 font-mono">
                         {formatDuration(playedSeconds)} / {formatDuration(duration)}
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4">
                     {/* Quality Selection (Mock UI) */}
                     <div className="relative group/quality scale-90 sm:scale-100 hidden sm:block">
                         <button
@@ -172,7 +169,7 @@ export function CustomControls({
                     </div>
 
                     {/* Playback Rate */}
-                    <div className="relative group/speed scale-90 sm:scale-100">
+                    <div className="relative group/speed">
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -223,12 +220,11 @@ export function CustomControls({
                             onToggleFullscreen();
                         }}
                         onTouchEnd={(e) => {
-                            // TouchEnd is often more reliable than click on mobile web
                             e.preventDefault();
                             e.stopPropagation();
                             onToggleFullscreen();
                         }}
-                        className="text-white hover:text-[#5D5CDE] transition-colors p-2 -mr-2 hover:bg-white/10 rounded-full"
+                        className="text-white hover:text-[#5D5CDE] transition-colors p-1.5 sm:p-2 -mr-1 sm:-mr-2 hover:bg-white/10 rounded-full"
                         aria-label={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
                     >
                         {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
