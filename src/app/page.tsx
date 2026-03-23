@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { HeroBanner } from "@/components/layout/HeroBanner";
 import { TrustBar } from "@/components/layout/TrustBar";
@@ -11,10 +12,12 @@ import { EcosystemSection } from "@/components/layout/EcosystemSection";
 import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 import { AuthoritySection } from "@/components/layout/AuthoritySection";
 import { ExitIntentModal } from "@/components/marketing/ExitIntentModal";
+import { AuthErrorHandler } from "@/components/auth/AuthErrorHandler";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#0B0F19]">
+      <Suspense fallback={null}><AuthErrorHandler /></Suspense>
       <Navbar />
       <div>
         <HeroBanner />

@@ -16,7 +16,7 @@ export const authOptions: AuthOptions = {
             credentials: {
                 email: { label: "Email", type: "text" },
                 password: { label: "Password", type: "password" },
-                isRegister: { label: "Register", type: "text" }
+                isRegister: { label: "Register", type: "hidden" }
             },
             async authorize(credentials) {
                 if (!credentials?.email || !credentials?.password) {
@@ -137,6 +137,10 @@ export const authOptions: AuthOptions = {
             }
         },
     },
+    pages: {
+        signIn: "/",
+        error: "/",
+    },
     theme: {
         colorScheme: "dark",
     },
@@ -150,8 +154,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            // Explicitly map role if needed, though Adapter handles creation.
-            // We can use profile callback to default role if not set by adapter default
+            allowDangerousEmailAccountLinking: true,
             profile(profile) {
                 return {
                     id: profile.sub,
