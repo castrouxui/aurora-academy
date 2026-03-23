@@ -455,7 +455,7 @@ export default function CourseEditorPage() {
                         <div className="h-6 w-px bg-gray-700 mx-1"></div>
 
                         <Button
-                            onClick={() => window.open(`/cursos/${courseId}`, '_blank')}
+                            onClick={() => window.open(`/learn/${courseId}`, '_blank')}
                             variant="outline"
                             className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white h-9 text-xs flex items-center gap-2"
                         >
