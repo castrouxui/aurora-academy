@@ -5,6 +5,7 @@ import { InstructorCard } from "@/components/cursos/InstructorCard";
 import { CourseFAQ } from "@/components/cursos/detail/CourseFAQ";
 import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 import { MobileCourseCTA } from "@/components/cursos/detail/MobileCourseCTA";
+import { MembershipUpsellBanner } from "@/components/cursos/detail/MembershipUpsellBanner";
 import { ReviewList } from "@/components/reviews/ReviewList";
 import { ReviewForm } from "@/components/reviews/ReviewForm";
 import { FeaturedTestimonial } from "@/components/cursos/detail/FeaturedTestimonial";
@@ -38,8 +39,13 @@ export function CourseDetailContent({
     totalReviewCount,
     featuredTestimonial
 }: CourseDetailContentProps) {
+    const isFree = courseData.rawPrice === 0;
+
     return (
         <div className="bg-[#0B0F19] min-h-screen">
+
+            {/* Sticky top banner → drive to memberships (free course only) */}
+            <MembershipUpsellBanner isFree={isFree} hasAccess={hasAccess} />
 
             {/* HERO BG WRAPPER */}
             <div className="relative w-full">

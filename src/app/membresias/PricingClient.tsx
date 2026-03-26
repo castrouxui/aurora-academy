@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { MembershipTable } from "@/components/membresias/MembershipTable";
 import { LeadMagnet } from "@/components/membresias/LeadMagnet";
 import { Testimonials } from "@/components/membresias/Testimonials";
@@ -12,7 +12,9 @@ import { PaymentModal } from "@/components/checkout/PaymentModal";
 import { CardsIcons } from "@/components/ui/CardsIcons";
 import { useSession } from "next-auth/react";
 import { LoginModal } from "@/components/auth/LoginModal";
+import { StickyPricingCTA } from "@/components/membresias/StickyPricingCTA";
 import { cn } from "@/lib/utils";
+import { getRegisteredUserCount } from "@/actions/user";
 
 interface PricingClientProps {
     initialBundles: any[];
@@ -33,7 +35,64 @@ export function PricingClient({ initialBundles, footer }: PricingClientProps) {
 
     // Dynamic State
     const [bundles] = useState<any[]>(initialBundles);
-    const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
+    const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
+    const [userCount, setUserCount] = useState<number | null>(null);
+    const plansRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        getRegisteredUserCount().then(count => setUserCount(count));
+    }, []);
+
+    // Ahorro concreto en pesos para el plan más económico (usado en el toggle anual)
+    const annualSavingsText = useMemo(() => {
+        const source = initialBundles.length > 0 ? initialBundles : [];
+        if (source.length === 0) return "25%";
+        const cheapest = Math.min(...source.map((b: any) => parseFloat(b.price)));
+        const savings = cheapest * 3; // 12 meses - 9 meses = 3 meses de ahorro
+        return new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(savings) + "/año";
+    }, [initialBundles]);
+
+    // Countdown timer — session-based, 20 minutes
+    const TIMER_KEY = "aurora_pricing_timer_end";
+    const TIMER_DURATION = 20 * 60; // 20 min in seconds
+    const [timeLeft, setTimeLeft] = useState<number>(TIMER_DURATION);
+
+    useEffect(() => {
+        const stored = localStorage.getItem(TIMER_KEY);
+        const now = Math.floor(Date.now() / 1000);
+        let endTime: number;
+
+        if (stored) {
+            endTime = parseInt(stored);
+            if (endTime <= now) {
+                // Expired — reset
+                endTime = now + TIMER_DURATION;
+                localStorage.setItem(TIMER_KEY, String(endTime));
+            }
+        } else {
+            endTime = now + TIMER_DURATION;
+            localStorage.setItem(TIMER_KEY, String(endTime));
+        }
+
+        const tick = () => {
+            const remaining = endTime - Math.floor(Date.now() / 1000);
+            setTimeLeft(Math.max(0, remaining));
+        };
+
+        tick();
+        const interval = setInterval(tick, 1000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const formatTime = (secs: number) => {
+        const m = Math.floor(secs / 60).toString().padStart(2, "0");
+        const s = (secs % 60).toString().padStart(2, "0");
+        return `${m}:${s}`;
+    };
+
+    const scrollToPlans = useCallback(() => {
+        plansRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, []);
 
     const handlePurchase = (title: string, price: string, courseId?: string, bundleId?: string, isAnnual?: boolean) => {
         if (!session) {
@@ -61,18 +120,26 @@ export function PricingClient({ initialBundles, footer }: PricingClientProps) {
             {/* Hero Section */}
             <section className="relative overflow-hidden pt-40 md:pt-48 pb-12 md:pb-14">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(93,92,222,0.12) 0%, transparent 70%)" }} />
                 <Container className="relative z-10 text-center">
-                    <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 font-display tracking-tight">
-                        Evolucioná tu capital con el respaldo de expertos
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-white mb-6 font-display tracking-tight">
+                        Invertí mejor, por menos de un café al día.
                     </h1>
                     <p className="text-base md:text-lg leading-relaxed text-gray-400 max-w-2xl mx-auto mb-4">
-                        Tu hoja de ruta y acompañamiento diario en los mercados.
-                        Desde tus primeros pasos hasta operar como un profesional.
+                        Cursos, comunidad y actualizaciones semanales. Cancelás cuando quieras.
                     </p>
                     {/* Social Proof */}
-                    <p className="text-sm text-gray-500 mb-12">
-                        Sumate a los más de 1000 alumnos activos que ya están aprendiendo
+                    <p className="text-sm text-gray-500 mb-6">
+                        Sumate a los más de {userCount !== null ? userCount : '...'} alumnos activos que ya están aprendiendo
                     </p>
+
+                    {/* Countdown urgency */}
+                    {timeLeft > 0 && (
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 mb-6">
+                            <span className="text-amber-400 text-xs font-bold uppercase tracking-wider">Precio especial disponible por</span>
+                            <span className="text-amber-300 text-sm font-black tabular-nums">{formatTime(timeLeft)}</span>
+                        </div>
+                    )}
 
                     {/* Toggle with Enhanced Badge */}
                     <div className="flex justify-center mt-8 mb-12">
@@ -107,7 +174,7 @@ export function PricingClient({ initialBundles, footer }: PricingClientProps) {
                                         ? "bg-emerald-500 text-white shadow-lg"
                                         : "bg-white/10 text-gray-400"
                                 )}>
-                                    Ahorrá 25%
+                                    Ahorrá {annualSavingsText}
                                 </span>
                                 {billingCycle === "annual" && (
                                     <div className="absolute inset-0 bg-white rounded-xl -z-10 animate-in fade-in zoom-in-95 duration-200" />
@@ -123,7 +190,7 @@ export function PricingClient({ initialBundles, footer }: PricingClientProps) {
                 <Container>
                     {/* Dynamic Bundle Grid */}
                     {/* Pricing Table Component */}
-                    <div id="precios" className="mb-20 scroll-mt-32">
+                    <div id="precios" ref={plansRef} className="mb-20 scroll-mt-32">
                         <MembershipTable
                             bundles={bundles}
                             billingCycle={billingCycle}
@@ -188,6 +255,9 @@ export function PricingClient({ initialBundles, footer }: PricingClientProps) {
                 redirectUrl="/membresias"
                 view="purchase"
             />
+
+            {/* Sticky mobile CTA */}
+            <StickyPricingCTA onScrollToPlans={scrollToPlans} />
         </div >
     );
 }

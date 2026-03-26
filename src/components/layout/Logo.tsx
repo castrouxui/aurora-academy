@@ -18,7 +18,7 @@ export function Logo({ iconOnly = false }: { iconOnly?: boolean }) {
                 alt="Aurora Academy"
                 width={180}
                 height={50}
-                className="h-8 md:h-10 w-auto object-contain"
+                className="h-5 md:h-7 w-auto object-contain"
                 priority
             />
         </Link>

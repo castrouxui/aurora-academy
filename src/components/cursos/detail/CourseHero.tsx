@@ -51,7 +51,7 @@ export function CourseHero({
             </nav>
 
             {/* Title */}
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-[1.05] tracking-tight text-shadow-sm">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.05] tracking-tight text-shadow-sm">
                 {title}
             </h1>
 

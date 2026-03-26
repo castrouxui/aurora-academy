@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/layout/Container";
 import { Logo } from "./Logo";
-import { Menu, X, Search, LogOut, BookOpen, User, LayoutDashboard, TrendingUp, ChevronDown, Building2, GraduationCap, PlayCircle, FileText, Lock, ArrowRight, ShieldCheck } from "lucide-react"; // Added icons
+import { Menu, X, LogOut, BookOpen, User, LayoutDashboard, TrendingUp, ChevronDown, Building2, GraduationCap, PlayCircle, FileText, Lock, ArrowRight, ShieldCheck } from "lucide-react"; // Added icons
 import { useSession, signOut } from "next-auth/react";
 // import { cn } from "@/lib/utils"; 
 import { LoginModal } from "@/components/auth/LoginModal";
@@ -92,28 +92,6 @@ export function Navbar() {
             {/* Right Actions & Search (Desktop) */}
             <div className="hidden md:flex items-center gap-6">
 
-              {/* Search Input - Desktop */}
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const term = (e.currentTarget.elements.namedItem('search') as HTMLInputElement).value;
-                  if (term) router.push(`/cursos?search=${encodeURIComponent(term)}`);
-                }}
-                className="hidden lg:flex relative w-[250px]"
-              >
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <Search size={16} />
-                </div>
-                <input
-                  name="search"
-                  type="text"
-                  placeholder="Buscar..."
-                  className="w-full bg-[#1e2330] border border-gray-700 text-gray-200 text-sm rounded-full py-2 pl-9 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-                />
-              </form>
-
-              <div className="h-6 w-px bg-gray-800 hidden lg:block"></div>
-
               {session?.user ? (
                 <div className="relative">
                   <button onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} className="flex items-center gap-3 focus:outline-none hover:bg-white/5 p-1 pr-3 rounded-full transition-colors border border-transparent hover:border-white/5">
@@ -160,23 +138,16 @@ export function Navbar() {
                   )}
                 </div>
               ) : (
-                <div className="flex items-center rounded-xl border border-emerald-500/50 bg-transparent overflow-hidden h-10 transition-all hover:border-emerald-400">
+                <div className="flex items-center gap-2">
                   <button
-                    onClick={() => {
-                      setAuthMode('login');
-                      setIsLoginModalOpen(true);
-                    }}
-                    className="px-4 h-full text-xs font-bold text-white hover:bg-emerald-500/10 transition-colors"
+                    onClick={() => { setAuthMode('login'); setIsLoginModalOpen(true); }}
+                    className="px-4 h-9 text-sm font-semibold text-gray-300 hover:text-white rounded-lg hover:bg-white/5 transition-all"
                   >
                     Iniciar sesión
                   </button>
-                  <div className="h-4 w-px bg-emerald-500/30"></div>
                   <button
-                    onClick={() => {
-                      setAuthMode('register');
-                      setIsLoginModalOpen(true);
-                    }}
-                    className="px-4 h-full text-xs font-bold text-white hover:bg-emerald-500/10 transition-colors"
+                    onClick={() => { setAuthMode('register'); setIsLoginModalOpen(true); }}
+                    className="px-4 h-9 text-sm font-bold text-white bg-[#5D5CDE] hover:bg-[#4B4AC0] rounded-lg shadow-[0_2px_12px_rgba(93,92,222,0.35)] transition-all active:scale-95"
                   >
                     Registrarse
                   </button>
@@ -222,29 +193,6 @@ export function Navbar() {
           </div>
 
           <div className="flex flex-col flex-1 px-6 py-8 overflow-y-auto space-y-10">
-            {/* Search - More Integrated */}
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const term = (e.currentTarget.elements.namedItem('search-mobile') as HTMLInputElement).value;
-                if (term) {
-                  router.push(`/cursos?search=${encodeURIComponent(term)}`);
-                  toggleMenu();
-                }
-              }}
-              className="relative group lg:hidden"
-            >
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 group-focus-within:text-primary transition-colors">
-                <Search size={18} />
-              </div>
-              <input
-                name="search-mobile"
-                type="text"
-                placeholder="¿Qué quieres aprender?"
-                className="w-full bg-white/5 border border-white/10 text-white rounded-2xl py-4 pl-12 pr-4 placeholder-gray-500 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all text-base"
-              />
-            </form>
-
             {/* Navigation Groups */}
             <div className="space-y-8">
               {/* Primary (Academical) */}

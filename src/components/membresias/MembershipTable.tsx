@@ -147,9 +147,18 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                     displayFeatures.push(...newDyns);
                 }
             } else {
-                // Static Fallback
-                displayFeatures.push(...(staticPlan?.features || []));
+                // Static Fallback — omitir header y pill que ya fueron agregados arriba
+                const staticFeats = (staticPlan?.features || []).filter((f: any) => {
+                    if (typeof f === 'string' && f.startsWith("Todo lo del Plan")) return false;
+                    if (React.isValidElement(f)) return false; // pill ya agregado
+                    return true;
+                });
+                displayFeatures.push(...staticFeats);
             }
+
+            // Precio sin descuento = mensual × 12 (lo que pagarías si fuera mes a mes)
+            const fullAnnualPrice = basePrice * 12;
+            const formattedAnchor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(fullAnnualPrice);
 
             return {
                 ...item,
@@ -162,8 +171,10 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                 formattedTotal: totalPriceDisplay,
                 savingsPct,
                 isRecommended: isPortfolio, // Portfolio is Hero
+                formattedAnchor,
                 // Identifying marks
                 isPortfolio,
+                isElite,
                 index
             };
         });
@@ -174,18 +185,25 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch max-w-7xl mx-auto scoll-mt-32">
             {displayItems.map((plan, idx) => {
                 const isPortfolio = plan.isPortfolio;
+                const isElite = plan.isElite;
 
                 return (
                     <div
                         key={idx}
                         className={cn(
                             "relative flex flex-col h-full rounded-3xl p-8 transition-all duration-300",
-                            // Removed order-first/last to respect natural sorted order (Inicial -> Elite -> Portfolio)
+                            // Mobile: Portfolio first, Elite second, Inicial third
+                            isPortfolio ? "order-first md:order-none" : isElite ? "order-2 md:order-none" : "order-3 md:order-none",
                             isPortfolio
-                                ? "bg-[#0F1115] border-[1.5px] border-[#5D5CDE]/50 shadow-2xl shadow-indigo-500/10 z-10 pb-10"
-                                : "bg-[#0A0A0A]/50 border border-white/5 hover:border-white/10 opacity-90 hover:opacity-100 pb-10"
+                                ? "bg-[#0D0F1A] border-[1.5px] border-[#5D5CDE]/60 shadow-[0_0_60px_-10px_rgba(93,92,222,0.35)] z-10 pb-10"
+                                : "bg-[#0D1120] border border-white/8 hover:border-white/15 hover:shadow-[0_4px_24px_-8px_rgba(93,92,222,0.12)] transition-all pb-10"
                         )}
                     >
+                        {/* Gradiente interno — solo Portfolio */}
+                        {isPortfolio && (
+                            <div className="absolute inset-0 rounded-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 40% at 50% 0%, rgba(93,92,222,0.08) 0%, transparent 70%)" }} />
+                        )}
+
                         {/* WRAPPER FOR TOP CONTENT TO PUSH CTA DOWN */}
                         <div className="flex-grow flex flex-col">
 
@@ -202,7 +220,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                             <div className="mb-6">
                                 <h3 className={cn(
                                     "font-bold font-display tracking-tight mb-2 min-h-[32px] flex items-center",
-                                    isPortfolio ? "text-2xl text-white" : "text-xl text-gray-200"
+                                    isPortfolio ? "text-2xl text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-300" : "text-xl text-gray-200"
                                 )}>
                                     {plan.title}
                                 </h3>
@@ -210,6 +228,21 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                     {plan.description}
                                 </p>
                             </div>
+
+                            {/* Anchor Pricing — solo visible en ciclo anual */}
+                            {billingCycle === "annual" && (
+                                <div className="mb-3 flex items-center gap-2 flex-wrap">
+                                    <span className={cn(
+                                        "text-xs line-through",
+                                        isPortfolio ? "text-gray-500" : "text-gray-600"
+                                    )}>
+                                        {plan.formattedAnchor}/año
+                                    </span>
+                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 whitespace-nowrap">
+                                        🎁 3 meses gratis
+                                    </span>
+                                </div>
+                            )}
 
                             {/* Price */}
                             <div className="mb-8 min-h-[84px] flex flex-col justify-end">
@@ -322,19 +355,22 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                             <Button
                                 onClick={() => onPurchase(plan.title, plan.finalPrice.toString(), undefined, plan.id, billingCycle === 'annual')}
                                 className={cn(
-                                    "w-full h-12 rounded-xl text-sm font-bold tracking-wide transition-all duration-300",
+                                    "w-full h-12 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 active:scale-95",
                                     isPortfolio
                                         ? "bg-white text-background hover:bg-gray-200 shadow-[0_4px_20px_-5px_rgba(255,255,255,0.2)]"
-                                        : "bg-transparent border border-white/20 text-white hover:bg-white/5 active:scale-95"
+                                        : "bg-[#5D5CDE]/90 border border-[#5D5CDE] text-white hover:bg-[#5D5CDE] shadow-[0_4px_20px_-5px_rgba(93,92,222,0.4)]"
                                 )}
                             >
                                 {isPortfolio ? "Empezar Ahora" : "Elegir plan"}
                             </Button>
 
-                            <div className="mt-3 flex items-start gap-2 opacity-80 min-h-[32px]">
-                                <span className="text-sm mt-0.5">🛡️</span>
-                                <p className="text-[10px] leading-snug text-gray-400 font-medium text-left">
-                                    <strong className="text-gray-300">Garantía de 7 días:</strong> Probá la academia sin riesgo. Si no cumple tus expectativas, te devolvemos el 100%.
+                            <div className="mt-3 flex items-center gap-2 min-h-[32px]">
+                                <span className="text-base">🛡️</span>
+                                <p className={cn(
+                                    "text-sm leading-snug font-semibold",
+                                    isPortfolio ? "text-emerald-400" : "text-emerald-500/90"
+                                )}>
+                                    Garantía de 7 días — devolvemos el 100%
                                 </p>
                             </div>
                         </div>

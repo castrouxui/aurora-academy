@@ -10,11 +10,13 @@ import { getRegisteredUserCount } from "@/actions/user";
 export function HeroBanner() {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [userCount, setUserCount] = useState<number | null>(null);
+    const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
         getRegisteredUserCount().then(count => {
             setUserCount(count);
         });
+        setIsMobile(window.innerWidth < 768);
     }, []);
 
     const openLoginModal = () => setIsLoginModalOpen(true);
@@ -34,7 +36,7 @@ export function HeroBanner() {
                             </span>
                         </div>
 
-                        <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white drop-shadow-2xl mb-4 md:mb-6 font-display leading-[0.95]">
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter text-white drop-shadow-2xl mb-4 md:mb-6 font-display leading-[0.95]">
                             Dejá de ahorrar,<br />
                             <span className="text-[#5D5CDE]">
                                 empezá a invertir.
@@ -63,19 +65,28 @@ export function HeroBanner() {
                 </div>
             </Container>
 
-            {/* Video Background */}
+            {/* Video/Image Background — image fallback on mobile for performance */}
             <div className="absolute inset-0 z-0">
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="h-full w-full object-cover opacity-50"
-                >
-                    <source src="/hero-video.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                </video>
-                {/* Gradient Overlay for better text readability and seamless transition */}
+                {isMobile ? (
+                    <img
+                        src="/hero-poster.jpg"
+                        alt=""
+                        className="h-full w-full object-cover opacity-40"
+                        loading="eager"
+                    />
+                ) : (
+                    <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        poster="/hero-poster.jpg"
+                        className="h-full w-full object-cover opacity-50"
+                    >
+                        <source src="/hero-video.mp4" type="video/mp4" />
+                    </video>
+                )}
+                {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-[#0B0F19]/50 to-[#0B0F19]/40"></div>
             </div>
 

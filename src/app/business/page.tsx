@@ -17,7 +17,7 @@ export default function BusinessPage() {
                             <Building2 size={16} />
                             <span className="text-sm font-semibold">Aurora Academy para Empresas</span>
                         </div>
-                        <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-500">
+                        <h1 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-500">
                             Potenciá el bienestar financiero de <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5D5CDE] to-[#b3b2f7]">tu equipo</span>
                         </h1>
                         <p className="text-xl text-gray-400 mb-10 animate-in fade-in slide-in-from-bottom-8 duration-700">

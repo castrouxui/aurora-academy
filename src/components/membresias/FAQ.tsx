@@ -16,7 +16,7 @@ const FAQ_ITEMS: FAQItem[] = [
     },
     {
         question: "¿Tengo garantía si no estoy conforme?",
-        answer: "Sí, confiamos 100% en nuestra metodología. Por eso tenés una garantía de satisfacción de 24hs. Si el contenido no es para vos, te devolvemos el total sin vueltas.",
+        answer: "Sí, confiamos 100% en nuestra metodología. Por eso tenés una garantía de satisfacción de 7 días. Si el contenido no es para vos, te devolvemos el total sin vueltas.",
     },
     {
         question: "¿Tengo horarios fijos para las clases?",

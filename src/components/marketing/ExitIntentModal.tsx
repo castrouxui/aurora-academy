@@ -1,16 +1,27 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { getRegisteredUserCount } from "@/actions/user";
 
 export function ExitIntentModal() {
+    const pathname = usePathname();
+    const isMembershipsPage = pathname === "/membresias";
+
     const [isVisible, setIsVisible] = useState(false);
     const [email, setEmail] = useState("");
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const [hasTriggered, setHasTriggered] = useState(false);
+    const [userCount, setUserCount] = useState<number | null>(null);
+
+    useEffect(() => {
+        getRegisteredUserCount().then(count => setUserCount(count));
+    }, []);
 
     // 3 days cooldown
     const COOLDOWN_DAYS = 3;
@@ -152,7 +163,31 @@ export function ExitIntentModal() {
                             <X className="h-5 w-5" />
                         </button>
 
-                        {status === "success" ? (
+                        {/* ── Memberships page: show discount CTA instead of email capture ── */}
+                        {isMembershipsPage ? (
+                            <div className="text-center space-y-5">
+                                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+                                    <span className="text-amber-400 text-xs font-bold uppercase tracking-wider">Oferta exclusiva</span>
+                                </div>
+                                <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight">
+                                    Antes de irte — llevate un 15% off
+                                </h2>
+                                <p className="text-gray-400 text-base leading-relaxed">
+                                    Usá el cupón <span className="text-white font-black bg-white/10 px-2 py-0.5 rounded font-mono">VUELVE15</span> al momento de pago y empezá hoy mismo.
+                                </p>
+                                <div className="space-y-3 pt-2">
+                                    <Link href="/membresias#precios" onClick={handleClose}>
+                                        <Button className="w-full h-12 text-base font-black bg-[#5D5CDE] hover:bg-[#4b4ac0] text-white shadow-lg shadow-purple-500/25 active:scale-95 transition-all">
+                                            Quiero el 15% off →
+                                        </Button>
+                                    </Link>
+                                    <button onClick={handleClose} className="text-xs text-gray-500 hover:text-gray-400 transition-colors w-full">
+                                        No gracias, prefiero pagar el precio completo
+                                    </button>
+                                </div>
+                                <p className="text-xs text-gray-500">🛡️ Garantía de 7 días — sin riesgo</p>
+                            </div>
+                        ) : status === "success" ? (
                             <div className="flex flex-col items-center justify-center py-8 text-center animate-in fade-in zoom-in duration-300">
                                 <div className="mb-6 rounded-full bg-green-500/10 p-4 text-green-500">
                                     <CheckCircle className="h-12 w-12" />
@@ -169,7 +204,7 @@ export function ExitIntentModal() {
                                         ¿Todavía no estás listo para dar el paso?
                                     </h2>
                                     <p className="text-gray-400 text-base leading-relaxed">
-                                        No te vayas con las manos vacías. Unite a los <span className="text-purple-400 font-semibold">+1.000 alumnos</span> que ya están transformando su relación con el dinero.
+                                        No te vayas con las manos vacías. Unite a los <span className="text-purple-400 font-semibold">+{userCount !== null ? userCount : '...'} alumnos</span> que ya están transformando su relación con el dinero.
                                     </p>
                                     <p className="text-white font-medium bg-white/5 p-3 rounded-lg border border-white/5 inline-block w-full text-center sm:text-left">
                                         🎁 Accedé gratis a "El camino del inversor"
