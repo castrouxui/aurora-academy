@@ -3,6 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { checkAndgrantCourseReward } from "@/lib/rewards";
+import { mailer, FROM } from "@/lib/mailer";
+import { membershipOfferEmail } from "@/lib/emails/membershipOffer";
+
+const FREE_COURSE_ID = "cml05hq7n00025z0eogogsnge";
 
 export async function POST(req: Request) {
     try {
@@ -82,6 +86,28 @@ export async function POST(req: Request) {
         if (lesson && lesson.module && isCompleted) {
             const rewardResult = await checkAndgrantCourseReward(session.user.id, lesson.module.courseId);
             rewardGranted = rewardResult.granted || false;
+
+            // Email funnel: trigger al completar la 2da lección del curso gratuito
+            if (lesson.module.courseId === FREE_COURSE_ID) {
+                const completedCount = await prisma.userProgress.count({
+                    where: {
+                        userId: session.user.id,
+                        completed: true,
+                        lesson: { module: { courseId: FREE_COURSE_ID } }
+                    }
+                });
+
+                if (completedCount === 2 && session.user.email) {
+                    const { html, text, subject } = membershipOfferEmail(session.user.name || "");
+                    mailer.sendMail({
+                        from: FROM,
+                        to: session.user.email,
+                        subject,
+                        html,
+                        text,
+                    }).catch(err => console.error("[EMAIL_FUNNEL]", err));
+                }
+            }
         }
 
         return NextResponse.json({ ...progress, rewardGranted });

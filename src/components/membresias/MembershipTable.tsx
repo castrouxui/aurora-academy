@@ -260,7 +260,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                         </div>
                                     </div>
                                     {billingCycle === "annual" && (
-                                        <p className="mt-1.5 text-[10px] text-emerald-400 font-semibold">🎁 3 meses gratis incluidos en el plan anual</p>
+                                        <p className="mt-1.5 text-[10px] text-emerald-400 font-semibold">💰 Ahorrás el equivalente a 3 meses vs. plan mensual</p>
                                     )}
                                 </div>
                             )}

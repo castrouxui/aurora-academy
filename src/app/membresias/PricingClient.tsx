@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { MembershipTable } from "@/components/membresias/MembershipTable";
 import { LeadMagnet } from "@/components/membresias/LeadMagnet";
 import { Testimonials } from "@/components/membresias/Testimonials";
@@ -23,6 +24,7 @@ interface PricingClientProps {
 
 export function PricingClient({ initialBundles, footer }: PricingClientProps) {
     const { data: session } = useSession();
+    const searchParams = useSearchParams();
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState({
@@ -35,7 +37,9 @@ export function PricingClient({ initialBundles, footer }: PricingClientProps) {
 
     // Dynamic State
     const [bundles] = useState<any[]>(initialBundles);
-    const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
+    const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">(
+        searchParams.get("billing") === "monthly" ? "monthly" : "annual"
+    );
     const [userCount, setUserCount] = useState<number | null>(null);
     const plansRef = useRef<HTMLDivElement>(null);
 
