@@ -1,12 +1,8 @@
 import React from "react";
 
-// Valor total de los cursos incluidos si se compraran individualmente.
-// Fuente: precios reales de cursos en DB (consultado 2026-03-26).
-export const PLAN_COURSE_VALUES = [
-    235_000,   // Inversor Inicial  (6 cursos)
-    800_000,   // Trader de Elite   (17 cursos)
-    1_740_000, // Portfolio Manager (26 cursos)
-];
+// Fallback estático usado cuando la DB local no tiene bundles.
+// En producción se calcula dinámicamente desde los precios reales.
+export const PLAN_COURSE_VALUES_FALLBACK = [235_000, 800_000, 1_740_000];
 
 export const PLANS = [
     {

@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { PLANS, PLAN_COURSE_VALUES } from "@/constants/pricing";
+import { PLANS, PLAN_COURSE_VALUES_FALLBACK } from "@/constants/pricing";
 import { PricingCheckmark } from "./PricingCheckmark";
 import { Lock } from "lucide-react";
 
@@ -160,8 +160,10 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
             const fullAnnualPrice = basePrice * 12;
             const formattedAnchor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(fullAnnualPrice);
 
-            // Valor individual de los cursos incluidos
-            const courseValue = PLAN_COURSE_VALUES[index];
+            // Valor individual de los cursos — dinámico desde DB en prod, fallback estático en local
+            const courseValue = bundles.length > 0
+                ? item.courses.reduce((sum: number, c: any) => sum + parseFloat(c.price || '0'), 0)
+                : PLAN_COURSE_VALUES_FALLBACK[index] ?? null;
             const formattedCourseValue = courseValue
                 ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(courseValue)
                 : null;
@@ -236,26 +238,29 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                 </p>
                             </div>
 
-                            {/* Anchor Pricing — valor de cursos siempre visible */}
+                            {/* Anchor Pricing — comparación cursos individuales vs membresía */}
                             {plan.formattedCourseValue && (
-                                <div className="mb-4">
-                                    <div className={cn(
-                                        "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold",
-                                        isPortfolio
-                                            ? "bg-indigo-500/10 border border-indigo-500/20 text-indigo-300"
-                                            : "bg-white/5 border border-white/10 text-gray-400"
-                                    )}>
-                                        <span className="line-through opacity-60">{plan.formattedCourseValue} en cursos</span>
-                                        <span className="opacity-40">→</span>
-                                        <span className={isPortfolio ? "text-indigo-200 font-bold" : "text-gray-300 font-bold"}>incluidos en tu plan</span>
-                                    </div>
-                                    {billingCycle === "annual" && (
-                                        <div className="mt-1.5 flex items-center gap-1.5">
-                                            <span className="text-[10px] text-gray-500 line-through">{plan.formattedAnchor}/año sin descuento</span>
-                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
-                                                🎁 3 meses gratis
+                                <div className={cn(
+                                    "mb-5 rounded-xl p-3 border",
+                                    isPortfolio
+                                        ? "bg-indigo-500/8 border-indigo-500/20"
+                                        : "bg-white/3 border-white/8"
+                                )}>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Si compraras los cursos por separado</p>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-lg font-bold text-gray-500 line-through">{plan.formattedCourseValue}</span>
+                                        <span className="text-gray-600 text-sm">→</span>
+                                        <div className="flex flex-col">
+                                            <span className={cn(
+                                                "text-sm font-black",
+                                                isPortfolio ? "text-indigo-300" : "text-white"
+                                            )}>
+                                                con tu membresía
                                             </span>
                                         </div>
+                                    </div>
+                                    {billingCycle === "annual" && (
+                                        <p className="mt-1.5 text-[10px] text-emerald-400 font-semibold">🎁 3 meses gratis incluidos en el plan anual</p>
                                     )}
                                 </div>
                             )}
