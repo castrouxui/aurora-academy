@@ -155,7 +155,11 @@ export default function MyMembershipsPage() {
             </div>
 
             {/* Current Status Section */}
-            {subscription?.subscription?.status === 'pending' ? (
+            {subscription?.subscription?.status === 'pending' && (() => {
+                const createdAt = new Date(subscription.subscription.createdAt);
+                const minutesAgo = (Date.now() - createdAt.getTime()) / 60_000;
+                return minutesAgo <= 30; // solo mostrar si tiene menos de 30 min (evitar pendings abandonados)
+            })() ? (
                 <Card className="bg-[#111827] border-[#5D5CDE]/20 border-2 py-14 text-center shadow-2xl">
                     <CardContent>
                         <div className="bg-[#5D5CDE]/10 p-5 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 text-[#5D5CDE]">
