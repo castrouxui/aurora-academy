@@ -3,7 +3,7 @@
 import React, { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { PLANS } from "@/constants/pricing";
+import { PLANS, PLAN_COURSE_VALUES } from "@/constants/pricing";
 import { PricingCheckmark } from "./PricingCheckmark";
 import { Lock } from "lucide-react";
 
@@ -156,9 +156,15 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                 displayFeatures.push(...staticFeats);
             }
 
-            // Precio sin descuento = mensual × 12 (lo que pagarías si fuera mes a mes)
+            // Precio sin descuento = mensual × 12
             const fullAnnualPrice = basePrice * 12;
             const formattedAnchor = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(fullAnnualPrice);
+
+            // Valor individual de los cursos incluidos
+            const courseValue = PLAN_COURSE_VALUES[index];
+            const formattedCourseValue = courseValue
+                ? new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", maximumFractionDigits: 0 }).format(courseValue)
+                : null;
 
             return {
                 ...item,
@@ -172,6 +178,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                 savingsPct,
                 isRecommended: isPortfolio, // Portfolio is Hero
                 formattedAnchor,
+                formattedCourseValue,
                 // Identifying marks
                 isPortfolio,
                 isElite,
@@ -229,18 +236,27 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                                 </p>
                             </div>
 
-                            {/* Anchor Pricing — solo visible en ciclo anual */}
-                            {billingCycle === "annual" && (
-                                <div className="mb-3 flex items-center gap-2 flex-wrap">
-                                    <span className={cn(
-                                        "text-xs line-through",
-                                        isPortfolio ? "text-gray-500" : "text-gray-600"
+                            {/* Anchor Pricing — valor de cursos siempre visible */}
+                            {plan.formattedCourseValue && (
+                                <div className="mb-4">
+                                    <div className={cn(
+                                        "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold",
+                                        isPortfolio
+                                            ? "bg-indigo-500/10 border border-indigo-500/20 text-indigo-300"
+                                            : "bg-white/5 border border-white/10 text-gray-400"
                                     )}>
-                                        {plan.formattedAnchor}/año
-                                    </span>
-                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 whitespace-nowrap">
-                                        🎁 3 meses gratis
-                                    </span>
+                                        <span className="line-through opacity-60">{plan.formattedCourseValue} en cursos</span>
+                                        <span className="opacity-40">→</span>
+                                        <span className={isPortfolio ? "text-indigo-200 font-bold" : "text-gray-300 font-bold"}>incluidos en tu plan</span>
+                                    </div>
+                                    {billingCycle === "annual" && (
+                                        <div className="mt-1.5 flex items-center gap-1.5">
+                                            <span className="text-[10px] text-gray-500 line-through">{plan.formattedAnchor}/año sin descuento</span>
+                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
+                                                🎁 3 meses gratis
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
