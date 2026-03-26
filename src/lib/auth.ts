@@ -32,6 +32,35 @@ export const authOptions: AuthOptions = {
                         where: { email }
                     });
 
+                    if (existingUser && !existingUser.password) {
+                        // Usuario de Google sin contraseña — exigir verificación por email antes de asociarle una
+                        const verifiedToken = await prisma.verificationToken.findFirst({
+                            where: {
+                                identifier: `checkout-verified:${email}`,
+                                expires: { gt: new Date() },
+                            },
+                        });
+                        if (!verifiedToken) {
+                            throw new Error("Verificación requerida");
+                        }
+                        // Token de un solo uso
+                        await prisma.verificationToken.delete({
+                            where: { identifier_token: { identifier: verifiedToken.identifier, token: verifiedToken.token } },
+                        });
+                        const hashedPassword = await bcrypt.hash(password, 10);
+                        const updatedUser = await prisma.user.update({
+                            where: { email },
+                            data: { password: hashedPassword },
+                        });
+                        return {
+                            id: updatedUser.id,
+                            name: updatedUser.name,
+                            email: updatedUser.email,
+                            image: updatedUser.image,
+                            role: updatedUser.role as any,
+                        };
+                    }
+
                     if (existingUser) {
                         throw new Error("El usuario ya existe");
                     }
@@ -49,7 +78,7 @@ export const authOptions: AuthOptions = {
                     });
 
                     // Send General Welcome Email
-                    // Note: This is async but we don't await to not block the login process, 
+                    // Note: This is async but we don't await to not block the login process,
                     // though for emails it's usually better to ensure they sent or at least handled.
                     // Given the context of "instant access", we want it fast.
                     sendGeneralWelcomeEmail(newUser.email!, newUser.name).catch(err =>

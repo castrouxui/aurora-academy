@@ -11,8 +11,6 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Container } from "@/components/layout/Container";
 import { PaymentModal } from "@/components/checkout/PaymentModal";
 import { CardsIcons } from "@/components/ui/CardsIcons";
-import { useSession } from "next-auth/react";
-import { LoginModal } from "@/components/auth/LoginModal";
 import { StickyPricingCTA } from "@/components/membresias/StickyPricingCTA";
 import { cn } from "@/lib/utils";
 import { getRegisteredUserCount } from "@/actions/user";
@@ -23,10 +21,8 @@ interface PricingClientProps {
 }
 
 export function PricingClient({ initialBundles, footer }: PricingClientProps) {
-    const { data: session } = useSession();
     const searchParams = useSearchParams();
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState({
         title: "",
         price: "",
@@ -99,11 +95,6 @@ export function PricingClient({ initialBundles, footer }: PricingClientProps) {
     }, []);
 
     const handlePurchase = (title: string, price: string, courseId?: string, bundleId?: string, isAnnual?: boolean) => {
-        if (!session) {
-            setIsLoginModalOpen(true);
-            return;
-        }
-
         setSelectedCourse({
             title,
             price,
@@ -251,14 +242,6 @@ export function PricingClient({ initialBundles, footer }: PricingClientProps) {
                     />
                 )
             }
-
-            {/* Login Modal for unauthenticated purchases */}
-            <LoginModal
-                isOpen={isLoginModalOpen}
-                onClose={() => setIsLoginModalOpen(false)}
-                redirectUrl="/membresias"
-                view="purchase"
-            />
 
             {/* Sticky mobile CTA */}
             <StickyPricingCTA onScrollToPlans={scrollToPlans} />
