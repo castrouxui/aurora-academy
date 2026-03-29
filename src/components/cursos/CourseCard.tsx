@@ -100,15 +100,15 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19] via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
                     </div>
 
-                    <div className="flex items-center gap-2 mb-2">
-                        <div className="bg-[#5D5CDE]/10 text-[#5D5CDE] text-sm font-bold px-2 py-1 rounded uppercase tracking-wide border border-[#5D5CDE]/20">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <div className="min-w-0 bg-[#5D5CDE]/10 text-[#5D5CDE] text-sm font-bold px-2 py-1 rounded uppercase tracking-wide border border-[#5D5CDE]/20 truncate">
                             {course.tag}
                         </div>
 
                         {/* Course Type Badge */}
                         {course.type && course.type !== 'bundle' && (
                             <div className={cn(
-                                "text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide border ml-2",
+                                "text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wide border",
                                 course.type === 'Mentoría' ? "bg-amber-500/10 text-amber-500 border-amber-500/20" :
                                     course.type === 'Micro Curso' ? "bg-cyan-500/10 text-cyan-500 border-cyan-500/20" :
                                         "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"

@@ -90,6 +90,8 @@ export default function StudentDashboard() {
             description: stats.inProgress === 1 ? "Curso activo" : "Cursos activos",
             icon: BookOpen,
             color: "text-blue-500",
+            href: "/dashboard/cursos",
+            emptyCTA: stats.inProgress === 0 ? "Empezá tu primer curso →" : null,
         },
         {
             title: "Certificados",
@@ -97,14 +99,18 @@ export default function StudentDashboard() {
             description: "Completados hasta ahora",
             icon: Award,
             color: "text-purple-500",
+            href: "/dashboard/cursos?tab=completed",
+            emptyCTA: stats.completed === 0 ? "Completá un curso para obtenerlo →" : null,
         },
         // Only show resources stat if they have any
         ...(membershipItems.length > 0 ? [{
             title: "Recursos Extra",
             value: membershipItems.length.toString(),
             description: "Enlaces de membresía",
-            icon: Award, // Reusing Award or similar, usually LinkIcon but importing specifically
+            icon: Award,
             color: "text-amber-500",
+            href: undefined as string | undefined,
+            emptyCTA: null as string | null,
         }] : [])
     ];
 
@@ -121,7 +127,10 @@ export default function StudentDashboard() {
             {/* Header */}
             <div>
                 <h1 className="text-3xl font-bold text-white mb-2">
-                    Hola, {session?.user?.name?.split(" ")[0]} 👋
+                    Hola, {(() => {
+                        const name = session?.user?.name?.split(" ")[0];
+                        return name && name !== "Usuario" ? name : session?.user?.email?.split("@")[0] || "Estudiante";
+                    })()} 👋
                 </h1>
                 <p className="text-gray-400">
                     Bienvenido a tu panel de aprendizaje. Aquí tienes un resumen de tu progreso.
@@ -137,22 +146,32 @@ export default function StudentDashboard() {
 
             {/* Stats Grid */}
             <div className={`grid gap-4 md:grid-cols-2 ${membershipItems.length > 0 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'}`}>
-                {statCards.map((stat) => (
-                    <Card key={stat.title} className="bg-white/5 border-white/5 shadow-lg group hover:border-[#5D5CDE]/30 hover:bg-white/10 transition-all duration-300">
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-bold text-gray-300">
-                                {stat.title}
-                            </CardTitle>
-                            <div className={`p-2 rounded-lg bg-white/5 ${stat.color} group-hover:scale-110 transition-transform`}>
-                                <stat.icon className="h-4 w-4" />
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-black text-white">{stat.value}</div>
-                            <p className="text-xs text-gray-500 font-medium mt-1">{stat.description}</p>
-                        </CardContent>
-                    </Card>
-                ))}
+                {statCards.map((stat) => {
+                    const cardContent = (
+                        <Card key={stat.title} className={`bg-white/5 border-white/5 shadow-lg group hover:border-[#5D5CDE]/30 hover:bg-white/10 transition-all duration-300 ${stat.href ? 'cursor-pointer' : ''}`}>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-bold text-gray-300">
+                                    {stat.title}
+                                </CardTitle>
+                                <div className={`p-2 rounded-lg bg-white/5 ${stat.color} group-hover:scale-110 transition-transform`}>
+                                    <stat.icon className="h-4 w-4" />
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-3xl font-black text-white">{stat.value}</div>
+                                <p className="text-xs text-gray-500 font-medium mt-1">{stat.description}</p>
+                                {stat.emptyCTA && (
+                                    <p className="text-xs text-purple-400 mt-1">{stat.emptyCTA}</p>
+                                )}
+                            </CardContent>
+                        </Card>
+                    );
+                    return stat.href ? (
+                        <Link key={stat.title} href={stat.href} className="block hover:shadow-md transition-shadow rounded-xl">
+                            {cardContent}
+                        </Link>
+                    ) : cardContent;
+                })}
             </div>
 
             {/* Career Progress Card */}

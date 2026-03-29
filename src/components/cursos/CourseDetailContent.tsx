@@ -5,6 +5,7 @@ import { InstructorCard } from "@/components/cursos/InstructorCard";
 import { CourseFAQ } from "@/components/cursos/detail/CourseFAQ";
 import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 import { MobileCourseCTA } from "@/components/cursos/detail/MobileCourseCTA";
+import Footer from "@/components/layout/Footer";
 import { MembershipUpsellBanner } from "@/components/cursos/detail/MembershipUpsellBanner";
 import { ReviewList } from "@/components/reviews/ReviewList";
 import { ReviewForm } from "@/components/reviews/ReviewForm";
@@ -158,9 +159,9 @@ export function CourseDetailContent({
                 </div>
             </div>
 
-            {/* Testimonials Carousel (Footer) */}
+            {/* Testimonials Carousel */}
             <div className="border-t border-white/[0.04] pt-24 pb-32">
-                {/* <TestimonialsSection /> */}
+                <TestimonialsSection />
             </div>
 
             {/* Mobile Sticky CTA - Increased Z-index */}
@@ -174,6 +175,8 @@ export function CourseDetailContent({
                     rawPrice={courseData.rawPrice}
                 />
             </div>
+
+            <Footer />
         </div>
     );
 }

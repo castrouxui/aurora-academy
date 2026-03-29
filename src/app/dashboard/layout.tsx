@@ -7,7 +7,7 @@ import { Logo } from "@/components/layout/Logo";
 import { useSession, signOut } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MobileSidebar } from "@/components/layout/MobileSidebar";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TelegramBlockingOverlay } from "@/components/dashboard/TelegramBlockingOverlay";
@@ -20,6 +20,7 @@ export default function DashboardLayout({
     const pathname = usePathname();
     const { data: session, status } = useSession();
     const router = useRouter();
+    const [sidebarProgress, setSidebarProgress] = useState<{ coursesInProgress: number; overallPercent: number } | undefined>(undefined);
 
     useEffect(() => {
         if (status === "loading") return;
@@ -29,6 +30,20 @@ export default function DashboardLayout({
             router.push("/admin");
         }
     }, [session, status, router]);
+
+    useEffect(() => {
+        if (!session?.user) return;
+        fetch("/api/my-courses")
+            .then(res => res.ok ? res.json() : [])
+            .then((courses: any[]) => {
+                if (!Array.isArray(courses)) return;
+                const inProgress = courses.filter(c => c.progress > 0 && c.progress < 100);
+                if (inProgress.length === 0) return;
+                const avg = Math.round(inProgress.reduce((sum, c) => sum + c.progress, 0) / inProgress.length);
+                setSidebarProgress({ coursesInProgress: inProgress.length, overallPercent: avg });
+            })
+            .catch(() => {});
+    }, [session]);
 
     if (status === "loading") {
         return (
@@ -79,6 +94,7 @@ export default function DashboardLayout({
                 items={navigation}
                 user={session.user}
                 roleLabel={isMainAdmin ? "Administración" : "Mi Aprendizaje"}
+                progress={sidebarProgress}
             />
 
             {/* Mobile Header & Sidebar */}

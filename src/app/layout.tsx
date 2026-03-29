@@ -102,7 +102,7 @@ export default function RootLayout({
             />
           </noscript>
           {children}
-          <Toaster richColors position="top-center" closeButton />
+          <Toaster richColors position="top-center" closeButton duration={4000} />
           <Analytics />
           {/* <ChatWidget /> */}
         </Providers>

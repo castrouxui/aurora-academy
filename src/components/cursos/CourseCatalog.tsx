@@ -19,6 +19,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
     const [courses, setCourses] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [availableCategories, setAvailableCategories] = useState<string[]>([]);
+    const [availableInstructors, setAvailableInstructors] = useState<string[]>([]);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [activeFilters, setActiveFilters] = useState<FilterState>({
         categories: [],
@@ -97,6 +98,9 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
 
                     const categories = Array.from(new Set(formattedCourses.map((c: any) => c.tag)));
                     setAvailableCategories(categories as string[]);
+
+                    const instructors = Array.from(new Set(formattedCourses.map((c: any) => c.instructor).filter(Boolean)));
+                    setAvailableInstructors(instructors as string[]);
                 }
             } catch (error) {
                 console.error("Failed to fetch courses", error);
@@ -113,12 +117,15 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
         const matchesCategory = activeFilters.categories.length === 0 || activeFilters.categories.some(cat => course.tag.includes(cat));
         const matchesLevel = activeFilters.levels.length === 0 || activeFilters.levels.includes(course.level);
         const matchesType = !activeFilters.types || activeFilters.types.length === 0 || activeFilters.types.includes(course.type);
+        const matchesInstructor = !activeFilters.instructors || activeFilters.instructors.length === 0 || activeFilters.instructors.includes(course.instructor);
+        const matchesMembership = !activeFilters.membership ||
+            (activeFilters.membership === 'Sí' ? course.rawPrice === 0 : course.rawPrice > 0);
 
         let matchesPrice = true;
         if (activeFilters.price === "Gratis") matchesPrice = course.rawPrice === 0;
         if (activeFilters.price === "De Pago") matchesPrice = course.rawPrice > 0;
 
-        return matchesSearch && matchesCategory && matchesLevel && matchesType && matchesPrice;
+        return matchesSearch && matchesCategory && matchesLevel && matchesType && matchesInstructor && matchesMembership && matchesPrice;
     }).sort((a, b) => {
         switch (sortBy) {
             case "price-asc":
@@ -251,6 +258,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                 activeFilters={activeFilters}
                 onApply={setActiveFilters}
                 categories={availableCategories}
+                instructors={availableInstructors}
             />
         </div>
     );

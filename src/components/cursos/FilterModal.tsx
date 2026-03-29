@@ -6,6 +6,8 @@ export interface FilterState {
     categories: string[];
     levels: string[];
     types?: string[];
+    instructors?: string[];
+    membership?: string | null;
     price: string | null;
 }
 
@@ -15,9 +17,10 @@ interface FilterModalProps {
     activeFilters: FilterState;
     onApply: (filters: FilterState) => void;
     categories?: string[];
+    instructors?: string[];
 }
 
-export function FilterModal({ isOpen, onClose, activeFilters, onApply, categories = [] }: FilterModalProps) {
+export function FilterModal({ isOpen, onClose, activeFilters, onApply, categories = [], instructors = [] }: FilterModalProps) {
     const [localFilters, setLocalFilters] = useState<FilterState>(activeFilters);
 
     // Default categories if none provided or empty
@@ -52,8 +55,21 @@ export function FilterModal({ isOpen, onClose, activeFilters, onApply, categorie
         }));
     };
 
+    const toggleInstructor = (instructor: string) => {
+        setLocalFilters(prev => ({
+            ...prev,
+            instructors: (prev.instructors || []).includes(instructor)
+                ? (prev.instructors || []).filter(i => i !== instructor)
+                : [...(prev.instructors || []), instructor]
+        }));
+    };
+
     const setPrice = (price: string) => {
         setLocalFilters(prev => ({ ...prev, price }));
+    };
+
+    const setMembership = (value: string) => {
+        setLocalFilters(prev => ({ ...prev, membership: prev.membership === value ? null : value }));
     };
 
     const handleApply = () => {
@@ -142,6 +158,52 @@ export function FilterModal({ isOpen, onClose, activeFilters, onApply, categorie
                             ))}
                         </div>
                     </div>
+
+                    {/* Membership */}
+                    <div>
+                        <h4 className="text-white font-semibold mb-3">Incluido en Membresía</h4>
+                        <div className="space-y-2">
+                            {['Sí', 'No'].map(opt => (
+                                <label key={opt} className="flex items-center gap-3 text-sm text-gray-300 hover:text-white cursor-pointer group">
+                                    <div className="relative flex items-center">
+                                        <input
+                                            type="radio"
+                                            name="membership"
+                                            className="peer appearance-none w-5 h-5 border border-gray-500 rounded-full bg-transparent checked:border-primary transition-colors"
+                                            checked={localFilters.membership === opt}
+                                            onChange={() => setMembership(opt)}
+                                        />
+                                    </div>
+                                    <span className="group-hover:text-white transition-colors">{opt}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Instructors */}
+                    {instructors.length > 0 && (
+                        <div>
+                            <h4 className="text-white font-semibold mb-3">Instructor</h4>
+                            <div className="space-y-2">
+                                {instructors.map(inst => (
+                                    <label key={inst} className="flex items-center gap-3 text-sm text-gray-300 hover:text-white cursor-pointer group">
+                                        <div className="relative flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                className="peer appearance-none w-5 h-5 border border-gray-500 rounded bg-transparent checked:bg-primary checked:border-primary transition-colors"
+                                                checked={(localFilters.instructors || []).includes(inst)}
+                                                onChange={() => toggleInstructor(inst)}
+                                            />
+                                            <svg className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black opacity-0 peer-checked:opacity-100 pointer-events-none" viewBox="0 0 12 10" fill="none">
+                                                <path d="M1 5L4.5 8.5L11 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </div>
+                                        <span className="group-hover:text-white transition-colors">{inst}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Footer */}

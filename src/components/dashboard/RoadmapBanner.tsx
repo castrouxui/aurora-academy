@@ -8,10 +8,10 @@ export function RoadmapBanner() {
             <div className="absolute inset-0 bg-gradient-to-r from-[#10b981]/5 to-transparent opacity-50" />
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#10b981]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
 
-            <div className="relative flex flex-col md:flex-row items-center justify-between p-6 md:p-8 gap-6 md:gap-12">
+            <div className="relative flex flex-col lg:flex-row items-center justify-between p-6 lg:p-8 gap-6 lg:gap-12">
 
                 {/* Left: Progress Narrative */}
-                <div className="flex flex-col sm:flex-row items-center md:items-start gap-6 shrink-0">
+                <div className="flex flex-col sm:flex-row items-center lg:items-start gap-6 shrink-0">
                     <div className="relative flex flex-col items-center">
                         {/* Vertical Line */}
                         <div className="absolute top-8 bottom-0 w-0.5 bg-gradient-to-b from-[#10b981] to-[#27272a] h-12 md:h-full left-1/2 -translate-x-1/2" />
@@ -43,8 +43,8 @@ export function RoadmapBanner() {
                 </div>
 
                 {/* Center: Copy */}
-                <div className="text-center md:text-left flex-1 max-w-2xl">
-                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
+                <div className="text-center lg:text-left flex-1 max-w-2xl">
+                    <h2 className="text-2xl lg:text-3xl font-bold text-white mb-2 tracking-tight">
                         Tu hoja de ruta: <span className="text-[#10b981]">De 0 a 100</span>
                     </h2>
                     <p className="text-gray-400 text-sm md:text-base leading-relaxed">
@@ -53,10 +53,10 @@ export function RoadmapBanner() {
                 </div>
 
                 {/* Right: CTA */}
-                <Link href="/membresias" className="shrink-0 w-full md:w-auto">
+                <Link href="/membresias" className="shrink-0 w-full lg:w-auto">
                     <button className="w-full md:w-auto relative group overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-[#10b981] focus:ring-offset-2 focus:ring-offset-slate-900">
                         <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#09090b_0%,#10b981_50%,#09090b_100%)]" />
-                        <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-[#09090b] px-8 py-3 text-sm font-medium text-white backdrop-blur-3xl transition-all group-hover:bg-[#10b981]/10">
+                        <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-[#09090b] px-8 py-3 text-sm font-medium text-white backdrop-blur-3xl transition-all group-hover:bg-[#10b981]/10 w-full lg:w-auto">
                             <span className="flex items-center gap-2">
                                 Desbloquear Acceso Total
                                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

@@ -11,6 +11,7 @@ interface MembershipTableProps {
     bundles: any[];
     billingCycle: "monthly" | "annual";
     onPurchase: (title: string, price: string, courseId?: string, bundleId?: string, isAnnual?: boolean) => void;
+    buttonOverrides?: Record<string, { label: string; disabled?: boolean }>;
 }
 
 const PERSONA_DATA = [
@@ -34,7 +35,7 @@ const PERSONA_DATA = [
     }
 ];
 
-export function MembershipTable({ bundles, billingCycle, onPurchase }: MembershipTableProps) {
+export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverrides }: MembershipTableProps) {
 
     // Process and sort items to display
     const displayItems = useMemo(() => {
@@ -180,6 +181,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                 savingsPct,
                 isRecommended: isPortfolio, // Portfolio is Hero
                 formattedAnchor,
+                courseValue,
                 formattedCourseValue,
                 // Identifying marks
                 isPortfolio,
@@ -190,7 +192,17 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
     }, [bundles, billingCycle]);
 
 
+    // Build comparison data from string features only
+    const allStringFeatures: string[] = Array.from(
+        new Set(
+            displayItems.flatMap(plan =>
+                plan.features.filter((f: any) => typeof f === 'string' && !f.startsWith("Todo lo del Plan"))
+            )
+        )
+    );
+
     return (
+        <div className="space-y-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch max-w-7xl mx-auto scoll-mt-32">
             {displayItems.map((plan, idx) => {
                 const isPortfolio = plan.isPortfolio;
@@ -239,7 +251,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                             </div>
 
                             {/* Anchor Pricing — comparación cursos individuales vs membresía */}
-                            {plan.formattedCourseValue && (
+                            {plan.formattedCourseValue && plan.courseValue > plan.finalPrice && (
                                 <div className={cn(
                                     "mb-5 rounded-xl p-3 border",
                                     isPortfolio
@@ -373,17 +385,27 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
 
                         {/* CTA Button & Guarantee - ALWAYS AT BOTTOM */}
                         <div className="mt-auto pt-8">
-                            <Button
-                                onClick={() => onPurchase(plan.title, plan.finalPrice.toString(), undefined, plan.id, billingCycle === 'annual')}
-                                className={cn(
-                                    "w-full h-12 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 active:scale-95",
-                                    isPortfolio
-                                        ? "bg-white text-background hover:bg-gray-200 shadow-[0_4px_20px_-5px_rgba(255,255,255,0.2)]"
-                                        : "bg-[#5D5CDE]/90 border border-[#5D5CDE] text-white hover:bg-[#5D5CDE] shadow-[0_4px_20px_-5px_rgba(93,92,222,0.4)]"
-                                )}
-                            >
-                                {isPortfolio ? "Empezar Ahora" : "Elegir plan"}
-                            </Button>
+                            {(() => {
+                                const override = buttonOverrides?.[plan.id ?? ''];
+                                const label = override?.label ?? (isPortfolio ? "Empezar Ahora" : "Elegir plan");
+                                const disabled = override?.disabled ?? false;
+                                return (
+                                    <Button
+                                        onClick={() => !disabled && onPurchase(plan.title, plan.finalPrice.toString(), undefined, plan.id, billingCycle === 'annual')}
+                                        disabled={disabled}
+                                        className={cn(
+                                            "w-full h-12 rounded-xl text-sm font-bold tracking-wide transition-all duration-300 active:scale-95",
+                                            disabled
+                                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 cursor-default"
+                                                : isPortfolio
+                                                ? "bg-white text-background hover:bg-gray-200 shadow-[0_4px_20px_-5px_rgba(255,255,255,0.2)]"
+                                                : "bg-[#5D5CDE]/90 border border-[#5D5CDE] text-white hover:bg-[#5D5CDE] shadow-[0_4px_20px_-5px_rgba(93,92,222,0.4)]"
+                                        )}
+                                    >
+                                        {label}
+                                    </Button>
+                                );
+                            })()}
 
                             <div className="mt-3 flex items-center gap-2 min-h-[32px]">
                                 <span className="text-base">🛡️</span>
@@ -399,6 +421,76 @@ export function MembershipTable({ bundles, billingCycle, onPurchase }: Membershi
                     </div>
                 );
             })}
+        </div>
+
+        {/* Comparison Table */}
+        {allStringFeatures.length > 0 && (
+            <div className="max-w-7xl mx-auto">
+                <h3 className="text-2xl font-bold text-white text-center mb-8">Comparación de Planes</h3>
+
+                {/* Desktop Table */}
+                <div className="hidden md:block overflow-hidden rounded-2xl border border-white/8">
+                    <table className="w-full">
+                        <thead>
+                            <tr className="bg-[#0D1120]">
+                                <th className="text-left px-6 py-4 text-sm font-semibold text-gray-400 w-1/2">Característica</th>
+                                {displayItems.map((plan, i) => (
+                                    <th key={i} className={cn("px-6 py-4 text-sm font-bold text-center", plan.isPortfolio ? "text-[#5D5CDE]" : "text-gray-200")}>
+                                        {plan.title}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {allStringFeatures.map((feature, fi) => (
+                                <tr key={fi} className={cn("border-t border-white/5", fi % 2 === 0 ? "bg-[#0D0F1A]" : "bg-[#0D1120]")}>
+                                    <td className="px-6 py-3 text-sm text-gray-300">{feature}</td>
+                                    {displayItems.map((plan, pi) => {
+                                        const included = plan.features.some((f: any) => typeof f === 'string' && f === feature);
+                                        return (
+                                            <td key={pi} className="px-6 py-3 text-center">
+                                                {included ? (
+                                                    <span className="text-emerald-400 text-lg font-bold">✓</span>
+                                                ) : (
+                                                    <span className="text-gray-600 text-lg">×</span>
+                                                )}
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* Mobile: Accordion per plan */}
+                <div className="md:hidden space-y-4">
+                    {displayItems.map((plan, pi) => (
+                        <details key={pi} className="rounded-2xl border border-white/8 bg-[#0D1120] group">
+                            <summary className={cn("flex items-center justify-between px-5 py-4 cursor-pointer font-bold list-none", plan.isPortfolio ? "text-[#5D5CDE]" : "text-white")}>
+                                {plan.title}
+                                <span className="text-gray-400 group-open:rotate-180 transition-transform">▾</span>
+                            </summary>
+                            <div className="px-5 pb-4 space-y-2">
+                                {allStringFeatures.map((feature, fi) => {
+                                    const included = plan.features.some((f: any) => typeof f === 'string' && f === feature);
+                                    return (
+                                        <div key={fi} className="flex items-center justify-between text-sm py-1 border-t border-white/5">
+                                            <span className={included ? "text-gray-300" : "text-gray-600"}>{feature}</span>
+                                            {included ? (
+                                                <span className="text-emerald-400 font-bold">✓</span>
+                                            ) : (
+                                                <span className="text-gray-600">×</span>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </details>
+                    ))}
+                </div>
+            </div>
+        )}
         </div>
     );
 }

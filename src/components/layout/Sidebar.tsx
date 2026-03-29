@@ -26,9 +26,10 @@ interface SidebarProps {
         telegramVerified?: boolean;
     };
     roleLabel: string;
+    progress?: { coursesInProgress: number; overallPercent: number };
 }
 
-export function Sidebar({ items, financeItems, user, roleLabel }: SidebarProps) {
+export function Sidebar({ items, financeItems, user, roleLabel, progress }: SidebarProps) {
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -147,6 +148,14 @@ export function Sidebar({ items, financeItems, user, roleLabel }: SidebarProps) 
 
             {/* Footer / User Profile */}
             <div className="p-4 border-t border-[#1F2937]">
+                {!isCollapsed && progress && progress.coursesInProgress > 0 && (
+                    <div className="px-2 py-2 mb-3 animate-in fade-in duration-300">
+                        <p className="text-xs text-gray-500 mb-1">{progress.coursesInProgress} curso{progress.coursesInProgress !== 1 ? 's' : ''} en progreso</p>
+                        <div className="w-full bg-gray-800 rounded-full h-1.5">
+                            <div className="bg-[#5D5CDE] h-1.5 rounded-full transition-all duration-500" style={{ width: `${progress.overallPercent}%` }} />
+                        </div>
+                    </div>
+                )}
                 {!isCollapsed ? (
                     <>
                         <div className="flex items-center justify-between px-2 mb-4 animate-in fade-in duration-300">

@@ -119,7 +119,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
             });
 
             if (res.ok) {
-                toast.success("¡Inscripción exitosa!");
+                toast.success("¡Inscripción exitosa!", { duration: 3000 });
                 router.refresh(); // Just refresh to update UI state
             } else {
                 const data = await res.json();
@@ -327,6 +327,37 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                         </div>
                     </div>
 
+                    {/* Mark as Viewed Button - below video, above tabs */}
+                    {isAccess && activeLesson && (
+                        <div className="bg-[#0B0F19] px-4 lg:px-8 py-3 border-b border-gray-800 flex justify-end">
+                            <div className="mx-auto max-w-5xl w-full flex justify-end">
+                                <Button
+                                    onClick={() => handleToggleComplete(activeLesson.id, activeLesson.completed)}
+                                    variant={activeLesson.completed ? "outline" : "default"}
+                                    size="sm"
+                                    className={cn(
+                                        "gap-2 transition-all font-bold rounded-xl border-2",
+                                        activeLesson.completed
+                                            ? "border-emerald-500/50 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20"
+                                            : "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white border-transparent shadow-lg shadow-indigo-500/20"
+                                    )}
+                                >
+                                    {activeLesson.completed ? (
+                                        <>
+                                            <CheckCircle size={16} className="fill-current" />
+                                            Completada
+                                        </>
+                                    ) : (
+                                        <>
+                                            <CheckCircle size={16} />
+                                            Marcar como Vista
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Content Tabs Area */}
                     <div className="flex-1 bg-[#0B0F19] p-4 lg:p-8">
                         <div className="mx-auto max-w-5xl">
@@ -353,49 +384,19 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                             {/* Tab Content */}
                             <div className="min-h-[200px] pb-20 lg:pb-0">
                                 {activeTab === "description" && activeLesson && (
-                                    <>
-                                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-                                            <div className="space-y-4 flex-1">
-                                                <h2 className="text-xl lg:text-3xl font-bold text-white leading-tight">{activeLesson.title}</h2>
-                                                <div className="text-sm lg:text-base text-gray-400 leading-relaxed max-w-3xl prose prose-invert">
-                                                    {/* Show Lesson Description OR Course Description as fallback */}
-                                                    {activeLesson.description ? (
-                                                        <p>{activeLesson.description}</p>
-                                                    ) : (
-                                                        <div className="opacity-80">
-                                                            <p className="text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Descripción del Curso</p>
-                                                            <p>{course.description || "Sin descripción disponible."}</p>
-                                                        </div>
-                                                    )}
+                                    <div className="space-y-4">
+                                        <h2 className="text-xl lg:text-3xl font-bold text-white leading-tight">{activeLesson.title}</h2>
+                                        <div className="text-sm lg:text-base text-gray-400 leading-relaxed max-w-3xl prose prose-invert">
+                                            {activeLesson.description ? (
+                                                <p>{activeLesson.description}</p>
+                                            ) : (
+                                                <div className="opacity-80">
+                                                    <p className="text-xs font-bold uppercase tracking-wider mb-2 text-gray-500">Descripción del Curso</p>
+                                                    <p>{course.description || "Sin descripción disponible."}</p>
                                                 </div>
-                                            </div>
-
-                                            <Button
-                                                onClick={() => handleToggleComplete(activeLesson.id, activeLesson.completed)}
-                                                variant={activeLesson.completed ? "outline" : "default"}
-                                                size="lg"
-                                                className={cn(
-                                                    "shrink-0 gap-2 transition-all font-bold h-12 px-6 rounded-xl border-2",
-                                                    activeLesson.completed
-                                                        ? "border-emerald-500/50 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20"
-                                                        : "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white border-transparent shadow-lg shadow-indigo-500/20"
-                                                )}
-                                            >
-                                                {activeLesson.completed ? (
-                                                    <>
-                                                        <CheckCircle size={20} className="fill-current" />
-                                                        Completada
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <CheckCircle size={20} />
-                                                        Marcar como Vista
-                                                    </>
-                                                )}
-                                            </Button>
+                                            )}
                                         </div>
-                                    </>
-
+                                    </div>
                                 )}
                                 {activeTab === "resources" && activeLesson && (
                                     <div className="space-y-3">
@@ -544,17 +545,21 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                                                 {/* Icon State */}
                                                 <div className="mt-0.5 shrink-0">
                                                     {lesson.completed ? (
-                                                        <div className="bg-emerald-500/10 text-emerald-500 rounded-full p-0.5">
+                                                        <div className="bg-emerald-500/10 text-emerald-500 rounded-full p-0.5" title="Completada">
                                                             <CheckCircle size={16} />
                                                         </div>
                                                     ) : isLocked ? (
-                                                        <Lock size={16} className="text-gray-600" />
+                                                        <Lock size={16} className="text-gray-600" title="Bloqueada" />
                                                     ) : isActive ? (
-                                                        <div className="bg-[#5D5CDE] text-white rounded-full p-1 animate-pulse">
+                                                        <div className="bg-[#5D5CDE] text-white rounded-full p-1 animate-pulse" title="Reproduciendo">
                                                             <Play size={10} fill="currentColor" />
                                                         </div>
+                                                    ) : lesson.lastPlayedTime && lesson.lastPlayedTime > 0 ? (
+                                                        <div className="w-4 h-4 rounded-full border-2 border-amber-500 bg-amber-500/20 flex items-center justify-center" title="En progreso">
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                                                        </div>
                                                     ) : (
-                                                        <div className="border-2 border-gray-600 rounded-full w-4 h-4" />
+                                                        <div className="border-2 border-gray-600 rounded-full w-4 h-4" title="No vista" />
                                                     )}
                                                 </div>
 

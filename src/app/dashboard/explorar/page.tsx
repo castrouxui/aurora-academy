@@ -12,7 +12,7 @@ export default function ExplorePage() {
             </div>
 
             <Suspense fallback={<div className="pt-8 text-center text-white">Cargando...</div>}>
-                <CourseCatalog showTitle={false} paddingTop="pt-4" basePath="/dashboard/explore" />
+                <CourseCatalog showTitle={false} paddingTop="pt-4" basePath="/cursos" />
             </Suspense>
         </div>
     );

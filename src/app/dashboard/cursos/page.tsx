@@ -207,17 +207,19 @@ export default function MyCoursesPage() {
                         <BookOpen className="w-16 h-16 text-gray-600 mx-auto mb-4" />
                         <h3 className="text-xl font-semibold text-white mb-2">
                             {activeTab === 'not-started'
-                                ? "No tienes cursos pendientes de inicio"
+                                ? "No tenés cursos pendientes de inicio"
                                 : activeTab === 'in-progress'
-                                    ? "No tienes cursos en progreso actualmente"
-                                    : "No tienes cursos completados aún"}
+                                    ? "Aún no empezaste ningún curso"
+                                    : "Todavía no completaste ningún curso"}
                         </h3>
                         <p className="text-gray-400 mb-6">
-                            {activeTab === 'completed'
-                                ? "¡Sigue aprendiendo para conseguir tus certificados!"
-                                : "Explora nuestros cursos y comienza a aprender hoy mismo."}
+                            {activeTab === 'not-started'
+                                ? "Explorá nuestro catálogo y encontrá el curso perfecto para vos."
+                                : activeTab === 'in-progress'
+                                    ? "¡Es el mejor momento para comenzar! Explorá nuestros cursos."
+                                    : "¡Seguí adelante! Cada lección te acerca a tu certificado."}
                         </p>
-                        <Link href="/dashboard/explore">
+                        <Link href="/dashboard/explorar">
                             <Button className="bg-primary hover:bg-primary/90">Explorar Cursos</Button>
                         </Link>
                     </div>
