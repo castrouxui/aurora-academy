@@ -549,7 +549,9 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                                                             <CheckCircle size={16} />
                                                         </div>
                                                     ) : isLocked ? (
-                                                        <Lock size={16} className="text-gray-600" title="Bloqueada" />
+                                                        <div title="Bloqueada">
+                                                            <Lock size={16} className="text-gray-600" />
+                                                        </div>
                                                     ) : isActive ? (
                                                         <div className="bg-[#5D5CDE] text-white rounded-full p-1 animate-pulse" title="Reproduciendo">
                                                             <Play size={10} fill="currentColor" />

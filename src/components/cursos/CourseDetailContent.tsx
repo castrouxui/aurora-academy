@@ -5,7 +5,7 @@ import { InstructorCard } from "@/components/cursos/InstructorCard";
 import { CourseFAQ } from "@/components/cursos/detail/CourseFAQ";
 import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 import { MobileCourseCTA } from "@/components/cursos/detail/MobileCourseCTA";
-import Footer from "@/components/layout/Footer";
+import { Footer } from "@/components/layout/Footer";
 import { MembershipUpsellBanner } from "@/components/cursos/detail/MembershipUpsellBanner";
 import { ReviewList } from "@/components/reviews/ReviewList";
 import { ReviewForm } from "@/components/reviews/ReviewForm";
