@@ -159,21 +159,84 @@ export default function StudentDashboard() {
             {/* Header */}
             <div>
                 <h1 className="text-3xl font-light tracking-tight text-white mb-2">
-                    {greeting}, {(() => {
-                        const name = session?.user?.name?.split(" ")[0];
-                        return name && name !== "Usuario" ? name : session?.user?.email?.split("@")[0] || "Estudiante";
-                    })()} 👋
+                    {greeting} 👋
                 </h1>
                 <p className="text-gray-400 font-light">
                     {dynamicSubtitle}
                 </p>
             </div>
 
+            {/* My Learning Section — primero para acceso inmediato */}
+            <div>
+                <div className="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 className="text-2xl font-bold text-white">Mis Cursos</h2>
+                        <p className="text-gray-400 text-sm">Continuá donde dejaste</p>
+                    </div>
+                </div>
+
+                {loading ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {[1, 2, 3].map((n) => (
+                            <div key={n} className="h-48 bg-white/5 rounded-xl animate-pulse" />
+                        ))}
+                    </div>
+                ) : courses.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {courses.map((course: any) => (
+                            <Link key={course.id} href={`/learn/${course.id}`} className="group">
+                                <Card className="bg-[#121620] border-white/5 overflow-hidden hover:border-[#5D5CDE]/50 transition-all duration-300 h-full flex flex-col">
+                                    <div className="relative h-40 w-full overflow-hidden">
+                                        <div className="absolute inset-0 bg-gradient-to-t from-[#121620] to-transparent z-10" />
+                                        <img
+                                            src={course.imageUrl || "/course-placeholder.jpg"}
+                                            alt={course.title}
+                                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                                        />
+                                        <div className="absolute bottom-3 left-3 z-20">
+                                            <div className="flex items-center gap-2">
+                                                <span className="bg-[#5D5CDE] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                                    Curso
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <CardContent className="p-5 flex-1 flex flex-col">
+                                        <h3 className="text-lg font-bold text-white mb-2 line-clamp-2 group-hover:text-[#5D5CDE] transition-colors">
+                                            {course.title}
+                                        </h3>
+
+                                        <div className="mt-auto space-y-3">
+                                            <div className="flex items-center justify-between text-xs text-gray-400">
+                                                <span>{course.progress}% completado</span>
+                                                <span>{course.completedLessons}/{course.totalLessons} lecciones</span>
+                                            </div>
+                                            <div className="h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
+                                                <div
+                                                    className="h-full bg-[#5D5CDE] transition-all duration-500"
+                                                    style={{ width: `${course.progress}%` }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </Link>
+                        ))}
+                    </div>
+                ) : (
+                    <EmptyState
+                        icon={BookOpen}
+                        title="Aún no tenés cursos"
+                        description="Explorá nuestros cursos y comenzá tu camino como inversor hoy mismo."
+                        action={{ label: "Ver Cursos", href: "/cursos" }}
+                    />
+                )}
+            </div>
+
             <QuoteOfTheWeek />
 
-            {/* <TelegramReminder isVerified={session?.user?.telegramVerified || false} /> */}{/* DISABLED */}
-
-            {/* Promotional Banner for Users with NO Memberships (regardless of individual course purchases) */}
+            {/* Promotional Banner for Users with NO Memberships */}
             {session?.user?.role !== "ADMIN" && membershipItems.length === 0 && <RoadmapBanner />}
 
             {/* Stats Grid */}
@@ -264,73 +327,6 @@ export default function StudentDashboard() {
                 </div>
             )}
 
-            {/* My Learning Section */}
-            <div>
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h2 className="text-2xl font-bold text-white">Mis Cursos</h2>
-                        <p className="text-gray-400 text-sm">Continúa donde dejaste</p>
-                    </div>
-                </div>
-
-                {loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {[1, 2, 3].map((n) => (
-                            <div key={n} className="h-48 bg-white/5 rounded-xl animate-pulse" />
-                        ))}
-                    </div>
-                ) : courses.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {courses.map((course: any) => (
-                            <Link key={course.id} href={`/learn/${course.id}`} className="group">
-                                <Card className="bg-[#121620] border-white/5 overflow-hidden hover:border-[#5D5CDE]/50 transition-all duration-300 h-full flex flex-col">
-                                    <div className="relative h-40 w-full overflow-hidden">
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#121620] to-transparent z-10" />
-                                        <img
-                                            src={course.imageUrl || "/course-placeholder.jpg"}
-                                            alt={course.title}
-                                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                        />
-                                        <div className="absolute bottom-3 left-3 z-20">
-                                            <div className="flex items-center gap-2">
-                                                <span className="bg-[#5D5CDE] text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                                                    Curso
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <CardContent className="p-5 flex-1 flex flex-col">
-                                        <h3 className="text-lg font-bold text-white mb-2 line-clamp-2 group-hover:text-[#5D5CDE] transition-colors">
-                                            {course.title}
-                                        </h3>
-
-                                        <div className="mt-auto space-y-3">
-                                            <div className="flex items-center justify-between text-xs text-gray-400">
-                                                <span>{course.progress}% completado</span>
-                                                <span>{course.completedLessons}/{course.totalLessons} lecciones</span>
-                                            </div>
-                                            <div className="h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
-                                                <div
-                                                    className="h-full bg-[#5D5CDE] transition-all duration-500"
-                                                    style={{ width: `${course.progress}%` }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-                        ))}
-                    </div>
-                ) : (
-                    <EmptyState
-                        icon={BookOpen}
-                        title="Aún no tienes cursos"
-                        description="Explora nuestros cursos y comienza tu camino como inversor hoy mismo."
-                        action={{ label: "Ver Cursos", href: "/cursos" }}
-                    />
-                )}
-            </div>
         </div>
     );
 }
