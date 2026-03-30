@@ -1,8 +1,6 @@
 "use client";
 
 import { useMemo } from "react";
-import { Quote } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 
 const QUOTES = [
     { text: "El riesgo viene de no saber lo que estás haciendo.", author: "Warren Buffett" },
@@ -19,7 +17,6 @@ const QUOTES = [
 
 export function QuoteOfTheWeek() {
     const quote = useMemo(() => {
-        // Simple logic to pick a quote based on the current week number
         const now = new Date();
         const start = new Date(now.getFullYear(), 0, 0);
         const diff = (now.getTime() - start.getTime()) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
@@ -31,18 +28,16 @@ export function QuoteOfTheWeek() {
     }, []);
 
     return (
-        <Card className="bg-gradient-to-r from-blue-900/20 to-[#5D5CDE]/10 border-[#5D5CDE]/20 mb-6">
-            <CardContent className="p-4 flex items-start gap-3">
-                <Quote className="text-[#5D5CDE] h-5 w-5 shrink-0 mt-1 opacity-80" />
-                <div className="space-y-1">
-                    <p className="text-gray-200 text-sm font-medium italic">
-                        "{quote.text}"
-                    </p>
-                    <p className="text-[#5D5CDE] text-xs font-bold">
-                        — {quote.author}
-                    </p>
-                </div>
-            </CardContent>
-        </Card>
+        <div className="py-6 relative mb-6">
+            <span className="absolute -top-2 -left-1 text-5xl text-[#5D5CDE]/15 font-serif select-none leading-none">"</span>
+            <div className="pl-4 space-y-2">
+                <p className="text-base font-light italic text-gray-300 leading-relaxed">
+                    "{quote.text}"
+                </p>
+                <p className="text-sm font-medium text-[#5D5CDE]/60 tracking-wide">
+                    — {quote.author}
+                </p>
+            </div>
+        </div>
     );
 }

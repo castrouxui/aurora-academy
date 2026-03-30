@@ -52,8 +52,8 @@ export function MobileSidebar({ items, financeItems, role, user }: MobileSidebar
             )}
 
             {/* Sidebar Drawer */}
-            <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#111827] border-r border-[#1F2937] transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
-                <div className="h-16 flex items-center justify-between px-6 border-b border-[#1F2937]">
+            <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#0B0F19] border-r border-border-subtle transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
+                <div className="h-16 flex items-center justify-between px-6 border-b border-border-subtle">
                     <Logo />
                     <Button
                         variant="ghost"
@@ -77,11 +77,12 @@ export function MobileSidebar({ items, financeItems, role, user }: MobileSidebar
                                     key={item.href}
                                     href={item.href}
                                     onClick={() => setIsOpen(false)}
-                                    className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive
+                                    className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-colors relative ${isActive
                                         ? "bg-[#5D5CDE]/10 text-[#5D5CDE]"
-                                        : "text-gray-400 hover:bg-[#1F2937] hover:text-white"
+                                        : "text-gray-400 hover:bg-surface-1 hover:text-white"
                                         }`}
                                 >
+                                    {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full" />}
                                     <item.icon size={20} />
                                     {item.name}
                                 </Link>
@@ -90,7 +91,7 @@ export function MobileSidebar({ items, financeItems, role, user }: MobileSidebar
                     </nav>
 
                     {financeItems && financeItems.length > 0 && (
-                        <div className="mt-6 border-t border-[#1F2937] pt-4">
+                        <div className="mt-6 border-t border-border-subtle pt-4">
                             <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
                                 Finanzas
                             </p>
@@ -102,9 +103,9 @@ export function MobileSidebar({ items, financeItems, role, user }: MobileSidebar
                                             key={item.href}
                                             href={item.href}
                                             onClick={() => setIsOpen(false)}
-                                            className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive
+                                            className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-colors relative ${isActive
                                                 ? "bg-[#5D5CDE]/10 text-[#5D5CDE]"
-                                                : "text-gray-400 hover:bg-[#1F2937] hover:text-white"
+                                                : "text-gray-400 hover:bg-surface-1 hover:text-white"
                                                 }`}
                                         >
                                             <item.icon size={20} />
@@ -117,7 +118,7 @@ export function MobileSidebar({ items, financeItems, role, user }: MobileSidebar
                     )}
 
                     {user && (
-                        <div className="mt-auto border-t border-[#1F2937] pt-4">
+                        <div className="mt-auto border-t border-border-subtle pt-4">
                             <div className="flex items-center justify-between px-2 mb-4">
                                 <div className="flex items-center gap-3">
                                     <img
@@ -139,7 +140,7 @@ export function MobileSidebar({ items, financeItems, role, user }: MobileSidebar
                             </div>
                             <div className="px-2 mb-4">
                                 <Link href="/dashboard/settings" onClick={() => setIsOpen(false)}>
-                                    <button className="w-full text-left px-3 py-2 text-sm font-medium text-gray-400 rounded-lg hover:bg-[#1F2937] hover:text-white transition-colors">
+                                    <button className="w-full text-left px-3 py-2 text-sm font-medium text-gray-400 rounded-lg hover:bg-surface-1 hover:text-white transition-colors">
                                         Configuración
                                     </button>
                                 </Link>
@@ -147,7 +148,7 @@ export function MobileSidebar({ items, financeItems, role, user }: MobileSidebar
                             <Button
                                 variant="outline"
                                 onClick={() => signOut({ callbackUrl: "/" })}
-                                className="w-full gap-2 border-[#1F2937] text-gray-400 hover:text-white hover:bg-[#1F2937]"
+                                className="w-full gap-2 border-border-subtle text-gray-400 hover:text-white hover:bg-surface-1"
                             >
                                 <LogOut size={16} />
                                 Cerrar sesión

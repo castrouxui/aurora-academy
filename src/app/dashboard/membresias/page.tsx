@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -19,10 +19,10 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { PricingCard } from "@/components/membresias/PricingCard";
+import { MembershipTable } from "@/components/membresias/MembershipTable";
 import { PLANS } from "@/constants/pricing";
-import { PaymentModal } from "@/components/checkout/PaymentModal";
 import { SyncPaymentsButton } from "@/components/dashboard/SyncPaymentsButton";
+import { PaymentModal } from "@/components/checkout/PaymentModal";
 
 export default function MyMembershipsPage() {
     const searchParams = useSearchParams();
@@ -135,6 +135,87 @@ export default function MyMembershipsPage() {
         setIsPaymentModalOpen(true);
     };
 
+    // Handler unificado para MembershipTable — maneja nuevo, upgrade y downgrade
+    const handleBundlePurchase = useCallback(async (title: string, priceStr: string, _courseId?: string, bundleId?: string, isAnnualPurchase?: boolean) => {
+        if (!bundleId) return;
+        const bundle = bundles.find((b: any) => b.id === bundleId);
+        if (!bundle) return;
+        const basePrice = parseFloat(bundle.price);
+
+        if (isAnnualPurchase) {
+            const finalPrice = basePrice * 9;
+            const displayPrice = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(finalPrice);
+            handlePurchase(title + " (Anual)", displayPrice, bundleId);
+            return;
+        }
+
+        if (subscription?.active) {
+            const currentPlan = PLANS.find((p: any) => p.title === subscription.bundleTitle);
+            const currentPrice = Number(currentPlan?.price?.replace(/[^0-9]/g, '') || 0);
+
+            if (basePrice > currentPrice) {
+                setActionLoading(true);
+                try {
+                    const res = await fetch("/api/subscription/upgrade-calc", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ targetBundleId: bundleId, targetPrice: basePrice.toString() })
+                    });
+                    const data = await res.json();
+                    if (res.ok) window.location.href = data.initPoint;
+                    else toast.error(data.error || "Error calculando upgrade");
+                } catch { toast.error("Error de conexión"); }
+                finally { setActionLoading(false); }
+                return;
+            }
+
+            if (basePrice < currentPrice) {
+                if (confirm(`¿Estás seguro de cambiar al plan ${title}? El cambio se aplicará en tu próxima factura.`)) {
+                    setActionLoading(true);
+                    try {
+                        const res = await fetch("/api/subscription/downgrade", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ targetBundleId: bundleId, targetPrice: basePrice.toString() })
+                        });
+                        if (res.ok) { toast.success("Plan actualizado."); window.location.reload(); }
+                        else toast.error("Error al cambiar plan");
+                    } catch { toast.error("Error de conexión"); }
+                    finally { setActionLoading(false); }
+                }
+                return;
+            }
+        }
+
+        const displayPrice = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice);
+        handlePurchase(title, displayPrice, bundleId);
+    }, [bundles, subscription, isAnnual]);
+
+    // Labels y estado de los botones según suscripción activa
+    const buttonOverrides = useMemo(() => {
+        if (!bundles.length) return {};
+        const overrides: Record<string, { label: string; disabled?: boolean }> = {};
+        const sorted = [...bundles].sort((a: any, b: any) => parseFloat(a.price) - parseFloat(b.price));
+
+        sorted.forEach((bundle: any) => {
+            const basePrice = parseFloat(bundle.price);
+            const isActive = subscription?.active && subscription.bundleTitle === bundle.title && !isAnnual;
+
+            if (isActive) {
+                overrides[bundle.id] = { label: "✓ Plan Actual", disabled: true };
+                return;
+            }
+            if (!subscription?.active) return; // default label
+
+            const currentPlan = PLANS.find((p: any) => p.title === subscription.bundleTitle);
+            const currentPrice = Number(currentPlan?.price?.replace(/[^0-9]/g, '') || 0);
+
+            if (basePrice > currentPrice) overrides[bundle.id] = { label: "Mejorar Plan" };
+            else if (basePrice < currentPrice) overrides[bundle.id] = { label: "Cambiar Plan" };
+        });
+        return overrides;
+    }, [bundles, subscription, isAnnual]);
+
     if (loading) {
         return (
             <div className="min-h-screen pt-4 pb-12">
@@ -147,7 +228,7 @@ export default function MyMembershipsPage() {
     }
 
     return (
-        <div className="space-y-12 max-w-5xl mx-auto pb-20">
+        <div className="space-y-12 max-w-5xl mx-auto pb-20 page-fade-in">
             {/* Header */}
             <div>
                 <h1 className="text-3xl font-bold text-white tracking-tight">Mi Membresía</h1>
@@ -340,207 +421,12 @@ export default function MyMembershipsPage() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-                    {(bundles.length > 0 ? bundles : PLANS).map((item: any, index: number) => {
-                        // Normalize Item (Bundle from DB or Plan from Static)
-                        const isDynamic = !!item.id; // Only DB bundles have ID
-                        const title = item.title;
-
-                        // Metadata from PLANS (fallback for static info)
-                        const staticPlan = PLANS[index] || PLANS.find(p => p.title === title);
-                        const description = staticPlan?.description || item.description || "Todo lo que necesitás para empezar";
-                        const isRecommended = staticPlan?.isRecommended || index === 1;
-                        const tag = staticPlan?.tag || (index === 1 ? "EL MÁS BUSCADO" : undefined);
-                        const excludedFeatures = staticPlan?.excludedFeatures || [];
-
-                        // PRICE CALCULATION
-                        const rawPriceString = item.price.toString().replace(/[^0-9]/g, '');
-                        const basePrice = parseFloat(rawPriceString); // Monthly Price Numerical
-
-                        let finalPrice = basePrice;
-                        let periodicity = "mes";
-                        let installmentsText = undefined;
-                        let totalFormatted = undefined;
-                        let savingsBadge = undefined;
-
-                        if (isAnnual) {
-                            finalPrice = basePrice * 9; // 12 months for price of 9 (25% off logic approx)
-                            // OR use the logic: basePrice * 12 * 0.75
-                            // Let's stick to the public page logic closely:
-                            // Public page: if annual, finalPrice = basePrice * 9;
-
-                            periodicity = "año";
-
-                            // Installments logic: 6 cuotas sin interés
-                            const installmentAmount = finalPrice / 6;
-                            const formattedInstallment = new Intl.NumberFormat("es-AR", {
-                                style: "currency",
-                                currency: "ARS",
-                                maximumFractionDigits: 0
-                            }).format(installmentAmount);
-                            installmentsText = `6 cuotas sin interés de ${formattedInstallment}`;
-
-                            totalFormatted = new Intl.NumberFormat("es-AR", {
-                                style: "currency",
-                                currency: "ARS",
-                                maximumFractionDigits: 0
-                            }).format(finalPrice);
-
-                            savingsBadge = "25% OFF";
-                        }
-
-                        // Determine Display Features
-                        let displayFeatures: (string | React.ReactNode)[] = [];
-
-                        if (isDynamic) {
-                            // Dynamic Logic (Copied from Public Page)
-                            if (index >= 1) {
-                                displayFeatures.push(
-                                    <span key={`benefit-15d-${item.id}`} className="inline-flex items-center gap-2 font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">
-                                        <span>🔥</span> 1 curso nuevo cada 15 días
-                                    </span>
-                                );
-                            }
-
-                            // Courses
-                            const currentCourseTitles = item.courses?.map((c: any) => c.title) || [];
-                            if (index > 0 && bundles.length > 0) {
-                                const prevBundle = bundles[index - 1]; // logic assumes sorted bundles
-                                const prevCourseTitles = prevBundle?.courses?.map((c: any) => c.title) || [];
-                                const hasAllPrevious = prevCourseTitles.length > 0 && prevCourseTitles.every((t: string) => currentCourseTitles.includes(t));
-
-                                if (hasAllPrevious) {
-                                    displayFeatures.push(`Todo lo del Plan ${prevBundle.title}`);
-                                    const newCourses = currentCourseTitles.filter((t: string) => !prevCourseTitles.includes(t));
-                                    displayFeatures.push(...newCourses);
-                                } else {
-                                    displayFeatures.push(...currentCourseTitles);
-                                }
-                            } else {
-                                displayFeatures.push(...currentCourseTitles);
-                            }
-
-                            // Items
-                            if (item.items && item.items.length > 0) {
-                                const items = item.items.map((i: any) => {
-                                    let name = i.name;
-                                    if ((name.toLowerCase().includes("canal") || name.toLowerCase().includes("telegram")) && !name.toLowerCase().startsWith("acceso a")) {
-                                        return `Acceso a ${name}`;
-                                    }
-                                    return name;
-                                });
-                                const existingStrings = displayFeatures.filter(f => typeof f === 'string') as string[];
-                                const newItems = items.filter((str: string) => {
-                                    if (existingStrings.includes(str)) return false;
-                                    if (str.toLowerCase().includes("comunidad de inversores")) return false;
-                                    return true;
-                                });
-                                displayFeatures.push(...newItems);
-                            }
-                        } else {
-                            // Static Features
-                            displayFeatures = staticPlan?.features || [];
-                        }
-
-                        // DASHBOARD LOGIC: Active / Upgrade / Downgrade
-                        // Note: If user has monthly "Trader", and toggles Annual, it IS an upgrade/switch.
-                        const isActive = subscription?.active && subscription.bundleTitle === title && !isAnnual;
-
-                        // Determine if it's an upgrade
-                        let isUpgrade = false;
-                        let isDowngrade = false;
-
-                        if (!isAnnual && subscription?.active && !isActive) {
-                            const currentDict = PLANS.find(p => p.title === subscription.bundleTitle);
-                            const currentPrice = Number(currentDict?.price.replace(/[^0-9]/g, '') || 0);
-                            if (basePrice > currentPrice) isUpgrade = true;
-                            if (basePrice < currentPrice) isDowngrade = true;
-                        }
-
-                        const handlePlanAction = async () => {
-                            if (isActive) return;
-
-                            const bundleId = isDynamic ? item.id : title.toLowerCase().replace(/ /g, '-');
-                            // If Annual, we initiate purchase for Annual price.
-                            // If user upgrades/downgrades monthly, we use special endpoints.
-
-                            if (isAnnual) {
-                                // Annual Purchase
-                                // Pass the Calculated Annual Price (finalPrice)
-                                const displayPriceStr = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(finalPrice);
-                                handlePurchase(title + " (Anual)", displayPriceStr, bundleId);
-                                return;
-                            }
-
-                            if (isUpgrade) {
-                                setActionLoading(true);
-                                try {
-                                    const res = await fetch("/api/subscription/upgrade-calc", {
-                                        method: "POST",
-                                        headers: { "Content-Type": "application/json" },
-                                        body: JSON.stringify({ targetBundleId: bundleId, targetPrice: basePrice.toString() })
-                                    });
-                                    const data = await res.json();
-                                    if (res.ok) window.location.href = data.initPoint;
-                                    else toast.error(data.error || "Error calculando upgrade");
-                                } catch (e) {
-                                    toast.error("Error de conexión");
-                                } finally {
-                                    setActionLoading(false);
-                                }
-                            } else if (isDowngrade) {
-                                if (confirm(`¿Estás seguro de cambiar al plan ${title}? El cambio de precio se aplicará en tu próxima factura.`)) {
-                                    setActionLoading(true);
-                                    try {
-                                        const res = await fetch("/api/subscription/downgrade", {
-                                            method: "POST",
-                                            headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify({ targetBundleId: bundleId, targetPrice: basePrice.toString() })
-                                        });
-                                        if (res.ok) {
-                                            toast.success("Plan actualizado. Se reflejará en el próximo ciclo.");
-                                            window.location.reload();
-                                        } else toast.error("Error al cambiar plan");
-                                    } catch (e) {
-                                        toast.error("Error de conexión");
-                                    } finally {
-                                        setActionLoading(false);
-                                    }
-                                }
-                            } else {
-                                // New Subscription (Standard Monthly)
-                                const displayPriceStr = new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(basePrice);
-                                handlePurchase(title, displayPriceStr, bundleId);
-                            }
-                        };
-
-                        return (
-                            <PricingCard
-                                key={index}
-                                title={title}
-                                price={finalPrice.toString()}
-                                periodicity={periodicity}
-                                tag={tag}
-                                isRecommended={isRecommended}
-                                isAnnual={isAnnual}
-                                totalPrice={totalFormatted}
-                                savings={isAnnual ? "25%" : undefined}
-                                description={
-                                    <p className="text-gray-400 text-sm min-h-[40px] flex items-center justify-center italic">
-                                        {description}
-                                    </p>
-                                }
-                                features={displayFeatures}
-                                excludedFeatures={excludedFeatures}
-                                buttonText={isActive ? "Plan Actual" : isAnnual ? "Pasarme al Anual" : isUpgrade ? "Mejorar Plan" : isDowngrade ? "Cambiar Plan" : "Suscribirme Ahora"}
-                                onAction={handlePlanAction}
-                                installments={installmentsText}
-                                originalMonthlyPrice={basePrice.toString()}
-                                className={isActive ? "opacity-60 grayscale-[0.5] pointer-events-none border-emerald-500/20" : "h-full flex flex-col justify-between"}
-                            />
-                        );
-                    })}
-                </div>
+                <MembershipTable
+                    bundles={bundles}
+                    billingCycle={isAnnual ? "annual" : "monthly"}
+                    onPurchase={handleBundlePurchase}
+                    buttonOverrides={buttonOverrides}
+                />
             </div>
 
             {/* Payment Modal */}

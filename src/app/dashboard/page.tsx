@@ -13,6 +13,7 @@ import { QuoteOfTheWeek } from "@/components/dashboard/QuoteOfTheWeek";
 import { CareerProgressCard } from "@/components/dashboard/CareerProgressCard";
 import { PaymentReturnBanner } from "@/components/dashboard/PaymentReturnBanner";
 import { useCallback } from "react";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export default function StudentDashboard() {
     const { data: session } = useSession();
@@ -79,8 +80,39 @@ export default function StudentDashboard() {
         }
     }, [session]);
 
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? "Buenos días" : hour < 19 ? "Buenas tardes" : "Buenas noches";
+
+    const dynamicSubtitle = stats.inProgress > 0
+        ? `Tenés ${stats.inProgress} curso${stats.inProgress > 1 ? 's' : ''} en progreso.`
+        : stats.completed > 0
+            ? "Todos tus cursos completos. Explorá nuevos desafíos."
+            : "Bienvenido a tu panel de aprendizaje.";
+
     if (loading) {
-        return <div className="p-8 text-center text-gray-500">Cargando tu progreso...</div>;
+        return (
+            <div className="space-y-8 page-fade-in">
+                {/* Skeleton Header */}
+                <div className="space-y-2">
+                    <div className="h-8 w-64 bg-white/5 rounded-xl animate-pulse" />
+                    <div className="h-4 w-80 bg-white/5 rounded-lg animate-pulse" />
+                </div>
+                {/* Skeleton Quote */}
+                <div className="h-16 bg-white/5 rounded-2xl animate-pulse" />
+                {/* Skeleton Stat Cards */}
+                <div className="grid gap-4 md:grid-cols-2">
+                    {[1, 2].map((n) => (
+                        <div key={n} className="h-28 bg-white/5 rounded-2xl animate-pulse" />
+                    ))}
+                </div>
+                {/* Skeleton Course Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[1, 2, 3].map((n) => (
+                        <div key={n} className="h-48 bg-white/5 rounded-xl animate-pulse" />
+                    ))}
+                </div>
+            </div>
+        );
     }
 
     const statCards = [
@@ -120,20 +152,20 @@ export default function StudentDashboard() {
     // The Dashboard will now always render, showing zeroes + Banner if applicable.
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 page-fade-in">
             {/* Payment return handler — auto-confirms purchase after MP redirect */}
             <PaymentReturnBanner onConfirmed={fetchData} />
 
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-bold text-white mb-2">
-                    Hola, {(() => {
+                <h1 className="text-3xl font-light tracking-tight text-white mb-2">
+                    {greeting}, {(() => {
                         const name = session?.user?.name?.split(" ")[0];
                         return name && name !== "Usuario" ? name : session?.user?.email?.split("@")[0] || "Estudiante";
                     })()} 👋
                 </h1>
-                <p className="text-gray-400">
-                    Bienvenido a tu panel de aprendizaje. Aquí tienes un resumen de tu progreso.
+                <p className="text-gray-400 font-light">
+                    {dynamicSubtitle}
                 </p>
             </div>
 
@@ -148,9 +180,9 @@ export default function StudentDashboard() {
             <div className={`grid gap-4 md:grid-cols-2 ${membershipItems.length > 0 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'}`}>
                 {statCards.map((stat) => {
                     const cardContent = (
-                        <Card key={stat.title} className={`bg-white/5 border-white/5 shadow-lg group hover:border-[#5D5CDE]/30 hover:bg-white/10 transition-all duration-300 ${stat.href ? 'cursor-pointer' : ''}`}>
+                        <Card key={stat.title} className={`bg-surface-1 border-border-subtle rounded-2xl shadow-lg group hover:border-[#5D5CDE]/30 hover:shadow-[0_0_30px_rgba(93,92,222,0.08)] transition-all duration-300 ${stat.href ? 'cursor-pointer' : ''}`}>
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-bold text-gray-300">
+                                <CardTitle className="text-xs font-medium uppercase tracking-wider text-gray-300">
                                     {stat.title}
                                 </CardTitle>
                                 <div className={`p-2 rounded-lg bg-white/5 ${stat.color} group-hover:scale-110 transition-transform`}>
@@ -158,8 +190,8 @@ export default function StudentDashboard() {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-3xl font-black text-white">{stat.value}</div>
-                                <p className="text-xs text-gray-500 font-medium mt-1">{stat.description}</p>
+                                <div className="text-4xl font-extralight tracking-tight text-white">{stat.value}</div>
+                                <p className="text-xs text-gray-500 font-light mt-1">{stat.description}</p>
                                 {stat.emptyCTA && (
                                     <p className="text-xs text-purple-400 mt-1">{stat.emptyCTA}</p>
                                 )}
@@ -291,16 +323,12 @@ export default function StudentDashboard() {
                         ))}
                     </div>
                 ) : (
-                    <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/5 border-dashed">
-                        <BookOpen className="mx-auto h-12 w-12 text-gray-600 mb-4" />
-                        <h3 className="text-lg font-medium text-white mb-2">Aún no tienes cursos</h3>
-                        <p className="text-gray-400 mb-6 max-w-sm mx-auto">Explora nuestros cursos y comienza tu camino como inversor hoy mismo.</p>
-                        <Link href="/cursos">
-                            <Button className="bg-[#5D5CDE] text-white hover:bg-[#4B4AC0]">
-                                Ver Cursos
-                            </Button>
-                        </Link>
-                    </div>
+                    <EmptyState
+                        icon={BookOpen}
+                        title="Aún no tienes cursos"
+                        description="Explora nuestros cursos y comienza tu camino como inversor hoy mismo."
+                        action={{ label: "Ver Cursos", href: "/cursos" }}
+                    />
                 )}
             </div>
         </div>

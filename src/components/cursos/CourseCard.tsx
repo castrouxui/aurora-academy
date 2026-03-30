@@ -58,8 +58,8 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
     return (
         <Link href={href} className={cn("block h-full group", isOwned && "pointer-events-none")}>
             <div className={cn(
-                "group h-full flex flex-col bg-white/5 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-white/10 backdrop-blur-sm",
-                !isOwned && "hover:-translate-y-2 hover:border-white/20",
+                "group h-full flex flex-col bg-white/5 rounded-3xl overflow-hidden shadow-lg transition-all duration-300 border border-border-subtle backdrop-blur-sm",
+                !isOwned && "hover:-translate-y-1 hover:border-white/20 hover:shadow-[0_8px_40px_rgba(93,92,222,0.12)]",
                 isOwned && "opacity-80 grayscale-[0.5]"
             )}>
                 <div className="p-6 flex flex-col flex-1 h-full relative">
@@ -101,7 +101,7 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <div className="min-w-0 bg-[#5D5CDE]/10 text-[#5D5CDE] text-sm font-bold px-2 py-1 rounded uppercase tracking-wide border border-[#5D5CDE]/20 truncate">
+                        <div className="min-w-0 bg-[#5D5CDE]/10 text-[#5D5CDE] text-xs font-bold px-2 py-1 rounded uppercase tracking-wide border border-[#5D5CDE]/20 truncate">
                             {course.tag}
                         </div>
 
@@ -116,11 +116,11 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
                                 {course.type}
                             </div>
                         )}
-                        <div className="flex items-center gap-1 text-yellow-400 ml-auto mr-0">
+                        <div className="flex items-center gap-1 text-amber-400/80 ml-auto mr-0">
                             {course.showDynamicStars && course.rating > 0 && (
-                                <span className="text-yellow-400 text-sm font-bold">{course.rating.toFixed(1)}</span>
+                                <span className="text-amber-400/80 text-sm font-bold">{course.rating.toFixed(1)}</span>
                             )}
-                            <Star size={14} fill="currentColor" className="stroke-none" />
+                            <Star size={12} fill="currentColor" className="stroke-none" />
                             <span className="text-gray-400 text-sm font-medium ml-1">
                                 {course.showDynamicStars ? `(${course.reviews})` : course.reviews}
                             </span>
@@ -135,7 +135,7 @@ export function CourseCard({ course, isOwned = false }: { course: CourseProps, i
 
                     <div className="flex items-center justify-between mt-auto">
                         <div className="flex flex-col">
-                            <span className="text-sm text-gray-400 font-medium uppercase tracking-wider mb-1">Inversión</span>
+                            <span className="text-xs text-gray-400 font-light tracking-wider uppercase mb-1">Inversión</span>
                             {isFree ? (
                                 <div className="flex items-center gap-2">
                                     <span className="text-gray-500 line-through text-sm">$40.000</span>

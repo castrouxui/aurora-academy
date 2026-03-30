@@ -242,7 +242,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                                 <ChevronLeft size={16} />
                                 <span className="hidden sm:inline">Mis Cursos</span>
                             </Link>
-                            <span className="text-gray-700 hidden sm:inline">/</span>
+                            <span className="text-gray-700 hidden sm:inline">›</span>
                             <span className="text-gray-200 font-medium truncate max-w-[150px] sm:max-w-md">{course.title}</span>
                         </div>
 
@@ -329,14 +329,13 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
 
                     {/* Mark as Viewed Button - below video, above tabs */}
                     {isAccess && activeLesson && (
-                        <div className="bg-[#0B0F19] px-4 lg:px-8 py-3 border-b border-gray-800 flex justify-end">
-                            <div className="mx-auto max-w-5xl w-full flex justify-end">
+                        <div className="bg-[#0B0F19] px-4 lg:px-8 py-3 border-b border-gray-800">
+                            <div className="mx-auto max-w-5xl w-full">
                                 <Button
                                     onClick={() => handleToggleComplete(activeLesson.id, activeLesson.completed)}
                                     variant={activeLesson.completed ? "outline" : "default"}
-                                    size="sm"
                                     className={cn(
-                                        "gap-2 transition-all font-bold rounded-xl border-2",
+                                        "w-full py-3 rounded-xl text-base gap-2 transition-all font-bold border-2",
                                         activeLesson.completed
                                             ? "border-emerald-500/50 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20"
                                             : "bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white border-transparent shadow-lg shadow-indigo-500/20"
@@ -368,7 +367,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                                             key={tab}
                                             onClick={() => setActiveTab(tab)}
                                             className={cn(
-                                                "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors",
+                                                "whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium transition-colors duration-200",
                                                 activeTab === tab
                                                     ? "border-primary text-primary"
                                                     : "border-transparent text-gray-400 hover:border-gray-700 hover:text-gray-300"
@@ -481,7 +480,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                             </div>
                             <div className="h-2 w-full bg-gray-800 rounded-full overflow-hidden">
                                 <div
-                                    className={cn("h-full rounded-full transition-all duration-500", progress === 100 ? "bg-emerald-500" : "bg-[#5D5CDE]")}
+                                    className={cn("h-full rounded-full transition-all duration-500", progress === 100 ? "bg-emerald-500" : "gradient-progress")}
                                     style={{ width: `${progress}%` }}
                                 />
                             </div>
@@ -511,7 +510,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                     <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
                         {localModules.map((module, i) => (
                             <div key={i} className="border-b border-gray-800/30">
-                                <div className="bg-[#090b10]/90 px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest sticky top-0 z-10 backdrop-blur-md">
+                                <div className="bg-[#090b10]/90 px-6 py-4 text-[10px] font-semibold text-gray-500 uppercase tracking-[0.2em] sticky top-0 z-10 backdrop-blur-md">
                                     {module.title}
                                 </div>
                                 <div>
@@ -532,7 +531,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                                                 className={cn(
                                                     "w-full text-left flex items-start gap-4 px-6 py-4 transition-all relative group",
                                                     isActive
-                                                        ? "bg-[#1F2937]/30"
+                                                        ? "bg-[#5D5CDE]/[0.04]"
                                                         : "hover:bg-gray-800/30",
                                                     isLocked && "opacity-50 cursor-not-allowed"
                                                 )}
@@ -553,7 +552,7 @@ export function CoursePlayerClient({ course, isAccess, studentName, backLink, ha
                                                             <Lock size={16} className="text-gray-600" />
                                                         </div>
                                                     ) : isActive ? (
-                                                        <div className="bg-[#5D5CDE] text-white rounded-full p-1 animate-pulse" title="Reproduciendo">
+                                                        <div className="bg-[#5D5CDE] text-white rounded-full p-1" title="Reproduciendo">
                                                             <Play size={10} fill="currentColor" />
                                                         </div>
                                                     ) : lesson.lastPlayedTime && lesson.lastPlayedTime > 0 ? (

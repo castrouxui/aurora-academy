@@ -193,7 +193,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                             placeholder="Buscar curso, instructor o categoría..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full h-[50px] rounded-full bg-white/5 border border-white/10 pl-12 pr-6 text-white placeholder-gray-400 focus:outline-none focus:border-[#5D5CDE]/50 focus:ring-1 focus:ring-[#5D5CDE]/50 transition-all backdrop-blur-sm"
+                            className="w-full h-[50px] rounded-full bg-white/5 border border-white/10 pl-12 pr-6 text-white placeholder-gray-400 focus:outline-none focus:border-[#5D5CDE]/50 focus:ring-1 focus:ring-[#5D5CDE]/50 focus:shadow-[0_0_20px_rgba(93,92,222,0.15)] transition-all backdrop-blur-sm"
                         />
                         <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                     </div>
@@ -238,7 +238,7 @@ export function CourseCatalog({ showTitle = true, paddingTop = "pt-32", basePath
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {filteredCourses.length > 0 ? (
                             filteredCourses.map((course) => (
                                 <CourseCard key={course.id} course={{ ...course, basePath }} />

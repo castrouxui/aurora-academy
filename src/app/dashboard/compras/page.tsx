@@ -7,6 +7,7 @@ import { RefundButton } from "@/components/dashboard/RefundButton";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Package, CreditCard } from "lucide-react";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 export default async function PurchasesPage() {
     const session = await getServerSession(authOptions);
@@ -30,7 +31,7 @@ export default async function PurchasesPage() {
     });
 
     return (
-        <div className="space-y-8 p-8">
+        <div className="space-y-8 p-8 page-fade-in">
             <DashboardHeader
                 heading="Historial de Compras"
                 text="Gestiona tus recibos y reembolsos."
@@ -38,10 +39,12 @@ export default async function PurchasesPage() {
 
             <div className="grid gap-4">
                 {purchases.length === 0 ? (
-                    <div className="text-center py-12 text-gray-500 bg-[#1F2937]/30 rounded-xl border border-gray-800">
-                        <CreditCard className="mx-auto h-12 w-12 mb-4 opacity-50" />
-                        <p>No has realizado ninguna compra aún.</p>
-                    </div>
+                    <EmptyState
+                        icon={CreditCard}
+                        title="Sin compras aún"
+                        description="No has realizado ninguna compra todavía. Explorá nuestros cursos y comenzá tu camino."
+                        action={{ label: "Explorar cursos", href: "/cursos" }}
+                    />
                 ) : (
                     purchases.map((purchase) => (
                         <div key={purchase.id} className="bg-[#1F2937]/30 border border-gray-800 rounded-xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

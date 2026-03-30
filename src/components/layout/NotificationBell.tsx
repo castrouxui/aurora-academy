@@ -111,8 +111,8 @@ export function NotificationBell({ side = "bottom", align = "end" }: Notificatio
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 md:w-96 p-0 bg-[#1F2937] border-gray-700 shadow-2xl rounded-2xl overflow-hidden" side={side} align={align}>
-                <div className="flex items-center justify-between p-4 border-b border-gray-700">
+            <PopoverContent className="w-80 md:w-96 p-0 bg-[#0E1016] border-border-subtle shadow-2xl rounded-2xl overflow-hidden" side={side} align={align}>
+                <div className="flex items-center justify-between p-4 border-b border-border-subtle">
                     <h3 className="font-bold text-white flex items-center gap-2">
                         Notificaciones
                         {unreadCount > 0 && (

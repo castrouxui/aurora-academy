@@ -35,12 +35,12 @@ export function Sidebar({ items, financeItems, user, roleLabel, progress }: Side
 
     return (
         <aside className={cn(
-            "bg-[#0B0F19] border-r border-white/5 flex-col sticky top-0 h-screen shrink-0 hidden md:flex transition-all duration-300 z-10",
+            "bg-[#0B0F19] border-r border-border-subtle flex-col sticky top-0 h-screen shrink-0 hidden md:flex transition-all duration-300 z-10",
             isCollapsed ? "w-20" : "w-64"
         )}>
             {/* Header */}
             <div className={cn(
-                "h-16 flex items-center border-b border-white/5 relative",
+                "h-16 flex items-center border-b border-border-subtle relative",
                 isCollapsed ? "justify-center px-0" : "px-6"
             )}>
                 {isCollapsed ? (
@@ -62,7 +62,7 @@ export function Sidebar({ items, financeItems, user, roleLabel, progress }: Side
             {/* Navigation */}
             <div className="p-4 flex-1 overflow-y-auto overflow-x-hidden">
                 {!isCollapsed && (
-                    <p className="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider mb-4 animate-in fade-in duration-300">
+                    <p className="px-4 text-xs font-medium text-gray-500 uppercase tracking-wider mb-4 animate-in fade-in duration-300">
                         {roleLabel}
                     </p>
                 )}
@@ -78,8 +78,8 @@ export function Sidebar({ items, financeItems, user, roleLabel, progress }: Side
                                 className={cn(
                                     "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 group relative overflow-hidden",
                                     isActive
-                                        ? "bg-primary/10 text-primary shadow-[0_0_15px_rgba(93,92,222,0.15)]"
-                                        : "text-gray-400 hover:bg-white/5 hover:text-white",
+                                        ? "bg-primary/10 text-primary shadow-[0_0_20px_rgba(93,92,222,0.1)]"
+                                        : "text-gray-400 hover:bg-surface-1 hover:text-white",
                                     isCollapsed && "justify-center px-2"
                                 )}
                             >
@@ -135,7 +135,7 @@ export function Sidebar({ items, financeItems, user, roleLabel, progress }: Side
                             href="/dashboard/configuracion"
                             title={isCollapsed ? "Configuración" : undefined}
                             className={cn(
-                                "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-gray-400 hover:bg-[#1F2937] hover:text-white transition-colors",
+                                "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-gray-400 hover:bg-surface-1 hover:text-white transition-colors",
                                 isCollapsed && "justify-center px-2"
                             )}
                         >
@@ -147,7 +147,7 @@ export function Sidebar({ items, financeItems, user, roleLabel, progress }: Side
             </div>
 
             {/* Footer / User Profile */}
-            <div className="p-4 border-t border-[#1F2937]">
+            <div className="p-4 border-t border-border-subtle">
                 {!isCollapsed && progress && progress.coursesInProgress > 0 && (
                     <div className="px-2 py-2 mb-3 animate-in fade-in duration-300">
                         <p className="text-xs text-gray-500 mb-1">{progress.coursesInProgress} curso{progress.coursesInProgress !== 1 ? 's' : ''} en progreso</p>
@@ -180,7 +180,7 @@ export function Sidebar({ items, financeItems, user, roleLabel, progress }: Side
                         <Button
                             onClick={() => signOut({ callbackUrl: "/" })}
                             variant="outline"
-                            className="w-full gap-2 border-[#1F2937] text-gray-400 hover:text-white hover:bg-[#1F2937]"
+                            className="w-full gap-2 border-border-subtle text-gray-400 hover:text-white hover:bg-surface-1"
                         >
                             <LogOut size={16} />
                             Cerrar sesión
@@ -198,7 +198,7 @@ export function Sidebar({ items, financeItems, user, roleLabel, progress }: Side
                             onClick={() => signOut({ callbackUrl: "/" })}
                             variant="ghost"
                             size="icon"
-                            className="text-gray-400 hover:text-white hover:bg-[#1F2937]"
+                            className="text-gray-400 hover:text-white hover:bg-surface-1"
                             title="Cerrar sesión"
                         >
                             <LogOut size={18} />

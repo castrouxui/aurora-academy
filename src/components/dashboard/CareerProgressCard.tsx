@@ -76,7 +76,7 @@ export function CareerProgressCard({ userId, careerReferenceId }: CareerProgress
                 </div>
 
                 <h3 className="text-2xl font-bold text-white mb-2 tracking-tight group-hover:text-[#5D5CDE] transition-colors">{careerName}</h3>
-                <p className="text-xs font-semibold text-white/50 mb-8 leading-relaxed max-w-[240px]">{statusCopy}</p>
+                <p className="text-xs font-light text-white/40 mb-8 leading-relaxed max-w-[240px]">{statusCopy}</p>
 
                 {/* Refined Segmented Progress Bar */}
                 <div className="flex gap-1.5 h-1.5 mb-10">
@@ -95,7 +95,7 @@ export function CareerProgressCard({ userId, careerReferenceId }: CareerProgress
 
                 <Link
                     href={`/dashboard/carrera/${careerReferenceId}`}
-                    className="flex items-center justify-between w-full bg-white/[0.03] hover:bg-[#5D5CDE] text-white px-6 py-4 rounded-2xl text-sm font-black transition-all group-hover:shadow-xl group-hover:shadow-[#5D5CDE]/20 border border-white/5 hover:border-[#5D5CDE]/20"
+                    className="flex items-center justify-between w-full bg-white/[0.03] hover:bg-[#5D5CDE] text-white px-6 py-4 rounded-2xl text-sm font-bold transition-all group-hover:shadow-xl group-hover:shadow-[#5D5CDE]/20 border border-white/5 hover:border-[#5D5CDE]/20"
                 >
                     <span>Continuar Carrera</span>
                     <ChevronRight size={18} className="transition-transform group-hover:translate-x-1" />

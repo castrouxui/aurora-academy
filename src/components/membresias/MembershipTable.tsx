@@ -216,7 +216,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
                             // Mobile: Portfolio first, Elite second, Inicial third
                             isPortfolio ? "order-first md:order-none" : isElite ? "order-2 md:order-none" : "order-3 md:order-none",
                             isPortfolio
-                                ? "bg-[#0D0F1A] border-[1.5px] border-[#5D5CDE]/60 shadow-[0_0_60px_-10px_rgba(93,92,222,0.35)] z-10 pb-10"
+                                ? "bg-[#0D0F1A] border-[1.5px] border-[#5D5CDE]/60 shadow-[0_0_60px_-10px_rgba(93,92,222,0.35)] z-10 pb-10 scale-[1.02] hover:scale-[1.03] transition-transform duration-300 shiny-hover overflow-hidden"
                                 : "bg-[#0D1120] border border-white/8 hover:border-white/15 hover:shadow-[0_4px_24px_-8px_rgba(93,92,222,0.12)] transition-all pb-10"
                         )}
                     >
@@ -367,7 +367,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
                                 })}
 
                                 {plan.excludedFeatures && plan.excludedFeatures.length > 0 && (
-                                    <div className="mt-4 space-y-3 opacity-40 hover:opacity-100 transition-opacity duration-300">
+                                    <div className="mt-4 space-y-3 opacity-30 hover:opacity-100 transition-opacity duration-300">
                                         {plan.excludedFeatures.map((feature: any, i: number) => (
                                             <div key={`ex-${i}`} className="flex items-start gap-3 text-gray-500">
                                                 <div className="mt-0.5 shrink-0">
@@ -416,6 +416,9 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
                                     Garantía de 7 días — devolvemos el 100%
                                 </p>
                             </div>
+                            {isPortfolio && (
+                                <p className="text-xs text-gray-500 mt-3 text-center">El plan más elegido por inversores activos</p>
+                            )}
                         </div>
 
                     </div>

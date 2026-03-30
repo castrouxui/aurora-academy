@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Award, Download, Share2 } from "lucide-react";
 import Link from "next/link";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { useState, useEffect } from "react";
 import { CertificateModal } from "@/components/certificates/CertificateModal";
 
@@ -52,7 +53,7 @@ export default function CertificatesPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0B0F19] p-4 md:p-8">
+        <div className="min-h-screen bg-[#0B0F19] p-4 md:p-8 page-fade-in">
             <div className="max-w-6xl mx-auto space-y-8">
                 <div>
                     <h1 className="text-3xl font-bold text-white mb-2">Mis Certificados</h1>
@@ -60,16 +61,12 @@ export default function CertificatesPage() {
                 </div>
 
                 {completedCourses.length === 0 ? (
-                    <div className="text-center py-20 bg-[#1F2937]/30 rounded-xl border border-dashed border-gray-700">
-                        <Award className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-white mb-2">Aún no tienes certificados</h3>
-                        <p className="text-gray-400 mb-6 max-w-md mx-auto">
-                            Completa el 100% de las lecciones de un curso para desbloquear tu certificado oficial.
-                        </p>
-                        <Link href="/dashboard/courses">
-                            <Button className="bg-primary hover:bg-primary/90">Ir a Mis Cursos</Button>
-                        </Link>
-                    </div>
+                    <EmptyState
+                        icon={Award}
+                        title="Aún no tienes certificados"
+                        description="Completá el 100% de las lecciones de un curso para desbloquear tu certificado oficial."
+                        action={{ label: "Ir a Mis Cursos", href: "/dashboard/cursos" }}
+                    />
                 ) : (
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                         {completedCourses.map((course) => (
