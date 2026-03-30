@@ -203,23 +203,37 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
 
     return (
         <div className="space-y-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch max-w-7xl mx-auto scoll-mt-32">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch max-w-7xl mx-auto scroll-mt-32">
             {displayItems.map((plan, idx) => {
                 const isPortfolio = plan.isPortfolio;
                 const isElite = plan.isElite;
 
                 return (
+                    /* Outer wrapper: overflow-visible so badge isn't clipped */
                     <div
                         key={idx}
                         className={cn(
+                            "relative",
+                            isPortfolio ? "order-first md:order-none pt-5" : isElite ? "order-2 md:order-none" : "order-3 md:order-none",
+                        )}
+                    >
+                        {/* BADGE — outside overflow-hidden so it's never clipped */}
+                        {isPortfolio && (
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full flex justify-center z-20">
+                                <div className="backdrop-blur-md bg-white/80 border border-white/30 text-background px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-xl whitespace-nowrap">
+                                    El más elegido / Sugerencia de Fran Castro
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Inner card — overflow-hidden safe here (badge is outside) */}
+                        <div className={cn(
                             "relative flex flex-col h-full rounded-3xl p-8 transition-all duration-300",
-                            // Mobile: Portfolio first, Elite second, Inicial third
-                            isPortfolio ? "order-first md:order-none" : isElite ? "order-2 md:order-none" : "order-3 md:order-none",
                             isPortfolio
                                 ? "bg-[#0D0F1A] border-[1.5px] border-[#5D5CDE]/60 shadow-[0_0_60px_-10px_rgba(93,92,222,0.35)] z-10 pb-10 scale-[1.02] hover:scale-[1.03] transition-transform duration-300 shiny-hover overflow-hidden"
                                 : "bg-[#0D1120] border border-white/8 hover:border-white/15 hover:shadow-[0_4px_24px_-8px_rgba(93,92,222,0.12)] transition-all pb-10"
-                        )}
-                    >
+                        )}>
+
                         {/* Gradiente interno — solo Portfolio */}
                         {isPortfolio && (
                             <div className="absolute inset-0 rounded-3xl pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 40% at 50% 0%, rgba(93,92,222,0.08) 0%, transparent 70%)" }} />
@@ -227,15 +241,6 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
 
                         {/* WRAPPER FOR TOP CONTENT TO PUSH CTA DOWN */}
                         <div className="flex-grow flex flex-col">
-
-                            {/* BADGE for Portfolio */}
-                            {isPortfolio && (
-                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-full flex justify-center z-20">
-                                    <div className="backdrop-blur-md bg-white/80 border border-white/30 text-background px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-xl whitespace-nowrap">
-                                        El más elegido / Sugerencia de Fran Castro
-                                    </div>
-                                </div>
-                            )}
 
                             {/* Header */}
                             <div className="mb-6">
@@ -421,76 +426,64 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
                             )}
                         </div>
 
+                        </div>
                     </div>
                 );
             })}
         </div>
 
-        {/* Comparison Table */}
+        {/* Comparison Table — sticky columns, scrollable on mobile */}
         {allStringFeatures.length > 0 && (
             <div className="max-w-7xl mx-auto">
                 <h3 className="text-2xl font-bold text-white text-center mb-8">Comparación de Planes</h3>
 
-                {/* Desktop Table */}
-                <div className="hidden md:block overflow-hidden rounded-2xl border border-white/8">
-                    <table className="w-full">
+                <div className="overflow-x-auto rounded-2xl border border-white/8 -mx-4 md:mx-0">
+                    <table className="w-full min-w-[480px]">
                         <thead>
                             <tr className="bg-[#0D1120]">
-                                <th className="text-left px-6 py-4 text-sm font-semibold text-gray-400 w-1/2">Característica</th>
+                                {/* Sticky feature header */}
+                                <th className="sticky left-0 z-20 bg-[#0D1120] text-left px-4 md:px-6 py-4 text-xs md:text-sm font-semibold text-gray-400 w-[130px] md:w-1/2 min-w-[130px]">
+                                    Característica
+                                </th>
                                 {displayItems.map((plan, i) => (
-                                    <th key={i} className={cn("px-6 py-4 text-sm font-bold text-center", plan.isPortfolio ? "text-[#5D5CDE]" : "text-gray-200")}>
+                                    <th key={i} className={cn(
+                                        "px-3 md:px-6 py-4 text-xs md:text-sm font-bold text-center min-w-[90px]",
+                                        plan.isPortfolio ? "text-[#5D5CDE]" : "text-gray-200"
+                                    )}>
                                         {plan.title}
                                     </th>
                                 ))}
                             </tr>
                         </thead>
                         <tbody>
-                            {allStringFeatures.map((feature, fi) => (
-                                <tr key={fi} className={cn("border-t border-white/5", fi % 2 === 0 ? "bg-[#0D0F1A]" : "bg-[#0D1120]")}>
-                                    <td className="px-6 py-3 text-sm text-gray-300">{feature}</td>
-                                    {displayItems.map((plan, pi) => {
-                                        const included = plan.features.some((f: any) => typeof f === 'string' && f === feature);
-                                        return (
-                                            <td key={pi} className="px-6 py-3 text-center">
-                                                {included ? (
-                                                    <span className="text-emerald-400 text-lg font-bold">✓</span>
-                                                ) : (
-                                                    <span className="text-gray-600 text-lg">×</span>
-                                                )}
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            ))}
+                            {allStringFeatures.map((feature, fi) => {
+                                const rowBg = fi % 2 === 0 ? "bg-[#0D0F1A]" : "bg-[#0D1120]";
+                                return (
+                                    <tr key={fi} className={cn("border-t border-white/5", rowBg)}>
+                                        {/* Sticky feature cell — same bg as row */}
+                                        <td className={cn(
+                                            "sticky left-0 z-10 px-4 md:px-6 py-3 text-xs md:text-sm text-gray-300 w-[130px] min-w-[130px] leading-snug",
+                                            rowBg
+                                        )}>
+                                            {feature}
+                                        </td>
+                                        {displayItems.map((plan, pi) => {
+                                            const included = plan.features.some((f: any) => typeof f === 'string' && f === feature);
+                                            return (
+                                                <td key={pi} className="px-3 md:px-6 py-3 text-center min-w-[90px]">
+                                                    {included ? (
+                                                        <span className="text-emerald-400 text-base font-bold">✓</span>
+                                                    ) : (
+                                                        <span className="text-gray-600 text-base">×</span>
+                                                    )}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
-                </div>
-
-                {/* Mobile: Accordion per plan */}
-                <div className="md:hidden space-y-4">
-                    {displayItems.map((plan, pi) => (
-                        <details key={pi} className="rounded-2xl border border-white/8 bg-[#0D1120] group">
-                            <summary className={cn("flex items-center justify-between px-5 py-4 cursor-pointer font-bold list-none", plan.isPortfolio ? "text-[#5D5CDE]" : "text-white")}>
-                                {plan.title}
-                                <span className="text-gray-400 group-open:rotate-180 transition-transform">▾</span>
-                            </summary>
-                            <div className="px-5 pb-4 space-y-2">
-                                {allStringFeatures.map((feature, fi) => {
-                                    const included = plan.features.some((f: any) => typeof f === 'string' && f === feature);
-                                    return (
-                                        <div key={fi} className="flex items-center justify-between text-sm py-1 border-t border-white/5">
-                                            <span className={included ? "text-gray-300" : "text-gray-600"}>{feature}</span>
-                                            {included ? (
-                                                <span className="text-emerald-400 font-bold">✓</span>
-                                            ) : (
-                                                <span className="text-gray-600">×</span>
-                                            )}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </details>
-                    ))}
                 </div>
             </div>
         )}
