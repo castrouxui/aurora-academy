@@ -468,7 +468,10 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
                                             {feature}
                                         </td>
                                         {displayItems.map((plan, pi) => {
-                                            const included = plan.features.some((f: any) => typeof f === 'string' && f === feature);
+                                            // A plan includes all features from plans 0..pi (cumulative)
+                                            const included = displayItems
+                                                .slice(0, pi + 1)
+                                                .some(p => p.features.some((f: any) => typeof f === 'string' && f === feature));
                                             return (
                                                 <td key={pi} className="px-3 md:px-6 py-3 text-center min-w-[90px]">
                                                     {included ? (
