@@ -161,9 +161,10 @@ export function Sidebar({ items, financeItems, user, roleLabel, progress }: Side
                         <div className="flex items-center justify-between px-2 mb-4 animate-in fade-in duration-300">
                             <div className="flex items-center gap-3">
                                 <img
-                                    src={user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                    src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email || 'U')}&background=5D5CDE&color=fff`}
                                     alt={user.name || "User"}
                                     className="w-10 h-10 rounded-full border border-gray-700 shrink-0"
+                                    onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email || 'U')}&background=5D5CDE&color=fff`; }}
                                 />
                                 <div className="overflow-hidden">
                                     <p className="text-sm font-medium text-white truncate flex items-center gap-1">
@@ -189,10 +190,11 @@ export function Sidebar({ items, financeItems, user, roleLabel, progress }: Side
                 ) : (
                     <div className="flex flex-col items-center gap-4">
                         <img
-                            src={user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                            src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email || 'U')}&background=5D5CDE&color=fff`}
                             alt={user.name || "User"}
                             className="w-8 h-8 rounded-full border border-gray-700"
                             title={user.name || ""}
+                            onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email || 'U')}&background=5D5CDE&color=fff`; }}
                         />
                         <Button
                             onClick={() => signOut({ callbackUrl: "/" })}

@@ -72,7 +72,7 @@ export async function POST() {
                     const newUser = await prisma.user.create({
                         data: {
                             email: email,
-                            name: payer.first_name ? `${payer.first_name} ${payer.last_name || ''}`.trim() : "Usuario Recuperado",
+                            name: payer.first_name ? `${payer.first_name} ${payer.last_name || ''}`.trim() : email.split("@")[0],
                             image: `https://ui-avatars.com/api/?name=${email}&background=random`
                         }
                     });

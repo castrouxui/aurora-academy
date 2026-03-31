@@ -122,9 +122,10 @@ export function MobileSidebar({ items, financeItems, role, user }: MobileSidebar
                             <div className="flex items-center justify-between px-2 mb-4">
                                 <div className="flex items-center gap-3">
                                     <img
-                                        src={user.image || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                        src={user.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email || 'U')}&background=5D5CDE&color=fff`}
                                         alt={user.name || "User"}
                                         className="w-10 h-10 rounded-full border border-gray-700"
+                                        onError={(e) => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || user.email || 'U')}&background=5D5CDE&color=fff`; }}
                                     />
                                     <div className="overflow-hidden">
                                         <p className="text-sm font-medium text-white truncate flex items-center gap-1">

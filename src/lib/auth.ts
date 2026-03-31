@@ -138,6 +138,19 @@ export const authOptions: AuthOptions = {
                     token.notificationPrefs = (user as any).notificationPrefs;
                 }
 
+                // Always refresh name/image from DB so stale JWT data doesn't persist
+                if (token.id && !user) {
+                    const dbUser = await prisma.user.findUnique({
+                        where: { id: token.id as string },
+                        select: { name: true, image: true, role: true },
+                    });
+                    if (dbUser) {
+                        token.name = dbUser.name;
+                        token.picture = dbUser.image;
+                        if (dbUser.role) token.role = dbUser.role as any;
+                    }
+                }
+
                 if (trigger === "update" && session) {
                     return { ...token, ...session };
                 }
