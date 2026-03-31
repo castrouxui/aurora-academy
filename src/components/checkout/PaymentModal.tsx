@@ -339,13 +339,35 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="fixed top-4 right-4 md:absolute z-50 text-gray-400 hover:text-white bg-black/40 hover:bg-black/60 p-2 rounded-full transition-all backdrop-blur-md"
+                    className="absolute top-3 right-3 md:top-4 md:right-4 z-50 text-gray-400 hover:text-white bg-black/40 hover:bg-black/60 p-1.5 rounded-full transition-all backdrop-blur-md"
                 >
-                    <X size={20} />
+                    <X size={18} />
                 </button>
 
-                {/* LEFT COLUMN: Order Summary */}
-                <div className="w-full md:w-5/12 bg-[#0D0F13] p-6 md:p-8 flex flex-col border-b md:border-b-0 md:border-r border-white/10 relative shrink-0 overflow-y-auto custom-scrollbar">
+                {/* Mobile-only compact summary header */}
+                <div className="md:hidden flex items-center gap-3 px-5 py-3.5 border-b border-white/8 bg-[#0D0F13] shrink-0 pr-12">
+                    <div className="flex-1 min-w-0">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-widest leading-none mb-0.5">Comprando</p>
+                        <p className="text-sm font-bold text-white truncate">{courseTitle}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                        {appliedCoupon ? (
+                            <p className="text-base font-bold text-emerald-400">
+                                {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(
+                                    Math.max(0, Number(coursePrice.replace(/[^0-9]/g, '')) * (appliedCoupon.type === 'PERCENTAGE' ? (1 - appliedCoupon.discount / 100) : 1) - (appliedCoupon.type !== 'PERCENTAGE' ? appliedCoupon.discount : 0))
+                                )}
+                            </p>
+                        ) : (
+                            <p className="text-base font-bold text-white">
+                                {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Number(coursePrice.replace(/[^0-9]/g, '')))}
+                            </p>
+                        )}
+                        {isAnnual && <p className="text-[10px] text-emerald-400 leading-none mt-0.5">Plan Anual</p>}
+                    </div>
+                </div>
+
+                {/* LEFT COLUMN: Order Summary — desktop only */}
+                <div className="hidden md:flex w-full md:w-5/12 bg-[#0D0F13] p-6 md:p-8 flex-col border-b md:border-b-0 md:border-r border-white/10 relative shrink-0 overflow-y-auto custom-scrollbar">
                     <div className="absolute top-0 left-0 w-full h-40 bg-indigo-500/5 blur-3xl pointer-events-none"></div>
                     <div className="relative z-10">
                         <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-6 flex items-center gap-2">
@@ -447,9 +469,9 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                     {/* ── PASO: email ──────────────────────────────────────── */}
                     {checkoutStep === 'auth-email' && (
                         <>
-                            <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
-                                <h3 className="text-xl font-bold text-white mb-2">Continuar con tu compra</h3>
-                                <p className="text-sm text-gray-400 mb-6">Ingresá tu email para continuar</p>
+                            <div className="flex-1 overflow-y-auto p-5 md:p-8 custom-scrollbar">
+                                <h3 className="text-base md:text-xl font-bold text-white mb-1">Continuar con tu compra</h3>
+                                <p className="text-xs md:text-sm text-gray-400 mb-4 md:mb-6">Ingresá tu email para continuar</p>
 
                                 {authError && (
                                     <div className="mb-4 p-3 bg-red-500/5 border border-red-500/20 rounded-xl flex items-start gap-3 text-red-400 text-sm animate-in fade-in slide-in-from-top-2">
@@ -503,7 +525,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                     {/* ── PASO: verificación OTP (solo usuarios de Google) ─── */}
                     {checkoutStep === 'auth-verify' && (
                         <>
-                            <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
+                            <div className="flex-1 overflow-y-auto p-5 md:p-8 custom-scrollbar">
                                 <button
                                     type="button"
                                     onClick={() => { setCheckoutStep('auth-email'); setAuthError(null); setOtpCode(""); }}
@@ -585,7 +607,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                     {/* ── PASO: contraseña ─────────────────────────────────── */}
                     {checkoutStep === 'auth-password' && (
                         <>
-                            <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
+                            <div className="flex-1 overflow-y-auto p-5 md:p-8 custom-scrollbar">
                                 <button
                                     type="button"
                                     onClick={() => { setCheckoutStep('auth-email'); setAuthError(null); setAuthPassword(""); }}
@@ -659,7 +681,7 @@ export function PaymentModal({ isOpen, onClose, courseTitle, coursePrice, course
                     {/* ── PASO: pago ───────────────────────────────────────── */}
                     {checkoutStep === 'payment' && (
                         <>
-                            <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar">
+                            <div className="flex-1 overflow-y-auto p-5 md:p-8 custom-scrollbar">
                                 <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                                     Finalizar Compra
                                 </h3>
