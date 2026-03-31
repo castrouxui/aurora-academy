@@ -189,27 +189,27 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
                     const isElite = plan.isElite;
 
                     return (
-                        /* Outer wrapper: overflow-visible so badge isn't clipped */
+                        /* Outer wrapper */
                         <div
                             key={idx}
                             className={cn(
-                                "relative",
+                                "relative flex flex-col",
                                 /* Mobile: Portfolio → Elite → Inicial | Desktop: Inicial → Elite → Portfolio */
                                 isPortfolio
-                                    ? "order-first md:order-none pt-5"
+                                    ? "order-first md:order-none"
                                     : isElite
                                     ? "order-2 md:order-none"
                                     : "order-3 md:order-none"
                             )}
                         >
-                            {/* Badge — outside overflow-hidden */}
-                            {isPortfolio && (
-                                <div className="absolute top-0 left-1/2 -translate-x-1/2 flex justify-center z-20 w-full">
+                            {/* Badge slot — fixed height for ALL cards so content aligns to top */}
+                            <div className="h-7 flex items-center justify-center mb-1">
+                                {isPortfolio && (
                                     <div className="backdrop-blur-sm bg-white/85 border border-white/20 text-background px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-lg whitespace-nowrap">
                                         Más elegido · Recomendado
                                     </div>
-                                </div>
-                            )}
+                                )}
+                            </div>
 
                             {/* Card */}
                             <div className={cn(
@@ -249,10 +249,12 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
                                                 isPortfolio ? "text-[28px]" : "text-2xl"
                                             )}>
                                                 {new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 }).format(
-                                                    plan.finalPrice / (billingCycle === 'annual' ? 365 : 1)
+                                                    billingCycle === 'annual'
+                                                        ? plan.finalPrice / 12   // precio mensual efectivo
+                                                        : plan.finalPrice
                                                 )}
                                             </span>
-                                            <span className="text-xs text-gray-500">{billingCycle === 'annual' ? '/día' : '/mes'}</span>
+                                            <span className="text-xs text-gray-500">/mes</span>
                                             {billingCycle === 'annual' && plan.savingsPct && (
                                                 <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
                                                     -{plan.savingsPct}%
@@ -267,13 +269,6 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
                                             </div>
                                         ) : (
                                             <p className="mt-1 text-[11px] text-gray-500">Facturación mensual recurrente</p>
-                                        )}
-
-                                        {/* Anchor pricing — compact inline hint */}
-                                        {plan.formattedCourseValue && plan.courseValue > plan.finalPrice && (
-                                            <p className="mt-1.5 text-[10px] text-gray-600">
-                                                Cursos sueltos: <span className="line-through text-gray-500">{plan.formattedCourseValue}</span>
-                                            </p>
                                         )}
                                     </div>
 
