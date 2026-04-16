@@ -54,7 +54,11 @@ export function MobileCourseCTA({
     const handleContinueSingle = () => {
         setIsUpsellModalOpen(false);
         setSelectedBundle(null);
-        setIsPaymentModalOpen(true);
+        if (isFree) {
+            handleFreeEnroll();
+        } else {
+            setIsPaymentModalOpen(true);
+        }
     };
 
     const handleUpgradeToBundle = (bundleId: string, bundleTitle: string, bundlePrice: string) => {
@@ -155,20 +159,12 @@ export function MobileCourseCTA({
                                 Ver Curso
                             </Button>
                         </Link>
-                    ) : isFree ? (
-                        <Button
-                            onClick={handleFreeEnroll}
-                            disabled={isEnrolling}
-                            className="flex-[1.5] h-11 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover flex items-center justify-center gap-2"
-                        >
-                            {isEnrolling ? <Loader2 className="animate-spin" size={16} /> : "Comenzar ahora"}
-                        </Button>
                     ) : (
                         <Button
                             onClick={handlePurchase}
                             className="flex-[1.5] h-11 text-sm font-bold transition-all duration-300 rounded-xl bg-[#5D5CDE] hover:bg-[#4B4AC0] text-white shadow-lg shiny-hover"
                         >
-                            Acceder
+                            {isFree ? "Obtener gratis" : "Acceder"}
                         </Button>
                     )}
                 </div>
