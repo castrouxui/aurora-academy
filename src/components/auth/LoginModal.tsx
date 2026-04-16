@@ -69,9 +69,11 @@ export function LoginModal({ isOpen, onClose, redirectUrl, view = 'default', ini
             if (result?.ok) {
                 toast.success("¡Bienvenido!");
 
-                // Always redirect to /dashboard — the dashboard layout handles
-                // redirecting admins to /admin once the session is fully loaded.
-                window.location.href = redirectUrl || "/dashboard";
+                if (mode === 'register') {
+                    window.location.href = "/welcome";
+                } else {
+                    window.location.href = redirectUrl || "/dashboard";
+                }
 
                 onClose();
             }
