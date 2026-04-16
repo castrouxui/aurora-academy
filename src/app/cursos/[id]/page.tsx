@@ -7,13 +7,48 @@ import { CourseDetailContent } from "@/components/cursos/CourseDetailContent";
 import { getYouTubeId, formatCourseDuration } from "@/lib/utils";
 import { getCourseImage } from "@/lib/course-constants";
 import { getMockCourseReviews } from "@/lib/course-reviews";
+import { unstable_cache } from "next/cache";
+
+const getCachedCourse = (id: string) =>
+    unstable_cache(
+        () => prisma.course.findUnique({
+            where: { id },
+            include: {
+                modules: {
+                    orderBy: { position: 'asc' },
+                    include: { lessons: { orderBy: { position: 'asc' } } }
+                }
+            }
+        }),
+        [`course-detail-${id}`],
+        { revalidate: 300, tags: [`course-${id}`, 'courses'] }
+    )();
+
+const getCachedPublicStats = (id: string) =>
+    unstable_cache(
+        async () => {
+            const [studentCount, dbReviews, totalPublishedCourses] = await Promise.all([
+                prisma.purchase.count({ where: { courseId: id, status: 'approved' } }),
+                prisma.review.findMany({
+                    where: { courseId: id },
+                    orderBy: { createdAt: 'desc' },
+                    include: { user: { select: { name: true, image: true } } }
+                }),
+                prisma.course.count({ where: { published: true } }),
+            ]);
+            return { studentCount, dbReviews, totalPublishedCourses };
+        },
+        [`course-stats-${id}`],
+        { revalidate: 300, tags: [`course-${id}`, 'courses', 'reviews'] }
+    )();
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const course = await prisma.course.findUnique({
-        where: { id },
-        select: { title: true, description: true, imageUrl: true }
-    });
+    const course = await unstable_cache(
+        () => prisma.course.findUnique({ where: { id }, select: { title: true, description: true, imageUrl: true } }),
+        [`course-meta-${id}`],
+        { revalidate: 300, tags: [`course-${id}`] }
+    )();
 
     if (!course) {
         return {
@@ -45,20 +80,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     const { id } = await params;
     const session = await getServerSession(authOptions);
 
-    // FIX: Order modules and lessons by position
-    const course = await prisma.course.findUnique({
-        where: { id },
-        include: {
-            modules: {
-                orderBy: { position: 'asc' },
-                include: {
-                    lessons: {
-                        orderBy: { position: 'asc' }
-                    }
-                }
-            }
-        }
-    });
+    const course = await getCachedCourse(id);
 
     let hasAccess = false;
     if (session?.user?.id && course) {
@@ -104,16 +126,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     // Format duration using centralized utility
     const formattedDuration = formatCourseDuration(totalDurationSeconds); // Fallback
 
-    // Get student count and reviews in parallel
-    const [studentCount, dbReviews, totalPublishedCourses] = await Promise.all([
-        prisma.purchase.count({ where: { courseId: id, status: 'approved' } }),
-        prisma.review.findMany({
-            where: { courseId: id },
-            orderBy: { createdAt: 'desc' },
-            include: { user: { select: { name: true, image: true } } }
-        }),
-        prisma.course.count({ where: { published: true } }),
-    ]);
+    // Get public stats from cache (studentCount, dbReviews, totalPublishedCourses)
+    const { studentCount, dbReviews, totalPublishedCourses } = await getCachedPublicStats(id);
 
     // Format price
     const basePrice = Number(course.price) || 0;
@@ -225,10 +239,6 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         shortDescription: course.shortDescription,
         rawPrice: finalPrice
     };
-
-    const totalPublishedCourses = await prisma.course.count({
-        where: { published: true }
-    });
 
     return (
         <main className="min-h-screen bg-[#0B0F19]">

@@ -74,13 +74,15 @@ export async function PATCH(
             },
         });
 
-        // Force revalidation of the public course page
+        // Invalidate all caches for this course
         try {
-            const { revalidatePath } = await import("next/cache");
+            const { revalidatePath, revalidateTag } = await import("next/cache");
+            revalidateTag(`course-${courseId}`);
+            revalidateTag('courses');
             revalidatePath(`/cursos/${courseId}`);
-            revalidatePath(`/`); // Also revalidate home in case it's featured
+            revalidatePath(`/`);
         } catch (err) {
-            console.error("Error revalidating path:", err);
+            console.error("Error revalidating cache:", err);
         }
 
         return NextResponse.json(course);

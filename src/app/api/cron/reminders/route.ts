@@ -3,8 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/email";
 
 export async function GET(req: Request) {
-    // Basic security: Check for a secret query param or just verify caller (Vercel Cron headers usually)
-    // For MVP, we'll keep it open but obscure, or check a CRON_SECRET env if user wants.
+    const authHeader = req.headers.get("authorization");
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}` && process.env.NODE_ENV === 'production') {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     try {
         const today = new Date();

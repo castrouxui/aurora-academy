@@ -73,6 +73,14 @@ export async function POST(request: Request) {
                     }
                 }
 
+                if (!user_id || (!course_id && !bundle_id)) {
+                    // Critical: approved payment but can't identify purchase — Sentry will capture this
+                    const errorMsg = `[WEBHOOK] CRITICAL: Approved payment ${id} has no identifiable user or product. amount=${paymentData.transaction_amount} metadata=${JSON.stringify(paymentData.metadata)} ext_ref=${paymentData.external_reference}`;
+                    console.error(errorMsg);
+                    // Return 500 so MercadoPago retries the webhook
+                    return NextResponse.json({ status: "error", message: "Missing payment metadata, will retry" }, { status: 500 });
+                }
+
                 if (user_id && (course_id || bundle_id)) {
                     // Check if purchase already exists
                     const existingPurchase = await prisma.purchase.findFirst({
