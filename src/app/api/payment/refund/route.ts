@@ -3,12 +3,18 @@ import { getServerSession } from "next-auth/next";
 import MercadoPagoConfig, { Payment } from "mercadopago";
 import { prisma } from "@/lib/prisma";
 import { isEligibleForRefund } from "@/lib/refund";
+import { checkRateLimit, getClientIP, rateLimitResponse } from "@/lib/rate-limit";
 
 const client = new MercadoPagoConfig({
     accessToken: (process.env.MP_ACCESS_TOKEN || "").trim().replace(/^Bearer\s+/i, '')
 });
 
 export async function POST(req: NextRequest) {
+    const clientIP = getClientIP(req as unknown as Request);
+    if (!checkRateLimit(`refund:${clientIP}`, 3, 60 * 60 * 1000)) {
+        return rateLimitResponse();
+    }
+
     try {
         const session = await getServerSession();
         if (!session?.user?.email) {

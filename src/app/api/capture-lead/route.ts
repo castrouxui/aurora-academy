@@ -1,7 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { sendEmail, sendCourseWelcomeEmail } from '@/lib/email';
+import { checkRateLimit, getClientIP, rateLimitResponse } from '@/lib/rate-limit';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+    const clientIP = getClientIP(request as unknown as Request);
+    if (!checkRateLimit(`lead:${clientIP}`, 3, 60 * 1000)) {
+        return rateLimitResponse();
+    }
+
     try {
         const body = await request.json();
         const { email, name } = body;
