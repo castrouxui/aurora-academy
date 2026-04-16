@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle } from "lucide-react";
+import { Suspense } from "react";
 
 declare global {
   interface Window {
@@ -10,14 +11,21 @@ declare global {
   }
 }
 
-export default function WelcomePage() {
+function WelcomeContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
+  const isPurchase = from === "purchase";
 
   useEffect(() => {
-    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+    if (typeof window === "undefined" || typeof window.fbq !== "function") return;
+
+    if (isPurchase) {
+      window.fbq("track", "Purchase");
+    } else {
       window.fbq("track", "CompleteRegistration");
     }
-  }, []);
+  }, [isPurchase]);
 
   return (
     <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center p-4">
@@ -27,10 +35,21 @@ export default function WelcomePage() {
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-white">¡Bienvenido a Aurora Academy!</h1>
-          <p className="text-gray-400">
-            Tu cuenta fue creada con éxito. Ya podés empezar a explorar todos nuestros cursos.
-          </p>
+          {isPurchase ? (
+            <>
+              <h1 className="text-3xl font-bold text-white">¡Compra exitosa!</h1>
+              <p className="text-gray-400">
+                Tu acceso fue activado. Ya podés empezar a aprender.
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-3xl font-bold text-white">¡Bienvenido a Aurora Academy!</h1>
+              <p className="text-gray-400">
+                Tu cuenta fue creada con éxito. Ya podés empezar a explorar todos nuestros cursos.
+              </p>
+            </>
+          )}
         </div>
 
         <button
@@ -41,5 +60,13 @@ export default function WelcomePage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function WelcomePage() {
+  return (
+    <Suspense>
+      <WelcomeContent />
+    </Suspense>
   );
 }

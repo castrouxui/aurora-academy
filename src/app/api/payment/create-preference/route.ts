@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
                 }
             ],
             back_urls: {
-                success: `${baseUrl}/dashboard`, // Redirect to main dashboard
+                success: `${baseUrl}/welcome?from=purchase`,
                 failure: `${baseUrl}/membresias`,
                 pending: `${baseUrl}/membresias`,
             },
