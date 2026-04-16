@@ -183,7 +183,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
     return (
         <div className="space-y-12">
             {/* Pricing Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch max-w-5xl mx-auto">
                 {displayItems.map((plan, idx) => {
                     const isPortfolio = plan.isPortfolio;
                     const isElite = plan.isElite;
@@ -193,7 +193,7 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
                         <div
                             key={idx}
                             className={cn(
-                                "relative flex flex-col",
+                                "relative flex flex-col h-full pt-5",
                                 /* Mobile: Portfolio → Elite → Inicial | Desktop: Inicial → Elite → Portfolio */
                                 isPortfolio
                                     ? "order-first md:order-none"
@@ -202,20 +202,20 @@ export function MembershipTable({ bundles, billingCycle, onPurchase, buttonOverr
                                     : "order-3 md:order-none"
                             )}
                         >
-                            {/* Badge slot — fixed height for ALL cards so content aligns to top */}
-                            <div className="h-7 flex items-center justify-center mb-1">
-                                {isPortfolio && (
-                                    <div className="backdrop-blur-sm bg-white/85 border border-white/20 text-background px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-lg whitespace-nowrap">
+                            {/* Tag — overlapping top border of card */}
+                            {isPortfolio && (
+                                <div className="absolute top-0 left-0 right-0 flex justify-center z-20">
+                                    <span className="inline-flex items-center bg-[#5D5CDE] text-white text-[10px] font-black px-4 py-1.5 rounded-full tracking-widest uppercase shadow-[0_2px_12px_rgba(93,92,222,0.5)]">
                                         Más elegido · Recomendado
-                                    </div>
-                                )}
-                            </div>
+                                    </span>
+                                </div>
+                            )}
 
                             {/* Card */}
                             <div className={cn(
-                                "relative flex flex-col rounded-2xl p-5 transition-all duration-300",
+                                "relative flex flex-col flex-1 rounded-2xl p-5 transition-all duration-300",
                                 isPortfolio
-                                    ? "bg-[#0D0F1A] border-[1.5px] border-[#5D5CDE]/60 shadow-[0_0_50px_-12px_rgba(93,92,222,0.4)] shiny-hover overflow-hidden"
+                                    ? "bg-[#0D0F1A] border-[1.5px] border-[#5D5CDE]/60 shadow-[0_0_50px_-12px_rgba(93,92,222,0.4)]"
                                     : "bg-[#0D1120] border border-white/8 hover:border-white/15 hover:shadow-[0_4px_20px_-8px_rgba(93,92,222,0.1)]"
                             )}>
 
