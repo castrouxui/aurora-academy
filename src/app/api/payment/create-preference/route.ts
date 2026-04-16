@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
                 }
             ],
             back_urls: {
-                success: `${baseUrl}/welcome?from=purchase`,
+                success: `${baseUrl}/welcome?from=purchase&amount=${numericPrice}`,
                 failure: `${baseUrl}/membresias`,
                 pending: `${baseUrl}/membresias`,
             },

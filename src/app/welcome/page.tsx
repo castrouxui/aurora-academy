@@ -15,17 +15,19 @@ function WelcomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
+  const amount = searchParams.get("amount");
   const isPurchase = from === "purchase";
 
   useEffect(() => {
     if (typeof window === "undefined" || typeof window.fbq !== "function") return;
 
     if (isPurchase) {
-      window.fbq("track", "Purchase");
+      const value = amount ? parseFloat(amount) : 0;
+      window.fbq("track", "Purchase", { value, currency: "ARS" });
     } else {
       window.fbq("track", "CompleteRegistration");
     }
-  }, [isPurchase]);
+  }, [isPurchase, amount]);
 
   return (
     <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center p-4">

@@ -133,7 +133,7 @@ export async function POST(req: NextRequest) {
                 transaction_amount: numericPrice,
                 currency_id: 'ARS',
             },
-            back_url: `${baseUrl}/welcome?from=purchase`,
+            back_url: `${baseUrl}/welcome?from=purchase&amount=${numericPrice}`,
             payer_email: email, // Now using the explicit MP email provided by user
             status: "pending",
             external_reference: JSON.stringify({
