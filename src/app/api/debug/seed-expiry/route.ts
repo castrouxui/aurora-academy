@@ -1,9 +1,11 @@
+import { devOnly } from "@/lib/dev-only";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 // @ts-ignore
 import bcrypt from "bcryptjs";
 
 export async function GET(request: Request) {
+    const guard = devOnly(); if (guard) return guard;
     const { searchParams } = new URL(request.url);
     const key = searchParams.get("key");
     const adminResetKey = process.env.ADMIN_RESET_KEY;

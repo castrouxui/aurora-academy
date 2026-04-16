@@ -62,52 +62,26 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
 
     let hasAccess = false;
     if (session?.user?.id && course) {
-        // 1. Direct course purchase
-        const directPurchase = await prisma.purchase.findFirst({
-            where: {
-                userId: session.user.id,
-                courseId: course.id,
-                status: { in: ['approved', 'COMPLETED'] }
-            }
-        });
-
-        if (directPurchase) {
-            hasAccess = true;
-        } else {
-            // 2. Bundle purchase containing this course
-            const bundlePurchase = await prisma.purchase.findFirst({
+        const [directPurchase, bundlePurchase, activeSubscription] = await Promise.all([
+            prisma.purchase.findFirst({
+                where: { userId: session.user.id, courseId: course.id, status: { in: ['approved', 'COMPLETED'] } }
+            }),
+            prisma.purchase.findFirst({
                 where: {
                     userId: session.user.id,
                     status: { in: ['approved', 'COMPLETED'] },
-                    bundle: {
-                        courses: {
-                            some: { id: course.id }
-                        }
-                    }
+                    bundle: { courses: { some: { id: course.id } } }
                 }
-            });
-
-            if (bundlePurchase) {
-                hasAccess = true;
-            } else {
-                // 3. Active subscription to a bundle containing this course
-                const activeSubscription = await prisma.subscription.findFirst({
-                    where: {
-                        userId: session.user.id,
-                        status: { in: ['authorized', 'active', 'ACTIVE', 'AUTHORIZED'] },
-                        bundle: {
-                            courses: {
-                                some: { id: course.id }
-                            }
-                        }
-                    }
-                });
-
-                if (activeSubscription) {
-                    hasAccess = true;
+            }),
+            prisma.subscription.findFirst({
+                where: {
+                    userId: session.user.id,
+                    status: { in: ['authorized', 'active', 'ACTIVE', 'AUTHORIZED'] },
+                    bundle: { courses: { some: { id: course.id } } }
                 }
-            }
-        }
+            }),
+        ]);
+        hasAccess = !!(directPurchase || bundlePurchase || activeSubscription);
     }
 
     if (!course) {
@@ -130,10 +104,16 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     // Format duration using centralized utility
     const formattedDuration = formatCourseDuration(totalDurationSeconds); // Fallback
 
-    // Get student count (real)
-    const studentCount = await prisma.purchase.count({
-        where: { courseId: id, status: 'approved' }
-    });
+    // Get student count and reviews in parallel
+    const [studentCount, dbReviews, totalPublishedCourses] = await Promise.all([
+        prisma.purchase.count({ where: { courseId: id, status: 'approved' } }),
+        prisma.review.findMany({
+            where: { courseId: id },
+            orderBy: { createdAt: 'desc' },
+            include: { user: { select: { name: true, image: true } } }
+        }),
+        prisma.course.count({ where: { published: true } }),
+    ]);
 
     // Format price
     const basePrice = Number(course.price) || 0;
@@ -161,15 +141,6 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     if (displayImage === "/course-placeholder.jpg" && youtubeId) {
         displayImage = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
     }
-
-    // Fetch Reviews
-    const dbReviews = await prisma.review.findMany({
-        where: { courseId: id },
-        orderBy: { createdAt: 'desc' },
-        include: {
-            user: { select: { name: true, image: true } }
-        }
-    });
 
     // Generate consistent mock reviews for this specific course
     const { mockTotalRatings, mockAverageRating, mockReviews } = getMockCourseReviews(id);

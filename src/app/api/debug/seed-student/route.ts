@@ -1,9 +1,11 @@
+import { devOnly } from "@/lib/dev-only";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(req: Request) {
+    const guard = devOnly(); if (guard) return guard;
     // Only admins can access this debug endpoint
     const session = await getServerSession(authOptions);
     if (!session || session.user.role !== "ADMIN") {

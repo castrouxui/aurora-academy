@@ -1,8 +1,10 @@
+import { devOnly } from "@/lib/dev-only";
 
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
+    const guard = devOnly(); if (guard) return guard;
     try {
         const courses = await prisma.course.findMany({
             include: {

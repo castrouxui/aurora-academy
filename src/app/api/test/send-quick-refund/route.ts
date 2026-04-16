@@ -1,7 +1,9 @@
+import { devOnly } from "@/lib/dev-only";
 import { NextResponse } from "next/server";
 import { sendQuickRefundEmail } from "@/lib/email";
 
 export async function GET() {
+    const guard = devOnly(); if (guard) return guard;
     try {
         const email = 'federicolopez.0023@gmail.com';
         const name = 'Jose Federico Lopez';
