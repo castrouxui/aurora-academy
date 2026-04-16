@@ -19,13 +19,22 @@ function WelcomeContent() {
   const isPurchase = from === "purchase";
 
   useEffect(() => {
-    if (typeof window === "undefined" || typeof window.fbq !== "function") return;
+    const fireEvent = () => {
+      if (typeof window.fbq !== "function") return false;
+      if (isPurchase) {
+        const value = amount ? parseFloat(amount) : 0;
+        window.fbq("track", "Purchase", { value, currency: "ARS" });
+      } else {
+        window.fbq("track", "CompleteRegistration");
+      }
+      return true;
+    };
 
-    if (isPurchase) {
-      const value = amount ? parseFloat(amount) : 0;
-      window.fbq("track", "Purchase", { value, currency: "ARS" });
-    } else {
-      window.fbq("track", "CompleteRegistration");
+    if (!fireEvent()) {
+      const interval = setInterval(() => {
+        if (fireEvent()) clearInterval(interval);
+      }, 100);
+      return () => clearInterval(interval);
     }
   }, [isPurchase, amount]);
 
